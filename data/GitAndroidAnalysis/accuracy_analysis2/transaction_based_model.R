@@ -38,6 +38,10 @@ combineData <- function(transactionFiles) {
 	# Returns:
 	#   A data frame containing all the data in all the files.
   
+  if(length(transactionFiles) == 0){
+    data <- data.frame(TL = numeric(), TD = numeric(),  DETs = numeric())
+  }
+  else{
 	data <- NULL
 	
   	for(i in 1:length(transactionFiles)) {
@@ -49,7 +53,7 @@ combineData <- function(transactionFiles) {
   	    data <- rbind(data, transactionFile)
   	  }
   	}
-	
+  }
 	data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
 	data <- na.omit(data)
 	data
@@ -280,7 +284,7 @@ classify <- function(data, cutPoints) {
 mre <- function(x) abs(x[1] - x[2])/x[2]
 mmre <- function(mre) mean(mre)
 pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
-pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred25 <- function(mre) length(mre[mre<=0.25])/length(mre)
 pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
 mdmre <- function(mre) median(mre)
 
@@ -356,7 +360,7 @@ crossValidate <- function(data, k, fit_func, predict_func){
 rankModels <- function(accuracyMeasures){
   accuracy_metrics <- names(accuracyMeasures)
   cvRankResults <- data.frame(matrix(nrow=nrow(accuracyMeasures), ncol=0))
-  #print(accuracy_metrics)
+  print(accuracy_metrics)
   for (i in 1:length(accuracy_metrics)){
     g = accuracy_metrics[i]
     #print(g)
@@ -386,6 +390,35 @@ rankModels <- function(accuracyMeasures){
   #print(rank_sum)
   cvRankResults["rank*"] <- rank_sum
   cvRankResults
+}
+
+#profile iteration data
+profileIterationData <- function(iterResults){
+  lcuts <- lapply(iterResults, function(iterationResult){
+    iterationResult$bayesModel$cuts
+  })
+  
+  laccuracy <- as.data.frame(t(sapply(iterResults, function(iterationResult){
+    iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+    #iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED', 'MSE')]
+  })))
+  
+  #print(laccuracy)
+  accuracyRanks <- rankModels(laccuracy)
+  #print(as.matrix(accuracyRanks))
+  
+  trainedModels <- lapply(iterResults, function(iterationResult){
+      trainedModel = cbind(as.data.frame(lapply(iterationResult$bayesModel$weights,Bayes.sum)),
+        as.data.frame(Bayes.sum(iterationResult$bayesModel$effortAdj)),
+        as.data.frame(Bayes.sum(iterationResult$bayesModel$sd))
+      )
+      tm <- t(as.matrix(trainedModel))
+      colnames(tm) <- 	c("mean","se","t","median","CrI", "CrI")
+      rownames(tm) <- c(names(iterationResult$bayesModel$weights), 'effortAdj', "sd")
+      tm
+  })
+  
+  list(lcuts = lcuts, laccuracy = round(accuracyRanks, 2), trainedModels = trainedModels)
 }
 
 
@@ -911,23 +944,6 @@ generateRegressionData <- function(projects, cutPoints, effortData, transactionF
   regressionData <- as.data.frame(regressionData)
 }
 
-
-#profile iteration data
-profileIterationData <- function(iterResults){
-  lcuts <- lapply(iterResults, function(iterationResult){
-    iterationResult$bayesModel$cuts
-  })
-  
-  laccuracy <- sapply(iterResults, function(iterationResult){
-    iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
-  })
-  
-  #print(laccuracy)
-  accuracyRanks <- rankModels(as.data.frame(t(laccuracy)))
-  #print(accuracyRanks)
-  
-  list(lcuts = lcuts, laccuracy = round(accuracyRanks, 2))
-}
 
 performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each

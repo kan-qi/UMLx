@@ -120,6 +120,11 @@ clean_lasso <- function(dataset){
   return(data.done)
 }
 
+m_profile.lasso <- function(lasso, dataset){
+  #testData <- modelData
+  profileData <- data.frame(LASSO=m_predict(lasso, dataset), row.names=rownames(dataset))
+}
+
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
   #dataset = modelData

@@ -4,6 +4,10 @@ m_fit.step_lnr <- function(step_lnr,dataset){
   #dataset = modelData
   
   cols = step_lnr$regression_cols
+  #for(i in 1:length(cols)){
+  #  print(cols[i])
+  #  print(dataset[, cols[i]])
+  #}
   dataset <- dataset[, cols]
   
   cleanData <- clean_step(dataset[, colnames(dataset) != "Effort"])
@@ -38,6 +42,11 @@ m_predict.step_lnr <- function(step_lnr, testData){
   data.numeric <- data.frame(apply(testData, 2, as.numeric))
   #cols_removed = step_lnr$cols_removed
   predicted <- predict(step_lnr$m, testData)
+}
+
+m_profile.step_lnr <- function(step_lnr, dataset){
+  #testData <- modelData
+  profileData <- data.frame(STEP=m_predict(step_lnr, dataset), row.names=rownames(dataset))
 }
 
 stepwise_linear_model <- function(modelData, regression_cols=c()){

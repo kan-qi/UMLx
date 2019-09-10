@@ -2,7 +2,7 @@
 mre <- function(x) abs(x[1] - x[2])/x[2]
 mmre <- function(mre) mean(mre)
 pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
-pred25 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred25 <- function(mre) length(mre[mre<=0.25])/length(mre)
 pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
 mdmre <- function(mre) median(mre)
 mae<- function(x) sum(apply(x, 1, function(x) abs(x[1] - x[2])))/length(x)

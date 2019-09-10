@@ -27,8 +27,8 @@ library(plyr)
 library(lsr)
 library("Hmisc")
 require(MASS)
-#library("grid")
-#library("ggplotify")
+library("grid")
+library("ggplotify")
 library("cowplot")
 ```
 Combined Data Effort Values
@@ -42,8 +42,11 @@ Combined Data Effort Values
 
 #modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
 outputDir = "."
+outputDir = "./res/9-5-6-models-34-data-points"
 outputDir = "./res/8-28-6-models-34-data-points"
 outputDir = "./res/8-28-6-models-bootstrap-100-34-data-points"
+outputDir = "./res/9-1-6-models-577-61-data-points"
+outputDir = "./res/9-5-8-models"
 print(outputDir)
 #outputDir = "./res/8-27-8-models"
 #outputDir = "./res/8-27-6-models"
@@ -52,8 +55,9 @@ dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
 dataset <- read.csv("dsets/combined_data_set_8_22.csv")
 dataset <- read.csv("dsets/combined_data_set_8_23.csv")
 dataset <- read.csv("dsets/combined_data_set_8_26.csv")
-dataset <- read.csv("dsets/combined_data_set_8_28.csv")
+dataset <- read.csv("dsets/combined_data_set_8_28.csv") #current
 dataset <- read.csv("dsets/combined_data_set_4_1.csv")
+dataset <- read.csv("dsets/modelEvaluations-5-4.csv")
 modelData <- selectData(dataset)
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
@@ -100,10 +104,22 @@ transaction_models <- trainsaction_based_model(modelData)
 models = append(models, transaction_models)
 
 #profile iteration data
-#iterationData <- profileIterationData(transaction_models$tm3$SWTIIIresults)
-#print(iterationData)
-#iterationData1 <- profileIterationData(transaction_models$tm2$SWTIIresults)
-#print(iterationData1)
+iterationData0 <- profileIterationData(transaction_models$tm1$SWTIresults)
+write.csv(round(iterationData0$trainedModels[[1]], digits=2), paste(outputDir, 'parameters_swtI.csv', sep="/"))
+
+iterationData <- profileIterationData(transaction_models$tm3$SWTIIIresults)
+print(iterationData$lcuts)
+write.csv(iterationData$lcuts, paste(outputDir, 'cut_points_swtIII.csv', sep="/"))
+print(as.matrix(iterationData$laccuracy))
+write.csv(as.matrix(iterationData$laccuracy), paste(outputDir, 'iteration_results_accuracy_swtIII.csv', sep="/"))
+print(iterationData$trainedModels[[3]])
+write.csv(round(iterationData$trainedModels[[3]], digits=2), paste(outputDir, 'parameters_swtIII.csv', sep="/"))
+
+iterationData1 <- profileIterationData(transaction_models$tm2$SWTIIresults)
+print(as.matrix(iterationData1$laccuracy))
+write.csv(as.matrix(iterationData1$laccuracy), paste(outputDir, 'iteration_results_accuracy_swtII.csv', sep="/"))
+print(iterationData1$trainedModels[[4]])
+write.csv(round(iterationData1$trainedModels[[4]], digits=2), paste(outputDir, 'parameters_swtII.csv', sep="/"))
 #models$tm3 <- trainsaction_based_model3(modelData)
 
 #initialize the size metric based models
@@ -158,7 +174,7 @@ transactionData <- transaction_data_profile(modelData)
 outputData <- merge(outputData, transactionData, by="row.names")
 rownames(outputData) <- outputData$Row.names
 outputData$Row.names <- NULL
-write.csv(outputData, paste(outputDir, "output_data.csv", sep="/"))
+write.csv(round(outputData, digits=2), paste(outputDir, "output_data.csv", sep="/"))
 
 #evaluate the models for their size metrics
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
@@ -202,7 +218,8 @@ ggplot(outputData, aes(x=SWTI, y=Effort)) + geom_point()+theme_bw()
 #ggplot(outputData, aes(x=SWTII, y=Effort)) + geom_point()+theme_bw()
 #ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
 
-#print(models$tm2$cuts)
+print(models$tm2$cuts)
+print(models$tm3$cuts)
 
 ```
 Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
@@ -223,13 +240,13 @@ models2 = list()
 #models2$cosmic = models$cosmic
 #models2$ln_sloc = models$ln_sloc
 #models2$step_lnr = models$step_lnr
-#models2$neuralnet = models$neuralnet
+models2$neuralnet = models$neuralnet
 #models2$lasso = models$lasso
 #models2$reg_tree= models$reg_tree
 #models2$tm3 = transaction_models$tm3
 models2$step_lnr <- step_model
 benchmarkResultsTemp <- modelBenchmark(models2, modelData)
-benchmarkResults <- updateBenchmarkResults(benchmarkResults, benchmarkResultsTemp)
+#benchmarkResults <- updateBenchmarkResults(benchmarkResults, benchmarkResultsTemp)
 
 #iterR2 <- benchmarkResultsTemp$bsResults$iterResults
 #print(iterR2)
@@ -266,7 +283,7 @@ model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
 
 #test 5
 model_names <- c("tm1","tm2","tm3", "ucp", "fp", "cosmic", "sloc", "ln_sloc")
-model_texts <- c("SWTIII","SWTI","SWTII", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+model_texts <- c("SWTIII","SWTII","SWTI", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
 model_estimator <- c("LSR","LSR","LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
 
 #test 6
@@ -274,6 +291,12 @@ model_names <- c("neuralnet", "reg_tree", "tm1", "step_lnr")
 model_texts <- c("NEURAL_NET", "REG_TREE", "TRAN", "STEP_REG")
 model_estimator <- c("ANN", "REG TREE", "LSR", "STEP")
 
+#test 7
+model_names <- c("tm1","tm2","tm3", "fp")
+model_texts <- c("SWTII","SWTIII","SWTI", "IFPUG")
+model_estimator <- c("LSR","LSR","LSR", "LSR")
+
+print(outputDir)
 model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
 
 #accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')
@@ -314,6 +337,7 @@ print(accuracy_labels)
 
 ```{r evaluate goodness of fit of the models}
 #evaluate goodness of fit
+#print(outputDir)
 goodnessRankResults = data.frame(model_labels = model_names)
 goodnessRankResults <- merge(goodnessRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
 
@@ -337,7 +361,6 @@ goodnessRankResults["Rank"] <- rank(-goodnessRankResults[,"R2"], ties.method = "
 goodnessRankResults <- goodnessRankResults[order(goodnessRankResults$Rank),]
 print(goodnessRankResults)
 write.csv(goodnessRankResults, paste(outputDir, "goodness_rank_results.csv", sep="/"))
-print(outputDir)
 ```
 
 ```{r evaluate the out-of-sample accuracy of the models}
@@ -363,7 +386,7 @@ avg_pred_plot = ggplot(meltAvgPreds) + theme_bw() +
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 print(avg_pred_plot)
-ggsave(paste(outputDir, "avg_pred_plot.png", sep="/"), width=5, height=4)
+ggsave(paste(outputDir, "avg_pred_plot.png", sep="/"), width=5, height=3.5)
 
 #rank the cv results of different metric
 
@@ -680,46 +703,56 @@ round_df <- function(df, digits) {
 }
 
 write.csv(sig_bs,paste(outputDir, 'sig_bs.csv', sep="/"))
+#print(sig_bs$p_value)
 
 #print only pair comparisons that are related to transaction models
-sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
+sig_bs_f = sig_bs[which(sig_bs$p_value < 0.05),]
 sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% accuracy_metrics),]
-sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
+sig_bs_f = sig_bs_f[order(sig_bs_f$p_value),]
 sig_bs_f = round_df(sig_bs_f, 2)
-print(sig_bs_f)
-write.csv(sig_bs_f,paste(outputDir, 'sig_bs_f.csv', sep="/"))
+#print(sig_bs_f$p_value)
 
-sig_bs_f_1 = sig_bs[which(sig_bs$bonferroni_p_value < 0.05),]
-sig_bs_f_1 = sig_bs_f_1[which(sig_bs_f_1$metric %in% accuracy_metrics),]
-sig_bs_f_1 = sig_bs_f_1[order(sig_bs_f_1$bonferroni_p_value),]
-sig_bs_f_1 = round_df(sig_bs_f_1, 2)
 #order models
-sig_bs_f_1 <- as.data.frame(t(apply(sig_bs_f_1, 1, function(x) {
+sig_bs_f <- as.data.frame(t(apply(sig_bs_f, 1, function(x) {
   #print(x)
     if(x['direction'] == "-"){
       model_2 = x['model2']
       x['model2'] = x['model1']
       x['model1'] = model_2
+      mean_2 = x['model2_mean']
+      x['model2_mean'] = x['model1_mean']
+      x['model1_mean'] = mean_2
       x['direction'] = "+"
       x['cohen_d'] = -as.numeric(x['cohen_d'])
-    }
+      }
     x
   })))
-sig_bs_f_1$model1 = model_mapping$model_texts[match(sig_bs_f_1$model1, model_mapping$model_names)]
-sig_bs_f_1$model2 = model_mapping$model_texts[match(sig_bs_f_1$model2, model_mapping$model_names)]
+#sig_bs_f$model1_mean = as.numeric(sig_bs_f$model1_mean)
+#sig_bs_f$model2_mean = as.numeric(sig_bs_f$model2_mean)
+#sig_bs_f$p_value = as.numeric(sig_bs_f$p_value)
+#sig_bs_f$BH_p_value = as.numeric(sig_bs_f$BH_p_value)
+#sig_bs_f$bonferroni_p_value = as.numeric(sig_bs_f$bonferroni_p_value)
+#sig_bs_f$cohen_d = as.numeric(sig_bs_f$cohen_d)
+sig_bs_f$model1 = model_mapping$model_texts[match(sig_bs_f$model1, model_mapping$model_names)]
+sig_bs_f$model2 = model_mapping$model_texts[match(sig_bs_f$model2, model_mapping$model_names)]
 #sig_bs_f_2$metric = accuracy_mapping[match(accuracy_mapping$accuracy_metrics == sig_bs_f_2$metric)]
-print(sig_bs_f_1)
+print(sig_bs_f$cohen_d)
+write.csv(sig_bs_f,paste(outputDir, 'sig_bs_f.csv', sep="/"))
+
+sig_bs_f_1 = sig_bs_f[which(sig_bs_f$bonferroni_p_value < 0.05),]
+sig_bs_f_1 = sig_bs_f_1[which(sig_bs_f_1$metric %in% accuracy_metrics),]
+sig_bs_f_1 = sig_bs_f_1[order(sig_bs_f_1$bonferroni_p_value),]
+sig_bs_f_1 = round_df(sig_bs_f_1, 2)
 write.csv(sig_bs_f_1,paste(outputDir, 'sig_bs_bc.csv', sep="/"))
 
 #identify the parirs that are not identified from the 84% overlaps.
-sig_bs_tm = sig_bs_f[which(sig_bs_f$model1 %in% c("tm1", "tm2", "tm3") | sig_bs_f$model2 %in% c("tm1", "tm2", "tm3")),]
+sig_bs_tm = sig_bs_f[which(sig_bs_f$model1 %in% c("SWTI", "SWTII", "SWTIII") | sig_bs_f$model2 %in% c("SWTI", "SWTII", "SWTIII")),]
 sig_bs_f_indices <- paste(sig_bs_tm$model1, sig_bs_tm$model2, sig_bs_tm$metric, sep="-")
 print(sig_bs_f_indices)
-sig_bs_f$index <- sig_bs_f_indices
+sig_bs_tm$index <- sig_bs_f_indices
 `%ni%` <- Negate(`%in%`)
-filtered_sig_bs_f = sig_bs_f[which(sig_bs_f$index %ni% filteredNonOverlappingPairsIndices), ]
-
-write.csv(filtered_sig_bs_f,paste(outputDir, 'filtered_sig_bs_f.csv', sep="/"))
+filtered_sig_bs_tm = sig_bs_tm[which(sig_bs_tm$index %ni% filteredNonOverlappingPairsIndices), ]
+write.csv(filtered_sig_bs_tm,paste(outputDir, 'filtered_sig_bs_tm.csv', sep="/"))
 
 # Using the "sig_bs" results, create a graph to represent the direct graph for the models.
 sig_rank_graph_plots = list()
@@ -737,11 +770,11 @@ for(metric_i in 1:length(accuracy_metrics)){
   colnames(m) <- model_names
   rownames(m) <- model_names
   for(i in 1:nrow(selectedData)){
-    if(selectedData$BH_p_value[i] < 0.05){
+    if(selectedData$p_value[i] < 0.05){
     if(selectedData$direction[i] == "+"){
-      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$BH_p_value[i], 3)
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$p_value[i], 3)
     }else if(selectedData$direction[i] == "-"){
-      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$BH_p_value[i], 3)
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$p_value[i], 3)
     }
     }
   }
@@ -806,19 +839,22 @@ ggsave(paste(outputDir, "sig_rank_graphs.png", sep="/"), width=6, height=10)
 ```
 
 ```{r stratified analysis, fig.width=4,fig.height=6, warning = FALSE}
-projectCategories <- as.matrix(read.csv("./project_categorization.csv"))
-print(projectCategories)
+projectCategories <- as.matrix(read.csv("./project_categorization1.csv"))
+projectCategoryLabels <- paste(projectCategories[,1], projectCategories[,2], sep=": ")
+print(projectCategoryLabels)
 nCategories <- nrow(projectCategories)
 benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
 categorizedBenchmarkResults = list()
 
-projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
-projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+#projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+#projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+categorizedBenchmarkResults1 = categorizedBenchmarkResults
 
-for(i in 1:nCategories){
-  print(projectCategories[i, ])
-  categorizedDataset <- selectData(datasheet, selector=projectCategories[i,])
-  
+for(i in 1:6){
+  #print(i)
+  #print(as.vector(projectCategories[i, ]))
+  categorizedDataset <- selectData(dataset, selector=projectCategories[i,])
+
   #categorizedDataset <- selectData("dsets/combined_data_set_4_1.csv", c("type", "Entertainment"))
   #print(rownames(categorizedDataset))
 
@@ -833,9 +869,8 @@ for(i in 1:nCategories){
   # calculate the rank information
   
 }
-
-projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
-projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+#projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+#projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
 
 p_cvAllRank_plots = list()
 #print the categorized benchmark results
@@ -931,6 +966,8 @@ title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='
 p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2, 1, .1), label_size=5)
 print(p_cvRank)
 ggsave(paste(outputDir, "p_cvRank.png", sep="/"), width=4, height=6)
+
+#print(outputDir)
 
 #9 categorized benchmarking results are produced
 #1-3 are the projects of sizes: small, medium, and large

@@ -1,37 +1,37 @@
-selectData <- function(modelData, selector="default"){
+selectData <- function(dataset, selector="Default"){
   
 #dataPath <- "modelEvaluations-1-3.csv"
 #selector <- "SLOC2ndQ25"
 #dataPath = "../android_analysis_datasets/android_dataset_6_20_1.csv"
 
-modelData$Project = as.character(modelData$Project)
-rownames(modelData) <- modelData$Project
-#modelData$Project <- NULL
+dataset$Project = as.character(dataset$Project)
+rownames(dataset) <- dataset$Project
+#dataset$Project <- NULL
 
 #if(selector == "SLOC2ndQ25"){
-#modelData <- selectBySLOC2ndQ25(modelData)
+#dataset <- selectBySLOC2ndQ25(dataset)
 #}
 
-dataset = subset(modelData, Effort != 0)
+modelData = subset(dataset, Effort != 0)
 
-if(selector == "default"){
+if(selector == "Default"){
   
 }
-else if(selector[1] == "size"){
-  dataset = selectProjectsBySize(dataset, selector[2])
+else if(selector[1] == "Size"){
+  modelData = selectProjectsBySize(modelData, selector[2])
 }
-else if(selector[1] == "initialDate"){
-  dataset = selectProjectsByInitialDate(dataset, selector[2])
+else if(selector[1] == "InitialDate"){
+  modelData = selectProjectsByInitialDate(modelData, selector[2])
 }
-else if(selector[1] == "type"){
-  dataset = selectProjectsByType(dataset, selector[2])
+else if(selector[1] == "Type"){
+  modelData = selectProjectsByType(modelData, selector[2])
 }
 
 #dataSet <- list()
 #dataSet[["modelData"]] <- modelData
 #dataSet
   
-dataset
+modelData
 }
 
 selectBySLOC2ndQ25 <- function(modelData){
@@ -65,17 +65,17 @@ selectProjectsByInitialDate <- function(modelData, initDate){
   
   projectIndices = c()
   
-  if(initDate == "early"){
+  if(initDate == "Early"){
     
     projectIndices = c(projectIndices, classifiedProjects$l1)
     
   }
-  else if(initDate == "normal"){
+  else if(initDate == "Normal"){
     
     projectIndices = c(projectIndices, classifiedProjects$l2)
     
   }
-  else if(initDate == "late"){
+  else if(initDate == "Late"){
     
     projectIndices = c(projectIndices, classifiedProjects$l3)
     
@@ -103,11 +103,11 @@ selectProjectsBySize <- function(modelData, size){
   print(classifiedDataPoints)
   
   projectIndices = c()
-  if(size == "small"){
+  if(size == "Small"){
     projectIndices = c(projectIndices, classifiedDataPoints$l1)
     projectIndices = c(projectIndices, classifiedDataPoints$l2)
   }
-  else if(size == "medium"){
+  else if(size == "Medium"){
     projectIndices = c(projectIndices, classifiedDataPoints$l3)
     projectIndices = c(projectIndices, classifiedDataPoints$l4)
   }
@@ -193,6 +193,7 @@ getCutPoints <- function(dataset){
 
 selectProjectsByType <- function(modelData, type){
   #type = "tools/system info"
+  modelData$Category <- as.character(modelData$Category)
   modelData <- modelData[which(modelData$Category == type),]
 }
 

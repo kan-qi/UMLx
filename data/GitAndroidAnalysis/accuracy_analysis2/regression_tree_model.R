@@ -142,6 +142,10 @@ regression_tree_model <- function(modelData, regression_cols){
   
 }
 
+m_profile.reg_tree <- function(reg_tree, dataset){
+  #testData <- modelData
+  profileData <- data.frame(RTREE=m_predict(reg_tree, dataset), row.names=rownames(dataset))
+}
 
 
 # Preprocess dataset

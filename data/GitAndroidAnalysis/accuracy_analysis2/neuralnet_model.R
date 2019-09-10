@@ -312,6 +312,11 @@ m_predict.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   return(predictions)
 }
 
+m_profile.neuralnet <- function(neuralnet, dataset){
+  #testData <- modelData
+  profileData <- data.frame(NN=m_predict(neuralnet, dataset), row.names=rownames(dataset))
+}
+
 
 # Visualize neuralnet
 # Source: https://gist.githubusercontent.com/fawda123/7471137/raw/f30f338ecf143c089af1b6a731edcabd0b11a79d/nnet_plot_update.r
