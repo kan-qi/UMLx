@@ -20,7 +20,7 @@ div.block.panel.panel-default
                 .modal-dialog.modal-dialog-centered(role='document', style="margin: 5% auto; width: 90%;")
                   .modal-content
                     .modal-header
-                      //- h2#exampleModalLongTitle.modal-title.text-center Choose the parameters 
+                      //- h2#exampleModalLongTitle.modal-title.text-center Choose the parameters
                       #sec-4(style = "margin-top: 10px; margin-bottom: -20px")
                         .panel-group
                             .panel.panel-default(style = "text-align : center")
@@ -40,7 +40,7 @@ div.block.panel.panel-default
                                                 option#estimator1(value="eucp_lm") EUCP
                                                 option#estimator2(value="exucp_lm") EXUCP
                                                 option#estimator3(value="ducp_lm") DUCP
-                    
+
                       //- button.close(type='button', data-dismiss='modal', aria-label='Close')
                       //-   span(aria-hidden='true') ×
                     .modal-body(style = "height: 79%; overflow-y: auto;")
@@ -159,7 +159,7 @@ div.block.panel.panel-default
                                                 option 2
                                                 option 3
                                                 option 4
-                                                option 5     
+                                                option 5
                       #sec-2
                         .panel-group
                             .panel.panel-default
@@ -260,153 +260,153 @@ div.block.panel.panel-default
           div.col-sm-12.status-row
             div.col-sm-2
               div#project-card.analytics-card(class = "card mb-3 red-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span Projects
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-folder-open.card-icon 
+                    span.glyphicon.glyphicon-folder-open.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{totalRec}
             div.col-sm-2
               div#usecase-card.analytics-card(class = "card mb-3 green-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span User Cases
                   label.switch
                     input(type="checkbox")
                     span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-user.card-icon 
+                    span.glyphicon.glyphicon-user.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.UseCaseNum}
             div.col-sm-2
               div#transaction-card.analytics-card(class = "card mb-3 purple-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span TXNS
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-transfer.card-icon 
+                    span.glyphicon.glyphicon-transfer.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.NT}
-            div.col-sm-2 
+            div.col-sm-2
               div#class-card.analytics-card(class = "card mb-3 yellow-card ")
-                div(class="card-header") 
+                div(class="card-header")
                   span Classes
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-sort-by-order.card-icon 
+                    span.glyphicon.glyphicon-sort-by-order.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.EntityNum}
             div.col-sm-2
               div#sloc-card.analytics-card(class = "card mb-3 blue-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span SLOC
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-tasks.card-icon 
+                    span.glyphicon.glyphicon-tasks.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.SLOC}
             div.col-sm-2
               div#schedule-card.analytics-card(class = "card mb-3 brown-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span Schedule
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-calendar.card-icon 
+                    span.glyphicon.glyphicon-calendar.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.schedule}
-          div.col-sm-12.status-row  
+          div.col-sm-12.status-row
             div.col-sm-2
               div#personnel-card.analytics-card(class = "card mb-3 gray-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span Personnel
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-briefcase.card-icon 
+                    span.glyphicon.glyphicon-briefcase.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.personnel}
-            div.col-sm-2 
+            div.col-sm-2
               div#eucp-card.analytics-card(class = "card mb-3 red-card cyan-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span EUCP
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-stats.card-icon 
+                    span.glyphicon.glyphicon-stats.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.EUCP}
             div.col-sm-2
               div#exucp-card.analytics-card(class = "card mb-3 orange2-card ")
-                div(class="card-header") 
+                div(class="card-header")
                   span EXUCP
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-stats.card-icon 
+                    span.glyphicon.glyphicon-stats.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.EXUCP}
             div.col-sm-2
               div#ducp-card.analytics-card(class = "card mb-3 purple-card purple2-card")
-                div(class="card-header") 
+                div(class="card-header")
                   sapn DUCP
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-stats.card-icon 
+                    span.glyphicon.glyphicon-stats.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.DUCP}
             div.col-sm-2
               div#effort-card.analytics-card(class = "card mb-3 yellow-card orange-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span Effort
                   label.switch
                       input(type="checkbox")
                       span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-leaf.card-icon 
+                    span.glyphicon.glyphicon-leaf.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.effort}
             div.col-sm-2
               div#estimate-card.analytics-card(class = "card mb-3 blue-card gray2-card")
-                div(class="card-header") 
+                div(class="card-header")
                   span Est Effort
                   label.switch
                       input(type="checkbox")
-                      span.slider.round 
+                      span.slider.round
                 div(class="card-body")
                   div.col-sm-4
-                    span.glyphicon.glyphicon-tree-conifer.card-icon 
+                    span.glyphicon.glyphicon-tree-conifer.card-icon
                   div.col-sm-8.text-right
                     h2(class="card-title") #{repoInfo.estimatedEffort}
         //- if repoInfo
         //-   if repoInfo.Models.length === 0
         //-     div.alert.alert-warning(role="alert") Upload some models first
-        //-   else 
+        //-   else
         //-     div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
         //-     div.col-sm-12.status-row
         //-       div.col-sm-3
@@ -433,7 +433,7 @@ div.block.panel.panel-default
         //-           .col-sm-8.text-box
         //-             h2 #{repoInfo.NT}
         //-             span Transactions
-        //-       div.col-sm-3 
+        //-       div.col-sm-3
         //-         div#class-card.analytics-card
         //-           .col-sm-4.image-box
         //-             img(src="img/project-icon.png", alt="")
@@ -466,7 +466,7 @@ div.block.panel.panel-default
         //-           .col-sm-8.text-box
         //-             h2 #{repoInfo.personnel}
         //-             span Personnel
-        //-       div.col-sm-3 
+        //-       div.col-sm-3
         //-         div#eucp-card.analytics-card
         //-           .col-sm-4.image-box
         //-             img(src="img/project-icon.png", alt="")
@@ -506,7 +506,7 @@ div.block.panel.panel-default
         //-             img(src="img/checked-icon.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
         //-           .col-sm-8.text-box
         //-             h2 #{repoInfo.estimatedEffort}
-        //-             span Estimated Effort 
+        //-             span Estimated Effort
       div.tab-pane.fade(id="project_list")
         .container
           h3.row

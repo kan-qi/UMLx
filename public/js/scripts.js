@@ -3856,7 +3856,7 @@ function open_new_page_for_diagram_display(type) {
         <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
         <script type="text/javascript" src="js/charts.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
-        <script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>        
+        <script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
     `;
   html_content += "</body></html>";
   newWindow.document.write(html_content);

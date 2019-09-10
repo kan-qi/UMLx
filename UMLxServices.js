@@ -600,6 +600,11 @@ app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 
 });
 
 
+app.get('/loadEstimatorInfo', function(req, res){
+    res.render('estimationPanel', {estimatorParameters: {}});
+});
+
+
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
 	res.render('estimationPage', {cookieName: "EstimationPageOptions"});
@@ -1805,7 +1810,9 @@ app.get('/', function(req, res){
 	 			}
 
 				umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
-					profileRep = result.Repos[0]
+					if(result){
+					profileRep = result.Repos[0];
+					}
 				});
 			});
 				if(req.userInfo.isEnterprise){
@@ -2149,6 +2156,7 @@ app.post('/analyseSLOC', function (req, res) {
 var server = app.listen(8081,'0.0.0.0', function () {
   var host = server.address().address
   var port = server.address().port
+
   console.log("Example app listening at http://%s:%s", host, port)
 
 });
