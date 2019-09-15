@@ -78,6 +78,8 @@ modelTrain <- function(models, dataset){
     model = fit(dataset, modelNames[i], models[[i]])
     
     trainedModels[[modelName]] = model
+    
+    #m_save(model)
   }
   
   trainedModels

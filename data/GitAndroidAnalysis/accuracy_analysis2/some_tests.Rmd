@@ -1,0 +1,91 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("utils/feature_selection.R")
+source("utils/data_selection.R")
+source("utils/model_funcs.R")
+source("accuracy_confidence_evaluation.R")
+source("transaction_based_model.R")
+source("size_metric_based_models.R")
+source("neuralnet_model.R")
+source("stepwise_linear_model.R")
+source("lasso_regression_model.R")
+source("regression_tree_model.R")
+source('familywiseHypoTest.R')
+library(jsonlite)
+library(reshape)
+library(tidyverse)
+library(fitdistrplus)
+library(egg)
+library(gridExtra)
+library(plyr)
+library(lsr)
+require(MASS)
+
+```
+Combined Data Effort Values
+```{r descriptive statistics, fig.width=4,fig.height=2.5}
+#The previous dataset
+#modelData <- selectData("dsets/modelEvaluations-1-3.csv")
+#The current dataset
+#modelData <- selectData("dsets/android_dataset_6_4.csv")
+#modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+dataset <- read.csv("dsets/combined_data_set_4.csv")
+dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
+dataset <- read.csv("dsets/combined_data_set_8_22.csv")
+dataset <- read.csv("dsets/combined_data_set_8_23.csv")
+dataset <- read.csv("dsets/combined_data_set_8_26.csv")
+dataset <- read.csv("dsets/combined_data_set_4_1.csv")
+modelData <- selectData(dataset)
+
+
+dataset1 <- read.csv("dsets/modelEvaluations-5-4.csv")
+dataset1$Component_num <- dataset1$Component_num/13
+mu_label = paste("=", round(mean(dataset1$Component_num),2), ", ", sep="");
+print(mu_label)
+sd_label = paste("=", round(sd(dataset1$Component_num), 2), ", ", sep="");
+print(sd_label)
+ggplot(dataset1, aes(x = Component_num)) +
+        geom_histogram(binwidth=3)+theme_bw()+xlab(expression( paste("Number of Components (AA), ", mu, "=10.73, ", sigma, "=7.02, "))) +
+		ylab("Num of Projects")
+
+dataset2 <- read.csv("dsets/combined_data_set_9_13.csv")
+dataset2$Component_Num <- dataset2$Component_Num
+mu_label = paste("=", round(mean(dataset2$Component_Num),2), ", ", sep="");
+print(mu_label)
+sd_label = paste("=", round(sd(dataset2$Component_Num), 2), ", ", sep="");
+print(sd_label)
+ggplot(dataset2, aes(x = Component_Num)) +
+        geom_histogram(binwidth=2)+theme_bw()+xlab(expression( paste("Number of Components (Android), ", mu, "=7.48, ", sigma, "=2.87, "))) +
+		ylab("Num of Projects")
+
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
+#dataset <- modelData
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("initialDate", "late"))
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type", "Tools"))
+
+#data set exploratory statistics, eg, correlation statistics, marginal distributions, etc.
+
+#ggplot2.scatterplot(data=modelData, xName='SLOC',
+#                    yName='Effort',
+#                    groupName="Organization")
+
+#ggplot(modelData,aes(SLOC, Effort, color=Organization)) + 
+#  geom_point() + 
+#  scale_color_manual(values = c('#999999','#E69F00')) + 
+#  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+
+```
+

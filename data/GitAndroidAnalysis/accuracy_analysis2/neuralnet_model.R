@@ -317,6 +317,15 @@ m_profile.neuralnet <- function(neuralnet, dataset){
   profileData <- data.frame(NN=m_predict(neuralnet, dataset), row.names=rownames(dataset))
 }
 
+m_save.neuralnet <- function(neuralnet){
+  #save the trained model: neuralnet to the files.
+}
+
+m_load.neuralnet <- function(model_name){
+  #return the objects from the file.
+  
+}
+
 
 # Visualize neuralnet
 # Source: https://gist.githubusercontent.com/fawda123/7471137/raw/f30f338ecf143c089af1b6a731edcabd0b11a79d/nnet_plot_update.r

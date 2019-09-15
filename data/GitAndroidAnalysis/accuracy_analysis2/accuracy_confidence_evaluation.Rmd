@@ -103,6 +103,8 @@ transaction_models <- trainsaction_based_model(modelData)
 #transaction_models_1 <- transaction_models
 models = append(models, transaction_models)
 
+print(outputDir)
+
 #profile iteration data
 iterationData0 <- profileIterationData(transaction_models$tm1$SWTIresults)
 write.csv(round(iterationData0$trainedModels[[1]], digits=2), paste(outputDir, 'parameters_swtI.csv', sep="/"))
@@ -231,6 +233,13 @@ benchmarkResultsTest4 = benchmarkResults
 #benchmarkResultsTest1 = benchmarkResults
 #benchmarkResults = benchmarkResultsTest1
 
+#tm2 = trainedModels$tm2
+#save(tm2, file="models/swtii.Rdata")
+#tm3 = trainedModels$tm3
+#save(tm3, file="models/swtiii.Rdata")
+#ucp = trainedModels$ucp
+#save(ucp, file="models/ucp.Rdata")
+
 #update the benchmark results for specific models
 #dataset1 <- read.csv("dsets/combined_data_set_8_27.csv")
 #modelData1 <- selectData(dataset1)
@@ -313,6 +322,8 @@ foldResults <- cvResults$foldResults
 bsRet <- benchmarkResults$bsResults
 bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
+
+neuralnet <- load_model(c("neuralnet"))
 
 model_labels <- c()
 for(i in 1:length(model_names)){
