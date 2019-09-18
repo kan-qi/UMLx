@@ -47,6 +47,7 @@ outputDir = "./res/8-28-6-models-34-data-points"
 outputDir = "./res/8-28-6-models-bootstrap-100-34-data-points"
 outputDir = "./res/9-1-6-models-577-61-data-points"
 outputDir = "./res/9-5-8-models"
+outputDir = "./res/9-15-8-models"
 print(outputDir)
 #outputDir = "./res/8-27-8-models"
 #outputDir = "./res/8-27-6-models"
@@ -177,6 +178,49 @@ outputData <- merge(outputData, transactionData, by="row.names")
 rownames(outputData) <- outputData$Row.names
 outputData$Row.names <- NULL
 write.csv(round(outputData, digits=2), paste(outputDir, "output_data.csv", sep="/"))
+outputData1 <- outputData
+effortData <- modelData[rownames(sizeMeasures), 'Effort']
+
+outputCSV <- read.csv("./res/9-5-8-models/output_csv.csv")
+outputData <- outputCSV
+rownames(outputData) <- outputData$Proj
+effortData <- outputCSV$Effort
+sizeMeasures = outputData
+
+cor(log(sizeMeasures$SLOC), log(effortData))
+sizeMeasures$LOG_EFFORT = log(effortData)
+
+log_sloc.lm = lm(LOG_EFFORT ~ LOG_SLOC, data=sizeMeasures)
+summary(log_sloc.lm)$r.squared
+print(summary(log_sloc.lm))
+
+sloc.lm = lm(Effort ~ SLOC, data=outputData)
+summary(sloc.lm)$r.squared 
+print(summary(sloc.lm))
+
+cosmic.lm = lm(Effort ~ COSMIC, data=outputData)
+summary(cosmic.lm)$r.squared
+print(summary(cosmic.lm))
+
+swtii.lm = lm(Effort ~ SWTII, data=outputData)
+summary(swtii.lm)$r.squared
+print(summary(swtii.lm))
+
+swtiii.lm = lm(Effort ~ SWTIII, data=outputData)
+summary(swtiii.lm)$r.squared 
+print(summary(swtiii.lm))
+
+swti.lm = lm(Effort ~ SWTI, data=outputData)
+summary(swti.lm)$r.squared
+print(summary(swti.lm))
+
+ifpug.lm = lm(Effort ~ AFP, data=outputData)
+summary(ifpug.lm)$r.squared 
+print(summary(ifpug.lm))
+
+uucp.lm = lm(Effort ~ UUCP, data=outputData)
+summary(uucp.lm)$r.squared 
+print(summary(uucp.lm))
 
 #evaluate the models for their size metrics
 sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
@@ -188,7 +232,6 @@ colnames(sizeMeasures) <- sizeMetricLabels
 sizeMeasures[,sizeMetricLabels] <- outputData[,sizeMetricLabels]
 sizeMeasures <- na.omit(sizeMeasures)
 sizeMeasures <- sizeMeasures[!is.infinite(rowSums(sizeMeasures)),]
-effortData <- modelData[rownames(sizeMeasures), 'Effort']
 
 #run the correlation analysis of the size metrics
 sizeCor <- rcorr(as.matrix(sizeMeasures))
@@ -202,16 +245,19 @@ effortCor <- apply(sizeMeasures, 2, function(x) {
     d <- data.frame(x=x, Effort=effortData)
     corT <- cor.test(d$x, d$Effort)
     c(corT$estimate, corT$p.value)
-  })
+})
+
+
 effortCor <- t(effortCor)
 colnames(effortCor) <- c("r", "p-value")
-effortCorRank <- as.data.frame(effortCor)
+    effortCorRank <- as.data.frame(effortCor)
 effortCorRank["Rank"] <- rank(-effortCorRank[,"r"], ties.method = "min")
 effortCorRank <- effortCorRank[order(effortCorRank$Rank),]
 print(round(effortCorRank, 2))
 #print(cor(sizeMeasures$LOG_SLOC, log(effortData)))
 write.csv(round(effortCorRank, 2), paste(outputDir, "effort_cor_rank.csv", sep="/"))
 
+print(outputDir)
 #draw scatter plot for the project description
 ggplot(outputData, aes(x=SLOC, y=Effort)) + geom_point()+theme_bw()
 ggplot(outputData, aes(x=LOG_SLOC, y=Effort)) + geom_point()+theme_bw()
@@ -244,7 +290,7 @@ benchmarkResultsTest4 = benchmarkResults
 #dataset1 <- read.csv("dsets/combined_data_set_8_27.csv")
 #modelData1 <- selectData(dataset1)
 models2 = list()
-#models2$cosmic = size_models$cosmic
+models2$cosmic = size_models$cosmic
 #models2$ln_sloc = size_models$ln_sloc
 #models2$cosmic = models$cosmic
 #models2$ln_sloc = models$ln_sloc
@@ -323,7 +369,7 @@ bsRet <- benchmarkResults$bsResults
 bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
 
-neuralnet <- load_model(c("neuralnet"))
+#neuralnet <- load_model(c("neuralnet"))
 
 model_labels <- c()
 for(i in 1:length(model_names)){
@@ -382,6 +428,8 @@ avgPreds <- data.frame(avgPreds)
 avgPreds <- avgPreds[,names(avgPreds) %in% c(model_names, "Pred")]
 names(avgPreds) <- model_mapping$model_texts[match(names(avgPreds), model_mapping$model_names)]
 names(avgPreds)[1] = c("Pred")
+
+print(outputDir)
 
 #apply new labels
 #colnames(avgPreds) <- c("Pred", "SWT", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")

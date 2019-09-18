@@ -434,7 +434,7 @@ for(i in 1:nfold){
 	  }
 	  
 	  if("mae" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "mae", sep="_")] = sum(model_eval_mre)/length(model_eval_predict)
+	    foldResults[i, paste(modelName, "mae", sep="_")] = mae(model_eval_predict)
 	  }
 	  
 	  #eval_metrics <- c(
@@ -622,7 +622,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       }
       
       if("mae" %in% accuracy_metrics){
-        iterResults[i, paste(modelName, "mae", sep="_")] = sum(model_eval_mre)/length(model_eval_predict)
+        iterResults[i, paste(modelName, "mae", sep="_")] = mae(model_eval_predict)
       }
       
       #eval_metrics <- c(
