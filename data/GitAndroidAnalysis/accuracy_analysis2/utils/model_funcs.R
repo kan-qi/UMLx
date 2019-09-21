@@ -17,12 +17,12 @@ m_save <- function(x,...) UseMethod('m_save', x)
 
 m_load <- function(x,...) UseMethod('m_load', x)
 
-model_load <- function(model_names){
+load_model <- function(model_names){
   #return a list of saved trained models from the files.
   models <- list()
   for(i in 1:length(model_names)){
     model_name = model_names[i]
-    model <- structure(new list(), class = model_name)
+    model <- structure(list(), class = model_name)
     model <- m_load(model)
     models[[model_name]] = model
   }
