@@ -323,8 +323,6 @@ m_save.neuralnet <- function(neuralnet){
 
 m_load.neuralnet <- function(model_name){
   #return the objects from the file.
-  fileobj <- load("../models/swtiii.Rdata")
-  return(fileobj)
 }
 
 
