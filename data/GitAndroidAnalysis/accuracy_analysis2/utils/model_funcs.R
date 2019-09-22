@@ -24,7 +24,6 @@ load_model <- function(model_names){
     model_name = model_names[i]
     model <- structure(list(), class = model_name)
     model <- m_load(model)
-    print(model)
     models[[model_name]] = model
   }
   models
