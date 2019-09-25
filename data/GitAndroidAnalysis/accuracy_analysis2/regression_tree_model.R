@@ -147,6 +147,10 @@ m_profile.reg_tree <- function(reg_tree, dataset){
   profileData <- data.frame(RTREE=m_predict(reg_tree, dataset), row.names=rownames(dataset))
 }
 
+m_save.reg_tree <- function(reg_tree){
+  #save the trained model: reg_tree to the files.
+  saveRDS(reg_tree,file = "models/reg_tree.Rdata")
+}
 
 # Preprocess dataset
 clean_tree <- function(dataset){

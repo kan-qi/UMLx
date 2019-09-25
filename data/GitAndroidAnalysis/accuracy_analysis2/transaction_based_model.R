@@ -1152,7 +1152,7 @@ m_predict.tm1 <- function(swti, testData){
   predict.swt(swti$m, testData)
 }
 
-trainsaction_based_model <- function(modelData){
+transaction_based_model <- function(modelData){
   # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
   #
   # Args:
@@ -1169,7 +1169,9 @@ trainsaction_based_model <- function(modelData){
   
   #SWTIIIresults <- models$tm3$SWTIIIresults
   accuracyMeasures <- as.data.frame(t(sapply(SWTIIIresults, function(iterResults){
-    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED')]
+    #     iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")] gives errors as some fields are NA
+
   })))
   accuracyRanks <- rankModels(accuracyMeasures)
   #print(accuracyRanks)
@@ -1195,7 +1197,9 @@ trainsaction_based_model <- function(modelData){
   
   #SWTIIresults <- models$tm2$SWTIIresults
   accuracyMeasures <- as.data.frame(t(sapply(SWTIIresults, function(iterResults){
-    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED')]
+    #     iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")] gives errors as some fields are NA
+
   })))
   #print(accuracyMeasures)
   accuracyRanks <- rankModels(accuracyMeasures)
@@ -1372,7 +1376,23 @@ m_profile.tm3 <- function(model, dataset){
   profileData
 }
 
+m_save.tm1 <- function(model){
+  swti = model
+  #save the trained model: swti to the files.
+  saveRDS(swti,file = "models/swti.Rdata")
+}
 
+m_save.tm2 <- function(model){
+  swtii = model
+  #save the trained model: swti to the files.
+  saveRDS(swtii,file = "models/swtii.Rdata")
+}
+
+m_save.tm3 <- function(model){
+  swtiii = model
+  #save the trained model: swti to the files.
+  saveRDS(swtiii,file = "models/swtiii.Rdata")
+}
 trainsaction_based_model3 <- function(modelData){
   # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
   #

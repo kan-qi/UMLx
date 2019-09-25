@@ -319,6 +319,7 @@ m_profile.neuralnet <- function(neuralnet, dataset){
 
 m_save.neuralnet <- function(neuralnet){
   #save the trained model: neuralnet to the files.
+  saveRDS(neuralnet,file = "models/neuralnet.Rdata")
 }
 
 m_load.neuralnet <- function(model_name){

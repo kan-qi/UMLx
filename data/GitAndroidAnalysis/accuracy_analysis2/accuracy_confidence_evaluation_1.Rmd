@@ -82,7 +82,7 @@ modelData <- selectData(dataset)
 #models1 = models
 models = list()
 #register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
-transaction_models <- trainsaction_based_model(modelData)
+transaction_models <- transaction_based_model(modelData)
 models = append(models, transaction_models)
 
 #models$tm3 <- trainsaction_based_model3(modelData)

@@ -16,6 +16,10 @@ m_profile.ucp <- function(ucp, dataset){
   profileData <- data.frame(UUCP=dataset$UUCP, row.names=rownames(dataset))
 }
 
+m_save.ucp <- function(ucp){
+  #save the trained model: ucp to the files.
+  saveRDS(ucp,file = "models/ucp.Rdata")
+}
 #define the cocomo model
 #m_fit.cocomo <- function(cocomo,dataset){
 #  print("cocomo fit")
@@ -41,6 +45,10 @@ m_profile.fp <- function(fp, dataset){
   profileData <- data.frame(AFP=dataset$IFPUG, row.names=rownames(dataset))
 }
 
+m_save.fp <- function(fp){
+  #save the trained model: fp to the files.
+  saveRDS(fp,file = "models/fp.Rdata")
+}
 #define the cocomo apriori model
 #m_fit.cocomo_apriori <- function(cocomo_apriori,dataset){
 #  cocomo_apriori
@@ -64,6 +72,11 @@ m_predict.cosmic <- function(cosmic, testData){
 
 m_profile.cosmic <- function(cosmic, dataset){
   profileData <- data.frame(COSMIC=dataset$COSMIC, row.names=rownames(dataset))
+}
+
+m_save.cosmic <- function(cosmic){
+  #save the trained model: cosmic to the files.
+  saveRDS(cosmic,file = "models/cosmic.Rdata")
 }
 
 #define the mkii model
@@ -90,6 +103,10 @@ m_profile.sloc <- function(sloc,dataset){
   profileData <- data.frame(SLOC=dataset$SLOC, row.names=rownames(dataset))
 }
 
+m_save.sloc <- function(sloc){
+  #save the trained model: sloc to the files.
+  saveRDS(sloc,file = "models/sloc.Rdata")
+}
 #define the ln_sloc model
 #the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
 m_fit.ln_sloc <- function(ln_sloc, dataset){
@@ -116,13 +133,24 @@ m_profile.ln_sloc <- function(ln_sloc, dataset){
   profileData <- data.frame(LOG_SLOC=log(dataset$SLOC), row.names=rownames(dataset))
 }
 
+m_save.ln_sloc <- function(ln_sloc){
+  #save the trained model: ln_sloc to the files.
+  saveRDS(ln_sloc,file = "models/ln_sloc.Rdata")
+}
+
 #the baseline model which only takes the average of the output traning dataset.
 m_fit.baseline_model <- function(baseline_model, dataset){
   baseline_model$m = list(mean_value = mean(dataset$Effort))
 }
 
+
 m_predict.baseline_model <- function(baseline_model, testData){
   baseline_model$m$mean_value
+}
+
+m_save.baseline_model <- function(baseline_model){
+  #save the trained model: baseline_model to the files.
+  saveRDS(baseline_model,file = "models/baseline_model.Rdata")
 }
 
 size_metric_models <- function(dataset){

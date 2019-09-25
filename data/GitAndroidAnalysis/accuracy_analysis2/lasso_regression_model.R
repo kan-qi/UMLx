@@ -125,6 +125,11 @@ m_profile.lasso <- function(lasso, dataset){
   profileData <- data.frame(LASSO=m_predict(lasso, dataset), row.names=rownames(dataset))
 }
 
+m_save.lasso <- function(lasso){
+  #save the trained model: lasso to the files.
+  saveRDS(lasso,file = "models/lasso.Rdata")
+}
+
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
   #dataset = modelData

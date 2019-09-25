@@ -49,6 +49,11 @@ m_profile.step_lnr <- function(step_lnr, dataset){
   profileData <- data.frame(STEP=m_predict(step_lnr, dataset), row.names=rownames(dataset))
 }
 
+m_save.step_lnr <- function(step_lnr){
+  #save the trained model: step_lnr to the files.
+  saveRDS(step_lnr,file = "models/step_lnr.Rdata")
+}
+
 stepwise_linear_model <- function(modelData, regression_cols=c()){
   
   #modelData <- selectData("dsets/android_dataset_5_15.csv")
