@@ -130,6 +130,12 @@ m_save.lasso <- function(lasso){
   saveRDS(lasso,file = "models/lasso.Rdata")
 }
 
+m_load.lasso <- function(lasso){
+  #return the objects from the file.
+  fileObj <- load("./models/lasso.Rdata")
+  return (fileObj)
+}
+
 #define the lasso model
 m_fit.lasso <- function(lasso,dataset){
   #dataset = modelData

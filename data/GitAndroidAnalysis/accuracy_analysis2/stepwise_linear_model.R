@@ -54,6 +54,12 @@ m_save.step_lnr <- function(step_lnr){
   saveRDS(step_lnr,file = "models/step_lnr.Rdata")
 }
 
+m_load.step_lnr <- function(step_lnr){
+  #return the objects from the file.
+  fileObj <- load("./models/step_lnr.Rdata")
+  return (fileObj)
+}
+
 stepwise_linear_model <- function(modelData, regression_cols=c()){
   
   #modelData <- selectData("dsets/android_dataset_5_15.csv")

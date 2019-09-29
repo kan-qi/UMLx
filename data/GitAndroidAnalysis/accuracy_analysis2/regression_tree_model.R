@@ -152,6 +152,12 @@ m_save.reg_tree <- function(reg_tree){
   saveRDS(reg_tree,file = "models/reg_tree.Rdata")
 }
 
+m_load.reg_tree <- function(reg_tree){
+  #return the objects from the file.
+  fileObj <- load("./models/reg_tree.Rdata")
+  return (fileObj)
+}
+
 # Preprocess dataset
 clean_tree <- function(dataset){
   

@@ -322,9 +322,9 @@ m_save.neuralnet <- function(neuralnet){
   saveRDS(neuralnet,file = "models/neuralnet.Rdata")
 }
 
-m_load.neuralnet <- function(model_name){
+m_load.neuralnet <- function(neuralnet){
   #return the objects from the file.
-  fileObj <- load("./models/swtiii.Rdata")
+  fileObj <- load("./models/neuralnet.Rdata")
   return (fileObj)
 }
 

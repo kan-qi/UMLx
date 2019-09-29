@@ -49,6 +49,13 @@ m_save.fp <- function(fp){
   #save the trained model: fp to the files.
   saveRDS(fp,file = "models/fp.Rdata")
 }
+
+m_load.fp <- function(fp){
+  #return the objects from the file.
+  fileObj <- load("./models/fp.Rdata")
+  return (fileObj)
+}
+
 #define the cocomo apriori model
 #m_fit.cocomo_apriori <- function(cocomo_apriori,dataset){
 #  cocomo_apriori
