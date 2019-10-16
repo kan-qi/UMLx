@@ -283,14 +283,12 @@ modelBenchmark <- function(models, dataset){
              )
 }
 
-
 # saves benchmarkResults for list of models under folder 'models' for the dataset <dataset_name>
-# directory name is relative to currnt folder
-saveBenchmarkResults <- function(benchmarkResults, dataset_name, directory){
+saveBenchmarkResults <- function(benchmarkResults, dataset_name){
   model_names = benchmarkResults$model_names
   accuracy_metrics = benchmarkResults$accuracy_metrics
   goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
-  
+
   for(model in model_names){
     jsonOUT = "{"
     # name of dataset used in model fitting
@@ -319,7 +317,7 @@ saveBenchmarkResults <- function(benchmarkResults, dataset_name, directory){
     # remove ',' from last entry of accuracy metrics
     jsonOUT = substring(jsonOUT,1,nchar(jsonOUT)-1)
     jsonOUT = paste(jsonOUT,"},", sep = "")
-    
+
     # goodness of fit metrics
     jsonOUT = paste(jsonOUT,sprintf("\"goodness_fit_metrics\":"), sep = "")
     jsonOUT = paste(jsonOUT,"{", sep = "")
@@ -345,7 +343,7 @@ saveBenchmarkResults <- function(benchmarkResults, dataset_name, directory){
     jsonOUT = paste(jsonOUT, "}", sep = "")
     jsonOUT = paste(jsonOUT, "}", sep = "")
     
-    filename = paste(directory,sprintf("/%s.json",model),sep='')
+    filename = sprintf("./models/%s.json",model)
     write(jsonOUT,filename)
   }
 }
