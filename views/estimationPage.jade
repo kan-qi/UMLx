@@ -297,8 +297,8 @@ html
                                     .form-group
                                         label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
                                         .col-xs-8
-                                            input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
-                                            a(href='./F14a_women_at_work_website_redesign.zip') Download Example XML File
+                                            input#uml_file.form-control(type='file', name='uml_file', accept='.apk, text/xml')
+                                            a(href='./example_project_xml_data.zip.zip') Download Example XML File
                                     //.form-group
                                       //  label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
                                       //  .col-xs-8
@@ -311,6 +311,7 @@ html
                                                 option(value="exucp_lm") EXUCP
                                                 option(value="ducp_lm") DUCP
 
+                                    input#result_page(type='hidden', name='result_page', value='simplified')
                                     button.btn.btn-success.pull-right(type='submit') Submit
 
                                 //input#uuid-page4(type='hidden', name='uuid-page4', value='')

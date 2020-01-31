@@ -146,17 +146,30 @@
 			var total_TC = 0;
 			var total_DETs = 0;
 
+			var dicInboundDegree = {};
+
+			for(var i in useCaseInfo.PrecedenceRelations){
+			    var edge = useCaseInfo.PrecedenceRelations[i];
+                 if(edge.end && edge.end.Component){
+                    var inboundEdges = dicInboundDegree[edge.end.Component._id];
+                    if(!inboundEdges){
+                        dicInboundDegree[edge.end.Component._id] = [];
+                        inboundEdges = dicInboundDegree[edge.end.Component._id];
+                    }
+
+                    inboundEdges.push(edge);
+                 }
+			}
+
 			var i = useCaseInfo.Transactions.length;
 			
 			while (i--) {
 				
 				 console.log('--------Process Transaction-------');
-//				 console.log(transaction);
-//				 console.log(modelInfo);
 				
 				var transaction = useCaseInfo.Transactions[i];
 
-				if(!transactionProcessor.processTransaction(transaction, useCaseInfo, modelInfo)){
+				if(!transactionProcessor.processTransaction(transaction, useCaseInfo, modelInfo, dicInboundDegree)){
 					useCaseInfo.Transactions.splice(i, 1);
 					continue;
 				}
@@ -222,10 +235,9 @@
 			useCaseInfo['TransactionAnalytics'].Avg_DETs = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : total_DETs/useCaseInfo['TransactionAnalytics'].NT;
 			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["TransactionAnalytics"].Avg_TL;
 			
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("transactions_"+useCaseInfo.Name,useCaseInfo.Transactions);
-		
-			
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("transactions_"+useCaseInfo.Name,useCaseInfo.Transactions);
+
 			if(callbackfunc){
 				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
 
@@ -552,8 +564,7 @@
 		}
 		
 	}
-	
-	
+
 	function dumpModelTransactionsInfo(modelInfo, transactionNum) {
 		// console.log("dump useCase analytics");
 		

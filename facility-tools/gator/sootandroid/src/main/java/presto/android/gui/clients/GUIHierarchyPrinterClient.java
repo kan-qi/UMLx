@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import javax.security.auth.login.ConfigurationSpi;
 
+
 public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
   private String TAG = GUIHierarchyPrinterClient.class.getSimpleName();
   GUIAnalysisOutput output;
@@ -32,9 +33,10 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
   @Override
   public void run(GUIAnalysisOutput output) {
     this.output = output;
+    System.out.println("start GUI analysis");
     guiHier = new StaticGUIHierarchy(output);
     boolean showDialog = true;
-
+    
     // Init the file io
     for (String param : Configs.clientParams) {
       if (param.equals("print2stdout")) {
@@ -45,6 +47,7 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     }
     if (out == null) {
       try {
+
 //    	 Path curDir = Paths.get(System.getProperty("user.dir"));
     	Path filePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
     	File file = filePath.toFile();
@@ -53,7 +56,7 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     	}
 //    	File file = new File("");
 //       File file = File.createTempFile(Configs.benchmarkName + "-", ".xml");
-    	 System.out.println("analysis output file: "+filePath.toString());
+    	System.out.println("analysis output file: "+filePath.toString());
         Logger.verb(TAG, "XML file: " + file.getAbsolutePath());
         out = new PrintStream(file);
       } catch (Exception e) {

@@ -88,18 +88,8 @@ function display()
 
     var url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/use_case_evaluation_statistics/statistics.json";
     var domain_model_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) +
-        "/domain_model_evaluation_statistics/statistics.json";
-    var url1 = "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv";
-    console.log(url);
-    //do not know the function of the two ajaxes below!!!
-     $.ajax({
-       url: url,
-       type:"GET",
-       dataType: "json",
-    
-       success: function(response)
-       {
-             document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model1-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form name='form1'><h3>Use case evaluation statistics</h3><input type='image' src='img/dist_btn.png' class='table-button' onclick='showMultipleDistributionChart(\"" + url1 + "\",\"" +'form1'+"\",\""  + '#myModal1' + "\",\"" + '#model1-body' +"\");return false;' value='Dist Chart'><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+        "/domain_model_evaluation_statist"&#xe0f2;" glyph-name="vertical_align_bottom" data-tags="vertical_align_bottom" d="M170 128.667h684v-86h-684v86zM682 384.667l-170-172-170 172h128v426h84v-426h128z" />
+<glyph unicode="&#xe1ff;" glyph-name="apps" data-tags="apps" d="</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
             for (var i=0;i<response.length;i++)
             {
                     var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
@@ -127,7 +117,7 @@ function display()
                 {
                 var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                 $('.modal-body').html('<img src="' + img_link2 + '">');
-                    document.getElementById("domain_table").innerHTML +=  "<tr align='center'><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='image' class='table-button' onclick = 'showModal(\"" + img_link2 +  "\");return false;' src='img/display_btn.png' value='Display Chart'> <input type='image' class='table-button' onclick='showDistributionChart(\"" + domain_model_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal2' + "\",\"" + '#model2-body' +"\");return false;' src='img/dist_btn.png' value=''> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>" ;
+                    document.getElementById("domain_table").innerHTML +=  "<tr align='center'><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='image' class='table-button' onclick = 'showModal(\"" + img_link2 +  "\");return false;' src='img/display_b#xe903;" glyph-name="pinterest-with-circle" data-tags="pinterest-with-circle" d="M512 952.32c-271.462 0-491.52-220.058-491.52-491.52s220.058-491.52 491.52-491.52 491.52 220.058 491.52 491.52-220.058 491.52-491.52 491.52zM545.638 344.32c-31.539 2.406-44.749 18.022-69.427 32.973-13.568-71.219-30.157-139.52-79.309-175.206-15.206 se[i]["column name"] + "\"></td></tr>" ;
                 }
                 document.getElementById("domain_table").innerHTML += "</form>";    
        },
@@ -181,15 +171,7 @@ function populate_usecase_data()
 
     var repoID = $("#myrepoId").val();
 
-    var modelID = $("#mymodelId").val();
-
-    var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/element_statistics.json" ;
-    var usecase_url2 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/path_statistics.json";
-    var usecase_url3 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/elementAnalytics.csv";
-    //console.log(usecase_url);
-    // $('.use-case-analytics').html("hi");
-    //console.log($('.use-case-analytics').html());
-    console.log("div data" + $('#analysis-data').html())
+    var modelID =€/h4></div><div class='modal-body' id='model1-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form name='form1'><h3>Use case evaluation statistics</h3><input type='image' src='img/dist_btn.png' class='table-button' onclick='showMultipleDistributionChart(\"" + url1 + "\",\"" +'form1'+"\",\""  + '#myModal1' + "\",\"" + '#model1-body' +"\");return false;' value='Dist Chart'><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</tlog("div data" + $('#analysis-data').html())
     $.ajax({
         url: usecase_url,
         type:"GET",
@@ -651,4 +633,28 @@ function drawNewHighCharts(column_data_name,column_name)
 
     });
 
+}                                                                                                                                                                                                                                                                                                                                     es);
+            console.log(seriesData);
+            console.log(data);
+            showPopupDistChart(header, categories, [{name: header.toString(),data: seriesData}], modalId, chartId);
+        },
+        error:function(error){
+            console.log(error);
+        }
+    });
 }
+function showPopupDistChart(header, categories, seriesData, modalId, chartId){
+    $(modalId).modal('toggle');
+    $(chartId).highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: header + " Distribution Chart"
+        },
+        xAxis: {
+            categories: categories,
+            crosshair: true
+        },
+        yAxis: {
+            

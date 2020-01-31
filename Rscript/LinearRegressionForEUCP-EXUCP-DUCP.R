@@ -57,8 +57,6 @@ print("correlation between effort and EUCP")
 cor1 = cor(data$Effort_Real, data$EUCP)
 print("linear regression of effort on EUCP")
 m1 = lm(Effort_Real~EUCP, data=data)
-
-
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
 coeff1 = summary(m1)$coefficients
 summary(m1)$r.squared

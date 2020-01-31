@@ -83,9 +83,6 @@ var surveyFiles = multer.diskStorage({
     }
 })
 
-
-
-
 var upload = multer({ storage: storage });
 var surveyUploads = multer({ storage: surveyFiles });
 

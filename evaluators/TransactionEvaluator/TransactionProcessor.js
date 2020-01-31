@@ -25,13 +25,12 @@
 	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
-			processTransaction: function(transaction,  usecase, model){
+			processTransaction: function(transaction,  usecase, model, dicInboundDegree){
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
 				// var totalComponents = 0;
 				var dataElementTypes = 0;
-
 				var componentNum = 0;
 				var boundaryNum = 0;
 				var controlNum = 0;
@@ -49,15 +48,20 @@
 //							console.log("associating component");
 //							console.log(node.Component);
 						
-								var edges = usecase.PrecedenceRelations;
-								for(var j in edges){
-									var edge = edges[j];
-									
-									if(edge.end && edge.end.Component && edge.end.Component._id === node.Component._id){
-										console.log("checking degree");
-										totalDegree++;
-									}
-								}
+//								var edges = usecase.PrecedenceRelations;
+//								for(var j in edges){
+//									var edge = edges[j];
+//
+//									if(edge.end && edge.end.Component && edge.end.Component._id === node.Component._id){
+//										console.log("checking degree");
+//										totalDegree++;
+//									}
+//								}
+
+                                    var inboundEdges = dicInboundDegree[node.Component._id];
+                                    if(inboundEdges){
+                                    totalDegree += inboundEdges.length;
+                                    }
 								
 									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
 									
@@ -190,8 +194,8 @@
 				
 				transaction['TransactionAnalytics'].Arch_Diff = transaction['TransactionAnalytics'].TL*transaction['TransactionAnalytics'].TD;
 				
-				console.log("transaction process: transaction process");
-				console.log(transaction);
+//				console.log("transaction process: transaction process");
+//				console.log(transaction);
 				
 				return true;
 			}

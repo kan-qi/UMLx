@@ -21,6 +21,15 @@
 	var EUCPModel = require("./effort_estimators/UCPModels.js").init("eucp_lm");
 	var EXUCPModel = require("./effort_estimators/UCPModels.js").init("exucp_lm");
 	var DUCPModel = require("./effort_estimators/UCPModels.js").init("ducp_lm");
+
+
+	// the existing models for prediction
+//	var UCPModel = require();
+//	var SLOCLNModel = require();
+//	var SlOCLogModel = require();
+//	var STPWSModel = require();
+//	var NeuralModel = require();
+//	var LassoModel = require();
 	
 //	var models = [EUCPModel, EXUCPModel, DUCPModel];
 	

@@ -1,0 +1,33 @@
+---
+title: "Lasso regression report"
+author: "XXX"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("lasso_model.R")
+
+modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
+
+lasso_parameters <- lasso_model(modelData)
+
+fitted_lasso_model = fit(dataset, "lasso", lasso_parameters)
+
+plot(log(fitted_lasso_model$m$lambda_list),fitted_lasso_model$m$cvfit$cvm,xlab="log(Lambda)",ylab="MSE")
+lines(log(fitted_lasso_model$m$lambda_list),fitted_lasso_model$m$cvfit$cvm,xlim=range(log(fitted_lasso_model$m$lambda_list)), ylim=range(fitted_lasso_model$m$cvfit$cvm), pch=16)
+
+plot(fitted_lasso_model$m)
+#for 10 biggest final features
+plot_glmnet(fitted_lasso_model$m)                             # default colors
+plot_glmnet(fitted_lasso_model$m, label=10)
+```
+
+```{r}
+#test and present your functions in regression_tree_model.R
+
+```

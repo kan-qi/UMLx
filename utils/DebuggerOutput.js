@@ -3,41 +3,108 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
+	var FileManagerUtil = require("./FileManagerUtils.js");
+
+    var JSONStream = require( "JSONStream" );
 	
 //	var OutputDir = './debug';
 
 	function writeJson(token, message, callbackfunc){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var OutputDir = "./debug";
-//		console.log(token);
-//		console.log(OutputDir);
-		mkdirp(OutputDir, function(err) { 
-		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
+		mkdirp(OutputDir, function(err) {
+		var strData = {}
+
+        try {
+		strData = JSON.stringify(message);
+		}
+        catch(error) {
+          console.error(error);
+          // expected output: ReferenceError: nonExistentFunction is not defined
+          // Note - error messages will vary depending on browser
+        }
+
+		fs.writeFile(OutputDir+'/'+token+'.json', strData, function(err){
 			if(err){
 				console.log(err);
 			}
 		});
+
+//		var transformStream = JSONStream.stringify();
+//        var outputStream = fs.createWriteStream(OutputDir+'/'+token+'.json');
+//        transformStream.pipe( outputStream );
+//        message.forEach(transformStream.write);
+//        transformStream.end();
+//
+//        outputStream.on(
+//            "finish",
+//            function handleFinish() {
+//                console.log("Done");
+//            }
+//        );
+
+
 		});
 	}
 	
-	function writeJson2(token, message, callbackfunc){
+	function writeJson2(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		var OutputDir = "./data/OpenSource/debug";
-		fs.writeFileSync(OutputDir+'/'+token+'.json', JSON.stringify(message));
+		if(!outputDir){
+			outputDir = "./data/OpenSource/debug";
+		}
+
+		var strData = {}
+
+		 try {
+        		strData = JSON.stringify(message);
+        		}
+                catch(error) {
+                  console.error(error);
+                  // expected output: ReferenceError: nonExistentFunction is not defined
+                  // Note - error messages will vary depending on browser
+                }
+
+		fs.writeFileSync(outputDir+'/'+token+'.json', strData);
 	}
 	
-	function writeJson3(token, message, callbackfunc){
+	function writeJson3(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		var OutputDir = "./data/OpenSource/debug";
-		var duplicate = JSON.parse(JSON.stringify(message));
+		
+		if(!outputDir){
+			outputDir = "./data/OpenSource/debug";
+		}
+
+		var strData = {}
+
+        		 try {
+                		strData = JSON.stringify(message);
+                		}
+                        catch(error) {
+                          console.error(error);
+                          // expected output: ReferenceError: nonExistentFunction is not defined
+                          // Note - error messages will vary depending on browser
+                        }
+		
+		var duplicate = JSON.parse(strData);
 		deleteAttrRecur(duplicate, "attachment")
-		fs.writeFileSync(OutputDir+'/'+token+'.json', JSON.stringify(duplicate));
+
+		var strData1 = {}
+
+                		 try {
+                        		strData = JSON.stringify(duplicate);
+                        		}
+                                catch(error) {
+                                  console.error(error);
+                                  // expected output: ReferenceError: nonExistentFunction is not defined
+                                  // Note - error messages will vary depending on browser
+                                }
+
+		fs.writeFileSync(outputDir+'/'+token+'.json', strData1);
 	}
 	
 	function writeTxt(token, message, callbackfunc){
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-//		console.log(token);
-//		console.log(OutputDir);
+		
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.txt', message, function(err){
 			if(err){
@@ -100,12 +167,22 @@
 				});
 	}
 	
+	function appendFile2(token, message, OutputDir){
+		if(!OutputDir){
+		OutputDir = './debug';
+		}
+		FileManagerUtil.mkDirSync(OutputDir);
+		var filename = OutputDir+'/'+token+'.txt';
+		fs.appendFileSync(OutputDir+'/'+token+'.txt', message);
+	}
+	
 	
 	module.exports = {
 			writeJson: writeJson,
 			writeTxt: writeTxt,
 			appendFile:appendFile,
 			appendFile1:appendFile1,
+			appendFile2:appendFile2,
 			writeJson2: writeJson2,
 			writeJson3: writeJson3
 	}

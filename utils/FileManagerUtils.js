@@ -2,8 +2,9 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var path = require('path')
+	const mkdirpSync = require('mkdirp-sync');
 	
-	 function deleteFolderRecursive(dir, rmSelf) {
+	 function deleteFolderRecursive(dir, rmSelf){
 		    var files;
 		    rmSelf = (rmSelf === undefined) ? true : rmSelf;
 		    dir = dir + "/";
@@ -29,8 +30,16 @@
           }
 	 }
 
+	 function isDirSync(filePath){
+	   return fs.lstatSync(filePath).isDirectory();
+	 }
+
 	 function existsSync(filePath){
 			return fs.existsSync(filePath);
+	 }
+	 
+	 function mkDirSync(dirPath){
+		 mkdirpSync(dirPath);
 	 }
 	 
 	 function readFilesSync(filePaths){
@@ -48,6 +57,30 @@
 		 
 		 return fileContents;
 	 }
+
+	  function readJSONFilesSync(filePaths){
+     		 var fileContents = [];
+     		 for(var i in filePaths){
+     		 var path = filePaths[i];
+     		 if( fs.existsSync(path) ) {
+     		    //console.log(path);
+     			 var fileContent = fs.readFileSync(path, 'utf8');
+     			 fileContents.push(JSON.parse(fileContent.trim()));
+     		 }
+     		 else{
+     			 fileContents.push(null);
+     		 }
+     		 }
+
+     		 return fileContents;
+      }
+
+      function writeJSONFilesSync(filePaths, jsonObjects){
+
+                  		 for(var i in filePaths){
+                  		  fs.writeFileSync(filePaths[i], JSON.stringify(jsonObjects[i]));
+                  		 }
+      	 }
 	 
 	 function readFileSync(filePath){
 		 if( fs.existsSync(filePath) ) {
@@ -116,13 +149,58 @@
 				    
 				    return data;
 		}
+
+
+		function parseCSVData2(csvData, header){
+                				 var data = [];
+                				    var lines = csvData.split(/\r?\n/g);
+                				    var headerLine = "";
+                				    var cols = [];
+                				    for(var i = 0; i < lines.length; i++){
+                				        //code here using lines[i] which will give you each line
+                				    	var line = lines[i];
+
+                				    	if(line === ""){
+                				    		continue;
+                				    	}
+
+                				    	var segs = line.split(/,/g);
+
+                				    	if(header && i==0){
+                				    		for(var j in segs){
+                				    			cols.push(segs[j].replace(/[^A-Za-z0-9_]/gi, ""));
+                				    		}
+                				    		headerLine = line;
+                				    		continue;
+                				    	}
+
+                				    	var dataElement = {};
+                				    	for(var j in segs){
+                				    		var col = cols[j];
+                				    		if(!col){
+                				    			col = j;
+                				    		}
+                				    		dataElement[col] = segs[j];
+                				    	}
+
+
+                				    	dataElement.line = line;
+
+                				    	data.push(dataElement);
+                				    }
+
+                				    return {
+                				        header : headerLine,
+                				        body: data
+                				    };
+                		}
 		
 	
 	module.exports = {
 		loadCSVFileAsString: function(csvFilePath, callbackfunc){
 			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
 				   if (err) throw err;
-//				    console.log(data);
+
 				   if(callbackfunc){
 					   callbackfunc(str);
 				   }
@@ -131,24 +209,37 @@
 		loadCSVFile:function(csvFilePath, header, callbackfunc){
 			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
 				   if (err) throw err;
-//				    console.log(str);
 				  
 				    data = parseCSVData(str, header);
-				    
-//				    console.log("csv data is loaded");
-//				    console.log(data);
-				    
+
 				    if(callbackfunc){
 				    	callbackfunc(data);
 				    }
 			});
 		},
+		loadCSVFile2:function(csvFilePath, header, callbackfunc){
+              fs.readFile(csvFilePath, 'utf-8', (err, str) => {
+                	if (err) throw err;
+
+                	data = parseCSVData2(str, header);
+
+                	if(callbackfunc){
+                			callbackfunc(data);
+                	}
+               });
+        },
 		loadCSVFileSync: function(csvFilePath, header){
 			var str = fs.readFileSync(csvFilePath, 'utf-8');
 				    data = parseCSVData(str, header);
 				    
 					return data;
 		},
+		loadCSVFileSync2: function(csvFilePath, header){
+            var str = fs.readFileSync(csvFilePath, 'utf-8');
+                	data = parseCSVData2(str, header);
+
+                	return data;
+        },
 		readFile: function(filePath, callbackfunc){
 			fs.readFile(filePath, 'utf-8', (err, str) => {
 				   if (err) {
@@ -178,19 +269,66 @@
 				   }
 			});
 		},
-		readJSONSync: function(filePath, callbackfunc){
+		readJSONSync: function(filePath){
 			var str = fs.readFileSync(filePath, 'utf-8');
-			console.log(str);
-				 var obj = JSON.parse(str);
+				 var obj = JSON.parse(str.trim());
 				  return obj
+		},
+		writeFiles: function(dir, files, callbackfunc){
+			function writeFile(path, content){
+				return new Promise((resolve, reject) => {
+					fs.writeFile(path, content, function(err){
+						if(err){
+							reject(err);
+							return;
+						}
+						resolve();
+					});
+				  });
+			}
+			
+			let chain = Promise.resolve();
+			
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(!callbackfunc){
+						callbackfunc(err);
+					}
+					return;
+				}
+			for(var i in files){
+				var file = files[i];
+				chain = chain.then(writeFile(dir+"/"+file.fileName, file.content));
+			}
+			
+			chain.then(function(){
+				if(callbackfunc){
+					callbackfunc();
+				}
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(err);
+				}
+			});
+			});
+			
 		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,
+			listFilesSync: function(folder){
+               return fs.readdirSync(folder);
+			},
 			readFilesSync : readFilesSync,
 			readFileSync: readFileSync,
 			writeFileSync: writeFileSync,
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
-			existsSync: existsSync
+			existsSync: existsSync,
+			mkDirSync: mkDirSync,
+			readJSONFilesSync: readJSONFilesSync,
+			isDirSync: isDirSync,
+			writeJSONFilesSync: writeJSONFilesSync
 	}
 }())

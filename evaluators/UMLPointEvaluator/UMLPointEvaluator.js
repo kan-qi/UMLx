@@ -21,14 +21,12 @@
  * Number of Associations (NOASSOC)
  * Average Number of Methods per Class (ANM_CLS)
  * Average Number of Parameters per Class (ANP_CLS)
- * Average Number of Class Attributes per Class
-(ANCA_CLS)
-Average Number of Associations per Class
-(ANASSOC_CLS)
-Average Number of Relationships per Class
-(ANREL_CLS)
-Class Points (CP)
-CP = NOC+NOIR+NOUR+NORR+NOM+NOCA+NOASS
+ * Average Number of Class Attributes per Class(ANCA_CLS)
+ * Average Number of Associations per Class(ANASSOC_CLS)
+ * Average Number of Relationships per Class(ANREL_CLS)
+
+ * Class Points (CP)
+ * CP = NOC+NOIR+NOUR+NORR+NOM+NOCA+NOASS
  * 
  */
 
@@ -173,8 +171,6 @@ CP = NOC+NOIR+NOUR+NORR+NOM+NOCA+NOASS
 		
 		return repoInfo["UMLPointAnalytics"];
 	}
-
-
 
 	module.exports = {
 		toModelEvaluationHeader : toModelEvaluationHeader,

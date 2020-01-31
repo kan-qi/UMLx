@@ -20,13 +20,13 @@
 	function loadModelEmpirics(modelLoad, modelInfo, modelId){
 		
 		modelInfo['UseCasePointData'] = {
-			COCOMONormalizedEffort : 0,
+//			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
 			TCF:1,
 			EF:1,
-			Effort_Norm_UCP : 0,
-			Effort_Norm_COCOMO : 0
+//			Effort_Norm_UCP : 0,
+//			Effort_Norm_COCOMO : 0
 		};
 		
 		
@@ -36,14 +36,14 @@
 			}
 		}
 		
-		modelInfo['UseCasePointData'].Effort_Norm_COCOMO = 0;
+//		modelInfo['UseCasePointData'].Effort_Norm_COCOMO = 0;
 //		normalizeEffortForUseCasePointByCOCOMO(modelInfo);
 
 		
-		console.log("cocomo data");
-		console.log(modelInfo['UseCasePointData'].Effort_Norm_COCOMO);
-		
-		modelInfo['UseCasePointData'].Effort_Norm_UCP = modelInfo['UseCasePointData'].Effort/(modelInfo['UseCasePointData'].EF*modelInfo['UseCasePointData'].TCF*20);
+//		console.log("cocomo data");
+//		console.log(modelInfo['UseCasePointData'].Effort_Norm_COCOMO);
+//
+//		modelInfo['UseCasePointData'].Effort_Norm_UCP = modelInfo['UseCasePointData'].Effort/(modelInfo['UseCasePointData'].EF*modelInfo['UseCasePointData'].TCF*20);
 }
 	
 	// normalise effort by cocomo.
@@ -75,7 +75,8 @@
 	
 	
 	function toModelEvaluationHeader(){
-		return "UAW,TCF,EF,Simple_UC, Average_UC, Complex_UC, Effort_Norm_UCP, Effort_Norm_COCOMO, UUCP, UCP";
+//		return "UAW,TCF,EF,Simple_UC, Average_UC, Complex_UC, Effort_Norm_UCP, Effort_Norm_COCOMO, UUCP, UCP";
+		return "UAW,TCF,EF,Simple_UC, Average_UC, Complex_UC, UUCP, UCP";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
@@ -86,8 +87,8 @@
 		modelInfo['UseCasePointData'].SimpleUC+","+
 		modelInfo['UseCasePointData'].AverageUC+","+
 		modelInfo['UseCasePointData'].ComplexUC+","+
-		modelInfo['UseCasePointData'].Effort_Norm_UCP+","+
-		modelInfo['UseCasePointData'].Effort_Norm_COCOMO+","+
+//		modelInfo['UseCasePointData'].Effort_Norm_UCP+","+
+//		modelInfo['UseCasePointData'].Effort_Norm_COCOMO+","+
 		modelInfo['UseCasePointData'].UUCP+","+
 		modelInfo['UseCasePointData'].UCP;
 	}
@@ -100,10 +101,10 @@
 		modelInfo['UseCasePointData'] = {
 				EF : 1,
 				TCF : 1,
-				UAW : 0,
+				UAW : 1,
 				Effort : 0,
-				Effort_Norm_UCP : 0,
-				Effort_Norm_COCOMO : 0
+//				Effort_Norm_UCP : 0,
+//				Effort_Norm_COCOMO : 0
 		}
 		}
 //		
@@ -159,7 +160,17 @@
 		}
 		// //change this later
 		// modelInfo['UseCasePointData'].EF = 1;
-		
+
+		//evaluate UAW
+       for(var i in modelInfo["ComponentAnalytics"].Actors){
+        var actor =  modelInfo["ComponentAnalytics"].Actors[i];
+        if(actor.OpType = "ext_service"){
+            modelInfo['UseCasePointData'].UAW += 2;
+        }
+        else{
+             modelInfo['UseCasePointData'].UAW += 1;
+        }
+       }
 		
 		var simpleUC = 0;
 		var averageUC = 0;

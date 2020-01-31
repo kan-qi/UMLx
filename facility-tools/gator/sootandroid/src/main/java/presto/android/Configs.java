@@ -39,7 +39,7 @@ public class Configs {
   // root directory of Android SDK
   public static String sdkDir;
   
-  public static String outputDir = System.getProperty("user.dir");
+  public static String outputDir = null;
 
   public static String apiLevel;
   public static int numericApiLevel;
@@ -151,6 +151,8 @@ public class Configs {
   // hailong: enable TextView.setText() analysis
   public static boolean enableSetTextAnalysis = false;
 
+  public static String appPkg = null;
+
   public static void addLibraryPackage(String packageName) {
     if (libraryPackages == null) {
       libraryPackages = Lists.newArrayList();
@@ -159,8 +161,14 @@ public class Configs {
   }
 
   public static boolean isLibraryClass(String className) {
-    if (libraryPackages == null)
-      return false;
+    if (libraryPackages == null || libraryPackages.isEmpty()) {
+      if(className.startsWith(appPkg)){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
     if(className.startsWith("java")) {
     	return true;
     }
