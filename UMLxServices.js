@@ -834,7 +834,14 @@ app.get('/clearDB', function(req, res){
 	    });
 	}
 })
+app.get('/save_model', function(req, res){
 
+	umlModelInfoManager.save_model_utility(function(){
+		
+	    });
+
+
+})
 app.get('/setupRepoStorage', function(req, res){
 	var userId = req.query.user_id;
 	if(userId === "flyqk191829189181810282"){
