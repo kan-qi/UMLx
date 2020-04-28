@@ -10,13 +10,20 @@ div.block.panel.panel-default
           div(id="info" style = "text-align : center; font-size: 14px; margin-top:70px;margin-bottom:50px") Upload UML diagrams, KDM models, APKs to get effort estimates of your project
           form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
             // file browser
+            //- div.input-group
+            //-     input.form-control.form-blank(type='text',readonly)
+            //-     label.input-group-btn()
+            //-         span.btn.btn-dark.btn-submit Browse
+            //-             input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+            
             div.input-group
                 input.form-control.form-blank(type='text',readonly)
                 label.input-group-btn()
-                    //- span.btn.btn-dark.btn-submit Browse
-                    a.btn.btn-dark.btn-submit.btn-browse(role="tab",data-toggle="tab",href="#main_page" aria-label="Skip to overview page")
-                      i.fa.fa-search.fa-2x(aria-hidden="true")
-                        input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+                    span.span_browse.btn.btn-dark.btn-submit
+                        i.search_icon.fa.fa-search.fa-2x(aria-hidden="true")
+                          input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+              
+            
             button.btn.btn-dark.btn-submit(type="button", data-toggle="modal", data-target="#exampleModalCenter") Estimator
             // Estimator Modal
             #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', )
