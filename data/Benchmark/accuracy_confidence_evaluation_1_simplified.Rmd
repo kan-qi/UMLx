@@ -86,20 +86,23 @@ models = append(models, size_models)
 
 Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
+# apply the model evaluation procedure
 benchmarkResults <- modelBenchmark(models, modelData)
 
 
-#test 1
+# select the models that will be shown in the following procedure to draw the graphs
 model_names <- c("ucp", "fp", "cosmic", "sloc", "ln_sloc")
 model_texts <- c("UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
 model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR")
-
 model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
 
+# select the accuracy measures that will be shown in the following procedure to draw the graphs
 accuracy_metrics <- c('mmre', 'pred25', 'mdmre', 'mae')
 accuracy_metric_texts <- c('MMRE', 'PRED25', 'MDMRE', 'MAE')
 accuracy_mapping <- data.frame(accuracy_metrics = accuracy_metrics, accuracy_metric_texts=accuracy_metric_texts)
 
+
+#read the model evaluation results
 goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
 fitResults <- benchmarkResults$fitResults
 cvResults <- benchmarkResults$cvResults
@@ -108,8 +111,8 @@ bsRet <- benchmarkResults$bsResults
 bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
 
-#neuralnet <- load_model(c("neuralnet"))
 
+#create some combinations of the model labels, which will be used to show the results.
 model_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -118,6 +121,7 @@ for(i in 1:length(model_names)){
 }
 print(model_labels)
 
+#create some combinations of the accuracy metric labels, which will be used to show the results.
 metric_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -131,9 +135,7 @@ print(accuracy_labels)
 
 ```
 
-```{r evaluate goodness of fit of the models}
-#evaluate goodness of fit
-#print(outputDir)
+```{r show the results of goodness of fit}
 goodnessRankResults = data.frame(model_labels = model_names)
 goodnessRankResults <- merge(goodnessRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
 
@@ -152,15 +154,16 @@ for (i in 1:length(goodness_fit_metrics)){
   goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
 }
 
-
+# show R^2 in a table
 goodnessRankResults["Rank"] <- rank(-goodnessRankResults[,"R2"], ties.method = "min")
 goodnessRankResults <- goodnessRankResults[order(goodnessRankResults$Rank),]
 print(goodnessRankResults)
+
+# write the results to the output dir
 write.csv(goodnessRankResults, paste(outputDir, "goodness_rank_results.csv", sep="/"))
 ```
 
-```{r evaluate the out-of-sample accuracy of the models}
-#evaluate cross-validation and plot the cross validation results for pred(.01)- pred(0.50)
+```{r show the results of the out-of-sample accuracy}
 
 avgPreds <- cvResults[["avgPreds"]]
 avgPreds <- data.frame(avgPreds)
@@ -168,19 +171,17 @@ avgPreds <- avgPreds[,names(avgPreds) %in% c(model_names, "Pred")]
 names(avgPreds) <- model_mapping$model_texts[match(names(avgPreds), model_mapping$model_names)]
 names(avgPreds)[1] = c("Pred")
 
+# draw curves from pred(0.01) - pred(0.50)
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
-print("melt avg preds info as dots and smooth function")
 avg_pred_plot = ggplot(meltAvgPreds) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=seq(from=1, to = length(model_names), by =1))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
-print(avg_pred_plot)
 ggsave(paste(outputDir, "avg_pred_plot.png", sep="/"), width=5, height=3.5)
 
 #rank the cv results of different metric
-
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
 cvAccuracyResults$label <- rownames(cvAccuracyResults)
 cvAccuracyResults <- cvAccuracyResults[cvAccuracyResults$label %in% accuracy_labels,]
@@ -226,7 +227,7 @@ print(round(cvRankResults,2))
 
 write.csv(round(cvRankResults,2), paste(outputDir, "cv_rank_results.csv", sep="/"))
 
-# draw histogram base on ranking
+# draw histogram based on ranking
 library(ggplot2)
 p <- list()
 for(i in 1:length(accuracy_metrics)){
@@ -282,6 +283,7 @@ df$label <- rownames(df)
 df <- df[df$label %in% accuracy_labels,]
 df <- merge(df, model_mapping_2, by.x = "label", by.y="accuracy_labels", all=FALSE)
 
+# read the pairs of models that are overlapped for 84% confidence intervals
 nonOverlappingPairs <- data.frame(matrix(ncol = 8, nrow = 0))
 overlappingPairAttrs <- c("model1", "model2", "metric", "direction", "mean1", "mean2", "84% CI1", "84% CI2")
 colnames(nonOverlappingPairs) <- overlappingPairAttrs
@@ -424,7 +426,7 @@ plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_
 }
 ```
 
-```{r evaluate the p-values under family-wise control}
+```{r present the results about the p-values under family-wise control}
 
 sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
 sig_bs = sig_bs[which(sig_bs$model1 %in% model_names | sig_bs$model2 %in% model_names),]

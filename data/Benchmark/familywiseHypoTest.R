@@ -170,7 +170,9 @@ for (k in 1:(nmodels-1)){
 }
 }
 
+#run Benjamini Hochberg correction procedure.
 dfPValue[,4] <- p.adjust(dfPValue[,'p_value'], method='BH')
+#run Bonferroni correction procedure.
 dfPValue[,5] <- p.adjust(dfPValue[,'p_value'], method='bonferroni')
 
 #ret <- list(dfHypothesis=dfHypothesis, dfPValue=dfPValue)

@@ -270,8 +270,11 @@ modelBenchmark <- function(models, dataset){
   goodness_fit_metrics <- c("R2", "f_test")
   fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
+  #effort estimation accuracy metrics
   accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
+  #evaluate out-of-sample accuaracy using k-fold cross validation
   cvResults <- cv(models, dataset, accuracy_metrics)
+  #evaluate sampling distributions using bootstrapping
   bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(
              fitResults = fitResults,
@@ -388,7 +391,7 @@ for(i in 1:nfold){
 	  
 	  #print(testData)
 	  
-	  m_predict(model, testData)
+	  #m_predict(model, testData)
 	  
 	  predicted = as.vector(m_predict(model, testData))
 	  names(predicted) <- rownames(testData)
