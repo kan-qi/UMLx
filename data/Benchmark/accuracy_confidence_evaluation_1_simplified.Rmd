@@ -33,9 +33,10 @@ library("cowplot")
 ```
 Combined Data Effort Values
 ```{r descriptive statistics, fig.width=5,fig.height=2.5}
-#The previous dataset
-outputDir = "./res/test1" ###don't write to existing folders!!!
+ ###change this folder, DON'T write to existing folders.
+outputDir = "./res/test1"
 print(outputDir)
+#Replace this data set to your own data set.
 dataset <- read.csv("dsets/combined_data_set_6_26.csv")
 modelData <- selectData(dataset)
 
@@ -55,8 +56,16 @@ modelData <- selectData(dataset)
 ```{r swtiii, warning = FALSE}
 
 #initialize models for training, testing, and evaluation. The models are put into a list with model names referencing a list of hyper-parameters, which will be passed to the model training function.
-#models = models3
-#models3 = models
+
+#to create a model, following 3 steps:
+# 1.create the model training function by rewriting this following template function
+#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
+# 2.create the prediction function by rewriting this following template function
+#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
+# 3.add your model name into the "models"(above) variable for referencing
+#  models.MODEL_NAME <- list(hyper-params...)
+# examples can be found in the size_metric_based_models.R or transaction_based_model.R
+
 models = list()
 #transaction_models <- trainsaction_based_model(modelData)
 #models = append(models, transaction_models)
@@ -72,22 +81,19 @@ models = append(models, size_models)
 #models$lasso = models$lasso
 #models$reg_tree= models$reg_tree
 
-#load the machine learning based models
-#to create a model, following 3 steps:
-# 1.create the model training function by rewriting this following template function
-#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
-# 2.create the prediction function by rewriting this following template function
-#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
-# 3.add your model name into the "models"(above) variable for referencing
-#  models.MODEL_NAME <- list(hyper-params...)
-# examples can be found in the size_metric_based_models.R or transaction_based_model.R
-  
 ```
 
 Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
-# apply the model evaluation procedure
-benchmarkResults <- modelBenchmark(models, modelData)
+#setup benchmark parameters for different experiments
+config = list()
+config$goodness_fit_metrics <- c("R2", "f_test")
+config$cv_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
+config$cv_nfold = 5
+config$bs_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
+config$bs_niters = 200
+config$bs_confidence_level = 0.83
+benchmarkResults <- modelBenchmark(models, modelData, config)
 
 
 # select the models that will be shown in the following procedure to draw the graphs
@@ -103,7 +109,7 @@ accuracy_mapping <- data.frame(accuracy_metrics = accuracy_metrics, accuracy_met
 
 
 #read the model evaluation results
-goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
+goodness_fit_metrics = c("R2", "f_test")
 fitResults <- benchmarkResults$fitResults
 cvResults <- benchmarkResults$cvResults
 foldResults <- cvResults$foldResults
@@ -112,7 +118,7 @@ bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
 
 
-#create some combinations of the model labels, which will be used to show the results.
+#create some combinations of the model labels, which will be used to show the evaluation results.
 model_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -121,7 +127,7 @@ for(i in 1:length(model_names)){
 }
 print(model_labels)
 
-#create some combinations of the accuracy metric labels, which will be used to show the results.
+#create some combinations of the accuracy metric labels, which will be used to show the evaluation results.
 metric_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){

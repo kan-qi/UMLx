@@ -263,26 +263,26 @@ updateBenchmarkResults <- function(benchmarkResults, benchmarkResultsUpdate){
 }
 
 #modelBenchmark would preform goodness of fit, cross validation, and bootrapping significance test
-modelBenchmark <- function(models, dataset){
+modelBenchmark <- function(models, dataset, config=list()){
   #dataset <- modelData
   
   #evaluating the goodness of fit for the compared models using R^2
-  goodness_fit_metrics <- c("R2", "f_test")
-  fitResults <- evalFit(models, dataset, goodness_fit_metrics)
+  #goodness_fit_metrics <- c("R2", "f_test")
+  fitResults <- evalFit(models, dataset, config$goodness_fit_metrics)
   
   #effort estimation accuracy metrics
-  accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
+  #accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
   #evaluate out-of-sample accuaracy using k-fold cross validation
-  cvResults <- cv(models, dataset, accuracy_metrics)
+  #nfold = 5
+  cvResults <- cv(models, dataset, config$cv_accuracy_metrics, config$cv_nfold)
   #evaluate sampling distributions using bootstrapping
-  bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
+  #niters = 1000, confidence_level = 0.83
+  bsResults <- bootstrappingSE(models, dataset, config$bs_accuracy_metrics, config$bs_niters, config$bs_confidence_level)
   ret <-list(
              fitResults = fitResults,
              cvResults = cvResults, 
              bsResults = bsResults,
-             model_names = names(models),
-             accuracy_metrics = accuracy_metrics,
-             goodness_fit_metrics = goodness_fit_metrics
+             model_names = names(models)
              )
 }
 
@@ -339,10 +339,10 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
 }
 
 # The cross validation process to evaluate the out-of-sample accuracy
-cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
+cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50'), nfold = 5){
 
-#dataset = modelData
-
+dataset = modelData
+accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50')
 nfold = 5
 
 folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
@@ -353,7 +353,13 @@ nmodels <- length(modelNames)
 
 nmetrics <- length(accuracy_metrics)
 
-predRange <- 50
+predRange <- 2
+predRangeStr <- grep('predRange*', accuracy_metrics, value = TRUE)[1]
+if(!is.na(predRangeStr)){
+  predRange = as.numeric(substring(predRangeStr, 10))
+}
+
+#predRange <- 50
 
 #data structure to hold the data for 10 fold cross validation
 
@@ -445,11 +451,9 @@ for(i in 1:nfold){
 	  #)
 	  
 	  #print(eval_metrics)
-	  if("predRange" %in% accuracy_metrics){
 	    predRangeResults <- predR(model_eval_mre, predRange)
 	    foldResults1[, j, i] = predRangeResults
-	    foldResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
-	  }
+	    foldResults[i, paste(modelName, paste("predRange", predRange, sep=""), sep="_")] = mean(predRangeResults)
 	}
 	
 	#foldResults[i,] = eval_metrics
@@ -502,7 +506,7 @@ testIdenticalRows <- function(row_names){
 }
 
 #bootstrapping to evaluate the statistical significance of the accuracy improvements
-bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
+bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50'), niters = 1000, confidence_level = 0.83){
 
   set.seed(42)
   #create 10000 samples of size 50
@@ -511,10 +515,8 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   #sample_size <- as.integer(0.83*N)
   #sample_size <- N
   
-  niters <- 1000
-  #niters <- 100
   
-  confidence_level <- 0.83
+  #niters <- 100
   
   modelNames = names(models)
   
@@ -524,7 +526,13 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   
   nmetrics <- length(accuracy_metrics)
   
-  predRange <- 50
+  predRange <- 1
+  predRangeStr <- grep('predRange*', accuracy_metrics, value = TRUE)[1]
+  if(!is.na(predRangeStr)){
+    predRange = as.numeric(substring(predRangeStr, 10))
+  }
+  
+  #predRange <- 50
   
   #data structure to hold the data for 10 fold cross validation
   
@@ -635,11 +643,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       
       #print(eval_metrics)
       
-      if("predRange" %in% accuracy_metrics){
         predRangeResults <- predR(model_eval_mre, predRange)
         iterResults1[, j, i] = predRangeResults
-        iterResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
-      }
+        iterResults[i, paste(modelName, paste("predRange", predRange, sep=""), sep="_")] = mean(predRangeResults)
     
     }
     
@@ -668,122 +674,4 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   
   ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, iterResults1=iterResults1)
 }
-
-
-regression_cols <- function(){
-  #duplicate:
-  #"Avg_Actor",
-  #"Component_num",
-  #"Attribute_num",
-  #"Operation_num",
-  #"class_num",
-  #"Top_Level_Classes",
-  #"Average_Depth_Inheritance_Tree",
-  #"Average_Number_Of_Children_Per_Base_Class",
-  #"Number_Of_Inheritance_Relationships",
-  #"Depth_Inheritance_Tree",
-  #"para_num", 
-  #"usage_num", 
-  #"real_num",
-  #"assoc_num",
-  #"external_oper_num",
-  #"data_object_num",
-  #"avg_operation",
-  #"avg_attribute",
-  #"avg_parameter",
-  #"avg_usage",
-  #"avg_real",
-  #"avg_assoc",
-  #"avg_instVar",
-  #"weighted_oper_num",
-  cols <- c(
-    ##Karner
-    "UseCase_Num",
-    "Tran_Num",
-    "Actor_Num",
-    ##Albrecht
-    "DET",
-    "RET",
-    "ILF",
-    "EIF",
-    "EI",
-    "EO",
-    "EQ",
-    ##Nitze
-    "EXT",
-    "ERY",
-    "RED",
-    "WRT", 
-    ##Tan
-    "NOET",
-    "NOAAE",
-    "NORT",
-    "NEM",
-    "NSR",
-    ##Minkiewicz
-    "NOS",
-    "WMC",
-    "MPC",
-    "DIT",
-    "NIVPC",
-    "NUMS",
-    "NTLC",
-    #"ANWMC",
-    #"ADIT",
-    "NOCPBC",
-    ##kim
-    "NOUC",
-    "NOR",
-    "ANAPUC",
-    "ANRPUC",
-    "NOC",
-    "NOIR",
-    "NOUR",
-    "NORR",
-    "NOM",
-    "NOP",
-    "NOCA",
-    "NOASSOC",
-    "ANMC",
-    "ANPC",
-    "ANCAC",
-    "ANASSOCC",
-    "ANRELC",
-    ##zivkovic
-    "NOAPC",
-    "NODET",
-    "NORET",
-    "NOMPC",
-    "NPPM",
-    "NMT",
-    #"Num_User_Story",
-    #"Num_Tasks",
-    #"project_manager_estimate",
-    #"developer_estimate",
-    ##Robles & Qi
-    "Duration", #NODAY
-    "Personnel", #NOCTR
-    "PublishTime",
-    "StartTime",
-    "ActivePersonnel",
-    "Commits", #NOCMT
-    "Files",
-    #"Blanks",
-    "Comments",
-    "SLOC",
-    "Type",
-    ##Frances
-    "Services", #"NSCRN", #adding number of screens
-    "Activities",
-    "BroadcastReceivers",
-    "ContentProviders",
-    "LayoutFiles", #"NXML"
-    "Screens",
-    ##De Souza
-    "EventHandlers", #"NODV",
-    "Views", #"NOSV",
-    "Effort"
-  )
-}
-
 
