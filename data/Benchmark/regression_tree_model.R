@@ -32,19 +32,32 @@ m_fit.reg_tree <- function(reg_tree,dataset){
   #             method="anova", data=android_dataset_4_26)
   
   #if (features == 'default') {
-    # 51 features left after dropping: 1. cols containing all missing values (all zeros); 2. duplucated cols 
+  # 51 features left after dropping: 1. cols containing all missing values (all zeros); 2. duplucated cols 
   #  features <- c('Effort', 'NT', 'NORT', 'EUCP', 'DM', 'Tran_Num', 'EXUCP', 'EXT', 'ANPC', 'class_num', 'Attribute_num', 'real_num', 'MPC', 'COSMIC', 'Complex_UC', 'ANAPUC', 'EF', 'NEM', 'Personnel', 'TRAN_NA', 'EXTIVK', 'Avg_TD', 'avg_attribute', 'objectdata_num', 'NOP', 'SWTIII', 'NOR', 'NOUC', 'ControlNum', 'IFPUG', 'Average_UC', 'Component_num', 'WMC', 'RR', 'Arch_Diff', 'UCP', 'Type', 'Activity_Num', 'ANWMC', 'Actor_Num', 'MKII', 'Priori_COCOMO_Estimate', 'Avg_TL', 'INT', 'UseCase_Num', 'avg_real', 'NT.1', 'EXTCLL', 'avg_usage', 'Boundary_Num', 'Simple_UC', 'COCOMO_Estimate')
   #}
   #train_df <- dataset[,names(dataset)%in%features]
   # train_df['Type'] <- apply(train_df['Type'], 1, function(x) if(x == 'Website') 1 else if (x =='Mobile App') 2 else if (x=='Information System') 3 else 4)
-
+  
   #features = 'default'
   #dataset = modelData
   
   prune = TRUE
   plot_tree = FALSE
   
-  regression_cols = reg_tree$regression_cols;
+  collength <- length(dataset[1,])
+  # print(collength)
+  regression_cols <- data.frame(dataset)
+  for(i in 1:collength){
+    temptype = typeof(dataset[1,i][0])
+    # print(temptype)
+    if(temptype!="integer"&&temptype!="double"){
+      tempcol = colnames(dataset)[i]
+      # print(tempcol)
+      regression_cols = regression_cols[ , !(colnames(regression_cols) %in% c(tempcol) ) ]
+    }
+  }
+  # print(regression_cols)
+  regression_cols = colnames(regression_cols)
   regressionData <- dataset[, regression_cols];
   train_df <- clean_tree(regressionData[, colnames(regressionData)!="Effort"])
   dims <- colnames(train_df)
@@ -67,9 +80,9 @@ m_fit.reg_tree <- function(reg_tree,dataset){
   #plotcp(rt)
   #printcp(rt)
   
-
+  
   reg_tree$m <- rt
-
+  
   # plotcp(rt)
   #cross validation to check where to stop pruning
   
@@ -87,7 +100,7 @@ m_fit.reg_tree <- function(reg_tree,dataset){
   # rt$cptable
   
   #pruning
-  if (prune == TRUE) {
+  if (prune == TRUE && length(rownames(dataset))>10) {
     # cp_id <- which.min(rt$cptable[,"xerror"]) #id of min xerror
     # cp <- rt$cptable[cp_id,"CP"] #cp threshold
     # rt_pruned <- prune(rt,cp=0.05)
@@ -115,30 +128,32 @@ m_fit.reg_tree <- function(reg_tree,dataset){
 m_predict.reg_tree <- function(reg_tree, testData){
   
   #if (predictors == 'default') {
-    # predict variable names (no target variable)
+  # predict variable names (no target variable)
   #  predictors <- c('NT', 'NORT', 'EUCP', 'DM', 'Tran_Num', 'EXUCP', 'EXT', 'ANPC', 'class_num', 'Attribute_num', 'real_num', 'MPC', 'COSMIC', 'Complex_UC', 'ANAPUC', 'EF', 'NEM', 'Personnel', 'TRAN_NA', 'EXTIVK', 'Avg_TD', 'avg_attribute', 'objectdata_num', 'NOP', 'SWTIII', 'NOR', 'NOUC', 'ControlNum', 'IFPUG', 'Average_UC', 'Component_num', 'WMC', 'RR', 'Arch_Diff', 'UCP', 'Type', 'Activity_Num', 'ANWMC', 'Actor_Num', 'MKII', 'Priori_COCOMO_Estimate', 'Avg_TL', 'INT', 'UseCase_Num', 'avg_real', 'NT.1', 'EXTCLL', 'avg_usage', 'Boundary_Num', 'Simple_UC', 'COCOMO_Estimate')
   #}
   
   #print(reg_tree$dims)
   
   #for(i in 1:length(reg_tree$dims)){
-    #print(reg_tree$dims[i])
+  #print(reg_tree$dims[i])
   #  testData[, reg_tree$dims[i]]
   #}
   test_df <- testData[, reg_tree$dims]
   #test_df <- testData[,names(testData)%in%predictors]
   # test_df['Type'] <- apply(test_df['Type'], 1, function(x) if(x == 'Website') 1 else if (x =='Mobile App') 2 else if (x=='Information System') 3 else 4)
-
+  
   predict(reg_tree$m, test_df)
 }
 
-regression_tree_model <- function(modelData, regression_cols){
+regression_tree_model <- function(modelData){
   
-  reg_tree = list()
+  models <- list()
   
-  reg_tree$regression_cols = regression_cols
-
-  reg_tree
+  reg_tree <- list()
+  
+  models$reg_tree = reg_tree
+  
+  models
   
 }
 
@@ -151,41 +166,47 @@ m_profile.reg_tree <- function(reg_tree, dataset){
 # Preprocess dataset
 clean_tree <- function(dataset){
   
-  # numeric data only
-  #numeric_columns <- unlist(lapply(dataset, is.numeric))
-  #data.numeric <- dataset[, numeric_columns]
-  #data.numeric <- data.frame(apply(dataset, 2, as.numeric))
+  if(length(rownames(dataset))>10){
+    # numeric data only
+    #numeric_columns <- unlist(lapply(dataset, is.numeric))
+    #data.numeric <- dataset[, numeric_columns]
+    #data.numeric <- data.frame(apply(dataset, 2, as.numeric))
+    
+    # remove near zero variance columns
+    #dataset <- regressionData
+    
+    library(caret)
+    nzv_cols <- nearZeroVar(dataset)
+    if(length(nzv_cols) > 0) data <- dataset[, -nzv_cols]
+    
+    sapply(data, function(x) sum(is.na(x)))
+    
+    ## Impute
+    library(mice)
+    library(randomForest)
+    # perform mice imputation, based on random forests.
+    # print(md.pattern(data))
+    miceMod <- mice(data, method="rf", print=FALSE, remove_collinear = TRUE)
+    # generate the completed data.
+    data.imputed <- mice::complete(miceMod)
+    # remove collinear columns
+    
+    #descrCorr <- cor(data.imputed)
+    #highCorr <- findCorrelation(descrCorr, 0.90)
+    #data.imputed1 <- data.imputed[, -highCorr]
+    #coli <- findLinearCombos(data.imputed1)
+    
+    
+    #coli <- findLinearCombos(data.imputed)
+    #data.done <- data.imputed[, -coli$remove]
+    #data.done$Effort <- dataset$Effort
+    data.done <- data.imputed
+    return(data.done)
+  }else{
+    return(dataset)
+  }
   
-  # remove near zero variance columns
-  #dataset <- regressionData
   
-  library(caret)
-  nzv_cols <- nearZeroVar(dataset)
-  if(length(nzv_cols) > 0) data <- dataset[, -nzv_cols]
-  
-  sapply(data, function(x) sum(is.na(x)))
-  
-  ## Impute
-  library(mice)
-  library(randomForest)
-  # perform mice imputation, based on random forests.
-  # print(md.pattern(data))
-  miceMod <- mice(data, method="rf", print=FALSE, remove_collinear = TRUE)
-  # generate the completed data.
-  data.imputed <- mice::complete(miceMod)
-  # remove collinear columns
-  
-  #descrCorr <- cor(data.imputed)
-  #highCorr <- findCorrelation(descrCorr, 0.90)
-  #data.imputed1 <- data.imputed[, -highCorr]
-  #coli <- findLinearCombos(data.imputed1)
-  
-  
-  #coli <- findLinearCombos(data.imputed)
-  #data.done <- data.imputed[, -coli$remove]
-  #data.done$Effort <- dataset$Effort
-  data.done <- data.imputed
-  return(data.done)
 }
 
 

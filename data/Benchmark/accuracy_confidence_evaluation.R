@@ -45,7 +45,7 @@ modelProfile <- function(trainedModels, dataset){
     colnames <- colnames(model_profile_data)
     
     for(j in 1:length(colnames)){
-     profileData[, colnames[j]] <- model_profile_data[, colnames[j]]
+      profileData[, colnames[j]] <- model_profile_data[, colnames[j]]
     }
     
   }
@@ -97,7 +97,7 @@ modelPredict <- function(models, dataset){
     modelName <- modelNames[i]
     
     print(modelName)
-
+    
     
     predictions[[modelName]] = m_predict(models[[modelName]], dataset)
   }
@@ -196,8 +196,8 @@ updateBenchmarkResults <- function(benchmarkResults, benchmarkResultsUpdate){
   for(i in 1:dim(foldResults1)[3]){
     addedCols = 0
     for(j in 1:dim(foldResults1)[2]){
-    #print(foldResults1[,j,i])
-    foldResults1_new[,j,i] = foldResults1[,j,i]
+      #print(foldResults1[,j,i])
+      foldResults1_new[,j,i] = foldResults1[,j,i]
     }
     for(j in 1:length(model_indices_update)){
       #print(model_indices_update[j])
@@ -263,27 +263,27 @@ updateBenchmarkResults <- function(benchmarkResults, benchmarkResultsUpdate){
 }
 
 #modelBenchmark would preform goodness of fit, cross validation, and bootrapping significance test
-modelBenchmark <- function(models, dataset, config=list()){
+modelBenchmark <- function(models, dataset){
   #dataset <- modelData
   
   #evaluating the goodness of fit for the compared models using R^2
-  #goodness_fit_metrics <- c("R2", "f_test")
-  fitResults <- evalFit(models, dataset, config$goodness_fit_metrics)
+  goodness_fit_metrics <- c("R2", "f_test")
+  fitResults <- evalFit(models, dataset, goodness_fit_metrics)
   
   #effort estimation accuracy metrics
-  #accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
+  accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange")
   #evaluate out-of-sample accuaracy using k-fold cross validation
-  #nfold = 5
-  cvResults <- cv(models, dataset, config$cv_accuracy_metrics, config$cv_nfold)
+  cvResults <- cv(models, dataset, accuracy_metrics)
   #evaluate sampling distributions using bootstrapping
-  #niters = 1000, confidence_level = 0.83
-  bsResults <- bootstrappingSE(models, dataset, config$bs_accuracy_metrics, config$bs_niters, config$bs_confidence_level)
+  bsResults <- bootstrappingSE(models, dataset, accuracy_metrics)
   ret <-list(
-             fitResults = fitResults,
-             cvResults = cvResults, 
-             bsResults = bsResults,
-             model_names = names(models)
-             )
+    fitResults = fitResults,
+    cvResults = cvResults, 
+    bsResults = bsResults,
+    model_names = names(models),
+    accuracy_metrics = accuracy_metrics,
+    goodness_fit_metrics = goodness_fit_metrics
+  )
 }
 
 evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
@@ -323,14 +323,17 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
     eval_metric_results[[modelName]]$model_eval_fit = model_eval_fit
     
     if("R2" %in% fit_metrics){
-    meanActual <- mean(model_eval_fit$actual)
-    eval_metric_results[[modelName]]$R2 <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
-    #print(r_squared)
+      meanActual <- mean(model_eval_fit$actual)
+      eval_metric_results[[modelName]]$R2 <- 1-sum((model_eval_fit$actual - model_eval_fit$predicted)^2)/sum((model_eval_fit$actual - meanActual)^2)
+      if(is.na(eval_metric_results[[modelName]]$R2)){
+        eval_metric_results[[modelName]]$R2 <- 0.0
+      }
+      #print(r_squared)
     }
     
     #f-test
     if("f_test" %in% fit_metrics){
-    eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)$p.value
+      eval_metric_results[[modelName]]$f_test = var.test(model_eval_fit$actual - model_eval_fit$predicted, model_eval_fit$actual - meanActual)$p.value
     }
     
   }
@@ -339,175 +342,179 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
 }
 
 # The cross validation process to evaluate the out-of-sample accuracy
-cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50'), nfold = 5){
-
-dataset = modelData
-accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50')
-nfold = 5
-
-folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
-
-modelNames = names(models)
-
-nmodels <- length(modelNames)
-
-nmetrics <- length(accuracy_metrics)
-
-predRange <- 2
-predRangeStr <- grep('predRange*', accuracy_metrics, value = TRUE)[1]
-if(!is.na(predRangeStr)){
-  predRange = as.numeric(substring(predRangeStr, 10))
-}
-
-#predRange <- 50
-
-#data structure to hold the data for 10 fold cross validation
-
-model_accuracy_indice <- c()
-for(i in 1:length(modelNames)){
-  modelName = modelNames[i]
-  model_accuracy_indice <- cbind(model_accuracy_indice, paste(modelName, accuracy_metrics, sep="_"));
-}
-
-foldResults <- matrix(nrow=nfold,ncol=nmodels*nmetrics)
-colnames(foldResults) <- model_accuracy_indice
-
-foldResults1 <- array(0,dim=c(predRange,nmodels,nfold))
-
-
-#Perform 10 fold cross validation
-for(i in 1:nfold){
-  print(paste("iter:", i, sep=""))
-	#Segement your data by fold using the which() function
-	testIndexes <- which(folds==i,arr.ind=TRUE)
-	
-	testData <- dataset[testIndexes, ]
-	trainData <- dataset[-testIndexes, ]
-	
-	#eval_metrics = c()
-	#eval_pred = c()
-	#print(i)
-	for(j in 1:nmodels){
-	  #j = 2
-	  modelName <- modelNames[j]
-	  
-	  print(modelName)
-	  
-	  model = fit(trainData, modelNames[j], models[[j]])
-	  
-	  #print(testData)
-	  
-	  #m_predict(model, testData)
-	  
-	  predicted = as.vector(m_predict(model, testData))
-	  names(predicted) <- rownames(testData)
-	  #print(predicted)
-	  
-	  actual = testData$Effort
-	  names(actual) <- rownames(testData)
-	  
-	  #print(actual)
-	  
-	  intersectNames <- intersect(names(predicted), names(actual))
-	  
-	  model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
-	  #print(model_eval_predict)
-	  
-	  eval_metric_results = list()
-	  
-	  model_eval_mre = apply(model_eval_predict, 1, mre)
-	  #("mre")
-	  #print(model_eval_mre)
-	  
-	  model_eval_mre <- na.omit(model_eval_mre)
-	  #print(model_eval_mre)
-	  
-	  if("mmre" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName,"mmre", sep="_")] = mmre(model_eval_mre)
-	  }
-	  
-	  if("pred15" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "pred15", sep="_")] = pred15(model_eval_mre)
-	  }
-	  
-	  if("pred25" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "pred25", sep="_")] = pred25(model_eval_mre)
-	  }
-	  
-	  if("pred50" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "pred50", sep="_")] = pred50(model_eval_mre)
-	  }
-	  
-	  if("mdmre" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "mdmre", sep="_")] = mdmre(model_eval_mre)
-	  }
-	  
-	  if("mae" %in% accuracy_metrics){
-	    foldResults[i, paste(modelName, "mae", sep="_")] = mae(model_eval_predict)
-	  }
-	  
-	  #eval_metrics <- c(
-	  #  eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
-	  #)
-	  
-	  #print(eval_metrics)
-	    predRangeResults <- predR(model_eval_mre, predRange)
-	    foldResults1[, j, i] = predRangeResults
-	    foldResults[i, paste(modelName, paste("predRange", predRange, sep=""), sep="_")] = mean(predRangeResults)
-	}
-	
-	#foldResults[i,] = eval_metrics
-	#foldResults1[,,i] = eval_pred
-}
-
-#print(foldResults)
-
-accuracyResults <- apply(foldResults, 2, mean);
-
-names(accuracyResults) <- model_accuracy_indice
-
-#print(cvResults)
-
-avgPreds <- matrix(nrow=predRange,ncol=nmodels+1)
-colnames(avgPreds) <- c("Pred",modelNames)
-for(i in 1:predRange)
-{
+cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
   
-	avgPreds[i,] <- c(i, rep(0, length(modelNames)))
-	
-	for(j in 1:length(modelNames)){
-	  model_fold_mean = mean(foldResults1[i,j,]);
-	  avgPreds[i,j+1] <- model_fold_mean
-	}
-	
-}
-avgPreds <- as.data.frame(avgPreds)
-foldResults <- as.data.frame(foldResults)
-
-ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults, foldResults1 = foldResults1)
-
+  #dataset = modelData
+  
+  nfold = 5
+  
+  folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
+  
+  modelNames = names(models)
+  
+  nmodels <- length(modelNames)
+  
+  nmetrics <- length(accuracy_metrics)
+  
+  predRange <- 50
+  
+  #data structure to hold the data for 10 fold cross validation
+  
+  model_accuracy_indice <- c()
+  for(i in 1:length(modelNames)){
+    modelName = modelNames[i]
+    model_accuracy_indice <- cbind(model_accuracy_indice, paste(modelName, accuracy_metrics, sep="_"));
+  }
+  
+  foldResults <- matrix(nrow=nfold,ncol=nmodels*nmetrics)
+  colnames(foldResults) <- model_accuracy_indice
+  
+  foldResults1 <- array(0,dim=c(predRange,nmodels,nfold))
+  
+  
+  #Perform 10 fold cross validation
+  for(i in 1:nfold){
+    print(paste("iter:", i, sep=""))
+    #Segement your data by fold using the which() function
+    testIndexes <- which(folds==i,arr.ind=TRUE)
+    if(length(rownames(dataset))<6){
+      testIndexes <- length(rownames(dataset))/2
+    }
+    
+    testData <- dataset[testIndexes, ]
+    trainData <- dataset[-testIndexes, ]
+    
+    
+    
+    #eval_metrics = c()
+    #eval_pred = c()
+    #print(i)
+    for(j in 1:nmodels){
+      #j = 2
+      modelName <- modelNames[j]
+      
+      print(modelName)
+      
+      model = fit(trainData, modelNames[j], models[[j]])
+      
+      #print(testData)
+      
+      #m_predict(model, testData)
+      
+      predicted = as.vector(m_predict(model, testData))
+      names(predicted) <- rownames(testData)
+      #print(predicted)
+      
+      actual = testData$Effort
+      names(actual) <- rownames(testData)
+      
+      #print(actual)
+      
+      intersectNames <- intersect(names(predicted), names(actual))
+      
+      model_eval_predict = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
+      #print(model_eval_predict)
+      
+      eval_metric_results = list()
+      
+      model_eval_mre = apply(model_eval_predict, 1, mre)
+      #("mre")
+      #print(model_eval_mre)
+      
+      model_eval_mre <- na.omit(model_eval_mre)
+      #print(model_eval_mre)
+      
+      if("mmre" %in% accuracy_metrics){
+        foldResults[i, paste(modelName,"mmre", sep="_")] = mmre(model_eval_mre)
+      }
+      
+      if("pred15" %in% accuracy_metrics){
+        foldResults[i, paste(modelName, "pred15", sep="_")] = pred15(model_eval_mre)
+      }
+      
+      if("pred25" %in% accuracy_metrics){
+        foldResults[i, paste(modelName, "pred25", sep="_")] = pred25(model_eval_mre)
+      }
+      
+      if("pred50" %in% accuracy_metrics){
+        foldResults[i, paste(modelName, "pred50", sep="_")] = pred50(model_eval_mre)
+      }
+      
+      if("mdmre" %in% accuracy_metrics){
+        foldResults[i, paste(modelName, "mdmre", sep="_")] = mdmre(model_eval_mre)
+      }
+      
+      if("mae" %in% accuracy_metrics){
+        foldResults[i, paste(modelName, "mae", sep="_")] = mae(model_eval_predict)
+        if(is.na(foldResults[i, paste(modelName, "mae", sep="_")])){
+          foldResults[i, paste(modelName, "mae", sep="_")] <- 0.0
+        }
+      }
+      
+      #eval_metrics <- c(
+      #  eval_metrics, model_eval_mmre,model_eval_pred15,model_eval_pred25,model_eval_pred50, model_eval_mdmre, model_eval_mae
+      #)
+      
+      #print(eval_metrics)
+      if("predRange" %in% accuracy_metrics){
+        predRangeResults <- predR(model_eval_mre, predRange)
+        foldResults1[, j, i] = predRangeResults
+        foldResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
+      }
+    }
+    
+    #foldResults[i,] = eval_metrics
+    #foldResults1[,,i] = eval_pred
+  }
+  
+  #print(foldResults)
+  
+  accuracyResults <- apply(foldResults, 2, mean);
+  
+  names(accuracyResults) <- model_accuracy_indice
+  
+  #print(cvResults)
+  
+  avgPreds <- matrix(nrow=predRange,ncol=nmodels+1)
+  colnames(avgPreds) <- c("Pred",modelNames)
+  for(i in 1:predRange)
+  {
+    
+    avgPreds[i,] <- c(i, rep(0, length(modelNames)))
+    
+    for(j in 1:length(modelNames)){
+      model_fold_mean = mean(foldResults1[i,j,]);
+      avgPreds[i,j+1] <- model_fold_mean
+    }
+    
+  }
+  avgPreds <- as.data.frame(avgPreds)
+  foldResults <- as.data.frame(foldResults)
+  
+  ret <-list(accuracyResults = accuracyResults, avgPreds = avgPreds, foldResults = foldResults, foldResults1 = foldResults1)
+  
 }
 
 testIdenticalRows <- function(row_names){
   #row_names = c()
   #row_names = c("Timber_S1W1L1_2019-4-29@1559141370065.2", "Timber_S1W1L1_2019-4-29@1559141370065.1", "Timber_S1W1L1_2019-4-29@1559141370065")
   if(length(row_names) > 1){
-  for(i in 1:length(row_names)){
-   # print(i)
-  g <- regexpr("\\.[^\\.]*$", row_names[i])
-  if(g[[1]] > 1){
-  row_names[i] = substr(row_names[i], 1, g[[1]]-1)
-  }
-  #print(row_names[i])
-  }
+    for(i in 1:length(row_names)){
+      # print(i)
+      g <- regexpr("\\.[^\\.]*$", row_names[i])
+      if(g[[1]] > 1){
+        row_names[i] = substr(row_names[i], 1, g[[1]]-1)
+      }
+      #print(row_names[i])
+    }
   }
   
   length(unique(row_names))
 }
 
 #bootstrapping to evaluate the statistical significance of the accuracy improvements
-bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50'), niters = 1000, confidence_level = 0.83){
-
+bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')){
+  
   set.seed(42)
   #create 10000 samples of size 50
   N <- nrow(dataset)
@@ -515,8 +522,10 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   #sample_size <- as.integer(0.83*N)
   #sample_size <- N
   
-  
+  niters <- 1000
   #niters <- 100
+  
+  confidence_level <- 0.83
   
   modelNames = names(models)
   
@@ -526,13 +535,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   
   nmetrics <- length(accuracy_metrics)
   
-  predRange <- 1
-  predRangeStr <- grep('predRange*', accuracy_metrics, value = TRUE)[1]
-  if(!is.na(predRangeStr)){
-    predRange = as.numeric(substring(predRangeStr, 10))
-  }
-  
-  #predRange <- 50
+  predRange <- 50
   
   #data structure to hold the data for 10 fold cross validation
   
@@ -546,7 +549,7 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   colnames(iterResults) <- model_accuracy_indice
   
   iterResults1 <- array(0,dim=c(predRange,nmodels,niters+1))
-
+  
   for (i in 1:niters){
     print(paste("iter: ", i, sep=""))
     #resample = data.frame()
@@ -634,6 +637,9 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       
       if("mae" %in% accuracy_metrics){
         iterResults[i, paste(modelName, "mae", sep="_")] = mae(model_eval_predict)
+        if(is.na(mae(model_eval_predict))){
+          iterResults[i, paste(modelName, "mae", sep="_")] <- 0.0
+        }
       }
       
       #eval_metrics <- c(
@@ -643,10 +649,12 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
       
       #print(eval_metrics)
       
+      if("predRange" %in% accuracy_metrics){
         predRangeResults <- predR(model_eval_mre, predRange)
         iterResults1[, j, i] = predRangeResults
-        iterResults[i, paste(modelName, paste("predRange", predRange, sep=""), sep="_")] = mean(predRangeResults)
-    
+        iterResults[i, paste(modelName, "predRange", sep="_")] = mean(predRangeResults)
+      }
+      
     }
     
     #if (i%%500 == 0){
@@ -674,4 +682,122 @@ bootstrappingSE <- function(models, dataset, accuracy_metrics = c('mmre','pred15
   
   ret <- list(bsEstimations = bsEstimations, iterResults = iterResults, iterResults1=iterResults1)
 }
+
+
+regression_cols <- function(){
+  #duplicate:
+  #"Avg_Actor",
+  #"Component_num",
+  #"Attribute_num",
+  #"Operation_num",
+  #"class_num",
+  #"Top_Level_Classes",
+  #"Average_Depth_Inheritance_Tree",
+  #"Average_Number_Of_Children_Per_Base_Class",
+  #"Number_Of_Inheritance_Relationships",
+  #"Depth_Inheritance_Tree",
+  #"para_num", 
+  #"usage_num", 
+  #"real_num",
+  #"assoc_num",
+  #"external_oper_num",
+  #"data_object_num",
+  #"avg_operation",
+  #"avg_attribute",
+  #"avg_parameter",
+  #"avg_usage",
+  #"avg_real",
+  #"avg_assoc",
+  #"avg_instVar",
+  #"weighted_oper_num",
+  cols <- c(
+    ##Karner
+    "UseCase_Num",
+    "Tran_Num",
+    "Actor_Num",
+    ##Albrecht
+    "DET",
+    "RET",
+    "ILF",
+    "EIF",
+    "EI",
+    "EO",
+    "EQ",
+    ##Nitze
+    "EXT",
+    "ERY",
+    "RED",
+    "WRT", 
+    ##Tan
+    "NOET",
+    "NOAAE",
+    "NORT",
+    "NEM",
+    "NSR",
+    ##Minkiewicz
+    "NOS",
+    "WMC",
+    "MPC",
+    "DIT",
+    "NIVPC",
+    "NUMS",
+    "NTLC",
+    #"ANWMC",
+    #"ADIT",
+    "NOCPBC",
+    ##kim
+    "NOUC",
+    "NOR",
+    "ANAPUC",
+    "ANRPUC",
+    "NOC",
+    "NOIR",
+    "NOUR",
+    "NORR",
+    "NOM",
+    "NOP",
+    "NOCA",
+    "NOASSOC",
+    "ANMC",
+    "ANPC",
+    "ANCAC",
+    "ANASSOCC",
+    "ANRELC",
+    ##zivkovic
+    "NOAPC",
+    "NODET",
+    "NORET",
+    "NOMPC",
+    "NPPM",
+    "NMT",
+    #"Num_User_Story",
+    #"Num_Tasks",
+    #"project_manager_estimate",
+    #"developer_estimate",
+    ##Robles & Qi
+    "Duration", #NODAY
+    "Personnel", #NOCTR
+    "PublishTime",
+    "StartTime",
+    "ActivePersonnel",
+    "Commits", #NOCMT
+    "Files",
+    #"Blanks",
+    "Comments",
+    "SLOC",
+    "Type",
+    ##Frances
+    "Services", #"NSCRN", #adding number of screens
+    "Activities",
+    "BroadcastReceivers",
+    "ContentProviders",
+    "LayoutFiles", #"NXML"
+    "Screens",
+    ##De Souza
+    "EventHandlers", #"NODV",
+    "Views", #"NOSV",
+    "Effort"
+  )
+}
+
 
