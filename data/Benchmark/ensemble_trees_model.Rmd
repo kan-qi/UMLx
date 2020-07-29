@@ -13,53 +13,44 @@ knitr::opts_chunk$set(echo = TRUE)
 source("ensemble_trees_model.R")
 ```
 
-Loading data form the csv file. At this step, we will check missing values in the dataset, and delete or impute when necessary. When checking the dataset, we've found the last observation with missing values and some data-entry mistakes, thus, it was deleted before processing to next steps.
+Loading data form the csv file.
 
 ```{r loads data.}
-newdata <- data_load()
-newdata
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D1.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D2.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D3.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D4.csv"
+
+dataset <- load_data(file)
 ```
 
-Since we are going to build regression model, which requires numeric variables, and the categorical variable in the dataset is not easy to label with numbers, we will only take numeric variables. Here, we got the dataset of 54 observations (1 was deleted already) with 98 variable. In order to better understand the prediction variable - Effort, we visualized the distribution of Effort at this step.
+Pre-processing step checks missing values in the dataset, and deletes or imputes when necessary. When checking the dataset, the last observation is deleted since it contains missing values and some data-entry mistakes. It also duplicate rows and the columns with near zero variance, or without names. Categorical variables are labeled with numbers for further data processing. Visualizations of the prediction variable - Effort allows to find out the outliers with very low frequency but quite large values. In this sense, a threshold is set to remove them.
 
 ```{r pre-processing data.}
-data <- data_clean(newdata)
-data
+clean_step(dataset)
 ```
 
-From this step, we've witnessed several outliers with very low frequency but quite large Effort. In this sense, we'd like to remove the outliers so that the data can be better modeled.
+This step initializes the Model and returns an empty list under the model name.
 
-```{r resample dataset - removes outliers}
-data_resample = data[data$Effort < 20000, ]
-data_resample
+```{r model initialization.}
+ensemble_trees <- ensemble_trees_model(dataset)
 ```
 
-After all the cleaning and resampling, we are going to split the dataset into training and testing sets, with the distribution of 80% of original data going to training set, while the left 20% going to testing set.
+Before running into modeling, Random Forest could find out the most related features with their related importances regarding the bunch of variables. Then it is followed by a cross validation of feature selections and a plot showing the relation between the error and number of variables.
 
-```{r splits dataset}
-train.index <- sample(x = 1: nrow(data_resample), size = ceiling(0.8 * nrow(data_resample)))
-train = data_resample[train.index, ]
-test = data_resample[-train.index, ]
+Since some functions, e.g. rfcv, could not take care of the observations less than 6, the model treats the datasets with different observations seperately. For example, for the datasets less than 6 observations, the cross validation is skipped.
+
+The next is to decide the number of trees in a Random Forest model. Using the initialized number of 100, it automatically capture the best tree size with the lowest errors. 
+
+Feeding both the features and number of trees, the model is built based on the indepedent variable - Effort. And the model is saved in a rds file as well. 
+
+```{r modeling.}
+ensemble_trees <- m_fit.ensemble_trees(ensemble_trees, dataset)
 ```
 
-We do not want to run into modeling but would like to see the importance of features instead since we have a bunch of variables. This step takes Random Forest to visualize the importance of features with a plot showing both % Increase MSE and Increase Node Purity. All the features are presented in the plot with descending orders. 
+Finally, the model predicts the results if fed with test dataset.
 
-In addition, this step also uses Cross Validation and visualizes the relationship between error and number of variables. The plot tells that increasing the number of variables not necessarily increase the accuracy of the model, but the model works well around 6 variables. 
-
-In this case, we order the features and return the top 6 variables with higest % IncMSE for modeling.
-
-```{r feature selection}
-top_imp <- feature_selection(data_resample, train, test)
-top_imp
-```
-
-Previously, we got top 6 features, and we will input the features as a formula for the model we are going to build. Considering that we will take Random Forest for modeling, the first step is to find out the appropriate number of trees. Having the visulized plot, we can determine the best tree number should around 40. And we build the model with the top features and predict the outcomes of testing data. 
-
-As the values of Effort are unevenly distributed and self-reported, we are not able to predict the exact numbers correctly with the model. Thus, we evaluate the accuracy by taking the average errors of predicted values and the original values in the testing set. 
-
-Due to its characteristic, Random Forest model changes every time when running it even with the same dataset. Therefore, the formula we are using at this step is not a constant one but should be constructed every time when get the output from feature selection step, in order to have a better prediction outcome.
-
-```{r modeling and prediction}
-avg_error <- m_fit.rf(data_resample, train, test)
-avg_error
+```{r prediction.}
+test <- dataset
+m_predict.ensemble_trees(ensemble_trees, test)
 ```
