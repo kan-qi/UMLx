@@ -70,7 +70,7 @@ ensemble_trees_model <- function(dataset){
 m_fit.ensemble_trees <- function(ensemble_trees, dataset){
   #features Selection - Random Forest.
   clean_cols <- ensemble_trees$dim
-  clean_data <- dataset[, clean_cols]
+  #clean_data <- dataset[, clean_cols]
   data_resample <- clean_step(dataset)
   train <- data_resample
 
