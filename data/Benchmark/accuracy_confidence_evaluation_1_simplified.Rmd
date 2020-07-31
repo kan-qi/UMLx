@@ -16,6 +16,7 @@ source("neuralnet_model.R")
 source("stepwise_linear_model.R")
 source("lasso_regression_model.R")
 source("regression_tree_model.R")
+source("ensemble_trees_model.R")
 source('familywiseHypoTest.R')
 library(jsonlite)
 library(reshape)
@@ -33,13 +34,12 @@ library("cowplot")
 ```
 Combined Data Effort Values
 ```{r descriptive statistics, fig.width=5,fig.height=2.5}
- ###change this folder, DON'T write to existing folders.
-outputDir = "./res/test1"
+#The previous dataset
+outputDir = "./res/test1" ###don't write to existing folders!!!
 print(outputDir)
-#Replace this data set to your own data set.
-dataset <- read.csv("dsets/combined_data_set_6_26.csv")
+dataset <- read.csv("dsets/D1.csv")
+dataset <- na.omit(dataset)
 modelData <- selectData(dataset)
-
 
 ```
 
@@ -56,16 +56,8 @@ modelData <- selectData(dataset)
 ```{r swtiii, warning = FALSE}
 
 #initialize models for training, testing, and evaluation. The models are put into a list with model names referencing a list of hyper-parameters, which will be passed to the model training function.
-
-#to create a model, following 3 steps:
-# 1.create the model training function by rewriting this following template function
-#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
-# 2.create the prediction function by rewriting this following template function
-#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
-# 3.add your model name into the "models"(above) variable for referencing
-#  models.MODEL_NAME <- list(hyper-params...)
-# examples can be found in the size_metric_based_models.R or transaction_based_model.R
-
+#models = models3
+#models3 = models
 models = list()
 #transaction_models <- trainsaction_based_model(modelData)
 #models = append(models, transaction_models)
@@ -76,31 +68,44 @@ size_models <- size_metric_models(modelData)
 models = append(models, size_models)
 #models$cosmic = size_models$cosmic
 #models$fp = size_models$fp
-#models2$step_lnr = models$step_lnr
-#models$neuralnet = models$neuralnet
+models$step_lnr = stepwise_linear_model(modelData)
+models$neuralnet = neuralnet_model(modelData)
+models$reg_tree= regression_tree_model(modelData)
+models$ensemble_trees = ensemble_trees_model(modelData)
 #models$lasso = models$lasso
-#models$reg_tree= models$reg_tree
 
+#load the machine learning based models
+#to create a model, following 3 steps:
+# 1.create the model training function by rewriting this following template function
+#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
+# 2.create the prediction function by rewriting this following template function
+#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
+# 3.add your model name into the "models"(above) variable for referencing
+#  models.MODEL_NAME <- list(hyper-params...)
+# examples can be found in the size_metric_based_models.R or transaction_based_model.R
+  
 ```
 
 Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
 ```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
+
 #setup benchmark parameters for different experiments
 config = list()
 config$goodness_fit_metrics <- c("R2", "f_test")
 config$cv_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
 config$cv_nfold = 4
 config$bs_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
-config$bs_niters = 10000
+config$bs_niters = 100
 config$bs_confidence_level = 0.84
+
 
 benchmarkResults <- modelBenchmark(models, modelData, config)
 
 
 # select the models that will be shown in the following procedure to draw the graphs
-model_names <- c("ucp", "fp", "cosmic", "sloc", "ln_sloc")
-model_texts <- c("UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
-model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR")
+model_names <- c("reg_tree","ucp", "fp", "cosmic", "ksloc", "step_lnr", "ensemble_trees")
+model_texts <- c("REG_TREE","UCP", "IFPUG", "COSMIC", "KSLOC", "STEP_LNR", "ENSEMBLE_TREES")
+model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
 model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
 
 # select the accuracy measures that will be shown in the following procedure to draw the graphs
@@ -110,7 +115,7 @@ accuracy_mapping <- data.frame(accuracy_metrics = accuracy_metrics, accuracy_met
 
 
 #read the model evaluation results
-goodness_fit_metrics = c("R2", "f_test")
+goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
 fitResults <- benchmarkResults$fitResults
 cvResults <- benchmarkResults$cvResults
 foldResults <- cvResults$foldResults
@@ -119,7 +124,7 @@ bsEstimations <- bsRet[['bsEstimations']]
 iterResults <- bsRet[['iterResults']]
 
 
-#create some combinations of the model labels, which will be used to show the evaluation results.
+#create some combinations of the model labels, which will be used to show the results.
 model_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -128,7 +133,7 @@ for(i in 1:length(model_names)){
 }
 print(model_labels)
 
-#create some combinations of the accuracy metric labels, which will be used to show the evaluation results.
+#create some combinations of the accuracy metric labels, which will be used to show the results.
 metric_labels <- c()
 for(i in 1:length(model_names)){
   for(j in 1:length(accuracy_metrics)){
@@ -145,6 +150,7 @@ print(accuracy_labels)
 ```{r show the results of goodness of fit}
 goodnessRankResults = data.frame(model_labels = model_names)
 goodnessRankResults <- merge(goodnessRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+print(goodnessRankResults)
 
 for (i in 1:length(goodness_fit_metrics)){
   g = goodness_fit_metrics[i]

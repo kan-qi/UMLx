@@ -1,56 +1,67 @@
 selectData <- function(dataset, selector="Default"){
   
-#dataPath <- "modelEvaluations-1-3.csv"
-#selector <- "SLOC2ndQ25"
-#dataPath = "../android_analysis_datasets/android_dataset_6_20_1.csv"
-
-dataset$Project = as.character(dataset$Project)
-rownames(dataset) <- dataset$Project
-#dataset$Project <- NULL
-
-#if(selector == "SLOC2ndQ25"){
-#dataset <- selectBySLOC2ndQ25(dataset)
-#}
-
-modelData = subset(dataset, Effort != 0)
-
-if(selector == "Default"){
+  #dataPath <- "modelEvaluations-1-3.csv"
+  #selector <- "SLOC2ndQ25"
+  #dataPath = "../android_analysis_datasets/android_dataset_6_20_1.csv"
   
-}
-else if(selector[1] == "Size"){
-  modelData = selectProjectsBySize(modelData, selector[2])
-}
-else if(selector[1] == "InitialDate"){
-  modelData = selectProjectsByInitialDate(modelData, selector[2])
-}
-else if(selector[1] == "Type"){
-  modelData = selectProjectsByType(modelData, selector[2])
-}
-
-#dataSet <- list()
-#dataSet[["modelData"]] <- modelData
-#dataSet
+  # dataset$Project = as.character(dataset$Project)
+  # rownames(dataset) <- dataset$Project
   
-modelData
+  # dataset$ID = as.character(dataset$ID)
+  # rownames(dataset) <- dataset$ID
+  
+  # dataset$NUM = as.character(dataset$NUM)
+  # if(!is.na(row.names)){
+  #   rownames(dataset) <- dataset$NUM
+  # }else{
+  #   rownames(dataset) <- dataset$NUM
+  # }
+  # 
+  #dataset$Project <- NULL
+  
+  #if(selector == "SLOC2ndQ25"){
+  #dataset <- selectBySLOC2ndQ25(dataset)
+  #}
+  
+  modelData = subset(dataset, Effort != 0)
+  
+  if(selector == "Default"){
+    
+  }
+  else if(selector[1] == "Size"){
+    modelData = selectProjectsBySize(modelData, selector[2])
+  }
+  else if(selector[1] == "InitialDate"){
+    modelData = selectProjectsByInitialDate(modelData, selector[2])
+  }
+  else if(selector[1] == "Type"){
+    modelData = selectProjectsByType(modelData, selector[2])
+  }
+  
+  #dataSet <- list()
+  #dataSet[["modelData"]] <- modelData
+  #dataSet
+  
+  modelData
 }
 
 selectBySLOC2ndQ25 <- function(modelData){
-
-    range <- c(l = quantile(modelData$KSLOC, 0.25), u = quantile(modelData$KSLOC, 0.5));
-
-    selectedRows <- c();
-
-    #print(range[1])
-    for (i in 1:nrow(modelData)) {
-      modelDataItem <- modelData[i, ]
-      if(modelDataItem$KSLOC > range[1] && modelDataItem$KSLOC <= range[2]){
-        selectedRows <- c(selectedRows, i)
-      }
+  
+  range <- c(l = quantile(modelData$KSLOC, 0.25), u = quantile(modelData$KSLOC, 0.5));
+  
+  selectedRows <- c();
+  
+  #print(range[1])
+  for (i in 1:nrow(modelData)) {
+    modelDataItem <- modelData[i, ]
+    if(modelDataItem$KSLOC > range[1] && modelDataItem$KSLOC <= range[2]){
+      selectedRows <- c(selectedRows, i)
     }
-
-    print(selectedRows)
-
-    modelData <- modelData[selectedRows,]
+  }
+  
+  print(selectedRows)
+  
+  modelData <- modelData[selectedRows,]
 }
 
 selectProjectsByInitialDate <- function(modelData, initDate){
@@ -82,7 +93,7 @@ selectProjectsByInitialDate <- function(modelData, initDate){
   }
   
   datapoints <- modelData[projectIndices,]
-
+  
 }
 
 selectProjectsBySize <- function(modelData, size){
@@ -98,7 +109,7 @@ selectProjectsBySize <- function(modelData, size){
   cutpoints["Duration",] = duration_cut_points
   cutpoints["Personnel",] = personnel_cut_points
   print(cutpoints)
-    
+  
   classifiedDataPoints <- classifyProjectsbyCutPoints(modelData, cutpoints)
   print(classifiedDataPoints)
   
@@ -120,7 +131,7 @@ selectProjectsBySize <- function(modelData, size){
   print(projectIndices)
   datapoints <- modelData[projectIndices,]
   print(datapoints)
-
+  
 }
 
 
@@ -137,41 +148,41 @@ classifyProjectsbyCutPoints <- function(data, cutPoints) {
   
   levels <- paste("l", 1:totalClassifications, sep = "")
   
-    result <- list()
-    
-    if(nrow(data) > 0){
-      for (i in 1:nrow(data)) {
-        sumCoord <- 0
-        #classifications <- c()
-        for (p in rownames(cutPoints)) {
-          #print(p)
-          #print(i)
-          #print(data$Personnel)
-          #i = 3
-          #p = "SLOC"
-          #print(p)
-          #print(data[i, p])
-          coord <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-          #classifications <- c(classifications, parameterResult)
-          #print(data[i, p])
-          #print(coord)
-          if(is.na(coord)){
-            coord = 3
-          }
-          sumCoord <- sumCoord + coord
+  result <- list()
+  
+  if(nrow(data) > 0){
+    for (i in 1:nrow(data)) {
+      sumCoord <- 0
+      #classifications <- c()
+      for (p in rownames(cutPoints)) {
+        #print(p)
+        #print(i)
+        #print(data$Personnel)
+        #i = 3
+        #p = "SLOC"
+        #print(p)
+        #print(data[i, p])
+        coord <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
+        #classifications <- c(classifications, parameterResult)
+        #print(data[i, p])
+        #print(coord)
+        if(is.na(coord)){
+          coord = 3
         }
-        print(sumCoord)
-        combinedClass <- paste("l", sumCoord-nrow(cutPoints)+1, sep = "")
-        print(combinedClass)
-        if(is.null(result[[combinedClass]])){
-          result[[combinedClass]] = c()
-        }
-        result[[combinedClass]] <- c(result[[combinedClass]], data[i, "Project"])
-        print( result[[combinedClass]])
+        sumCoord <- sumCoord + coord
       }
+      print(sumCoord)
+      combinedClass <- paste("l", sumCoord-nrow(cutPoints)+1, sep = "")
+      print(combinedClass)
+      if(is.null(result[[combinedClass]])){
+        result[[combinedClass]] = c()
+      }
+      result[[combinedClass]] <- c(result[[combinedClass]], data[i, "Project"])
+      print( result[[combinedClass]])
     }
-    print(result)
-    return(result)
+  }
+  print(result)
+  return(result)
 }
 
 

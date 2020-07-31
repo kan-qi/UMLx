@@ -76,45 +76,59 @@ m_profile.cosmic <- function(cosmic, dataset){
 #  predict(mkii$m, testData)
 #}
 
-#define the sloc model
-m_fit.sloc <- function(sloc,dataset){
-  sloc$m = lm(Effort~SLOC, data=dataset)
-  sloc
+# #define the sloc model
+# m_fit.sloc <- function(sloc,dataset){
+#   sloc$m = lm(Effort~SLOC, data=dataset)
+#   sloc
+# }
+# 
+# m_predict.sloc <- function(sloc, testData){
+#   predict(sloc$m, testData)
+# }
+# 
+# m_profile.sloc <- function(sloc,dataset){
+#   profileData <- data.frame(SLOC=dataset$SLOC, row.names=rownames(dataset))
+# }
+
+#define the ksloc model
+m_fit.ksloc <- function(ksloc,dataset){
+  ksloc$m = lm(Effort~KSLOC, data=dataset)
+  ksloc
 }
 
-m_predict.sloc <- function(sloc, testData){
-  predict(sloc$m, testData)
+m_predict.ksloc <- function(ksloc, testData){
+  predict(ksloc$m, testData)
 }
 
-m_profile.sloc <- function(sloc,dataset){
-  profileData <- data.frame(SLOC=dataset$SLOC, row.names=rownames(dataset))
+m_profile.ksloc <- function(ksloc,dataset){
+  profileData <- data.frame(KSLOC=dataset$KSLOC, row.names=rownames(dataset))
 }
 
-#define the ln_sloc model
-#the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
-m_fit.ln_sloc <- function(ln_sloc, dataset){
-  #dataset <- categorizedDataset
-  #ln_sloc <- list()
-  dataset <- dataset[dataset$SLOC!=0 & dataset$Effort != 0,]
-  dataset$log_effort = log(dataset$Effort)
-  dataset$log_sloc = log(dataset$SLOC)
-  ln_sloc$m = lm(log_effort~log_sloc, data=dataset)
-  ln_sloc
-}
-
-m_predict.ln_sloc <- function(ln_sloc, testData){
-  #testData <- modelData
-  a = summary(ln_sloc$m)$coefficients[1,1]
-  b = summary(ln_sloc$m)$coefficients[2,1]
-  predicted=exp(a)*testData$SLOC^b
-  names(predicted) = rownames(testData)
-  predicted
-}
-
-m_profile.ln_sloc <- function(ln_sloc, dataset){
-  #testData <- modelData
-  profileData <- data.frame(LOG_SLOC=log(dataset$SLOC), row.names=rownames(dataset))
-}
+# #define the ln_sloc model
+# #the simplified version of cocomo model with log transformation: log(y) = log(a) + b*log(x)
+# m_fit.ln_sloc <- function(ln_sloc, dataset){
+#   #dataset <- categorizedDataset
+#   #ln_sloc <- list()
+#   dataset <- dataset[dataset$SLOC!=0 & dataset$Effort != 0,]
+#   dataset$log_effort = log(dataset$Effort)
+#   dataset$log_sloc = log(dataset$SLOC)
+#   ln_sloc$m = lm(log_effort~log_sloc, data=dataset)
+#   ln_sloc
+# }
+# 
+# m_predict.ln_sloc <- function(ln_sloc, testData){
+#   #testData <- modelData
+#   a = summary(ln_sloc$m)$coefficients[1,1]
+#   b = summary(ln_sloc$m)$coefficients[2,1]
+#   predicted=exp(a)*testData$SLOC^b
+#   names(predicted) = rownames(testData)
+#   predicted
+# }
+# 
+# m_profile.ln_sloc <- function(ln_sloc, dataset){
+#   #testData <- modelData
+#   profileData <- data.frame(LOG_SLOC=log(dataset$SLOC), row.names=rownames(dataset))
+# }
 
 #the baseline model which only takes the average of the output traning dataset.
 m_fit.baseline_model <- function(baseline_model, dataset){
@@ -153,13 +167,17 @@ size_metric_models <- function(dataset){
   
   #models$mkii = list()
   
-  #define the sloc model
+  # #define the sloc model
+  # 
+  # models$sloc = list()
   
-  models$sloc = list()
+  #define the Ksloc model
   
-  #define the ln_sloc model
+  models$ksloc = list()
   
-  models$ln_sloc = list()
+  # #define the ln_sloc model
+  # 
+  # models$ln_sloc = list()
   
   #define the baseline model
   #models$baseline_model = list()
