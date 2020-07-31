@@ -341,9 +341,9 @@ evalFit <- function(models, dataset, fit_metrics = c("R2", "f_test")){
 # The cross validation process to evaluate the out-of-sample accuracy
 cv <- function(models, dataset, accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50'), nfold = 5){
 
-dataset = modelData
-accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50')
-nfold = 5
+#dataset = modelData
+#accuracy_metrics = c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange50')
+#nfold = 5
 
 folds <- cut(seq(1,nrow(dataset)),breaks=nfold,labels=FALSE)
 

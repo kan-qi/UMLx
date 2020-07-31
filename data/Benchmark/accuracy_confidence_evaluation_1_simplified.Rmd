@@ -89,10 +89,11 @@ Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cros
 config = list()
 config$goodness_fit_metrics <- c("R2", "f_test")
 config$cv_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
-config$cv_nfold = 5
+config$cv_nfold = 4
 config$bs_accuracy_metrics <- c('mmre','pred15','pred25','pred50', "mdmre", "mae", "predRange50")
-config$bs_niters = 200
-config$bs_confidence_level = 0.83
+config$bs_niters = 10000
+config$bs_confidence_level = 0.84
+
 benchmarkResults <- modelBenchmark(models, modelData, config)
 
 
