@@ -13,12 +13,9 @@ library(caret)
 library(dplyr)
 library(parallel)
 library(nnet)
-
 library(mice)
 library(randomForest)
-
 library(nnet)
-
 library(caret)
 library(dplyr)
 library(doParallel)
@@ -156,6 +153,9 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
   
   #set.seed(1984)  # set a seed
   #print(regression_cols)
+  x <- colnames(dataset)
+  regression_cols <- x[x!="ID"]
+  
   regressionData = dataset[, regression_cols]
   # Clean dataset to keep features that we care about only
   data <- clean_neural(regressionData)
@@ -226,13 +226,10 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
 m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   
   #set.seed(1984)  # set a seed
-  #print(neuralnet$regression_cols)
   regressionData <- dataset[, neuralnet$regression_cols]
   data <- clean_neural(regressionData[, colnames(regressionData) != "Effort"])
   data <- impute(data)
-  #data <- clean_neural(data)
   dims <- names(data)
-  #print(dims)
   neuralnet$dims = dims
   data$Effort = regressionData$Effort
   
@@ -243,15 +240,9 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   
   ## Preprocess data
   methods <- c("center", "scale", "nzv", "pca", "knnImpute", "corr")
-  preprocessed_data <- preProcess(data[, names(data) != "Effort"],
-                                  method=methods,
-                                  na.remove=FALSE,
-                                  pcaComp=pcaComp,
-                                  k=5,
-                                  knnSummary = mean,
-                                  outcome=NULL,
-                                  fudge=.2,
-                                  numUnique=3)
+  preprocessed_data <- preProcess(data[, names(data) != "Effort"],method=methods,na.remove=FALSE,
+  pcaComp=pcaComp,k=5,knnSummary = mean,outcome=NULL,fudge=.2,numUnique=3)
+  
   neuralnet$transform <- preprocessed_data
   if (verbose) print(preprocessed_data)
   
@@ -272,16 +263,8 @@ m_fit.neuralnet <- function(neuralnet, dataset, verbose=FALSE) {
   ## Fit Model
   if (verbose) cat("****** Neural Network - NNET ...  \n")
   nnet.grid <- expand.grid(size=size, decay=decay)
-
-  nnet.model <- train(Effort ~ .,
-                      data=data_train,
-                      method="nnet",
-                      trControl=model.control,
-                      maxit=1000,
-                      tuneGrid=nnet.grid,
-                      trtrace=FALSE,
-                      linout=1,
-                      verbose=verbose)
+  nnet.model <- train(Effort ~ .,data=data_train,method="nnet",trControl=model.control,maxit=1000,
+                      tuneGrid=nnet.grid,trtrace=FALSE,linout=1,verbose=verbose)
   
   if (verbose) print(nnet.model)
   
@@ -709,14 +692,14 @@ plot.nnet<-function(mod.in,nid=TRUE,all.out=TRUE,all.in=TRUE,bias=TRUE,wts.only=
   
 }
 
-
 # Stub for testing
-# filename <- "temp/android_dataset_6_4.csv"
+# filename <- "dsets/D3.csv"
 # modelData <- read.csv(filename, header=TRUE, sep=",", row.names="Project")
 # modelData$Project <- NULL
-# 
 # neuralnet <- list()
-# neuralnet <- neuralnet_model(modelData)
+# x <- colnames(modelData)
+# neuralnet <- neuralnet_model(modelData,x[x!="ID"])
+# print(neuralnet)
 # neuralnet <- m_fit.neuralnet(neuralnet, modelData)
 # print(neuralnet)
 # predictions <- m_predict.neuralnet(neuralnet, modelData)
