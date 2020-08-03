@@ -279,6 +279,7 @@ modelBenchmark <- function(models, dataset, config=list()){
   #niters = 1000, confidence_level = 0.83
   bsResults <- bootstrappingSE(models, dataset, config$bs_accuracy_metrics, config$bs_niters, config$bs_confidence_level)
   ret <-list(
+    goodness_fit_metrics = config$goodness_fit_metrics,
     fitResults = fitResults,
     cvResults = cvResults, 
     bsResults = bsResults,
