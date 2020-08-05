@@ -2,7 +2,7 @@
 m_fit.step_lnr <- function(step_lnr,dataset){
   #step_lnr <- models$step_lnr
   #dataset = modelData
-  cleanData <- clean_step(dataset[, colnames(dataset) != "Effort"])
+  cleanData <- sl_clean_step(dataset[, colnames(dataset) != "Effort"])
   dims <- colnames(cleanData)
   step_lnr$dims <- dims
   str_frm <- paste("Effort ~", paste(dims, collapse="+"))
@@ -53,7 +53,7 @@ stepwise_linear_model <- function(modelData, regression_cols=c()){
   }
 
   # Preprocess dataset
-clean_step <- function(dataset){
+sl_clean_step <- function(dataset){
   # numeric data only
   data.numeric<-dplyr::select_if(dataset, is.numeric)
   
