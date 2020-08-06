@@ -131,7 +131,7 @@ fitModel <- function(data.train, verbose=FALSE) {
                     data=data.train,
                     method="nnet",
                     trControl=model.control,
-                    maxit=1000,
+                    maxit=500,
                     #tuneLength=5,
                     tuneGrid=nnet.grid,
                     trtrace=FALSE,
@@ -170,7 +170,10 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
   hyperparameters <- list()
   methods <- c("center", "scale", "nzv", "pca", "knnImpute", "corr")
   train_data_size <- floor(0.8 * nrow(data))
-  for(pcaComp in seq(6, 10)) {
+  
+  mini = min(train_data_size, 6)
+  maxi = min(nrow(data), 10)
+  for(pcaComp in seq(mini, maxi)) {
     start_time <- proc.time()
     
     preprocessed_data <- preProcess(data[, names(data) != "Effort"],
@@ -182,6 +185,7 @@ neuralnet_model <- function(dataset, regression_cols=c(), verbose=FALSE) {
                                     outcome=NULL,
                                     fudge=0.2,
                                     numUnique=3)
+    
     
     data_pca <- predict(preprocessed_data, data[, names(data) != "Effort"])
     #data.pca$Effort <- data$Effort
@@ -693,7 +697,7 @@ plot.nnet<-function(mod.in,nid=TRUE,all.out=TRUE,all.in=TRUE,bias=TRUE,wts.only=
 }
 
 # Stub for testing
-# filename <- "dsets/D3.csv"
+# filename <- "E:/Kan/UMLx-2020-summer-model-tool-integration/UMLx-2020-summer-model-tool-integration/data/Benchmark/dsets/D31.csv"
 # modelData <- read.csv(filename, header=TRUE, sep=",", row.names="Project")
 # modelData$Project <- NULL
 # neuralnet <- list()
