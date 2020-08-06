@@ -30,7 +30,7 @@ clean_step <- function(dataset){
   #newdata["Type"] <- apply(newdata["Type"], 1, function(x) if(x == "Website") 
     #1 else if (x == "Mobile App") 2 else if (x == " Tool") 3 else 4)
   newdata["Type"] <- as.numeric(as.factor(unlist(newdata["Type"])))
- 
+  
   #removes near zero variance columns.
   nzv_cols <- nearZeroVar(newdata) #returns the cols number of nearZeroVar
   data <- newdata[, -nzv_cols]
