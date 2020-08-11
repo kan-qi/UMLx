@@ -697,8 +697,12 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 					// put apk activity info to model
 					modelInfo.apkFile = apkFlag;
 					if (modelInfo.apkFile) {
-						let data = fs.readFileSync(modelInfo.OutputDir + "/android-attrs.json");
+						
+						//MR let data = fs.readFileSync(modelInfo.OutputDir + "/android-attrs.json");
+						let data = fs.readFileSync("./MR" + "/android-attrs1.json");
 						modelInfo.apkAttrs = JSON.parse(data.toString());
+						
+						
 					}
 
 					effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){

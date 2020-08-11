@@ -77,27 +77,67 @@
 //              console.log("finished prediction 1");
 //              process.exit();
 
-                // decompose effort for activities in Android apk
+                console.log("Estimation Results Before - MR");
+		console.log(estimationResults);
+				
                 if (modelInfo.apkFile) {
-                    if (estimationResults["UseCases"].length === 0) {
-                        if(callbackfunc){
-                            callbackfunc(false);
-                        }
-                        return;
-                    }
-                    const original_case = estimationResults["UseCases"][0];
-                    const total_effort = original_case["Effort"];
-                    const activityNames = modelInfo.apkAttrs.ActivityNames;
-                    const num_activities = activityNames.length;
-                    let use_cases = [];
-                    for (let i = 0; i < num_activities; i++) {
-                        let new_case = JSON.parse(JSON.stringify(original_case));
-                        new_case["Name"] = activityNames[i];
-                        new_case["Effort"] = total_effort / num_activities;
-                        use_cases.push(new_case);
-                    }
-                    estimationResults["UseCases"] = use_cases;
+					//MR++
+					if(estimationResults.UseCases === 0)
+					{
+						if(callbackfunc)
+						{
+							callbackfunc(false);
+						}
+					}
+					
+					const original_case = estimationResults["UseCases"][0];
+					const total_effort = original_case["Effort"];
+					const activityNames = modelInfo.apkAttrs.Activities;
+					const serviceNames = modelInfo.apkAttrs.Services;
+					const num_activities = activityNames.length;
+					const num_services = serviceNames.length;
+					let use_cases = [];
+					var total_event_handlers = 0;
+					for(let i = 0; i < num_activities; i++)
+					{
+						total_event_handlers = parseInt(total_event_handlers) + parseInt(activityNames[i].eventAndHandler);
+						//console.log(total_event_handlers);
+					}
+					
+					for(let j = 0; j < num_services; j++)
+					{
+						total_event_handlers = parseInt(total_event_handlers) + parseInt(serviceNames[j].eventAndHandler);
+						//console.log(total_event_handlers);
+					}
+					
+					console.log("Prinitng val - MR");
+					console.log(total_event_handlers);
+					//process.exit();
+					
+					
+					for(let k = 0; k < num_activities; k++)
+					{
+						let new_case = JSON.parse(JSON.stringify(original_case));
+						new_case["Name"] = activityNames[k].name;
+						//new_case["Effort"] =  Math.ceil((activityNames[k].eventAndHandler/total_event_handlers) * total_effort); 
+						new_case["Effort"] = ((activityNames[k].eventAndHandler/total_event_handlers) * total_effort).toFixed(2); 
+						use_cases.push(new_case);
+					}
+					for(let l = 0; l < num_services; l++)
+					{
+						let new_case = JSON.parse(JSON.stringify(original_case));
+						new_case["Name"] = serviceNames[l].name;
+						//new_case["Effort"] = Math.ceil((serviceNames[l].eventAndHandler/total_event_handlers) * total_effort);
+						new_case["Effort"] = ((serviceNames[l].eventAndHandler/total_event_handlers) * total_effort).toFixed(2);  
+						use_cases.push(new_case);
+					}
+					estimationResults["UseCases"] = use_cases;
+					//MR--
                 }
+
+				console.log("Estimation Results After - MR");
+				console.log(estimationResults);
+				//process.exit();
                 
                 if(!modelInfo){
                     if(callbackfunc){

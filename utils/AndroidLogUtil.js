@@ -391,6 +391,15 @@
 			var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
                 				+ "\"" + apkFileName + "\" "
                 				+ "\"" + outputDir + "\"";
+			/*var command = "java -cp + "\"""./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit"
+			                   +"\""./data/Test/AFHDownloader.apk + "\"" + "\" "./data/Test/output3 + "\"";*/
+
+			//var command = "java -cp "./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*" org.umlx.UMLxAndroidToolKit "./data/Test/AFHDownloader" "./data/Test/output3"
+			
+			var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+                				+ "\"" + "./public/output/DNS66/DNS66.apk" + "\" "
+                				+ "\"" + outputDir + "\"";
+			
 			console.log(command);
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 				if (error !== null) {

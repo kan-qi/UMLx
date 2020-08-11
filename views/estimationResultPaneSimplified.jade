@@ -28,7 +28,7 @@ if estimationResults
       thead
         tr
           th#number_column Number
-          th#Use_Case Use Case
+          th#Use_Case Component
           th#EffortPH Effort (PH)
           th#SizeMeasurement #{estimationResults.SizeMetric}
           th#Duration Schedule (Months)
@@ -36,8 +36,9 @@ if estimationResults
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
-              td #{i}
-              td #{estimationResults.UseCases[i].Name}
+              td #{i+1}
+              td
+                a(href='/MR/android-attrs1.json') #{estimationResults.UseCases[i].Name}
               td #{estimationResults.UseCases[i].Effort}
               td #{estimationResults.UseCases[i].SizeMeasurement}
               td #{estimationResults.UseCases[i].Duration}
