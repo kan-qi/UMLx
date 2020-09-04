@@ -750,6 +750,16 @@ app.get('/login',function(req,res){
 	res.render('login');
 });
 
+//MR++
+app.get('/displayjsondata',function(req,res){
+	let data = fs.readFileSync("./MR" + "/android-attrs1.json"); //Hard-coded Local JSON File Path
+	let jsondata = JSON.parse(data);
+	console.log(jsondata);
+	res.render('displayjsondata', {jsondata:jsondata});
+	//res.render('displayjsondata');
+});
+//MR--
+
 app.get('/logout',function(req,res){
 	if(req.cookies){
 		req.cookies.appToken = null;
