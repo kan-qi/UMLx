@@ -10,17 +10,17 @@ html
     p JSON DATA
     - var activities = jsondata.Activities
     - var services = jsondata.Services
-    p SERVICES
+    p ACTIVITIES
     - for(var i = 0; i < activities.length; i++)
-      p Service #{i+1}
+      p Activity #{i+1}
         p name: #{activities[i].name}
         p view_num: #{activities[i].view_num}
         p eventAndHandler: #{activities[i].eventAndHandler}
         br
     br
-    p ACTIVITIES
+    p SERVICES
     - for(var j = 0; j < services.length; j++)
-      p Activity #{j+1}
+      p Service #{j+1}
         p name: #{services[j].name}
         p view_num: #{services[j].view_num}
         p eventAndHandler: #{services[j].eventAndHandler}
