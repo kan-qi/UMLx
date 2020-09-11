@@ -1,3 +1,46 @@
+// $(document).ready(function() {
+//     // $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
+//     //     console.log(e.relatedTarget);
+//     //     if (e.relatedTarget) {
+//     //         $(e.relatedTarget).removeClass('active');
+//     //     }
+//     // });    
+
+
+// });
+
+
+$(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+$(document).ready( function() {
+    $(':file').on('fileselect', function(event, numFiles, label) {
+
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+        if( input.length ) {
+            input.val(log);
+        } else {
+            if( log ) alert(log);
+        }
+    });
+});
+
+function showLoading() {
+    var classList = document.getElementById("loadingScreen").classList;
+    console.log(classList);
+    classList.remove("hidden");
+    console.log(classList);
+    console.log('a')
+    
+}
+
 function setCookie(cname, cvalue, exdays) {
     var expires = "";
     if (exdays > 0) {
@@ -303,11 +346,12 @@ function predict_project_effort_func(show_loading_screen = true) {
         document.getElementById("loadingScreen").classList.remove("hidden");
     }
 
-
+    
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
         url: "predictProjectEffort",
+        //url: "uploadUMLFile",
         cache: false,
         processData: false, // Don't process the files
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
@@ -2691,6 +2735,15 @@ $('#collapse2').on('shown.bs.collapse', function () {
 $('#collapse2').on('hidden.bs.collapse', function () {
     $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
 });
+
+$('#collapse3').on('shown.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse3').on('hidden.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
 
 var repoLink = "";
 // var repoLink = "public";

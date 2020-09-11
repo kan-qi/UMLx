@@ -23,12 +23,30 @@ var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
+const androidAnalyzer = require('./UMLxAndroidAnalyzer');
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
 var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
+
+/* output/ and uploads/ folders auto-creation */
+var checkDirExist = (folderpath) => {
+	const pathArr = folderpath.split('/');
+	let _path = '';
+	for (let i = 0; i < pathArr.length; i++) {
+    	if (pathArr[i]) {
+    		_path += pathArr[i] + '/';
+      		if (!fs.existsSync(_path)) {
+        		fs.mkdirSync(_path);
+      		}
+    	}
+  	}
+}
+checkDirExist('public/output');
+checkDirExist('public/uploads');
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         var date = new Date();
@@ -95,7 +113,7 @@ app.get('/codeAnalysisPage',function(req,res){
 
 app.post('/analyseSrc',function(req,res){
 	console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
 
@@ -111,7 +129,7 @@ app.post('/analyseSrc',function(req,res){
 
 app.post('/genRepoReport',function(req,res){
 	console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
 
@@ -120,8 +138,8 @@ app.post('/genRepoReport',function(req,res){
 	fileManagerUtil.readJSON(configFilePath, function(config){
 			console.log(config);
 			config.configFilePath = configFilePath;
-			
-			
+
+
 var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-results-folders.txt").split(/\r?\n/g);
 var transactionFiles = [];
 var filteredTransactionFiles = [];
@@ -133,7 +151,7 @@ for(var i in modelOutputDirs){
 	if(modelOutputDir === ""){
 		continue;
 	}
-	
+
 	filteredTransactionFiles.push(modelOutputDir+"\\"+"filteredTransactionEvaluation.csv");
 	transactionFiles.push(modelOutputDir+"\\"+"transactionEvaluation.csv");
 	modelEvaluationFiles.push(modelOutputDir+"\\"+"modelEvaluation.csv");
@@ -153,10 +171,10 @@ for(var i in modelEvaluationContents){
 		  }
 
 		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
-		  
+
 		  }
 }
-	  
+
 FileManagerUtil.writeFileSync(repo.reportDir+"\\modelEvaluations.csv", modelEvaluationConsolidation);
 
 var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
@@ -171,9 +189,11 @@ function filter(transaction){
 			return true;
 		}
 	}
-	
+
 	return false;
 }
+
+
 
 for(var i in transactionEvaluationContents){
 	var identifiedTransactions = {};
@@ -193,9 +213,9 @@ for(var i in transactionEvaluationContents){
 		  identifiedTransactions[transactionEvaluationFields[1].replace(/\s+/g, "").toLowerCase()] = 1;
 		  filteredTransactionEvaluationStr += "\n"+transactionEvaluationLines[j];
 		  transactionEvaluationConsolidation += "\n"+transactionEvaluationLines[j]+","+i;
-		  
+
 		  }
-	  
+
 	  var transactionFilePath = transactionFiles[i];
 	  FileManagerUtil.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
 }
@@ -208,7 +228,7 @@ for(var i in transactionEvaluationContents){
 
 app.post('/analyseRepo',function(req,res){
 	console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
 
@@ -224,7 +244,7 @@ app.post('/analyseRepo',function(req,res){
 
 app.post('/analyseRepo',function(req,res){
 	console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
 
@@ -236,30 +256,30 @@ app.post('/analyseRepo',function(req,res){
 			var reportPath = reportDir+"\\analysis-results-folders.txt";
 	global.debugCache = new Object();
 //	FileManagerUtil.deleteFileSync(reportPath);
-	
+
 	  //use promise to construct the repo objects
     function analyseModel(projectXMI, projectName, reportDir){
         return new Promise((resolve, reject) => {
 //        	config.setDebugOutputDir(projectPath+"/debug");
-        	
+
 
         if(!projectName){
         		projectName = ""
         }
-        	
+
    		 let date = new Date();
    	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
    	     analysisDate = analysisDate+"@"+Date.now();
-   	   
+
    	     projectName = projectName + "_"+analysisDate;
-        	
+
         	var outputDir = reportDir +"\\"+projectName+"_analysis";
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
-        	
+
         	console.log(inputFile);
-        	
-        	mkdirp(outputDir, function(err) { 
+
+        	mkdirp(outputDir, function(err) {
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
         		console.log(inputFile+" doesn't exist.");
@@ -279,16 +299,16 @@ app.post('/analyseRepo',function(req,res){
             		console.log(message);
             		resolve();
         		})
-        		  
+
         	});
-        	
+
         	}
       	  });
         	});
-        	
+
         });
     }
-    
+
     return Promise.all(projectList.map(project=>{
         return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
     })).then(
@@ -296,7 +316,7 @@ app.post('/analyseRepo',function(req,res){
 			console.log("=============Cache==============");
 			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 			for (var key in global.debugCache) {
-				mkdirp(OutputDir, function(err) { 
+				mkdirp(OutputDir, function(err) {
 					fs.writeFile(key, global.debugCache[key], function(err){
 						if(err){
 							console.log(err);
@@ -316,14 +336,14 @@ app.post('/analyseRepo',function(req,res){
     ).catch(function(err){
         console.log(err);
     });
-	
+
 	});
 
 });
 
 app.post('/genCOCOMOReport',function(req,res){
 	// console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = req.body['configFile'];
 
@@ -356,7 +376,7 @@ app.post('/genCOCOMOReport',function(req,res){
 		generateSlocReport(fileList, slocReport);
 		}
 
-		
+
 		var cocomoCalculator = require("./effort_estimators/COCOMOCalculator.js");
 		var cocomoDataPath = config.repoDir+"\\COCOMORatings.csv";
 
@@ -365,7 +385,7 @@ app.post('/genCOCOMOReport',function(req,res){
 			var cocomoValues = cocomoCalculator.genDefaultValues();
 			var rows = "PROJ,KSLOC";
 			for(var i in cocomoValues){
-				rows += ","+i;				
+				rows += ","+i;
 			}
 			rows += "\n";
 
@@ -393,16 +413,14 @@ app.post('/genCOCOMOReport',function(req,res){
 		var cocomoDataResults= config.repoDir+"\\COCOMOResults.csv";
 		cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
 
-		// console.log(cocomoDataList);
-
 		var rows = "";
 
 		for(var i = 0; i < cocomoDataList.length; i++){
-	
+
 		var cocomoData = cocomoCalculator.estimateProjectEffort(cocomoDataList[i]);
 
 		console.log(cocomoData);
-				
+
 		if(i == 0){
 			rows += "PROJ, KSLOC, Effort";
 			for(var j in cocomoData.SF){
@@ -430,8 +448,8 @@ app.post('/genCOCOMOReport',function(req,res){
 				rows += ","+cocomoData.EM[j][k];
 				}
 			}
-			
-			
+
+
 		}
 		fileManagerUtil.writeFileSync(cocomoDataResults, rows);
 
@@ -442,7 +460,7 @@ app.post('/genCOCOMOReport',function(req,res){
 
 app.post('/genSrcReport',function(req,res){
 	// console.log(req);
-	
+
 	// var configFilePath = req.files['config-file'][0].path;
 	configFilePath = req.body['configFile'];
 
@@ -465,7 +483,7 @@ app.post('/genSrcReport',function(req,res){
 			var fileList = config.reportDir+"/fileList.txt";
 
 			fileManagerUtil.writeFileSync(fileList, paths);
-		
+
 			var generateSlocReport = require('./utils/RepoAnalyzerUtil').generateSlocReport;
 
 			generateSlocReport(fileList, config.reportDir+"/slocReport.csv");
@@ -478,11 +496,11 @@ app.get('/kdmModelRecoverPage',function(req,res){
 
 app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), function(req,res){
 	console.log(req);
-	
+
 	var workingDir = "public/"+req.body['workingDir'];
 
 	console.log(workingDir);
-			
+
 			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
 			// var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel2;
 
@@ -495,7 +513,7 @@ app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), functi
 				}
 
 				// files.forEach(function(filename) {
-					
+
 			        // console.log(workingDir + "/" + filename);
 
 					// fs.lstat(workingDir + "/" + filename, function(err, stats) {
@@ -514,7 +532,7 @@ app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), functi
 						// 	}
 
 							// the directory must contain ".project" file to proceed
-							
+
 
 							generateKDMModel4(workingDir, function(err, resultPath) {
 								if (err) {
@@ -532,16 +550,16 @@ app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), functi
 
 app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 }]), function(req,res){
 	console.log(req);
-	
+
 	var projectZipFilePath = req.files['project-zip-file'][0].path;
 
 	// extract zip file, put at the same directory
 	fs.createReadStream(projectZipFilePath)
-		.pipe(unzip.Extract({ 
-			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\")) 
+		.pipe(unzip.Extract({
+			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\"))
 		}))
 		.on('close', function () {
-			
+
 			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
 			var workingDir = path.dirname(projectZipFilePath);
 
@@ -592,95 +610,124 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
-	var projectInfo = {};
-	projectInfo.distributedSystem = req.body['distributed_system'];
-	projectInfo.responseTime = req.body['response_time'];
-	projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
-	projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
-	projectInfo.codeReusable = req.body['code_must_be_reusable'];
-	projectInfo.easyInstall = req.body['easy_to_install'];
-	projectInfo.easyUse = req.body['easy_to_use'];
-	projectInfo.portable = req.body['portable'];
-	projectInfo.easyToChange = req.body['easy_to_change'];
-	projectInfo.concurrent = req.body['concurrent'];
-	projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
-	projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
-	projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
-	projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
-	projectInfo.applicationExperience = req.body['application_experience'];
-	projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
-	projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
-	projectInfo.motivation = req.body['motivation'];
-	projectInfo.stableRequirements = req.body['stable_requirements'];
-	projectInfo.partTimeStaff = req.body['part_time_staff'];
-	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	
-	if(req.body['personnel']){
-		projectInfo.personnel = Number(req.body['personnel']);
-	}
-	
-	if(req.body['schedule']){
-		projectInfo.schedule = Number(req.body['schedule']);
-	}
-	
-	if(req.body['hours-per-month']){
-		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
-	}
-	
-	projectInfo.hoursPerMonth = 40;
-	
-	var umlFilePath = req.files['uml_file'][0].path;
-	
-	var estimationModel = req.body['model'];
-	
-	console.log("estimate project effort");
-	var umlModelType = "uml";
-	var umlModelName = "query1";
-	var formInfo = req.body;
-	umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
-		if(!repoInfo){
-			res.end("error");
-			return;
+	var uploadedFile = req.files['uml_file'][0];
+    if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file or apk file
+        var projectInfo = {};
+		projectInfo.distributedSystem = req.body['distributed_system'];
+		projectInfo.responseTime = req.body['response_time'];
+		projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
+		projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+		projectInfo.codeReusable = req.body['code_must_be_reusable'];
+		projectInfo.easyInstall = req.body['easy_to_install'];
+		projectInfo.easyUse = req.body['easy_to_use'];
+		projectInfo.portable = req.body['portable'];
+		projectInfo.easyToChange = req.body['easy_to_change'];
+		projectInfo.concurrent = req.body['concurrent'];
+		projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+		projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+		projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+		projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+		projectInfo.applicationExperience = req.body['application_experience'];
+		projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+		projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+		projectInfo.motivation = req.body['motivation'];
+		projectInfo.stableRequirements = req.body['stable_requirements'];
+		projectInfo.partTimeStaff = req.body['part_time_staff'];
+		projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+
+		if(req.body['personnel']){
+			projectInfo.personnel = Number(req.body['personnel']);
 		}
-		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
-		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
-		modelInfo.projectInfo = projectInfo;
-//		console.log('updated model info');
-//		console.log(modelInfo);
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-			//update model analytics.
-			if(!modelInfo){
+
+		if(req.body['schedule']){
+			projectInfo.schedule = Number(req.body['schedule']);
+		}
+
+		if(req.body['hours-per-month']){
+			projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
+		}
+
+		projectInfo.hoursPerMonth = 40;
+
+		var umlFilePath = req.files['uml_file'][0].path;
+
+		var estimationModel = req.body['model'];
+
+		console.log("estimate project effort");
+		var umlModelType = "uml";
+		var umlModelName = "query1";
+		var formInfo = req.body;
+		umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
+			if(!repoInfo){
 				res.end("error");
 				return;
 			}
-			console.log("model is extracted");
-			umlEvaluator.evaluateModel(modelInfo, function(){
-				console.log("model analysis complete");
-                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
-                    if(!estimationResults){
-                        console.log("error");
-                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
-                        return;
-                    }
+			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+	//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
+			modelInfo.projectInfo = projectInfo;
 
-                    console.log("estimation results");
-                    console.log(estimationResults);
+			if (path.extname(uploadedFile.originalname) == ".apk") {
+				modelInfo['apkFile'] = true;
+			}
+	//		console.log('updated model info');
+	//		console.log(modelInfo);
 
-                    modelInfo[estimationModel] = estimationResults;
-                    modelInfo.repo_id = repoInfo._id;
+			let apkFlag = modelInfo['apkFile'];
+			// read hard coded .apk.xml file and put it into output dir
+			umlFileManager.makeDir(modelInfo.OutputDir, () => {
+				let apkXml = fs.readFileSync("facility-tools/Android-toolkit/AnExplorer.apk.xml");
+				// rename the file to make it corresponding to the uploaded apk
+				let dirs =  modelInfo.umlFilePath.split("/");
+				let apkName = dirs[dirs.length - 1];
+				umlFileManager.writeFile(modelInfo.OutputDir + "/" + apkName + ".xml", apkXml.toString());
+			});
 
-                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+				umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+				//update model analytics.
+				if(!modelInfo){
+					res.end("error");
+					return;
+				}
+				modelInfo.Name = umlModelName;
+				console.log("model is extracted");
+				umlEvaluator.evaluateModel(modelInfo, function(){
+					console.log("model analysis complete");
 
-                    	currentModel = modelInfo;
-                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
+					// put apk activity info to model
+					modelInfo.apkFile = apkFlag;
+					if (modelInfo.apkFile) {
+						let data = fs.readFileSync(modelInfo.OutputDir + "/android-attrs.json");
+						modelInfo.apkAttrs = JSON.parse(data.toString());
+					}
 
-                    });
+					effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
+	                    if(!estimationResults){
+	                        console.log("error");
+	                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
+	                        return;
+	                    }
 
-                });
+	                    console.log("estimation results");
+	                    console.log(estimationResults);
+
+	                    modelInfo[estimationModel] = estimationResults;
+						modelInfo.repo_id = repoInfo._id;
+
+	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+
+	                    	currentModel = modelInfo;
+	                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
+
+	                    });
+
+	                });
+
+				});
+
 			});
 		});
-	});
+	}
 });
 
 // console.l = console.log;
@@ -703,7 +750,7 @@ app.get('/logout',function(req,res){
 	if(req.cookies){
 		req.cookies.appToken = null;
 	}
-	
+
 	res.redirect('/login');
 });
 
@@ -806,7 +853,6 @@ app.get('/clearDB', function(req, res){
 	}
 })
 
-
 app.get('/setupRepoStorage', function(req, res){
 	var userId = req.query.user_id;
 	if(userId === "flyqk191829189181810282"){
@@ -846,9 +892,6 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
-
-
-
 
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
@@ -901,7 +944,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/savegitinfo', function(req,res){
-	
+
 	var email = req.userInfo.email;
 	var userId = req.userInfo._id;
 	umlModelInfoManager.saveGitInfo(email,userId, function(success,msg){
@@ -917,17 +960,17 @@ app.get('/profile',function(req,res){
 
 	var profileInfo = {}
 	var userID = req.userInfo._id;
-    	
-	
+
+
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
-	
+
 	umlModelInfoManager.getGitData(req.userInfo._id, function(gitData, success, msg){
 		if(success==true){
 			profileInfo.gitData = gitData;
 		}
-	
+
 		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
         		res.render('profile', {profileInfo:profileInfo, profileRep:result.Repos[0]});
 	   	});
@@ -987,9 +1030,8 @@ app.get('/surveyAnalytics', function (req, res){
     // res.sendStatus(200);
 });
 
-
-app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
-    { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
+app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { name: 'uml_other', maxCount: 1 },
+    { name: 'uml_model_name', maxCount: 1 }, { name: 'uml_model_type', maxCount: 1 }, { name: 'repo_id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',
 		[],
         {
@@ -999,20 +1041,28 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+
     worker.on('message', (text) => {
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
         worker.kill();
+        res.redirect('/'); // 第二次redirect
     });
+
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
-    res.redirect('/');
+
     console.l("DEBUGGGG: before evaluate project");
+
+
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
+
+
+
 
 function encapsulateReq(req) {
     let obj = {};
@@ -1279,6 +1329,8 @@ app.get('/reanalyseRepo', function (req, res){
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+    console.l("test1");
+
     worker.on('message', (text) => {
         if(text.isEqual('ok')) {
             sendPush(subscription, 'Reanalyse finished');
@@ -1290,6 +1342,8 @@ app.get('/reanalyseRepo', function (req, res){
         console.l("killing child process");
         worker.kill();
     });
+    console.l("test2");
+
     worker.send(repoId);
     console.l("DEBUGGGG: Reanalyse task sent to worker");
     sendPush(subscription, 'Project Reanalysing');
@@ -1358,7 +1412,7 @@ app.get('/reanalyseModel', function (req, res){
 			}
 			umlEvaluator.evaluateModel(extractedModelInfo, function(modelInfo2){
 				console.log("model analysis complete");
-				
+
 				effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
 					if(!modelInfo3){
 						 res.redirect('/');
@@ -1471,7 +1525,7 @@ app.get('/queryModelInfo', function(req, res){
 		//console.log(uploadsFile);
 		res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
 	});
-    
+
 })
 
 app.get('/setupTestRepoStorage', function(req, res){
@@ -1507,7 +1561,7 @@ app.get('/requestUseCaseDetail', function(req, res){
 			res.send("error");
 			return;
 		}
-		
+
 		//create the displayable paths
 		var displayableTransactions = [];
 		for(var i in useCaseInfo.Transactions){
@@ -1625,7 +1679,7 @@ app.get('/getSubmittedSurveyList', function(req, res){
     umlModelInfoManager.getSurveyData(function(data){
         res.send(data);
     }, req.query.id);
-});		
+});
 
 app.get('/surveyData', function(req, res){
    res.render("surveyData");
@@ -1652,40 +1706,40 @@ var start = 0;
 var currentPage = 1;
 var totalVal = {"SLOC": 0, "schedule": 0,"personnel": 0, "EUCP": 0, "EXUCP": 0, "DUCP": 0, "effort": 0, "estimatedEffort": 0};
 app.get('/pager',function(req,res){
-   
+
     //var index = req.param('index');
     var repID = req.param('repId');
     //start = parseInt(req.param('start'));
     //pageSize = parseInt(req.param('pageSize'));
-    
-    
+
+
     if(req.param('currentPage') != undefined){
         currentPage = parseInt(req.param('currentPage'));
     }
-    
+
     if(currentPage >1){
         start = (currentPage - 1) * pageSize;
     }else{
         start = 0;
     }
-    
+
     console.log("repo ID "+repID+" Start "+start+" pageSize "+pageSize+" pageCount "+pageCount+" currentPage "+currentPage);
-    
+
     //umlModelInfoManager.queryRepoInfo(repID, function(repoInfo){
-    
+
         umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
-       
+
         /*totalRec = result.length;
         pageCount =  Math.ceil(totalRec/pageSize);
         */
-        
+
         //console.log(result);
         //console.log("Index in UMLx "+ index);
 
         res.render('pagination', {repoId: repID, pageR:result.Models, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
-       
+
        // });
-    }); 
+    });
 })
 
 
@@ -1696,9 +1750,9 @@ app.get('/', function(req, res){
         length: 12,
 		charset: 'alphabetic'
     });
-	
+
 	var repoId = req.userInfo.repoId;
-	
+
 //    if(req.param('step') != undefined && req.param('page') != undefined){
 //        var repID = req.param('repId');
 //        //var stepSize = parseInt(req.param('step'));
@@ -1714,7 +1768,7 @@ app.get('/', function(req, res){
     if(req.param('currentPage') != undefined){
         currentPage = parseInt(req.param('currentPage'));
     }
-    
+
     if(currentPage >1){
         start = (currentPage - 1) * pageSize;
     }
@@ -1722,7 +1776,7 @@ app.get('/', function(req, res){
 //    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
     umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
 
-      
+
 //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
 
@@ -1742,16 +1796,16 @@ app.get('/', function(req, res){
         totalUseCaseNum = resultForRepoInfo.UseCaseNum;
         totalNT = resultForRepoInfo.NT;
         totalEntityNum =  resultForRepoInfo.EntityNum;
-		
+
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
-      
+
         totalRec = modelNum;
         pageCount =  Math.ceil(totalRec/pageSize);
-       
+
         console.log("total Records"+totalRec);
-        
+
         console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
-		
+
         if(!repoInfo){
 			res.send("error");
 			return;
@@ -1769,7 +1823,7 @@ app.get('/', function(req, res){
 							repoInfo.Models.push(model[j]);
 							}
 						}
-						
+
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
@@ -1796,8 +1850,8 @@ app.get('/', function(req, res){
 app.post('/saveModelInfoCharacteristics', upload.fields([]), function(req,res){
     // console.log("/saveModelInfoCharacteristics");
 	// console.log(req.body);
-	
-	umlModelInfoManager.saveModelInfoCharacteristics(req.body, function(result,message){		
+
+	umlModelInfoManager.saveModelInfoCharacteristics(req.body, function(result,message){
 		res.json(result);
 	});
 });
@@ -1838,7 +1892,7 @@ app.get('/listFileUnderDir', function(req, res) {
 		isAbsolute = true;
 		filePath = filePath.replace(/public\//g, "");
 	}
-	
+
     function recurDir(filePath, done) {
         var results = [];
         fs.readdir(filePath, function(err, list){
@@ -2006,7 +2060,7 @@ app.get('/getZipPackage', function (req, res){
 	var repoId = '/repo' + currentModel.repo_id;
 	var modelId = '/' + currentModel.fileId;
 	currentModel.OutputDir = __dirname + '/public/output' + repoId + modelId;
-	
+
 	var folderPath = __dirname + '/public/output' + repoId + modelId;
 	var zipPath = __dirname + '/public/output/package.zip';
 
@@ -2028,8 +2082,8 @@ app.get('/getZipPackage', function (req, res){
 	 				}
 	 			});
 		    }
-		});			
-	});	
+		});
+	});
 });
 
 app.post('/analyseSLOC', function (req, res) {
@@ -2066,11 +2120,11 @@ app.post('/analyseSLOC', function (req, res) {
 	}
 
 	var writeFile = require('./utils/FileManagerUtil').writeFileSync;
-	
+
 	var outputFilePath = workingDir+"/fileList.txt";
-	
+
 	writeFile(outputFilePath, filePaths);
-	
+
 	console.log("hello");
 	analyseSLOC(outputFilePath, workingDir, function(result){
         if(result){
@@ -2099,7 +2153,7 @@ app.get('/getZipPackage', function (req, res){
 	var zipFolder = require('zip-folder');
 	var folderPath = __dirname + '/public/output' + repoId + modelId;
 	var zipPath = __dirname + '/public/output/package.zip';
-	 
+
 	zipFolder(folderPath, zipPath, function(err) {
 	    if(err) {
 	        console.log(err);
@@ -2116,5 +2170,5 @@ app.get('/getZipPackage', function (req, res){
  				}
  			});
 	    }
-	});		
+	});
 });

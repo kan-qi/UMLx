@@ -106,11 +106,12 @@ public class AnalysisKit {
 	}
 	
 	public void generateSlocReport(String repoListPath, String repoRecordPath) throws Exception {
-//		System.out.println(repoRecordPath+"\\sloc_report.csv");
-		
-//		File repoListFile = new File(repoRecordPath+"\\repositories.txt");
-		
+
 		File repoListFile = new File(repoListPath);
+
+		if(repoListFile == null || !repoListFile.exists()){
+			throw new Exception("repo doesn't exist!");
+		}
 		
 		FileInputStream fis = new FileInputStream(repoListFile);
 
@@ -125,8 +126,8 @@ public class AnalysisKit {
 				if(!repoDir.exists()) {
 					continue;
 				}
-//				projectRecordPaths.put(repoDir.getName(), repoRecordPath+"\\"+getRepoDirNameByPath(line.replaceAll("\\s+$", "")));
-				projectRecordPaths.put(repoDir.getName(), line);
+				projectRecordPaths.put(repoDir.getName(), repoRecordPath+"\\"+getRepoDirNameByPath(line.replaceAll("\\s+$", "")));
+//				projectRecordPaths.put(repoDir.getName(), line);
 			}
 		}
 	 
@@ -162,11 +163,9 @@ public class AnalysisKit {
 				br.close();
 		}
 		
-		File reportFile = new File(repoRecordPath);
+		System.out.println(repoRecordPath+"\\sloc_report.csv");
 		
-		if(repoListFile == null || !repoListFile.exists()){
-			throw new Exception("repo doesn't exist!");
-		}
+		File reportFile = new File(repoRecordPath+"\\sloc_report.csv");
 		
 		if(reportFile.exists()) {
 			reportFile.delete();
@@ -287,7 +286,6 @@ public class AnalysisKit {
 			try {
 				analysisKit.generateSlocReport(repoListPath, repoRecordPath);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

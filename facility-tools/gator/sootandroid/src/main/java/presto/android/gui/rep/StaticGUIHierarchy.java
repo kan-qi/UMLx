@@ -46,6 +46,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
   }
 
   void traverseRootViewAndHierarchy(ViewContainer parent, Set<NNode> roots) {
+	System.out.println("traverse root view and hierarchy");
     // Roots & view hierarchy
     if (roots != null && !roots.isEmpty()) {
       for (NNode n : roots) {
@@ -57,6 +58,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
   SootClass currentActivity;
 
   void buildActivities() {
+	System.out.println("build activities");
     for (SootClass activityClass : analysisOutput.getActivities()) {
       currentActivity = activityClass;
       Activity act = new Activity();
@@ -73,6 +75,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
   }
 
   void buildDialogs() {
+	System.out.println("build dialogs");
     for (NDialogNode dialogNode : analysisOutput.getDialogs()) {
       Dialog dialog = new Dialog();
       dialogs.add(dialog);
@@ -89,6 +92,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
   }
 
   void buildOptionsMenu(Activity act, SootClass activityClass) {
+	System.out.println("build options menu");
     NOptionsMenuNode optionsMenu =
             flowgraph.activityClassToOptionsMenu.get(activityClass);
     if (optionsMenu != null) {
@@ -118,6 +122,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
   Set<NNode> visitingNodes = Sets.newHashSet();
 
   void buildView(ViewContainer parent, NNode node) {
+	System.out.println("build view: "+node.id);
     if (!(node instanceof NObjectNode)) {
       throw new RuntimeException(node.toString());
     }
@@ -158,7 +163,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
         view.idName = idAndName.getO2();
         parent.addChild(view);
         buildEventAndHandlers(view, node);
-        visitingNodes.remove(node);
+//        visitingNodes.remove(node);
         return;
       }
     }
@@ -207,7 +212,7 @@ public class StaticGUIHierarchy extends GUIHierarchy {
       }
     }
 
-    visitingNodes.remove(node);
+//    visitingNodes.remove(node);
   }
 
   void buildEventAndHandlers(View view, NNode node) {

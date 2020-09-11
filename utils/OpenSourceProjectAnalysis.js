@@ -16,7 +16,7 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var EclipseUtil = require("./EclipseUtil.js");
-var FileManagerUtil = require("./FileManagerUtil.js");
+var FileManagerUtil = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
 var config = require("../config.js");
 
@@ -258,12 +258,12 @@ if(functionSelection === "--scan-repo"){
 	for(var i in repo.projectList){
 		projectPaths += repo.projectList[i].path+"\n";
 	}
+
+	var repoRecordPath = repo.reportDir+"\\sloc";
 	
-	var repoListDir= repo.reportDir+"\\temp"
-	mkdirp(repoListDir, function(err) {
-		  var repoListPath = repoListDir+"\\repositories.txt";
-		  var repoRecordPath = repoListDir+"\\sloc";
-		  FileManagerUtil.writeFileSync(repo.reportDir+"\\repositories.txt", projectPaths);
+	mkdirp(repoRecordPath, function(err) {
+		  var repoListPath = repoRecordPath+"\\repositories.txt";
+		  FileManagerUtil.writeFileSync(repoListPath, projectPaths);
 		  scanRepo(repoListPath, repoRecordPath);
 	});
 }
@@ -281,9 +281,8 @@ analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
 	//4. calculate sloc for each repo
-//var repoListDir= repo.reportDir+"\\temp";
 var repoRecordPath = repo.reportDir+"\\sloc";
-var repoListPath = repoRecordPath+"\\fileList.txt";
+var repoListPath = repoRecordPath+"\\repositories.txt";
 generateSlocReport(repoListPath, repoRecordPath);
 }
 else if(functionSelection === "--recover-kdm"){

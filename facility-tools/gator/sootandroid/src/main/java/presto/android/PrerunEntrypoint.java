@@ -37,6 +37,7 @@ public class PrerunEntrypoint {
     Configs.preRun = true;
     PrerunXMLParser xmlParser = PrerunXMLParser.v();
     for (String str : Configs.onDemandClassSet) {
+      System.out.println(str);
       Scene.v().addBasicClass(str, SootClass.SIGNATURES);
     }
     //Load basic classes

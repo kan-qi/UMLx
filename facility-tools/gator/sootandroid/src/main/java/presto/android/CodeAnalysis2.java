@@ -1,29 +1,42 @@
 /*
- * AnalysisEntrypoint.java - part of the GATOR project
- *
- * Copyright (c) 2018 The Ohio State University
- *
- * This file is distributed under the terms described in LICENSE in the
- * root directory.
+ * CodeAnalysis.java
  */
+
 package presto.android;
 
-import presto.android.gui.GUIAnalysis;
 import soot.Body;
 import soot.Scene;
 import soot.SootClass;
+import soot.SootField;
 import soot.SootMethod;
+import soot.Type;
 import soot.Unit;
 import soot.Value;
 import soot.ValueBox;
 import soot.jimple.FieldRef;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
-import soot.jimple.internal.JAssignStmt;
+import soot.jimple.infoflow.android.Debug;
+import soot.jimple.infoflow.android.SetupApplication;
+import soot.jimple.infoflow.android.axml.AXmlAttribute;
+import soot.jimple.infoflow.android.axml.AXmlHandler;
+import soot.jimple.infoflow.android.axml.AXmlNode;
+import soot.jimple.infoflow.android.axml.parsers.AXML20Parser;
+import soot.jimple.infoflow.android.resources.IResourceHandler;
+import soot.jimple.infoflow.android.SetupApplication;
 import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
+import soot.options.Options;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,80 +46,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import pxb.android.axml.AxmlVisitor;
+
 /**
- * var dicClassUnits = {};
-	var dicMethodUnits = {};
-	var dicCompositeClasses = {};
-	var dicCompositeClass = {}; // {subclass.uuid, compositeClassUnit.uuid}
-	var dicCompositeSubclasses = {}; // {compositeClassUnit.uuid, [subclass.uuid]}
-	var dicMethodClass = {};	 // {method.uuid, class.uuid}
-	var dicActionElementMethod = {};
-	
-	Output the code dictionaries by soot.
-	
-	var ActionElement = {
-						name:XMIActionElement['$']['name'],
-						uuid:XMIActionElement['$']['uuid'],
-						kind:XMIActionElement['$']['kind'],
-						type:XMIActionElement['$']['xsi:type'],,
-						StorableUnits: [],
-						ClassUnits: [],
-						Addresses: [],
-						Reads:[],
-						Calls:[],
-						Creates:[],
-						ActionElements:[],
-						attachment:XMIActionElement
-		}
-		
-			var MethodUnit = {
-				uuid: XMIMethodUnit['$']['uuid'],
-				Signature: null,
-				BlockUnit : {
-					ActionElements: []
-				},
-				attachment: XMIMethodUnit
-		}
-
-
-// those elements store all the same type of elements in the sub classes.
-		var ClassUnit = {
-				name: XMIClassUnit['$']['name'],
-				isAbstract: XMIClassUnit['$']['isAbstract'],
-				Source: null,
-				MethodUnits : [],
-				StorableUnits: [],
-				InterfaceUnits : [],
-				Imports : [],
-				ClassUnits: [],
-				uuid: XMIClassUnit['$']['uuid'],
-				attachment: XMIClassUnit
-		}
-		
-		
-		var call = {
-				to: XMICall['$']['to'],
-				from:XMICall['$']['from']
-			}
-			
-			
-       var extend = {
-				to: XMIExtend['$']['to'],
-				from: XMIExtend['$']['from']
-			};
-			
-		var storableUnit = {
-				name: XMIStorableUnit['$']['name'],
-				type: XMIStorableUnit['$']['type'] // this is a path to the class
-			};
-			
-			
-		var externalClassUnit = {
-					name: XMIExternalClassUnit['$']['name'],
-					type: XMIExternalClassUnit['$']['xsi:type'],
-				}
-	
-	
  * @author Kan Qi
  *
  */
@@ -123,607 +70,218 @@ public class CodeAnalysis2 {
     return theInstance;
   }
   
+  class MethodUnit {
+	  public MethodUnit(SootMethod method) {
+		  this.uuid = UUID.randomUUID().toString();
+		  this.name = method.getName();
+		  this.returnType = method.getReturnType().toString();
+		  this.parameterTypes = new ArrayList<String>();
+		  for(Type parameter : method.getParameterTypes()) {
+			  this.parameterTypes.add(parameter.toString());
+		  }
+		  this.attachment = method;
+		  this.signature = method.getSignature();
+	  }
+	String returnType;
+	List<String> parameterTypes;
+	String name;
+	String uuid;
+	SootMethod attachment;
+	String signature;
+	
+	public String getReturnType() {
+		return this.returnType;
+	}
+	
+	public List<String> getParameterTypes() {
+		return this.parameterTypes;
+	}
+	
+	public String toJSONString() {
+		StringBuilder str = new StringBuilder();
+		str.append("{");
+		str.append("\"name\":\""+name+"\",");
+		str.append("\"UUID\":\""+uuid+"\",");
+		str.append("\"returnType\":\""+returnType+"\",");
+		str.append("\"parameterTypes\":[");
+		int i = 0;
+		for(String parameterType : parameterTypes) {
+			str.append("\""+parameterType+"\"");
+			if(i != parameterTypes.size()-1) {
+				str.append(",");
+			}
+			i++;
+		}
+		str.append("]}");
+		return str.toString();
+	}
+}
+
   
-  /**
-   * // those elements store all the same type of elements in the sub classes.
-		var ClassUnit = {
-				name: XMIClassUnit['$']['name'],
-				isAbstract: XMIClassUnit['$']['isAbstract'],
-				Source: null,
-				MethodUnits : [],
-				StorableUnits: [],
-				InterfaceUnits : [],
-				Imports : [],
-				ClassUnits: [],
-				uuid: XMIClassUnit['$']['uuid'],
-				attachment: XMIClassUnit
+//private class Parameter{
+//	String name;
+//	String type;
+//	
+//	Parameter(name, type){
+//		this.name = name;
+//		this.type = type;
+//	}
+//	
+//	public String toJSONString() {
+//		StringBuilder str = new StringBuilder();
+//		str.append("{");
+//		str.append("\"name\":\""+name+"\",");
+//		str.append("\"type\":\""+type);
+//		str.append("}");
+//		return str.toString();
+//	}
+//}
+
+  
+private class CallGraphNode{
+	MethodUnit methodUnit;
+	ClassUnit classUnit;
+	
+	CallGraphNode(MethodUnit methodUnit, ClassUnit classUnit) {
+		super();
+		this.methodUnit = methodUnit;
+		this.classUnit = classUnit;
+	}
+	
+}
+  
+//output the call graph to JSON format
+private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, MethodUnit> methodBySig, Map<String, String> methodToClass, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic){
+		
+		System.out.println("construct of call graph starts.");
+		Set<CallGraphNode[]> edges = new HashSet<CallGraphNode[]>();
+		
+		if(cg != null) {
+		Iterator<Edge> itr = cg.iterator();
+
+		while(itr.hasNext()){
+			Edge e = itr.next();
+			String srcSig = e.getSrc().toString();
+			String destSig = e.getTgt().toString();
+			
+			MethodUnit srcMethod = methodBySig.get(srcSig);
+			MethodUnit destMethod = methodBySig.get(destSig);
+			
+			if(srcMethod == null || destMethod == null) {
+				continue;
+			}
+			
+			String srcClassUUID = methodToClass.get(srcMethod.uuid);
+			String targetClassUUID = methodToClass.get(destMethod.uuid);
+			
+			ClassUnit srcClass = classUnitByUUID.get(srcClassUUID);
+			ClassUnit targetClass = classUnitByUUID.get(targetClassUUID);
+			
+			CallGraphNode srcNode = new CallGraphNode(srcMethod, srcClass);
+			CallGraphNode targetNode = new CallGraphNode(destMethod, targetClass);
+			
+			edges.add(new CallGraphNode[] {srcNode, targetNode});
+		}
 		}
 		
 		
-   * @return
-   */
-//  private List<> identifyClassUnits(){
-//	  Scene.v().getFastHierarchy().get
-//  }
-//  
-//  
-//  private List<> identifyMethodUnits(){
-//	  
-//  }
-//  
-//  
-//  private void createCallGraph() {
-//	    SetupApplication app = new SetupApplication
-//                (androidPlatformPath,
-//                        appPath);
-//        app.calculateSourcesSinksEntrypoints("D:\\Arbeit\\Android Analyse\\soot-infoflow-android\\SourcesAndSinks.txt");
-//        soot.G.reset();
-//
-//        Options.v().set_src_prec(Options.src_prec_apk);
-//        Options.v().set_process_dir(Collections.singletonList(appPath));
-//        Options.v().set_android_jars(androidPlatformPath);
-//        Options.v().set_whole_program(true);
-//        Options.v().set_allow_phantom_refs(true);
-//        Options.v().setPhaseOption("cg.spark", "on");
-//
-//        Scene.v().loadNecessaryClasses();
-//
-//        SootMethod entryPoint = app.getEntryPointCreator().createDummyMain();
-//        Options.v().set_main_class(entryPoint.getSignature());
-//        Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
-//        System.out.println(entryPoint.getActiveBody());
-//
-//        PackManager.v().runPacks();
-//
-//        CallGraph appCallGraph = Scene.v().getCallGraph();
-//        
-//  }
-//  
-//  
-//  private void constructTypeDependencyGraph() {
-//
-//		// var edges = [];
-//		// var nodes = [];
-//		// var nodesByName = {};
-//
-//		var edgesAttr = [];
-//		var nodesAttr = [];
-//		var nodesByNameAttr = {};
-//
-//		var edgesLocal = [];
-//		var nodesLocal = [];
-//		var nodesByNameLocal = {};
-//
-//		var edgesPara = [];
-//		var nodesPara = [];
-//		var nodesByNamePara = {};
-//
-//		var nodesP = [];
-//		var edgesP = [];
-//		var nodesByNameP = {};
-//
-//		var edgesAttrComposite = [];
-//		var nodesAttrComposite = [];
-//		var nodesByNameAttrComposite = {};
-//
-//		var nodesPComposite = [];
-//		var edgesPComposite = [];
-//		var nodesByNamePComposite = {};
-//
-//		// console.log("top classes");
-//		// console.log(topClassUnits);
-//
-//		for (var i in dicClassUnits) {
-//			var classUnit = dicClassUnits[i];
-//			//			console.log('test');
-//			//			console.log(classUnit);
-//			// var xmiClassUnit = classUnit.attachment;
-//			var XMIClassStorableUnits = classUnit.StorableUnits
-//			for (var q in XMIClassStorableUnits) {
-//				var XMIClassStorableUnit = XMIClassStorableUnits[q];
-//				if (XMIClassStorableUnit.type == undefined) {
-//					continue;
-//				}
-//				var XMIClassStorableUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIClassStorableUnit.type));
-//				var targetClassUnit = null;
-//				// console.log('StorableUnit');
-//				// console.log(XMIClassStorableUnitType[0]['$']['uuid']);
-//
-//				if (!XMIClassStorableUnitType || XMIClassStorableUnitType.length < 1) {
-//					continue;
-//				}
-//
-//				for (var j in dicClassUnits) {
-//					var classUnitCandidate = dicClassUnits[j];
-//					if (classUnitCandidate.uuid == XMIClassStorableUnitType[0]['$']['uuid']) {
-//						targetClassUnit = classUnitCandidate;
-//					}
-//				}
-//				console.log("targetClassUnit");
-//				console.log(targetClassUnit);
-//				if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within dicClassUnits, like string, int...
-//					continue;
-//				}
-//
-//				var compositeClassUnitUUID = dicCompositeClass[classUnit.uuid];
-//				var targetCompositeClassUnitUUID = dicCompositeClass[targetClassUnit.uuid];
-//				var compositeClassUnit = dicCompositeClasses[compositeClassUnitUUID];
-//				var compositeTargetClassUnit = dicCompositeClasses[targetCompositeClassUnitUUID];
-//
-//				// eliminate the composite classes which are not composite (only containing one original class) and not related to other classes
-//				if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-//					if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-//						referencedClassUnitsComposite.push(compositeClassUnit);
-//					}
-//
-//					if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-//						referencedClassUnitsComposite.push(compositeTargetClassUnit);
-//					}
-//				}
-//				else {
-//					continue;
-//				}
-//
-//				var startNodeComposite = nodesByNameAttrComposite[compositeClassUnit.uuid];
-//				if (!startNodeComposite) {
-//					startNodeComposite = {
-//						name: compositeClassUnit.name,
-//						// isResponse: methodUnit.isResponse,
-//						component: {
-//							name: compositeClassUnit.name,
-//							classUnit: compositeClassUnit.uuid
-//						},
-//						uuid: compositeClassUnit.uuid
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesAttrComposite.push(startNodeComposite);
-//					nodesByNameAttrComposite[compositeClassUnit.uuid] = startNodeComposite;
-//				}
-//
-//				var endNodeComposite = nodesByNameAttrComposite[compositeTargetClassUnit.uuid];
-//				if (!endNodeComposite) {
-//					endNodeComposite = {
-//						name: compositeTargetClassUnit.name,
-//						// isResponse: targetMethodUnit.isResponse,
-//						component: {
-//							name: compositeTargetClassUnit.name,
-//							classUnit: compositeTargetClassUnit.uuid,
-//						},
-//						uuid: compositeTargetClassUnit.uuid
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesAttrComposite.push(endNodeComposite);
-//					nodesByNameAttrComposite[compositeTargetClassUnit.uuid] = endNodeComposite;
-//				}
-//				//				var end = targetClassUnit.name;
-//				edgesAttrComposite.push({ start: startNodeComposite, end: endNodeComposite });
-//
-//
-//
-//				if (classUnit != targetClassUnit) {
-//					if (!referencedClassUnits.includes(classUnit)) {
-//						referencedClassUnits.push(classUnit);
-//					}
-//
-//					if (!referencedClassUnits.includes(targetClassUnit)) {
-//						referencedClassUnits.push(targetClassUnit);
-//					}
-//				}
-//				else {
-//					continue;
-//				}
-//
-//				var startNode = nodesByNameAttr[classUnit.uuid];
-//				if (!startNode) {
-//					startNode = {
-//						name: classUnit.name + ":" + XMIClassStorableUnit.name,
-//						// isResponse: methodUnit.isResponse,
-//						component: {
-//							name: classUnit.name,
-//							classUnit: classUnit.uuid
-//						},
-//						uuid: XMIClassStorableUnit.uuid,
-//						attributeName: XMIClassStorableUnit.name
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesAttr.push(startNode);
-//					nodesByNameAttr[classUnit.uuid] = startNode;
-//				}
-//
-//				var endNode = nodesByNameAttr[targetClassUnit.uuid];
-//				if (!endNode) {
-//					endNode = {
-//						name: targetClassUnit.name,
-//						// isResponse: targetMethodUnit.isResponse,
-//						component: {
-//							name: targetClassUnit.name,
-//							classUnit: targetClassUnit.uuid,
-//						},
-//						uuid: targetClassUnit.uuid
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesAttr.push(endNode);
-//					nodesByNameAttr[targetClassUnit.uuid] = endNode;
-//				}
-//				//				var end = targetClassUnit.name;
-//				edgesAttr.push({ start: startNode, end: endNode });
-//				
-//			}
-//			// var calls = kdmModelUtils.identifyCalls(xmiClassUnit);
-//			// var XMIMethodUnits = jp.query(xmiClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-//			var XMIMethodUnits = classUnit.MethodUnits;
-//			for (var i in XMIMethodUnits) {
-//				// var XMIMethodUnit = XMIMethodUnits[i];
-//				// var methodUnit = kdmModelUtils.identifyMethodUnit(XMIMethodUnit, xmiString);
-//				var methodUnit = XMIMethodUnits[i];
-//				var methodParameters = methodUnit.Signature.parameterUnits; // the parameters of the method, including input and return
-//				// var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
-//				var methodClassUnit = classUnit;
-//
-//				if (!methodParameters || !methodClassUnit || !methodClassUnit.isWithinBoundary) {
-//					continue;
-//				}
-//
-//				// To find the local variable
-//				var methodActionElements = methodUnit.BlockUnit.ActionElements;
-//				for (var k in methodActionElements) {
-//					var methodActionElement = methodActionElements[k];
-//					var methodLocalVariables = methodActionElement.StorableUnits;
-//					for (var p in methodLocalVariables) {
-//						var methodLocalVariable = methodLocalVariables[p];
-//						var localVariableType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodLocalVariable.type));
-//						if (!localVariableType || localVariableType.length < 1) {
-//							continue;
-//						}
-//						var targetClassUnit = null;
-//						for (var j in dicClassUnits) {
-//							var classUnitCandidate = dicClassUnits[j];
-//							if (classUnitCandidate.uuid == localVariableType[0]['$']['uuid']) {
-//								targetClassUnit = classUnitCandidate;
-//							}
-//						}
-//						if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within dicClassUnits, like string, int...
-//							continue;
-//						}
-//
-//						var compositeClassUnitUUID = dicCompositeClass[methodClassUnit.uuid];
-//						var targetCompositeClassUnitUUID = dicCompositeClass[targetClassUnit.uuid];
-//						var compositeClassUnit = dicCompositeClasses[compositeClassUnitUUID];
-//						var compositeTargetClassUnit = dicCompositeClasses[targetCompositeClassUnitUUID];
-//
-//
-//						if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-//							if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-//								referencedClassUnitsComposite.push(compositeClassUnit);
-//							}
-//
-//							if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-//								referencedClassUnitsComposite.push(compositeTargetClassUnit);
-//							}
-//						}
-//						else {
-//							continue;
-//						}
-//
-//						var startNodeComposite = nodesByNamePComposite[methodUnit.uuid];
-//						if (!startNodeComposite) {
-//							startNodeComposite = {
-//								name: compositeClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodLocalVariable.name,
-//								// isResponse: methodUnit.isResponse,
-//								component: {
-//									name: compositeClassUnit.name,
-//									classUnit: compositeClassUnit.uuid
-//								},
-//								// uuid: compositeClassUnit.uuid
-//								//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//							};
-//							nodesPComposite.push(startNodeComposite);
-//							nodesByNamePComposite[methodUnit.uuid] = startNodeComposite;
-//						}
-//
-//						var endNodeComposite = nodesByNamePComposite[compositeTargetClassUnit.uuid];
-//						if (!endNodeComposite) {
-//							endNodeComposite = {
-//								name: compositeTargetClassUnit.name,
-//								// isResponse: targetMethodUnit.isResponse,
-//								component: {
-//									name: compositeTargetClassUnit.name,
-//									classUnit: compositeTargetClassUnit.uuid,
-//								},
-//								uuid: compositeTargetClassUnit.uuid
-//								//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//							};
-//							nodesPComposite.push(endNodeComposite);
-//							nodesByNamePComposite[compositeTargetClassUnit.uuid] = endNodeComposite;
-//						}
-//						//				var end = targetClassUnit.name;
-//						edgesPComposite.push({ start: startNodeComposite, end: endNodeComposite });
-//
-//						if (methodClassUnit != targetClassUnit) {
-//							if (!referencedClassUnits.includes(methodClassUnit)) {
-//								referencedClassUnits.push(methodClassUnit);
-//							}
-//
-//							if (!referencedClassUnits.includes(targetClassUnit)) {
-//								referencedClassUnits.push(targetClassUnit);
-//							}
-//						}
-//						else {
-//							continue;
-//						}
-//
-//						if (!(dicMethodParameters.hasOwnProperty(methodUnit.uuid))) {
-//							var methodParameters = methodUnit.Signature.parameterUnits;
-//							var name = null;
-//							var dicParameters = [];
-//							for (var l in methodParameters) {
-//								if (methodParameters[l].hasOwnProperty('name')) {
-//									name = methodParameters[l].name;
-//								}
-//								//								var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
-//								var type = methodParameters[l].type;
-//								var typeClass = null;
-//								for (var j in dicClassUnits) {
-//									var classUnitCandidate = dicClassUnits[j];
-//									if (classUnitCandidate.uuid == type.uuid) {
-//										typeClass = classUnitCandidate;
-//									}
-//								}
-//								if (!typeClass) {
-//									continue;
-//								}
-//								var parameter = {
-//									Name: name,
-//									// kind: methodParameters[l].kind,
-//									Type: typeClass.name,
-//									Typeuuid: typeClass.uuid,
-//								};
-//								dicParameters.push(parameter);
-//							}
-//							dicMethodParameters[methodUnit.uuid] = dicParameters;
-//						}
-//
-//						var startNode = nodesByNameLocal[methodUnit.uuid];
-//						if (!startNode) {
-//							startNode = {
-//								name: methodClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodLocalVariable.name,
-//								// isResponse: methodUnit.isResponse,
-//								component: {
-//									name: methodClassUnit.name,
-//									classUnit: methodClassUnit.uuid
-//								},
-//								// uuid: methodLocalVariable.uuid
-//								//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//							};
-//							nodesLocal.push(startNode);
-//							nodesByNameLocal[methodUnit.uuid] = startNode;
-//							nodesP.push(startNode);
-//							nodesByNameP[methodUnit.uuid] = startNode;
-//						}
-//
-//						var endNode = nodesByNameLocal[targetClassUnit.uuid];
-//						if (!endNode) {
-//							endNode = {
-//								name: targetClassUnit.name,
-//								// isResponse: targetMethodUnit.isResponse,
-//								component: {
-//									name: targetClassUnit.name,
-//									classUnit: targetClassUnit.uuid
-//								},
-//								uuid: targetClassUnit.uuid
-//								//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//							};
-//							nodesLocal.push(endNode);
-//							nodesByNameLocal[targetClassUnit.uuid] = endNode;
-//							nodesP.push(endNode);
-//							nodesByNameP[targetClassUnit.uuid] = endNode;
-//						}
-//						//				var end = targetClassUnit.name;
-//						edgesLocal.push({ start: startNode, end: endNode });
-//						edgesP.push({ start: startNode, end: endNode });
-//
-//
-//
-//						// console.log("checkcheckcheck!");
-//						// console.log({start: startNodeComposite, end: endNodeComposite});
-//						// console.log({start: startNode, end: endNode});
-//
-//					}
-//				}
-//
-//				// targeted at input and return parameters of this method
-//				for (var i in methodParameters) {
-//					var methodParameter = methodParameters[i];
-//					//					var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameter.type));
-//					var type = methodParameter.type;
-//					//					
-//					//					if(!XMIParameterType || XMIParameterType.length < 1){
-//					//						continue;
-//					//					}
-//
-//					//					console.log(XMIParameterType);
-//
-//					var targetClassUnit = null;
-//					for (var j in dicClassUnits) {
-//						var classUnitCandidate = dicClassUnits[j];
-//						if (classUnitCandidate.uuid == type.uuid) {
-//							targetClassUnit = classUnitCandidate;
-//						}
-//					}
-//
-//					if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within dicClassUnits, like string, int...
-//						continue;
-//					}
-//
-//					var compositeClassUnitUUID = dicCompositeClass[methodClassUnit.uuid];
-//					var targetCompositeClassUnitUUID = dicCompositeClass[targetClassUnit.uuid];
-//					var compositeClassUnit = dicCompositeClasses[compositeClassUnitUUID];
-//					var compositeTargetClassUnit = dicCompositeClasses[targetCompositeClassUnitUUID];
-//
-//
-//					if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-//						if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-//							referencedClassUnitsComposite.push(compositeClassUnit);
-//						}
-//
-//						if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-//							referencedClassUnitsComposite.push(compositeTargetClassUnit);
-//						}
-//					}
-//					else {
-//						continue;
-//					}
-//
-//					var startNodeComposite = nodesByNamePComposite[methodUnit.uuid];
-//					if (!startNodeComposite) {
-//						startNodeComposite = {
-//							name: compositeClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodParameter.name,
-//							// isResponse: methodUnit.isResponse,
-//							component: {
-//								name: compositeClassUnit.name,
-//								classUnit: compositeClassUnit.uuid
-//							},
-//							// uuid: compositeClassUnit.uuid
-//							//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//						};
-//						nodesPComposite.push(startNodeComposite);
-//						nodesByNamePComposite[methodUnit.uuid] = startNodeComposite;
-//					}
-//
-//					var endNodeComposite = nodesByNamePComposite[compositeTargetClassUnit.uuid];
-//					if (!endNodeComposite) {
-//						endNodeComposite = {
-//							name: compositeTargetClassUnit.name,
-//							// isResponse: targetMethodUnit.isResponse,
-//							component: {
-//								name: compositeTargetClassUnit.name,
-//								classUnit: compositeTargetClassUnit.uuid,
-//							},
-//							uuid: compositeTargetClassUnit.uuid
-//							//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//						};
-//						nodesPComposite.push(endNodeComposite);
-//						nodesByNamePComposite[compositeTargetClassUnit.uuid] = endNodeComposite;
-//					}
-//					//				var end = targetClassUnit.name;
-//					edgesPComposite.push({ start: startNodeComposite, end: endNodeComposite });
-//
-//					if (methodClassUnit != targetClassUnit) {
-//						if (!referencedClassUnits.includes(methodClassUnit)) {
-//							referencedClassUnits.push(methodClassUnit);
-//						}
-//
-//						if (!referencedClassUnits.includes(targetClassUnit)) {
-//							referencedClassUnits.push(targetClassUnit);
-//						}
-//					}
-//					else {
-//						continue;
-//					}
-//
-//					var startNode = nodesByNamePara[methodUnit.uuid];
-//					if (!startNode) {
-//						startNode = {
-//							name: methodClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodParameter.name,
-//							// isResponse: methodUnit.isResponse,
-//							component: {
-//								name: methodClassUnit.name,
-//								classUnit: methodClassUnit.uuid
-//							},
-//							method: {
-//								name: methodUnit.Signature.name,
-//								uuid: methodUnit.uuid,
-//								parameter: {
-//									name: methodParameter.name,
-//									uuid: methodParameter.uuid
-//								}
-//							},
-//							uuid: methodParameter.uuid
-//							//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//						};
-//						nodesPara.push(startNode);
-//						nodesByNamePara[methodUnit.uuid] = startNode;
-//						nodesP.push(startNode);
-//						nodesByNameP[methodUnit.uuid] = startNode;
-//					}
-//
-//					var endNode = nodesByNamePara[targetClassUnit.uuid];
-//					if (!endNode) {
-//						endNode = {
-//							name: targetClassUnit.name,
-//							// isResponse: targetMethodUnit.isResponse,
-//							component: {
-//								name: targetClassUnit.name,
-//								classUnit: targetClassUnit.uuid
-//							},
-//							uuid: targetClassUnit.uuid
-//							//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//						};
-//						nodesPara.push(endNode);
-//						nodesByNamePara[targetClassUnit.uuid] = endNode;
-//						nodesP.push(endNode);
-//						nodesByNameP[targetClassUnit.uuid] = endNode;
-//					}
-//					//				var end = targetClassUnit.name;
-//					edgesPara.push({ start: startNode, end: endNode });
-//					edgesP.push({ start: startNode, end: endNode });
-//
-//
-//
-//					// console.log("checkcheckcheck!")
-//					// console.log({start: startNodeComposite, end: endNodeComposite})
-//					// console.log({start: startNode, end: endNode})
-//
-//
-//				}
-//			}
-//		}
-//
-//		// console.log("edgesPComposite");
-//		// console.log(edgesPComposite);
-//
-//		return { nodesAttr: nodesAttr, edgesAttr: edgesAttr, nodesP: nodesP, edgesP: edgesP, nodesPara: nodesPara, edgesPara: edgesPara, nodesAttrComposite: nodesAttrComposite, edgesAttrComposite: edgesAttrComposite, nodesPComposite: nodesPComposite, edgesPComposite: edgesPComposite };
-//
-//	}
-//  
-  class ClassUnit extends SootClass{
+		System.out.println("construct of call graph finishes.");
+		
+		return convertCallGraphToJSON(edges);
+	}
+
+
+String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
+	
+	String outputS = "{";
+		outputS += "\"edges\":[";
+		
+		int i = 0;
+		for(CallGraphNode[] edge: edges) {
+			if(edge[0] == null || edge[1] == null) {
+				continue;
+			}
+			i++;
+			if(i != 1) {
+				outputS += ",";
+			}
+			outputS += "{\"start\":{\"methodUnit\":\""+edge[0].methodUnit.uuid+"\",\"classUnit\":\""+edge[0].classUnit.uuid+"\"},";
+			outputS += "\"end\":{\"methodUnit\":\""+edge[1].methodUnit.uuid+"\",\"classUnit\":\""+edge[1].classUnit.uuid+"\"}}";
+			
+		}
+		outputS += "]}";
+		
+		return outputS;
+	}
+
+  
+  class ClassUnit{
 	  public ClassUnit(SootClass sootClass, boolean isWithinBoundary) {
-		super(sootClass.getName());
-		// TODO Auto-generated constructor stub
+		this.name = sootClass.getName();
 		this.attachment = sootClass;
 		this.uuid = UUID.randomUUID().toString();
 		this.isWithinBoundary = isWithinBoundary;
+	    
+		methodUnits = new ArrayList<MethodUnit>();
+		attrUnits = new ArrayList<AttrUnit>();
+		for(SootMethod method: this.attachment.getMethods()) {
+			methodUnits.add(new MethodUnit(method));
+		}
 		
+		for(SootField sootField : this.attachment.getFields()) {
+			AttrUnit attrUnit = new AttrUnit(sootField.getName(), sootField.getType().toString());
+			attrUnits.add(attrUnit);
+		}
 	}
 	  String uuid;
 	  SootClass attachment;
 	  boolean isWithinBoundary;
+	  List<MethodUnit> methodUnits;
+	  List<AttrUnit> attrUnits;
+	  String name;
 	  
-	  public List<SootMethod> getMethods(){	
-		 return attachment.getMethods();
+	  public List<AttrUnit> getAttr(){
+		  return this.attrUnits;
+	  }
+	  
+	  public List<MethodUnit> getMethods(){	
+		 return this.methodUnits;
+	  }
+	  
+	  public List<AttrUnit> getAttributes() {
+		  return this.attrUnits;
 	  }
 	  
 	  public String toJSONString() {
-		  return "{uuid:\""+ 
+		  StringBuilder str = new StringBuilder();
+		  str.append("{\"UUID\":\""+ 
 				  this.uuid+"\","+
-				  "name:\""+
+				  "\"name\":\""+
 				  this.name+"\","+
-				  "isWithinBoundary:\""+
-				  this.isWithinBoundary+"\"}";
-				  
+				  "\"isWithinBoundary\":\""+
+				  this.isWithinBoundary+"\","+
+				  "\"methodUnits\":["
+				  );
+		  int i = 0;
+		  for(MethodUnit methodUnit : methodUnits) {
+			  str.append(methodUnit.toJSONString());
+			  if(i != methodUnits.size() - 1) {
+			  str.append(",");
+			  }
+			  i++;
+		  }
+		  str.append( "],\"attrUnits\":[");
+		  i = 0;
+		  for(AttrUnit attrUnit : attrUnits) {
+			  str.append(attrUnit.toJSONString());
+			  if(i != attrUnits.size() - 1) {
+			  str.append(",");
+			  }
+			  i++;
+		  }
+		  str.append("]}");
+		  return str.toString();
 	  }
-
-	@Override
-	public void checkLevel(int level) {
-		this.attachment.checkLevel(level);
-	}
-
-	@Override
-	public boolean isInterface() {
-		return this.attachment.isInterface();
-	}
-	  
-	  
   }
   
   class CompositeClassUnit implements Set<ClassUnit>{
@@ -733,8 +291,6 @@ public class CodeAnalysis2 {
 	  
 	  public CompositeClassUnit(String name) {
 		  this.classUnits = new HashSet<ClassUnit>();
-//		  this.classUnits.add(classUnit);
-//		  this.name = classUnit.getName();
 		  this.name = name;
 		  this.uuid = UUID.randomUUID().toString();
 	  }
@@ -746,13 +302,11 @@ public class CodeAnalysis2 {
 	  public String toJSONString() {
 		  Iterator<ClassUnit> iterator = classUnits.iterator();
 		  StringBuilder Json = new StringBuilder();
-		  Json.append("{name: \""+name+"\",");
-		  Json.append("uuid: \""+uuid+"\",");
-		  Json.append("classUnits: [");
+		  Json.append("{\"name\": \""+name+"\",");
+		  Json.append("\"UUID\": \""+uuid+"\",");
+		  Json.append("\"classUnits\": [");
 		  while(iterator.hasNext()) {
 			  ClassUnit classUnit = iterator.next();
-//			  Json.append(classUnit.toJSONString());
-//			  Json.append("\""+classUnit.getName()+"\"");
 			  Json.append("\""+classUnit.uuid+"\"");
 			  if(iterator.hasNext()) {
 				  Json.append(",");
@@ -764,18 +318,11 @@ public class CodeAnalysis2 {
 
 	@Override
 	public boolean add(ClassUnit e) {
-		// TODO Auto-generated method stub
 		return this.classUnits.add(e);
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends ClassUnit> c) {
-		// TODO Auto-generated method stub
-//		Iterator<ClassUnit> iterator = c.iterator();
-//		while(iterator.hasNext()) {
-//			this.classUnits.add(iterator.next());
-//		}
-//		return true;
 		return this.classUnits.addAll(c);
 	}
 
@@ -787,355 +334,618 @@ public class CodeAnalysis2 {
 
 	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
 		return this.classUnits.contains(o);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.containsAll(c);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return this.classUnits.isEmpty();
 	}
 
 	@Override
 	public Iterator<ClassUnit> iterator() {
-		// TODO Auto-generated method stub
 		return this.classUnits.iterator();
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
 		return this.classUnits.remove(0);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.retainAll(c);
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
 		return this.classUnits.size();
 	}
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
 		return this.classUnits.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
 		return this.classUnits.toArray(a);
 	}
   }
   
   
-public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+  private class AccessGraphNode {
+		MethodUnit methodUnit;
+		AttrUnit attrUnit;
+		ClassUnit classUnit;
+		
+		AccessGraphNode(MethodUnit methodUnit, AttrUnit attrUnit, ClassUnit classUnit) {
+			super();
+			this.methodUnit = methodUnit;
+			this.classUnit = classUnit;
+			this.attrUnit = attrUnit;
+		}
+		
+	}
+  
+  private class TypeDependencyGraphNode {
+	  String className;
+	  String uuid;
+	  Map<String, String> methods;
+	  Map<String, TypeDependencyUnit> typeDependencies;	// Other classes that this class has relationships with
+	  
+	  public TypeDependencyGraphNode(ClassUnit classUnit) {
+		  this.className = classUnit.name;
+		  this.uuid = classUnit.uuid;
+		  this.methods = new HashMap<String, String>();
+		  this.typeDependencies = new HashMap<String, TypeDependencyUnit>();
+		  
+		  for (MethodUnit method : classUnit.getMethods()){
+			  this.methods.put(method.name, method.uuid);
+		  }
+	  }
+	  
+	  public void addReturnTypeDependency(TypeDependencyGraphNode typeDependency, String methodName) {
+		  TypeDependencyUnit edge = this.getTypeDependencyUnit(typeDependency);
+		  edge.addReturnDependency(methodName);
+	  }
+	  
+	  public void addParameterTypeDependency(TypeDependencyGraphNode typeDependency, String methodName) {
+		  TypeDependencyUnit edge = this.getTypeDependencyUnit(typeDependency);
+		  edge.addParameterDependency(methodName);
+	  }
+	  
+	  public void addLocalVariableTypeDependency(TypeDependencyGraphNode typeDependency, String methodName) {
+		  TypeDependencyUnit edge = this.getTypeDependencyUnit(typeDependency);
+		  edge.addLocalVarDependency(methodName);
+	  }
+	  
+	  private TypeDependencyUnit getTypeDependencyUnit(TypeDependencyGraphNode typeDependency) {
+		  if (!this.typeDependencies.containsKey(typeDependency.className)) {
+			  TypeDependencyUnit typeDepEdge = new TypeDependencyUnit(typeDependency);
+			  this.typeDependencies.put(typeDependency.className, typeDepEdge);
+		  }
+		  
+		  return (TypeDependencyUnit)this.typeDependencies.get(typeDependency.className);
+	  }
+  }
+  
+  private class TypeDependencyUnit {
+	  TypeDependencyGraphNode typeDependency;	// The class that the parent node has a dependency on
+	  List<String> returnDependencies;	// Keep track of the method names returning this type
+	  Map<String, Integer> parameterDependencies;	// Keep track of method names and how many parameters
+	  Map<String, Integer> localVarDependencies;	// Keep track of method names and how many within it
+	  
+	  public TypeDependencyUnit(TypeDependencyGraphNode typeDependency) {
+		  this.typeDependency = typeDependency;
+		  
+		  this.returnDependencies = new ArrayList<String>();
+		  this.parameterDependencies = new HashMap<String, Integer>();
+		  this.localVarDependencies = new HashMap<String, Integer>();
+	  }
+	  
+	  public void addReturnDependency(String methodName) {
+		  this.returnDependencies.add(methodName);
+	  }
+	  
+	  public void addParameterDependency(String methodName) {
+		  if (!this.parameterDependencies.containsKey(methodName)) {
+			  this.parameterDependencies.put(methodName, 1);
+		  } else {
+			  this.parameterDependencies.put(methodName, this.parameterDependencies.get(methodName) + 1);
+		  }
+	  }
+	  
+	  public void addLocalVarDependency(String methodName) {
+		  if (!this.localVarDependencies.containsKey(methodName)) {
+			  this.localVarDependencies.put(methodName, 1);
+		  } else {
+			  this.localVarDependencies.put(methodName, this.localVarDependencies.get(methodName) + 1);
+		  }		  
+	  }
+  }
 
-	  	List<ClassUnit[]> edges = new ArrayList<ClassUnit[]>(); // call relation
-//	  	List<Node> nodes = new ArrayList<Node>(); // classes
-//		Map<String, Node> nodesByName = new HashMap<String, Node>();
+  private class AttrUnit {
+	  String name;
+	  String type;
+	  String uuid;
+	  
+	public AttrUnit(String name, String type) {
+		this.name = name;
+		this.type = type;
+		this.uuid = UUID.randomUUID().toString();
+	}
+	  
+	public String toJSONString() {
+		return "{\"name\":\""+this.name+"\", \"type\":\""+this.type+"\", \"UUID\":\""+this.uuid+"\"}";
+	}
+  }
+  
+  private class AttributeDependencyGraphNode{
+	  String className;
+	  String uuid;
+	  Map<String, String> attributes;
+	  Map<String, AttributeDependencyUnit> attributeDependencies;	// Other classes that this class has relationships with
+	  
+	  public AttributeDependencyGraphNode(ClassUnit classUnit) {
+		  this.className = classUnit.name;
+		  this.uuid = classUnit.uuid;
+		  this.attributes = new HashMap<String, String>();
+		  this.attributeDependencies = new HashMap<String, AttributeDependencyUnit>();
+		  
+		  for (AttrUnit attribute : classUnit.getAttributes()) {
+			  this.attributes.put(attribute.name, attribute.uuid);
+		  }
+	  }
+	  
+	  public void addAttributeAttributeDependency(AttributeDependencyGraphNode attributeDependency, String attrName) {
+		  AttributeDependencyUnit edge = this.getAttributeDependencyUnit(attributeDependency);
+		  edge.addAttributeDependency(attrName);
+	  }
+	  
+	  private AttributeDependencyUnit getAttributeDependencyUnit(AttributeDependencyGraphNode attributeDependency) {
+		  if (!this.attributeDependencies.containsKey(attributeDependency.className)) {
+			  AttributeDependencyUnit attrDepEdge = new AttributeDependencyUnit(attributeDependency);
+			  this.attributeDependencies.put(attributeDependency.className, attrDepEdge);
+		  }
+		  
+		  return (AttributeDependencyUnit)this.attributeDependencies.get(attributeDependency.className);
+	  }
+  }
+  
+  
+  private class AttributeDependencyUnit {
+	  AttributeDependencyGraphNode AttributeDependency;	// The class that the parent node has a dependency on
+	  List<String> attributeDependencies;	// Keep track of attribute names
+	  
+	  public AttributeDependencyUnit(AttributeDependencyGraphNode AttributeDependency) {
+		  this.AttributeDependency = AttributeDependency;
+		  this.attributeDependencies = new ArrayList<String>();
+	  }
+	  
+	  public void addAttributeDependency(String attrName) {
+		  this.attributeDependencies.add(attrName);
+	  }
+  }
 
-		List<CompositeClassUnit[]> compositeEdges = new ArrayList<CompositeClassUnit[]>(); // call relation
-//		List<NodeCompoiste> nodesComposite = new ArrayList<NodeComposite>(); // classes
+  
+ public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+
+	 HashMap mappings = new HashMap<String, AttributeDependencyGraphNode>();
 		
 		for (ClassUnit classUnit : classUnits) {
-//			var classUnit = dicClassUnits.g;
-//			var xmiClassUnit = classUnit.attachment;
+			// Create a AttributeDependencyGraphNode for the class if it doesn't exist yet
+			if (!mappings.containsKey(classUnit.name)) {
+				AttributeDependencyGraphNode classNode = new AttributeDependencyGraphNode(classUnit);
+				mappings.put(classUnit.name, classNode);
+			}
 			
-			System.out.printf("class unit id:%s\n", classUnit.uuid);
+			AttributeDependencyGraphNode currentClassNode = (AttributeDependencyGraphNode)mappings.get(classUnit.name);
+			
+			// Loop through attributes of the class
+			List<AttrUnit> attributes = classUnit.getAttributes();
+			for (AttrUnit attribute : attributes) {
+				// Create a AttributeDependencyGraphNode for the attribute type if it doesn't exist yet
+				if (classUnitByName.containsKey(attribute.type)) {
+					ClassUnit attrType = (ClassUnit)classUnitByName.get(attribute.type);
+					if (!mappings.containsKey(attribute.type)) {
+						AttributeDependencyGraphNode node = new AttributeDependencyGraphNode(attrType);
+						mappings.put(attribute.type, node);
+					}
+					
+					// Add the attribute type dependency
+					AttributeDependencyGraphNode attrNode = (AttributeDependencyGraphNode)mappings.get(attribute.type);
+					currentClassNode.addAttributeAttributeDependency(attrNode, attribute.name);
+				}
+			}
+		}
+		
+		return convertCompositionGraph(mappings);
+ }
+  
+public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	HashMap mappings = new HashMap<String, TypeDependencyGraphNode>();
+	
+	for (ClassUnit classUnit : classUnits) {
+		// Create a TypeDependencyGraphNode for the class if it doesn't exist yet
+		if (!mappings.containsKey(classUnit.name)) {
+			TypeDependencyGraphNode classNode = new TypeDependencyGraphNode(classUnit);
+			mappings.put(classUnit.name, classNode);
+		}
+		
+					
+	TypeDependencyGraphNode currentClassNode = (TypeDependencyGraphNode)mappings.get(classUnit.name);
+					
+					
+		// Loop through methods of the class
+		List<MethodUnit> methods = classUnit.getMethods();
+		for (MethodUnit method : methods) {
+			// Document the method return type
+			String returnTypeName = method.getReturnType();
+			if (classUnitByName.containsKey(returnTypeName)) {
+				ClassUnit returnType = (ClassUnit)classUnitByName.get(returnTypeName);
+				if (!mappings.containsKey(returnTypeName)) {
+					TypeDependencyGraphNode node = new TypeDependencyGraphNode(returnType);
+					mappings.put(returnTypeName, node);
+				}
+				
+				// Add the method return type dependency
+				TypeDependencyGraphNode returnTypeNode = (TypeDependencyGraphNode)mappings.get(returnTypeName);
+				currentClassNode.addReturnTypeDependency(returnTypeNode, method.name);
+				
+				// Loop through parameter types of the method
+				List<String> parameterTypes = method.getParameterTypes();
+				for (String parameterTypeName : parameterTypes) {
+					if (classUnitByName.containsKey(parameterTypeName)) {
+						ClassUnit parameterType = (ClassUnit)classUnitByName.get(parameterTypeName);
+						if (!mappings.containsKey(parameterTypeName)) {
+							TypeDependencyGraphNode node = new TypeDependencyGraphNode(parameterType);
+							mappings.put(parameterTypeName, node);
+						}
+						
+						// Add the method parameter type dependency
+						TypeDependencyGraphNode parameterTypeNode = (TypeDependencyGraphNode)mappings.get(parameterTypeName);
+						currentClassNode.addParameterTypeDependency(returnTypeNode, method.name);
+					}
+				}
+				
+				// Loop through method code lines to find local variables
+				Body methodBlockUnit = null;
+				
+				try {
+					methodBlockUnit = method.attachment.retrieveActiveBody();
+				} catch(Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+				
+				for (Unit u : methodBlockUnit.getUnits()) {
+					Stmt s = (Stmt) u;
+					if(s.containsFieldRef()) {
+						FieldRef fieldRef = s.getFieldRef();
+				        SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
+						ClassUnit targetClassUnit = classUnitByName.get(targetClassUnitType.getName());
+						if(targetClassUnit == null) {
+							continue;
+						}
+						
+						if (classUnitByName.containsKey(targetClassUnit.name)) {
+							ClassUnit targetClassType = (ClassUnit)classUnitByName.get(targetClassUnit.name);
+							if (!mappings.containsKey(targetClassUnit.name)) {
+								TypeDependencyGraphNode node = new TypeDependencyGraphNode(targetClassType);
+								mappings.put(targetClassUnit.name, node);
+							}
+							
+							// Add the local variable dependency
+							TypeDependencyGraphNode localVarNode = (TypeDependencyGraphNode)mappings.get(targetClassUnit.name);
+							currentClassNode.addLocalVariableTypeDependency(localVarNode, method.name);
+						}
+					}
+				}				
+			}
+		}
+	}
+	
+	return convertTypeDependencyGraphToJSON(mappings);
+}
+
+String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
+	String output = "{\"nodes\":[";
+	
+	// Loop through each class node
+	int classIter = 0;
+	int classCount = typeDepGraph.size();
+	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
+	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"methodCount\":" + node.methods.size() + ",\"dependencies\":[";
+	    
+	    // Loop through each class it depends on
+	    int typeDepIter = 0;
+	    int typeDepCount = node.typeDependencies.size();
+	    for (TypeDependencyUnit dependency : node.typeDependencies.values()) {
+	    	output += "{\"class\":\"" + dependency.typeDependency.className + "\",\"uuid\":\"" + dependency.typeDependency.uuid + "\"";
+	    	
+	    	int depCount;
+	    	int iterCount = 0;
+	    			
+	    	output += ",\"returnDependencies\":[";
+	    	depCount = dependency.returnDependencies.size();
+	    	for (String returnDep : dependency.returnDependencies) {
+	    		String returnDepUuid = node.methods.get(returnDep);
+	    		output += "{\"methodName\":\"" + returnDep + "\",\"methodUuid\":\"" + returnDepUuid + "\"}";
+	    		iterCount++;
+	    		if (iterCount < depCount) {
+	    			output += ",";
+	    		}
+	    	}
+	    	output += "]";
+	    	
+	    	output += ",\"paramDependencies\":[";
+	    	depCount = dependency.parameterDependencies.size();
+	    	iterCount = 0;
+	    	for (Map.Entry<String, Integer> paramDep : dependency.parameterDependencies.entrySet()){
+	    		String paramDepUuid = node.methods.get(paramDep.getKey());
+	    		output += "{\"methodName\":\"" + paramDep.getKey() + "\",\"methodUuid\":\"" + paramDepUuid + "\",\"count\":" + paramDep.getValue() + "}";
+	    	    iterCount++;
+	    	    if (iterCount < depCount) {
+	    	    	output += ",";
+	    	    }
+	    	}
+	    	output += "]";
+	    	
+	    	output += ",\"localVarDependencies\":[";
+	    	depCount = dependency.localVarDependencies.size();
+	    	iterCount = 0;
+	    	for (Map.Entry<String, Integer> localVarDep : dependency.localVarDependencies.entrySet()){
+	    		String localVarUuid = node.methods.get(localVarDep.getKey());
+	    		output += "{\"methodName\":\"" + localVarDep.getKey() + "\",\"methodUuid\":\"" + localVarUuid + "\",\"count\":" + localVarDep.getValue() + "}";
+	    	    iterCount++;
+	    	    if (iterCount < depCount) {
+	    	    	output += ",";
+	    	    }
+	    	}
+	    	output += "]}";    	
+    	
+	    	typeDepIter++;
+	    	if (typeDepIter < typeDepCount) {
+	    		output += ",";
+	    	}
+	    }
+	    
+	    output += "]}";
+	    
+	    classIter++;
+	    if (classIter < classCount) {
+	    	output += ",";
+	    }
+	}
+	
+	output += "]}";
+			
+	return output;
+}
+
+String convertCompositionGraph(HashMap<String, AttributeDependencyGraphNode> attributeCompGraph) {
+	String output = "{\"nodes\":[";
+	
+	// Loop through each class node
+	int classIter = 0;
+	int classCount = attributeCompGraph.size();
+	for (AttributeDependencyGraphNode node : attributeCompGraph.values()) {
+	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"dependencies\":[";
+	    
+	    // Loop through each class it has an attribute dependency on
+	    int typeDepIter = 0;
+	    int typeDepCount = node.attributeDependencies.size();
+	    for (AttributeDependencyUnit dependency : node.attributeDependencies.values()) {
+	    	output += "{\"class\":\"" + dependency.AttributeDependency.className + "\",\"uuid\":\"" + dependency.AttributeDependency.uuid + "\"";
+	    	
+	    	int depCount;
+	    	int iterCount = 0;    	
+	    	
+	    	output += ",\"attrDependencies\":[";
+	    	depCount = dependency.attributeDependencies.size();
+	    	iterCount = 0;
+	    	for (String attrDep : dependency.attributeDependencies) {
+	    		String attrUuid = node.attributes.get(attrDep);
+	    		output += "{\"attributeName\":\"" + attrDep + "\",\"attributeUuid\":\"" + attrUuid + "\"}";
+	    		iterCount++;
+	    		if (iterCount < depCount) {
+	    			output += ",";
+	    		}
+	    	}
+	    	output += "]}";	    	
+
+	    	typeDepIter++;
+	    	if (typeDepIter < typeDepCount) {
+	    		output += ",";
+	    	}
+	    }
+	    
+	    output += "]}";
+	    
+	    classIter++;
+	    if (classIter < classCount) {
+	    	output += ",";
+	    }
+	}
+	
+	output += "]}";
+			
+	return output;
+}
+
+public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	System.out.println("construct of extends graph starts.");
+	
+	List<List<ClassUnit>> extendsClasses = new ArrayList<List<ClassUnit>>();
+	String res = "{";
+	int i = 1;
+	for (ClassUnit classUnit : classUnits) {
+		SootClass sootClassUnit = classUnit.attachment;
+		SootClass superClassUnit = null;
+		try {
+		superClassUnit = sootClassUnit.getSuperclass();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		if(superClassUnit == null) {
+			continue;
+		}
+		
+		String from = superClassUnit.getName();
+		//if parent class is not in the map, ignore it
+		if(classUnitByName.containsKey(classUnit.name) && classUnitByName.containsKey(from)){
+			ClassUnit parent = classUnitByName.get(from);
+			List<ClassUnit> temp = new ArrayList();
+			temp.add(parent);
+			temp.add(classUnit);
+			extendsClasses.add(temp);
+		}		
+	}
+	
+	for(List<ClassUnit> extendpair:extendsClasses){
+		String parentName = extendpair.get(0).name;
+		String parentUUID = extendpair.get(0).uuid;
+		String childName = extendpair.get(1).name;
+		String childUUID = extendpair.get(1).uuid;
+		res += "\""+i+"\":{\"from\":{\"name\":\""+parentName+"\",\"uuid\":\""+parentUUID+"\"},\"to\":{\"name\":\""+childName+"\",\"uuid\":\""+childUUID+"\"}},";	
+		i++;
+		
+	}
+	res = res.substring(0,res.length()-1);
+	res += "}";	
+	
+	System.out.println("construct of extends graph finishes.");
+	
+	int ind = 10;
+	return res;
+}
+  
+public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+
+	  	Set<AccessGraphNode[]> edges = new HashSet<AccessGraphNode[]>();
+		
+		for (ClassUnit classUnit : classUnits) {
+			
 			String compositeClassUnitUUID = classUnitToCompositeClassDic.get(classUnit.uuid);
-			System.out.printf("composite class unit id:%s\n", compositeClassUnitUUID);
 			CompositeClassUnit compositeClassUnit = compositeClassUnitByUUID.get(compositeClassUnitUUID);
-			System.out.printf("composite class unit:%s\n", compositeClassUnit.name);
 
 			Set<ClassUnit> referencedClassUnits = new HashSet<ClassUnit>();
 			
-			List<SootMethod> methodUnits = classUnit.getMethods();
-			for (SootMethod methodUnit : methodUnits) {
-//				var methodUnit = methodUnits[q];
-
-//				if (!methodUnit || !classUnit.isWithinBoundary) {
-//					continue;
-//				}
+			List<MethodUnit> methodUnits = classUnit.getMethods();
+			for (MethodUnit methodUnit : methodUnits) {
+				//need to identify the methods within the boundary.
 				
-				System.out.printf("method:%s\n", methodUnit.getName());
-//				Debug2.v().printf("method:%s", methodUnit.getName());
-				
-//				if(!methodUnit.hasActiveBody()) {
-//					continue;
-//				}
-				
-//				Body methodBlockUnit = methodUnit.getActiveBody();
-				
-//				if(!methodUnit.getName().equals("onCreate")) {
-//					continue;
-//				}
-				
-//				if(methodUnit.getSource() == null) {
-//					continue;
-//				}
-				
+				Debug2.v().printf("method:%s", methodUnit.name);
 				
 				Body methodBlockUnit = null;
 				
 				try{
-					methodBlockUnit = methodUnit.retrieveActiveBody();
+					methodBlockUnit = methodUnit.attachment.retrieveActiveBody();
 				}catch(Exception e) {
 					e.printStackTrace();
 					continue;
 				}
 				
-				System.out.printf("active body:%s\n", methodUnit.getName());
-//				Debug2.v().printf("active body:%s", methodUnit.getName());
+				Debug2.v().printf("active body:%s", methodUnit.name);
 				
-//				if( s.containsFieldRef() ) {
-//	                FieldRef fr = s.getFieldRef();
-//	                if( fr instanceof StaticFieldRef ) {
-//	                    SootClass cl = fr.getFieldRef().declaringClass();
-//	                    for (SootMethod clinit : EntryPoints.v().clinitsOf(cl)) {
-//	                        addEdge( source, s, clinit, Kind.CLINIT );
-//	                    }
-//	                }
-//	            }
+				AccessGraphNode srcAccessGraphNode = new AccessGraphNode(methodUnit, null, classUnit);
+				ArrayList<AccessGraphNode> referencedAccessGraphNodes = new ArrayList<AccessGraphNode>();
 				
 				for (Unit u : methodBlockUnit.getUnits()) {
-					System.out.printf("unit:%s\n", u.toString());
 					Stmt s = (Stmt) u;
-//					if(SootUtilities.isInvoke(s)) {
-//						InvokeExpr invokeExpr = s.getInvokeExpr();
-//						invokeExpr.getArgs();
-//					}
-//					else 
 						if(s.containsFieldRef()) {
 						FieldRef fieldRef = s.getFieldRef();
-//					}
-//				      List<ValueBox> useBoxes = s.getUseBoxes();
-//				      for (ValueBox useBox : useBoxes) {
-//				        Value val = useBox.getValue();
-//				        System.out.printf("value:%s\n", val.toString());
-//				        if(val instanceof FieldRef) {
-				         System.out.printf("field:%s\n", fieldRef.toString());
-////				        Debug2.v().printf("field:%s\n", val.toString());
-//				          FieldRef fieldRef = (FieldRef) val;
-				          SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
-				          System.out.printf("target class:%s\n", targetClassUnitType.getName());
+//				        Debug2.v().printf("field:%s\n", fieldRef.toString());
+				        SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
 					        
-								ClassUnit targetClassUnit = classUnitByName.get(targetClassUnitType.getName());
-								referencedClassUnits.add(targetClassUnit);
-					}
-
-				
+						ClassUnit targetClassUnit = classUnitByName.get(targetClassUnitType.getName());
+						
+						if(targetClassUnit == null) {
+							continue;
+						}
+						
+						AttrUnit attrUnit = new AttrUnit(fieldRef.getField().getName(), fieldRef.getField().getType().toString());
+						
+						AccessGraphNode targetAccessGraphNode = new AccessGraphNode(null, attrUnit, targetClassUnit);
+						
+						referencedAccessGraphNodes.add(targetAccessGraphNode);
+						
+				}
 			  }
+			
+			for(AccessGraphNode accessGraphNode : referencedAccessGraphNodes) {
+				edges.add(new AccessGraphNode[] {srcAccessGraphNode, accessGraphNode});
 			}
 			
-			for(ClassUnit targetClassUnit : referencedClassUnits) {
-				System.out.printf("target class unit:%s\n", targetClassUnit.getName());
-				String targetCompositeClassUnitUUID = classUnitToCompositeClassDic.get(targetClassUnit.uuid);
-				CompositeClassUnit targetCompositeClassUnit = compositeClassUnitByUUID.get(targetCompositeClassUnitUUID);
-				System.out.printf("target composite class unit:%s\n", targetCompositeClassUnit.name);
-//				SootClass compositeTargetClassUnit = dicCompositeClasses[targetCompositeClassUnitUUID];
-
-//				if (compositeClassUnit != targetCompositeClassUnit) {
-//					if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-//						referencedClassUnitsComposite.push(compositeClassUnit);
-//					}
-//
-//					if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-//						referencedClassUnitsComposite.push(compositeTargetClassUnit);
-//					}
-//				}
-//				else {
-//					continue;
-//				}
-
-//				Node startNodeComposite = nodesByNameComposite[compositeClassUnitUUID];
-//				if (!startNodeComposite) {
-//					Node startNodeComposite = {
-//						name: compositeClassUnit.name + ":" + methodUnit.Signature.name,
-//						// isResponse: methodUnit.isResponse,
-//						component: {
-//							name: compositeClassUnit.name,
-//							classUnit: compositeClassUnit.uuid
-//						},
-//						uuid: methodUnit.uuid
-//						// uuid: compositeClassUnit.uuid
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesComposite.push(startNodeComposite);
-//					nodesByNameComposite[methodUnit.uuid] = startNodeComposite;
-//				}
-//
-//				Node endNodeComposite = nodesByNameComposite[targetStorableUnit.uuid];
-//				if (!endNodeComposite) {
-//					Node endNodeComposite = {
-//						name: compositeTargetClassUnit.name,
-//						// isResponse: targetMethodUnit.isResponse,
-//						component: {
-//							name: compositeTargetClassUnit.name,
-//							classUnit: compositeTargetClassUnit.uuid,
-//						},
-//						uuid: targetStorableUnit.uuid
-//						//							isWithinBoundary: targetClassUnit.isWithinBoundary
-//					};
-//					nodesComposite.push(endNodeComposite);
-//					nodesByNameComposite[targetStorableUnit.uuid] = endNodeComposite;
-//				}
-				//				var end = targetClassUnit.name;
-				if(classUnit != targetClassUnit) {
-				edges.add(new ClassUnit[] {classUnit, targetClassUnit});
-				}
-				
-				if(compositeClassUnit != targetCompositeClassUnit) {
-				compositeEdges.add(new CompositeClassUnit[]{compositeClassUnit, targetCompositeClassUnit});
-				}
-				
-				}
-
-//				if (classUnit != targetClassUnit) {
-//					if (!referencedClassUnits.includes(classUnit)) {
-//						referencedClassUnits.push(classUnit);
-//					}
-//
-//					if (!referencedClassUnits.includes(targetClassUnit)) {
-//						referencedClassUnits.push(targetClassUnit);
-//					}
-//				}
-//				else {
-//					continue;
-//				}
-
+		}
+		}
+		
+		System.out.println("construct of access graph finishes");
+		
+		return convertAccessGraphToJSON(edges);
+		
 }
-		
-//		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "access_dependency_graph.dotty");
-//		kdmModelDrawer.drawGraph(compositeEdges, nodesComposite, outputDir, "access_dependency_graph_composite.dotty");
 
-//		return { nodes: nodes, edges: edges, nodesComposite: nodesComposite, compositeEdges: compositeEdges };
+String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
+	
+	System.out.println("convert access graph starts.");
+	
+	StringBuilder outputS = new StringBuilder("{");
 		
-		String outputS = "{compositeClassGraph:[";
+		outputS.append("\"edges\":[");
+		
 		int i = 0;
-		for(CompositeClassUnit[] compEdge: compositeEdges) {
-			outputS += "{start:\""+compEdge[0].uuid+"\",";
-//			outputS += "->";
-			outputS += "end:\""+compEdge[1].uuid+"\"}";
-//			outputS += "\n";
-			if(i != compositeEdges.size()-1) {
-				outputS += ",";
+		for(AccessGraphNode[] edge: edges) {
+			if(edge[0] == null || edge[1] == null) {
+				continue;
 			}
 			i++;
-		}
-		outputS += "]";
-		
-		outputS += ",classGraph:[";
-		
-		i = 0;
-		for(ClassUnit[] edge: edges) {
-			outputS += "{start:\""+edge[0].uuid+"\",";
-//			outputS += "->";
-			outputS += "end:\""+edge[1].uuid+"\"}";
-//			outputS += "\n";
-			if(i != edges.size()-1) {
-				outputS += ",";
+			System.out.println("processing method: "+edge[0].methodUnit.uuid);
+			
+			if(i != 1) {
+				outputS.append(",");
 			}
-			i++;
+			
+			outputS.append("{\"start\":{\"methodUnit\":\""+edge[0].methodUnit.uuid+"\",\"classUnit\":\""+edge[0].classUnit.uuid+"\"},");
+			
+			outputS.append("\"end\":{\"attrUnit\":"+edge[1].attrUnit.toJSONString()+",\"classUnit\":\""+edge[1].classUnit.uuid+"\"}}");
+			
 		}
-		outputS += "]}";
+		outputS.append("]}");
 		
-		System.out.printf("composite graph: %s", outputS);
-//		Debug4.v().printf("json: %s", outputS);
 		
-		return outputS;
-	}
+		System.out.println("convert access graph finishes.");
+		
+		return outputS.toString();
+}
 
-//public static Set<Class> getDependencies(Scene scene, CallGraph callGraph, Class<?> clazz) {
-//    Set<Class> dependencies = Sets.newHashSet();
-//
-//    SootClass sootClass = scene.getSootClass(clazz.getName());
-//
-//    for(SootMethod method: sootClass.getMethods())
-//        if(!method.isPhantom())
-//            callGraph.edgesInto(method).forEachRemaining(edge -> {
-//                try {
-//                    dependencies.add(Class.forName(edge.getSrc().method().getDeclaringClass().getName()));
-//                } catch (ClassNotFoundException e) {
-//                    log.info(String.format("Class not found: %s", edge.getSrc().method().getDeclaringClass().getName()));
-//                }
-//            });
-//
-//    return dependencies;
-//}
+  private String parseCallbackFunctions(String UIHierarchyXML) {
+	  return "";
+  }
 
-  public void run() {
+  public void run() {	  
     Logger.stat("#Classes: " + Scene.v().getClasses().size() +
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
     Logger.trace("TIMECOST", "Start at " + System.currentTimeMillis());
 
-//    final int[] numStmt = {0};
-//    Scene.v().getClasses().parallelStream().forEach(new Consumer<SootClass>() {
-//      @Override
-//      public void accept(SootClass sootClass) {
-//        if (!sootClass.isConcrete())
-//          return;
-//        sootClass.getMethods().parallelStream().forEach(new Consumer<SootMethod>() {
-//          @Override
-//          public void accept(SootMethod sootMethod) {
-//            if (!sootMethod.isConcrete())
-//              return;
-//            Body b = sootMethod.retrieveActiveBody();
-//            Stream<Unit> stmtStream = b.getUnits().parallelStream();
-//            stmtStream.forEach(new Consumer<Unit>() {
-//              @Override
-//              public void accept(Unit unit) {
-//                Stmt currentStmt = (Stmt) unit;
-//                numStmt[0] += 1;
-//              }
-//            });
-//          }
-//        });
-//      }
-//    });
-
-//    Logger.stat("#Stmt: " + numStmt[0] + " (not correct)");
-    
-//    Debug2.v().printf("classes: %s", sb.toString());
-    
     List<ClassUnit> allClassUnits = new ArrayList<ClassUnit>();
     
-//    StringBuilder sb = new StringBuilder();
     for (SootClass c : Scene.v().getClasses()) {
-//    sb.append(c.getName()+"\n");
       ClassUnit classUnit = null;
-//      if(c.isApplicationClass()) {
-//    	  Debug2.v().printf("application class: %s\n", c.getName());
-//      }
-//      if(c.isPhantomClass()) {
-//    	  Debug2.v().printf("phantom class: %s\n", c.getName());
-//      }
-//      if(Configs.isLibraryClass(c.getName())) {
-//    	  Debug2.v().printf("library class: %s\n", c.getName());
-//      }
-      
+
       if (Configs.isLibraryClass(c.getName()) || Configs.isGeneratedClass(c.getName()) || c.isPhantomClass()) {
-//        if ((!c.isPhantomClass()) && c.isApplicationClass()) {
-//          c.setLibraryClass();
-//        }
     	 c.setLibraryClass();
     	 classUnit = new ClassUnit(c, false);
       }
@@ -1147,7 +957,6 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
       allClassUnits.add(classUnit);
     }
     
-
     List<CompositeClassUnit> compositeClassUnits = new ArrayList<CompositeClassUnit>();
     
     Map<String, ClassUnit> classUnitByUUID = new HashMap<String, ClassUnit>();
@@ -1156,114 +965,45 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
     Map<String, CompositeClassUnit> compositeClassUnitByUUID = new HashMap<String, CompositeClassUnit>();
     Map<String, CompositeClassUnit> compositeClassUnitByName = new HashMap<String, CompositeClassUnit>();
     Map<String, String> classUnitToCompositeClassDic = new HashMap<String, String>();
+    Map<String, MethodUnit> methodBySig = new HashMap<String, MethodUnit>();
+    Map<String, String> methodToClass = new HashMap<String, String>();
     
-//    List<ClassUnit> toIterate = new ArrayList<ClassUnit>(classUnits);
     List<ClassUnit> classUnits = new ArrayList<ClassUnit>();
     for(ClassUnit classUnit : allClassUnits) {
-//    	ClassUnit classUnit = toIterate.remove(0);
     	if(!classUnit.isWithinBoundary) {
     		continue;
     	}
 
-		System.out.println(classUnit.getName());
-		
-		String className = classUnit.getName();
+		String className = classUnit.name;
 		String compositeClassUnitName = getComponentName(className);
 		
 		CompositeClassUnit targetCompositeClassUnit = compositeClassUnitByName.get(compositeClassUnitName);
+		
 		if(targetCompositeClassUnit == null) {
 			targetCompositeClassUnit = new CompositeClassUnit(compositeClassUnitName);
 			compositeClassUnitByName.put(compositeClassUnitName, targetCompositeClassUnit);
 			compositeClassUnitByUUID.put(targetCompositeClassUnit.uuid, targetCompositeClassUnit);
 		}
-		targetCompositeClassUnit.add(classUnit);
 		
+		targetCompositeClassUnit.add(classUnit);
 		
 		classUnitToCompositeClassDic.put(classUnit.uuid, targetCompositeClassUnit.uuid);
 		
-		
-//    	CompositeClassUnit mergedCompositeClassUnit = null;
-//    	for(String className: classUnitByName.keySet()) { //find and merge composite class units
-//    		System.out.println(className);
-//    		if(className.startsWith(classUnit.getName()) || classUnit.getName().startsWith(className)) {
-//    			ClassUnit targetClassUnit = classUnitByName.get(className);
-//    			String targetCompositeClassUnitUUID = classUnitToCompositeClassDic.get(targetClassUnit.uuid);
-//    			System.out.println(targetCompositeClassUnitUUID);
-//    			CompositeClassUnit targetCompositeClassUnit = compositeClassUnitByUUID.get(targetCompositeClassUnitUUID);
-////    			if(targetCompositeClassUnit == null) {
-////    				continue;
-////    			}
-//    			targetCompositeClassUnit.add(classUnit);
-//    			targetCompositeClassUnit.name = className.length() > classUnit.getName().length() ? classUnit.getName() : className;
-//    			if(mergedCompositeClassUnit != null) {
-//    				mergedCompositeClassUnit.addAll(targetCompositeClassUnit);
-//        			compositeClassUnitByUUID.remove(targetCompositeClassUnit.uuid);
-//        			for(ClassUnit s : targetCompositeClassUnit) {
-//            		classUnitToCompositeClassDic.put(s.uuid, mergedCompositeClassUnit.uuid);
-//        			}
-//        			mergedCompositeClassUnit.name = mergedCompositeClassUnit.name.length() > targetCompositeClassUnit.name.length() ?  targetCompositeClassUnit.name : mergedCompositeClassUnit.name;
-//    			} else {
-//        			 mergedCompositeClassUnit = targetCompositeClassUnit;
-//        			}
-//    		}
-//    	}
-//    	
-//    	if(mergedCompositeClassUnit == null) { //create new composite class
-//    		mergedCompositeClassUnit = new CompositeClassUnit(classUnit);
-//    		compositeClassUnitByUUID.put(mergedCompositeClassUnit.uuid, mergedCompositeClassUnit);
-//    		classUnitToCompositeClassDic.put(classUnit.uuid, mergedCompositeClassUnit.uuid);
-//    	}
-    	
-
-        classUnitByName.put(classUnit.getName(), classUnit);
+        classUnitByName.put(classUnit.name, classUnit);
         classUnitByUUID.put(classUnit.uuid, classUnit);
     	classUnits.add(classUnit);
     	
-//    	String compositeClassUnitUUID = classUnitToCompositeClassDic.get(classUnit.uuid);
-//
-//    	CompositeClassUnit compositeClassUnit = null;
-//    	
-//    	if(compositeClassUnitUUID == null) {
-//    		compositeClassUnit = new CompositeClassUnit(classUnit);
-//    		compositeClassUnitByUUID.put(compositeClassUnit.uuid, compositeClassUnit);
-//    		classUnitToCompositeClassDic.put(classUnit.uuid, compositeClassUnit.uuid);
-//    	}
-//    	else {
-//    		compositeClassUnit = compositeClassUnitByUUID.get(compositeClassUnitUUID);
-//    	}
-//    	
-//    	System.out.println(classUnit.getName());
-//    	
-//    	if(classUnit.isInterface()) {
-//    		continue;
-//    	}	
+    	List<MethodUnit> methodUnits = classUnit.getMethods();
     	
-//    	List<SootClass> subClasses = Scene.v().getActiveHierarchy().getSubclassesOf(classUnit.attachment);
-//    	for(SootClass subClass : subClasses) {
-//    		System.out.println(subClass.getName());
-//    		ClassUnit subClassUnit = classUnitByName.get(subClass.getName());
-//    		String subCompositeClassUnituuid = classUnitToCompositeClassDic.get(subClassUnit.uuid);
-////    		CompositeClassUnit subCompositeClassUnit = classUnitToCompositeClassDic.get(classUnit);
-//    		if(subCompositeClassUnituuid == null) {
-//    			compositeClassUnit.add(subClassUnit);
-//    		}
-//    		else {
-//    			CompositeClassUnit subCompositeClassUnit = compositeClassUnitByUUID.get(subCompositeClassUnituuid);
-//    			if(subCompositeClassUnit == null) {
-//    				continue;
-//    			}
-//    			compositeClassUnit.addAll(subCompositeClassUnit);
-//    			compositeClassUnitByUUID.remove(subCompositeClassUnit.uuid);
-//    			
-//    			for(ClassUnit s : subCompositeClassUnit) {
-//        		classUnitToCompositeClassDic.put(s.uuid, compositeClassUnit.uuid);
-//    			}
-//    		}
-//    	}
+    	for(MethodUnit methodUnit : methodUnits) {
+    		methodBySig.put(methodUnit.signature, methodUnit);
+    		methodToClass.put(methodUnit.uuid, classUnit.uuid);
+    	}
     }
     
+    // output referenced classes
     String outputS = "{";
-    outputS += "classUnits:[";
+    outputS += "\"classUnits\":[";
 	
   	for(int i = 0; i < classUnits.size(); i++) {
   		ClassUnit CU = classUnits.get(i);
@@ -1273,14 +1013,13 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
   		}
   	}
   	
-    
 	outputS += "]";
-	outputS += ", compositeClassunits:[";
+	outputS += ", \"compositeClassUnits\":[";
     
+	// output referenced composite classes
 	int i = 0;
 	for(String uuid: compositeClassUnitByUUID.keySet()) {
 		CompositeClassUnit compCU = compositeClassUnitByUUID.get(uuid);
-//		outputS += compCU.uuid;
 		outputS += compCU.toJSONString();
 		if(i != compositeClassUnitByUUID.keySet().size()-1) {
 		outputS += ",";
@@ -1288,49 +1027,138 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 		i++;
 	}
 	outputS += "]";
-    
+
     for(String m : classUnitToCompositeClassDic.keySet()) {
     	Debug2.v().printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
-    	System.out.printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
     }
     
-    //create the hierarchy of the class units for the composite class units.
-    
-    // Analysis
-    // TODO: use reflection to allow nice little extensions.
-    
-//    identifyAggregateClassUnits(xmiString);
-    
-//	var callGraph = constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-	outputS += ",assessGraph:"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-	//	var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-//	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+    CallGraph callGraph = genCallGraph();
+
+    outputS += ",\"typeDependencyGraph\":"+constructTypeDependencyGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"extendsGraph\":"+constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 
 	outputS += "}";
 	
-
     Debug4.v().printf("%s", outputS);
     
-//    return {
-//		dicClassUnits: dicClassUnits,
-//		dicMethodUnits: dicMethodUnits,
-//		callGraph: callGraph,
-//		dicMethodClass: dicMethodClass,
-//		typeDependencyGraph: typeDependencyGraph,
-//		accessGraph: accessGraph,
-//		extendsGraph: extendsGraph,
-//		compositionGraph: compositionGraph,
-//		referencedClassUnits: referencedClassUnits,
-//		referencedClassUnitsComposite: referencedClassUnitsComposite,
-//		dicCompositeSubclasses: dicCompositeSubclasses,
-//		dicMethodParameters: dicMethodParameters,
-//	};
-    
-  }
+ }
+  
+/*
+ * Derive call graphs from source code.
+ */
+  
+private CallGraph genCallGraph() {
+
+	String apkPath = Configs.project;
+  	String androidJarPath = Configs.sdkDir + "/platforms/";
+  
+    File apkFile = new File(apkPath);
+	String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
+	if (!extension.equals(".apk") || !apkFile.exists()){
+		Debug1.v().println("apk-file not exists "+ apkFile.getName());
+		return null;
+	}
+
+	File sdkFile = new File(androidJarPath);
+	if (!sdkFile.exists()){
+		Debug1.v().println("android-jar-directory not exists "+ sdkFile.getName());
+		return null;			
+	}
+	
+	Path curDir = Paths.get(System.getenv("GatorRoot")); 
+	
+	Path sourceSinkPath = Paths.get(curDir.toString(), "SourcesAndSinks.txt");
+	File sourceSinkFile = sourceSinkPath.toFile();
+	if (!sourceSinkFile.exists()){
+		Debug1.v().println("SourcesAndSinks.txt not exists");
+		return null;				
+	}
+	
+	Path callbackPath = Paths.get(curDir.toString(), "AndroidCallbacks.txt");
+	File callbackFile = callbackPath.toFile();
+	if (!callbackFile.exists()){
+		Debug1.v().println("AndroidCallbacks.txt not exists");
+		return null;				
+	}
+
+	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
+	app.setOutputDir(Configs.outputDir);
+	
+	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
+	File gatorFile = gatorFilePath.toFile();
+	if(!gatorFile.exists()) {
+		Debug1.v().println("Gator file doesn't exist...");
+//		return null;
+	}
+	else {
+		app.setGatorFile(gatorFile.getAbsolutePath());
+	}
+	
+	
+	Debug1.v().println("Setup Application...");
+	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);
+  
+  	soot.G.reset();
+  	Options.v().set_src_prec(Options.src_prec_apk);
+	Options.v().set_process_dir(Collections.singletonList(apkPath));
+	Options.v().set_android_jars(androidJarPath);
+	Options.v().set_whole_program(true);
+	Options.v().set_allow_phantom_refs(true);
+	Options.v().set_output_format(Options.output_format_none);
+	Options.v().setPhaseOption("cg.spark", "on");
+	Scene.v().loadNecessaryClasses(); 
+	
+	app.setCallbackFile(callbackPath.toAbsolutePath().toString());
+	
+	try {
+		app.runInfoflow(sourceSinkPath.toAbsolutePath().toString());
+	} catch (IOException e1) {
+		e1.printStackTrace();
+	} catch (XmlPullParserException e1) {
+		e1.printStackTrace();
+	}
+	
+	CallGraph callGraph = Scene.v().getCallGraph();
+	
+	String res = dumpCallGraph(callGraph);
+	
+	Debug5.v().printf("%s", res);
+	
+	return callGraph;
+}
+
+//output the call graph to JSON formate
+private static String dumpCallGraph(CallGraph cg){
+		Iterator<Edge> itr = cg.iterator();
+		Map<String, Set<String>> map = new HashMap<String, Set<String>>();
+
+		while(itr.hasNext()){
+			Edge e = itr.next();
+			String srcSig = e.getSrc().toString();
+			String destSig = e.getTgt().toString();
+			Set<String> neighborSet;
+			if(map.containsKey(srcSig)){
+				neighborSet = map.get(srcSig);
+			}else{
+				neighborSet = new HashSet<String>();
+			}
+			neighborSet.add(destSig);
+			map.put(srcSig, neighborSet );
+			
+		}
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+		String json = gson.toJson(map);
+		return json;
+}
 
 private String getComponentName(String classPath) {
 	int pos = classPath.lastIndexOf(".");
+	if(pos < 0) {
+		return classPath;
+	}
 	String packageName = classPath.substring(0, pos);
 	String className = classPath.substring(pos+1, classPath.length());
 	int firstPos = -1;
@@ -1348,29 +1176,5 @@ private String getComponentName(String classPath) {
 		return packageName+"."+className.substring(0, firstPos);
 	}
 }
-  
-//  
-//  private List<String[]> constructCompositionGraph(){
-//	  
-//  }
-//  
-//  private List<String[]> constructExtendsGraph(){
-//	  
-//  }
-//  
-//  private List<String[]> constructCallGraph(){
-//	  
-//  }
-//  
-//  private List<String[]> constructTypeDependencyGraph(){
-//	  
-//  }
-//  
-//  private List<String[]> constructAccessGraph(){
-//	  
-//  }
-  
-  
-
   
 }

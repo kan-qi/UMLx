@@ -34,7 +34,6 @@
 	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-
 	var userStoryEvaluator = require('./evaluators/StoryPointEvaluator/UserStoryEvaluator.js');
 	
 	var evaluators = [
@@ -370,8 +369,7 @@
 		}
 		
 		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
-		
-		
+
 		model.ModelEvaluationFileName = "modelEvaluation.csv";
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
@@ -575,6 +573,7 @@
 			evaluateUseCase: evaluateUseCase,
 			evaluateDomainModel: evaluateDomainModel,
 			evaluateModel: evaluateModel,
-			evaluateRepo: evaluateRepo
+			evaluateRepo: evaluateRepo,
+			evaluators: evaluators
 	}
 }());

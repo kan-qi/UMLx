@@ -34,9 +34,7 @@ public class RepoFileFinder {
 //		if(!tempOutputDir.exists()){
 //			tempOutputDir.mkdirs();
 //		}
-		
 	}
-
 
 	public Map<String, String> searchRepositoryFiles(File fin) throws Exception{
 		if(fin == null || !fin.exists()){

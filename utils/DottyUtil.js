@@ -34,8 +34,10 @@
 	}
 	
 	function drawDottyGraph(dottyGraph, graphFilePath, callbackfunc){
+		return;
 		var dir = path.dirname(graphFilePath);
 		var fileName = path.parse(graphFilePath).base.replace(/\.[^/.]+$/, "");
+		console.log("the output fileName %s\n", fileName);
 		mkdirp(dir, function(err) {
 		    // path exists unless there was an error
 			 if(err) {
@@ -44,6 +46,7 @@
 //			 console.log(graph);
 		fs.writeFile(graphFilePath, dottyGraph, function(err) {
 		    if(err) {
+		    	
 		        return console.log(err);
 		    }
 		    
