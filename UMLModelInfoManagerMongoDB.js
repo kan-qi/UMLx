@@ -742,7 +742,7 @@ function deleteRepo(repoId, callbackfunc) {
             ], function(err, result)
             {
                if(err) throw err;
-                console.log("Result RepoID: "+ result[0].Repos[0]._id);
+                //console.log("Result RepoID: "+ result[0].Repos[0]._id);
                 db.close();
                 callbackfunc(result[0]);
             });

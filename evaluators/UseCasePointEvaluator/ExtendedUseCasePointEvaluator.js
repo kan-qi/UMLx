@@ -17,7 +17,7 @@
 	var RScriptExec = require('../../utils/RScriptUtil.js');
 	//var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	var UCPPredictionModels = require('./UCPPredictionModels.js');
-	
+
 	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {
 			  "EUCP": {
@@ -66,19 +66,19 @@
 				  }
 				}
 
-	
+
 	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
-	
+
 	function initEvaluator(callbackfunc){
-		
+
 		//readTransactionWeightingSchema
 		fs.readFile(transactionWeightingJsonFile, 'utf-8', (err, str) => {
 			   if (err) throw err;
 //			    console.log(data);
-			  
+
 		});
 	}
-	
+
 	
 //	function determineTransactionWeight(dimensions, schema){
 //		var weightingSchema = transactionWeightingSchema[schema];
@@ -339,17 +339,17 @@
                             return {
                                eucp_lm: {
                                         predictEffort: function(modelInfo, key, callbackfunc){
-                                                             UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, eucpConfig);
+                                                             UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, eucpConfig);
                                                          }
                                },
                                exucp_lm: {
                                           predictEffort: function(modelInfo, key, callbackfunc){
-                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, exucpConfig);
+                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, exucpConfig);
                                                          }
                                           },
                                 ducp_lm: {
                                          predictEffort: function(modelInfo, key, callbackfunc){
-                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, ducpConfig);
+                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, ducpConfig);
                                                          }
                                           },
                             }

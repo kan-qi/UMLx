@@ -3,8 +3,9 @@ html
         title UMLx
         link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
         link(href='css/style.css', rel='stylesheet')
+        link(href='http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', rel='stylesheet')
     body
-        include banner
+        include bannerNew
         if message
             div.message-box
             p.message-text message:#{message}
@@ -14,6 +15,8 @@ html
             include mainPanel
         script(type='text/javascript', src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
         script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+        script(type='text/javascript', src="https://code.jquery.com/jquery-1.12.4.js")
+        script(type='text/javascript', src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
         script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
         script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
         script(type='text/javascript', src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js")
@@ -22,5 +25,3 @@ html
         script(type='text/javascript', src="js/charts.js")
         script(type='text/javascript', src="js/scripts.js")
         script(type='text/javascript', src="http://requirejs.org/docs/release/2.2.0/minified/require.js")
-
-
