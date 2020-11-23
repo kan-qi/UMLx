@@ -81,7 +81,7 @@ var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false}));
 
 
 app.set('views', './views');
@@ -420,7 +420,8 @@ app.get('/profile',function(req,res){
 
 	var profileInfo = {}
 	var userID = req.userInfo._id;
-
+	const tracker = require("/TrackUserInfo.js");
+	tracker.tracker(req);
 
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;

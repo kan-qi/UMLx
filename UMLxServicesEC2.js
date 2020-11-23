@@ -428,8 +428,10 @@ app.get('/profile',function(req,res){
 
 	var profileInfo = {}
 	var userID = req.userInfo._id;
-    	
-	
+	const tracker = require("/TrackUserInfo.js");
+	tracker.tracker(req);
+
+
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;

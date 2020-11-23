@@ -101,7 +101,7 @@ var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true}));
 
 
 app.set('views', './views');
@@ -733,7 +733,10 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 	res.render('loginNew');
+
 });
 
 app.get('/logout',function(req,res){
@@ -758,7 +761,8 @@ app.get('/logout', function (req, res) {
 
 
 app.post('/updateModel', function (req, res){
-
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
     var modelInfo = req.body;
     //JSON.parse(modelInfo);
     console.log(modelInfo);
@@ -861,6 +865,9 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 	console.log(req.body);
 	var formInfo = req.body;
 
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
+
 	console.log("==========req.files=============");
     console.log(req.files);
 
@@ -931,7 +938,8 @@ app.use(function(req, res, next) {
 });
 
 app.get('/savegitinfo', function(req,res){
-	
+	console.log("****************************");
+
 	var email = req.userInfo.email;
 	var userId = req.userInfo._id;
 	umlModelInfoManager.saveGitInfo(email,userId, function(success,msg){
@@ -944,11 +952,6 @@ app.get('/savegitinfo', function(req,res){
 });
 
 app.get('/profile',function(req,res){
-
-	var profileInfo = {}
-	var userID = req.userInfo._id;
-    	
-	
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
@@ -959,16 +962,22 @@ app.get('/profile',function(req,res){
 		}
 	
 		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+				console.log("WERTYU********************************");
         		res.render('profile', {profileInfo:profileInfo, profileRep:result.Repos[0]});
 	   	});
     	});
-})
+});
 
 app.get('/inviteUser',function(req,res){
 	res.render('invite');
 });
 
 app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (req, res){
+
+
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
+
 
 	var email = req.body['email'];
 	var enterpriseUserId = req.userInfo._id;
@@ -1019,7 +1028,11 @@ app.get('/surveyAnalytics', function (req, res){
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { name: 'uml_other', maxCount: 1 },
     { name: 'uml_model_name', maxCount: 1 }, { name: 'uml_model_type', maxCount: 1 }, { name: 'repo_id', maxCount: 1 }]), function (req, res) {
-    const worker = fork('./UMLxAnalyzeWorker.js',
+
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
+
+	const worker = fork('./UMLxAnalyzeWorker.js',
 		[],
         {
             execArgv: []
@@ -1221,6 +1234,8 @@ app.get('/uploadUMLFileCompany', function(req, res){
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
 app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadUseCaseFile');
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 	var usecaseFilePath = req.files['usecase-file'][0].path;
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
@@ -1241,6 +1256,8 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
  */
 app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}, {name:'model-id', maxCount:1}]), function (req, res){
 	console.log("/uploadUMLFileVersion");
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelType = req.body['uml-model-type'];
 	var modelId = req.body['model-id'];
@@ -1460,6 +1477,10 @@ app.get('/deleteUseCase', function (req, res){
 
 app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{name:'it', maxCount:1},{name:'ilf', maxCount:1}, {name:'elf', maxCount:1},{name:'ei', maxCount:1}, {name:'eo', maxCount:1}, {name:'eq', maxCount:1}, {name:'ph', maxCount:1}, {name:'useCase-id',maxCount:1}]),  function (req, res){
 	console.log("/uploadUseCaseEvaluation");
+
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
+
 	var CCSS = req.body['ccss'];
 	var IT = req.body['it'];
 	var ILF = req.body['ilf'];
@@ -1731,8 +1752,10 @@ app.get('/pager',function(req,res){
 
 
 app.get('/', function(req, res){
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 
-    var message = req.query.e;
+	var message = req.query.e;
 	var requestUUID = randomstring.generate({
         length: 12,
 		charset: 'alphabetic'
@@ -1863,7 +1886,8 @@ app.get('/', function(req, res){
 app.post('/saveModelInfoCharacteristics', upload.fields([]), function(req,res){
     // console.log("/saveModelInfoCharacteristics");
 	// console.log(req.body);
-	
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 	umlModelInfoManager.saveModelInfoCharacteristics(req.body, function(result,message){		
 		res.json(result);
 	});
@@ -2053,6 +2077,8 @@ app.use(require('body-parser').json());
 app.post('/subscribe', (req, res) => {
     const token = req.cookies.appToken;
     const subscription = req.body;
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
     if(subscription) {
         endpoints[token] = subscription;
         console.l('server received subsription endpoint');
@@ -2101,6 +2127,8 @@ app.get('/getZipPackage', function (req, res){
 });
 
 app.post('/analyseSLOC', function (req, res) {
+	const tracker = require("./TrackUserInfo.js");
+	tracker.tracker(req);
 	var archives = req.body.archives;
 	archives = JSON.parse(archives);
 
