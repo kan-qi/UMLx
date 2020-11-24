@@ -30,7 +30,7 @@ const { fork } = require('child_process');
 var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
-
+var saveEstimationModel=require('./saveEstimationModel.js');
 /* output/ and uploads/ folders auto-creation */
 var checkDirExist = (folderpath) => {
 	const pathArr = folderpath.split('/');
@@ -2186,4 +2186,19 @@ app.get('/getZipPackage', function (req, res){
  			});
 	    }
 	});		
+});
+app.get('/sem/:model_name',(req,res)=>{
+	//console.log(req.params)
+	saveEstimationModel.queryEstimationModelNames(req.params.model_name).then(function(result){
+         //searchResult=result
+        // console.log(result)	
+         res.send({express:result})
+	})
+});
+app.get('/qem/:model_id',(req,res)=>{
+	saveEstimationModel.searchEstimationModelDetail(req.params.model_id).then(function(result){
+         //searchResult=result
+         //console.log(result)	
+         res.send({express:result})
+	})
 });
