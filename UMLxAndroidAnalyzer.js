@@ -8,6 +8,7 @@
     var srcParser = require('./model_platforms/src/SrcParser.js');
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     var modelDrawer = require('./model_drawers/UserSystemInteractionModelDrawer');
     var AndroidLogUtil = require('./utils/AndroidLogUtil');
@@ -16,6 +17,10 @@
     var modelDrawer = require('./model_drawers/UserSystemInteractionModelDrawer');
     var AndroidLogUtil = require('./utils/AndroidLogUtil');
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+    var modelDrawer = require('./model_drawers/UserSystemInteractionModelDrawer');
+    var AndroidLogUtil = require('./utils/AndroidLogUtil');
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 
 
     function analyseAndroidApks(apkFilePath, reportDir){
@@ -24,6 +29,9 @@
 
         /* dummy android apk analysis due to that gator command cannot run on local machine with MAC OS*/
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 //         return new Promise((resolve, reject) => {
 //             var project = {
 //                 "reportDir": reportDir,
@@ -42,6 +50,7 @@
 //                 "reportDir": reportDir,
 //                 "repoDir": reportDir,
 //                 "path": "/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release-1",
+<<<<<<< HEAD
 =======
         return new Promise((resolve, reject) => {
             var project = {
@@ -62,6 +71,8 @@
 //                 "repoDir": reportDir,
 //                 "path": "/Users/diaozhuoran/desktop/DR2/UMLxKqi/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release-1",
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 //                 "modelFile": "android-analysis-output.json",
 //                 "stimulusFile": "gator-handlers.txt",
 // //                "tag": "AnotherMonitor_release-1",
@@ -71,6 +82,7 @@
 //                 "useCaseRec":"record.txt",
 //                 "clusterConfig": "S1W1L1"
 <<<<<<< HEAD
+<<<<<<< HEAD
             // }
         //     setTimeout(resolve(project), 1000);
         // });
@@ -79,6 +91,11 @@
             setTimeout(resolve(project), 1000);
         });
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+            // }
+        //     setTimeout(resolve(project), 1000);
+        // });
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
     }
 
     function analyseAndroidProject(project, reportDir, umlModelInfo){        
@@ -125,11 +142,15 @@
 //                            }, project);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
                                 var modelJson = FileManagerUtil.readJSONSync(inputFile);
                                 //var modelJson = JSON.parse(FileManagerUtil.readJSONSync(inputFile).trim());
                                 
                                 srcParser.isJSONBased = true;
+<<<<<<< HEAD
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
                                             //var workDir = path.dirname(umlModelInfo.umlFilePath);
@@ -188,12 +209,54 @@
                                 //var modelJson = JSON.parse(FileManagerUtil.readJSONSync(inputFile).trim());
                                 
                                 srcParser.isJSONBased = true;
+=======
 
                                             //var workDir = path.dirname(umlModelInfo.umlFilePath);
                                             //umlModelInfo = modelJson;
                                             
                                             srcParser.extractUserSystermInteractionModel(modelJson, outputDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 
+                                                if(!model){
+                                                    return;
+                                                }
+
+
+                                                // set up the model info properties
+                                                for(var i in model){
+                                                    umlModelInfo[i] = model[i];
+                                                }
+
+                                                // set up the domain model
+                                                var domainModel = umlModelInfo.DomainModel;
+                                                var debug = require("./utils/DebuggerOutput.js");
+                                                debug.writeJson2("constructed_domain_model", domainModel, umlModelInfo.OutputDir);
+                                                for(var i in umlModelInfo.UseCases) {
+                                                                var useCase = umlModelInfo.UseCases[i];
+
+                                                                modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
+
+                                                                    console.log("use case is drawn");
+                                                                });
+                                                                modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
+
+                                                                    console.log("simple use case is drawn");
+                                                                });
+
+                                //                              pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+                                //                                  console.log("paths are drawn");
+                                //                              });
+                                                }
+                                                modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+                                                    console.log("domain model is drawn");
+                                                });
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
+
+                                            //var workDir = path.dirname(umlModelInfo.umlFilePath);
+                                            //umlModelInfo = modelJson;
+                                            
+                                            srcParser.extractUserSystermInteractionModel(modelJson, outputDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
+
+<<<<<<< HEAD
                                                 if(!model){
                                                     return;
                                                 }
@@ -242,6 +305,17 @@
 =======
                                             }, umlModelInfo);
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+                                                var debug = require("./utils/DebuggerOutput.js");
+                                                debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
+
+//                                              if(callbackfunc){
+                                                 //                                                 callbackfunc(umlModelInfo);
+                                                 //                                             }
+                                                  resolve(model);
+
+                                            }, umlModelInfo);
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 
                         }
                     });

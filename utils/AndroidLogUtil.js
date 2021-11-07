@@ -371,12 +371,16 @@
 	
 	function generateAndroidAnalysis(apkFileName, outputDir) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		var executeAPKAnalysis = function(apkFileName, outputDir, callback){			
 =======
 		  
 		var executeAPKAnalysis = function(apkFileName, outputDir, callback){
 			
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+		var executeAPKAnalysis = function(apkFileName, outputDir, callback){			
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 		 	if(!apkFileName){
 			  	console.log('empty apk name');
 			  	if(callback){
@@ -388,6 +392,9 @@
 		  	var apkName = apkFileName.replace(/\.apk/g, "");
 		  
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 		  //  	var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:./libs/*\" org.umlx.UMLxAndroidToolKit " 
 				// + apkFileName + "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
 				// + "\"/Users/diaozhuoran/Library/Android/sdk/platforms/\" \" /Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/output\"";
@@ -395,6 +402,7 @@
 //				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
 //				+ "\"" + __dirname + "/../" + apkFileName + "\" "
 //				+ "\"" + __dirname + "/../" + outputDir + "\"";
+<<<<<<< HEAD
 			var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
                 				+ "\"" + apkFileName + "\" "
                 				+ "\"" + outputDir + "\"";
@@ -407,6 +415,22 @@
 		   
 		   	//console.log(command);
 		   	//process.exit(1)
+=======
+			// var command = "java -cp \""+__basedir+"/facility-tools/Android-toolkit/out/production/Android-toolkit:"+__basedir+"/facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+   //              				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
+   //              				+ "\"" + __basedir+"/" + apkFileName + "\" "
+   //              				+ "\"" + __basedir+"/" + outputDir + "\"";
+
+            // var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
+            //           +"org.umlx.UMLxAndroidToolKit \""+apkFileName+"\""
+            //           +" \""+outputDir+"\"";
+
+            		var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
+                				+ "\"./" + apkFileName + "\" "
+                				+ "\"./" + outputDir + "\"";
+
+			console.log(command);
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -438,17 +462,25 @@
 			var dir = outputDir +"/"+apkName;
 			
 <<<<<<< HEAD
+<<<<<<< HEAD
 			//var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
 			var fileNames = ["android-analysis-output.json"];
 =======
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+			//var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
+			var fileNames = ["android-analysis-output.json"];
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 
 			/* parameters in project object are supposed to change to the local path */
 			var project = {
                 "reportDir": outputDir,
                 "repoDir": outputDir,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
                 "path": outputDir,
                 "modelFile": "android-analysis-output.json",
                 "stimulusFile": "gator-handlers.txt",
@@ -468,6 +500,7 @@
    //              "useCaseRec":"record.txt",
    //              "clusterConfig": "S1W1L1"
    //          }
+<<<<<<< HEAD
 =======
                 "path": outputDir + "/" + apkName,
                 "modelFile": "android-analysis-output.json",
@@ -479,6 +512,8 @@
                 "clusterConfig": "S1W1L1"
             }
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 				
 			mkdirp(dir, function(err) {
 				      // to generate svg file.
@@ -507,10 +542,14 @@
 					}
 				}catch(e){
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 				console.log("watch on files...");
 =======
 	 console.log("watch on files...");
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+	 				console.log("watch on files...");
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 					alreadyExist = false;
 					var checkExists = {};
 					for(var i in fileNames){
@@ -542,10 +581,14 @@
 
 					if(executeAPKAnalysis){
 <<<<<<< HEAD
+<<<<<<< HEAD
 						executeAPKAnalysis(apkFileName, outputDir, function(result){
 =======
 						executeAPKAnalysis(apkFileName, dir, function(result){
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+						executeAPKAnalysis(apkFileName, outputDir, function(result){
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 							clearTimeout(timer);
 							if(watcher != null){
 								watcher.close();

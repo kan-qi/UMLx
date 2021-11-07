@@ -21,6 +21,7 @@
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	function extractModelInfo(umlModelInfo, callbackfunc) {
 		
 		var constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
@@ -210,6 +211,77 @@
     				}
 
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+	function extractModelInfo(umlModelInfo, callbackfunc){
+		console.log(callbackfunc);
+		var constructModel = null;
+        if(umlModelInfo.apkFile){
+        	constructModel = function(modelParser, modelString, umlModelInfo, callback){
+                console.l("apk file found => go to UMLxAndroidAnalyzer.js");
+    			var workDir = path.dirname(umlModelInfo.umlFilePath);
+                modelParser.analyseAPKGator(
+                	umlModelInfo.umlFilePath, workDir, umlModelInfo.OutputDir,
+                    (result) => {
+                    	//console.l(result)
+                        if (result == false) {
+                        	console.l("Android APK Analysis failed");
+                        	if(callback){
+                        		callback(false);
+                        	}
+                        }
+                        else {
+                        	console.l("Android APK Analysis succeed");
+                        	if(callback){
+                        		callback(result);
+                        	}
+                        }                        
+                    }, umlModelInfo);
+        	}
+        }
+        else{
+        	constructModel  = function(modelParser, modelString, umlModelInfo, callbackfunc){
+    			var path = require('path');
+    			var workDir = path.dirname(umlModelInfo.umlFilePath);
+    			modelParser.extractUserSystermInteractionModel(modelString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
+    				
+    				if(!model){
+    					return;
+    				}
+    				
+    				// set up the model info properties
+    				for(var i in model){
+    					umlModelInfo[i] = model[i];
+    				}
+    				
+    				// set up the domain model
+    				var domainModel = umlModelInfo.DomainModel;
+    				
+    				for(var i in umlModelInfo.UseCases) {
+    								var useCase = umlModelInfo.UseCases[i];
+    								
+    								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
+
+    									console.log("use case is drawn");
+    								});
+    								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
+
+    									console.log("simple use case is drawn");
+    								});
+    								
+    								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+    									console.log("paths are drawn");
+    								});
+    				}
+    			
+    				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+    					console.log("domain model is drawn");
+    				});
+
+    				if(callbackfunc){
+    					callbackfunc(umlModelInfo);
+    				}
+
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
     			}, umlModelInfo);
     		}
         }
@@ -264,6 +336,7 @@
 	}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	
 =======
@@ -271,6 +344,9 @@
 =======
 	
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+	
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 //	function traverseUseCaseForTransactions(useCase){
 //		
 ////		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
@@ -372,9 +448,12 @@
 //			return uniquePaths;
 //	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 =======
 >>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
+=======
+>>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 	module.exports = {
 		extractModelInfo : extractModelInfo,
 		extractModelInfoTest : function(umlModelInfo, func){
