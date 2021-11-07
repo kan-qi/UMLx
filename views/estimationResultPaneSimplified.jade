@@ -4,15 +4,15 @@ if error
 if estimationResults
   div(id='estimation-results-tables', data-estimation-model="#{estimationResults.EstimationModel}")
     div.model-predictions
-      table.table.table-bordered.ui.blue.table
+      table.table.table-bordered
         thead
           tr
-            th.center.aligned Model
-            th.center.aligned Effort (PH)
-            th.center.aligned Schedule (Months)
-            th.center.aligned PH/Month
-            th.center.aligned #{estimationResults.SizeMetric}
-            th.center.aligned Personnel (Developers)
+            th Model
+            th Effort (PH)
+            th Schedule (Months)
+            th PH/Month
+            th #{estimationResults.SizeMetric}
+            th Personnel (Developers)
         tbody
           tr.estimation-table
             td #{estimationResults.EstimationModel}
@@ -36,8 +36,9 @@ if estimationResults
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
-              td #{i}
-              td #{estimationResults.UseCases[i].Name}
+              td #{i+1}
+              td
+               a(href='/displayjsondata') #{estimationResults.UseCases[i].Name}
               td #{estimationResults.UseCases[i].Effort}
               td #{estimationResults.UseCases[i].SizeMeasurement}
               td #{estimationResults.UseCases[i].Duration}

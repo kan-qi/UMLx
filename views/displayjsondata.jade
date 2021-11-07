@@ -1,0 +1,31 @@
+html
+  head
+    title UMLx JSON Data
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+    link(href='css/style.css', rel='stylesheet')
+    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
+    script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    
+  body
+    p JSON DATA
+    - var activities = jsondata.Activities
+    - var services = jsondata.Services
+    p ACTIVITIES
+    - for(var i = 0; i < activities.length; i++)
+      p Activity #{i+1}
+        p name: #{activities[i].name}
+        p view_num: #{activities[i].view_num}
+        p eventAndHandler: #{activities[i].eventAndHandler}
+        br
+    br
+    p SERVICES
+    - for(var j = 0; j < services.length; j++)
+      p Service #{j+1}
+        p name: #{services[j].name}
+        p view_num: #{services[j].view_num}
+        p eventAndHandler: #{services[j].eventAndHandler}
+        br
+      
+
+       
+       
