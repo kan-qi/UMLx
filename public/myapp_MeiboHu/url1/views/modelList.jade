@@ -1,0 +1,29 @@
+doctype html
+html
+head
+title=title
+
+body
+    h1 UMLx
+
+    table(style='width:60%', border='1')
+      thead
+        tr
+          th Name
+          th Dataset
+          th Model_path
+          th CvResults
+          th Estimations
+      tbody
+        - each item in model
+          tr
+            td #{item.model_name}
+            td #{item.dataset_name}
+            td #{item.model_path}
+            td 
+              a(href='/queryByName/cvResults') cvResults
+            td 
+              a(href='/queryByName/bsEstimations') bsEstimations
+              
+      
+      

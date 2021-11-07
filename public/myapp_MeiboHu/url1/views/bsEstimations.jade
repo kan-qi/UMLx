@@ -1,0 +1,21 @@
+doctype html
+html
+head
+title=title
+body
+    h1 bsEstimations
+
+    table(style='width:60%', border='1')
+      thead
+        tr
+          - each name in keys
+            th #{name}
+      tbody
+        tr
+          - each num in item
+            td !{JSON.stringify(num)}
+                
+        
+              
+      
+      

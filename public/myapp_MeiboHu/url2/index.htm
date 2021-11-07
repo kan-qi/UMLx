@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      table.center {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <head>
+      <title>UMLx</title>
+    </head>
+    <form action="http://127.0.0.1:3000/list" method="POST">
+      <input type="submit" value="List" />
+    </form>
+    <form action="http://127.0.0.1:3000/ListByDateCreate" method="POST">
+      <input type="submit" value="ListByDateCreate" />
+    </form>
+
+    <form action="http://127.0.0.1:3000/listByInsertTime" method="POST">
+      <input type="submit" value="ListByInsertTime" />
+    </form>
+
+    <form action="http://127.0.0.1:3000/queryByName" method="POST">
+      Name: <input type="text" name="name" />
+      <input type="submit" value="QueryByName" />
+    </form>
+
+    
+  </body>
+</html>
+
+ 
