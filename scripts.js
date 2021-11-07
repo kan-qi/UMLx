@@ -252,7 +252,7 @@ function model_survey_file_upload_fnc() {
         success: function (response) {
             console.log(response);
         },
-        error: function () {
+        error: function (err) {
             console.log("fail");
             console.log(err);
             alert("There was an error submitting survey data");
@@ -321,7 +321,7 @@ function predict_project_effort_func() {
             console.log('#'+estimationModel+'-estimation-results-charts');
             showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
-        error: function () {
+        error: function (err) {
             // hide loading
             document.getElementById("loadingScreen").classList.add("hidden");
 

@@ -614,7 +614,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
 	console.log("poilkj");
 	var uploadedFile = req.files['uml_file'][0];
-    if (uploadedFile.mimetype == "text/xml") { // xml file
+    if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file or apk file
         var projectInfo = {};
 		projectInfo.distributedSystem = req.body['distributed_system'];
 		projectInfo.responseTime = req.body['response_time'];
@@ -669,6 +669,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
 			modelInfo.projectInfo = projectInfo;
+
+			if (path.extname(uploadedFile.originalname) == ".apk") {
+				modelInfo['apkFile'] = true;
+			}
 	//		console.log('updated model info');
 	//		console.log(modelInfo);
 			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
@@ -677,6 +681,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 					res.end("error");
 					return;
 				}
+				modelInfo.Name = umlModelName
 				console.log("model is extracted");
 				umlEvaluator.evaluateModel(modelInfo, function(){
 					console.log("model analysis complete");
@@ -692,7 +697,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	                    console.log(estimationResults);
 
 	                    modelInfo[estimationModel] = estimationResults;
-	                    modelInfo.repo_id = repoInfo._id;
+						modelInfo.repo_id = repoInfo._id;
 
 	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
@@ -707,24 +712,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 			});
 		});
-    }
-    else if (path.extname(uploadedFile.originalname) == ".apk") { // apk file
-        console.l("apk file found => go to UMLxAndroidAnalyzer.js");
-        androidAnalyzer.analyseAPKGator(
-            uploadedFile.path, 
-            (result, model) => {
-                if (result != true) {
-                	res.send("failed");
-                	console.l("Android APK Analysis failed");
-                }
-                else {
-                	console.l("Android APK Analysis succeed");
-                	res.render('estimationResultPaneSimplified', {estimationResults:model.eucp_lm, modelInfo: model});
-                	//res.send("success");
-                }
-            }
-        );
-    }
+	}
 });
 
 // console.l = console.log;
@@ -1034,8 +1022,8 @@ app.get('/surveyAnalytics', function (req, res){
 
 
 
-app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
-    { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
+app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { name: 'uml_other', maxCount: 1 },
+    { name: 'uml_model_name', maxCount: 1 }, { name: 'uml_model_type', maxCount: 1 }, { name: 'repo_id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',
 		[],
         {
@@ -1053,6 +1041,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
         res.redirect('/'); // 第二次redirect 
     });
 
+	console.log(req);
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
@@ -1775,7 +1764,26 @@ app.get('/', function(req, res){
     
     if(currentPage >1){
         start = (currentPage - 1) * pageSize;
-    }
+	}
+
+	var profileInfo = {}
+	var userID = req.userInfo._id;
+	var profileRep = {}
+
+	profileInfo.userName = req.userInfo.userName;
+	profileInfo.email = req.userInfo.email;
+	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+
+	umlModelInfoManager.getGitData(userID, function(gitData, success, msg){
+		if(success==true){
+			profileInfo.gitData = gitData;
+		}
+
+		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+			profileRep = result.Repos[0];
+		});
+	});
+
 
 //    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
     umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
@@ -1814,6 +1822,9 @@ app.get('/', function(req, res){
 			res.send("error");
 			return;
 		}
+
+
+
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1835,7 +1846,12 @@ app.get('/', function(req, res){
 					});
 				});
 			} else {
-                repoInfo.requestUUID = requestUUID;
+				repoInfo.requestUUID = requestUUID;
+				if (repoId === '5cf9cf93049031c21c5e86a4') {
+					res.render('index_login', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
+						repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+						pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief, profileInfo: profileInfo, profileRep: profileRep});
+				}
 				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
 					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
 					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
@@ -1845,9 +1861,6 @@ app.get('/', function(req, res){
     });
          });
 	});
-
-
-
 });
 
 

@@ -45,8 +45,8 @@ function evaluateUploadedProject(req) {
     if(req.files['uml_file'] != null && req.files['uml_other'] != null){
         // console.log("================================path===================");
         console.l('uml-file && other not null');
-        umlFilePath = req.files['uml-file'][0].path;
-        umlOtherPath = req.files['uml-other'][0].path;
+        umlFilePath = req.files['uml_file'][0].path;
+        umlOtherPath = req.files['uml_other'][0].path;
 
         // console.log(umlFilePath);
         // console.log(umlOtherPath);
@@ -136,7 +136,7 @@ function evaluateUploadedProject(req) {
             //console.l(modelInfo);
             umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
                 //update model analytics.
-                console.l("model is extracted");
+                console.l("mdoel is extracted");
                 if(!modelInfo){
                     // res.end("error");
                     console.l('Error: model info null');
