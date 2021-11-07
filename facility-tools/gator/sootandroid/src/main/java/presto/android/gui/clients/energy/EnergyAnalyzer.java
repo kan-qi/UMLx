@@ -254,12 +254,38 @@ public class EnergyAnalyzer {
     };
 
     //Gen Inital Edges
-    List<WTGEdge> initEdges = Lists.n.wtg.ds.WTG;
-import presto.android.gui.wtg.ds.WTGEdge;
-import presto.android.gui.wtg.ds.WTGNode;
-import presto.android.gui.wtg.util.Filter;
-import presto.android.gui.wtg.util.QueryHelper;
-import presto.android.gui.wtg.util.WTGU;
+    List<WTGEdge> initEdges = Lists.newArrayList();
+    for (WTGNode n : wtg.getNodes()) {
+      if (!(n.getWindow() instanceof NActivityNode)) {
+        //Ignore any window that is not Activity
+        continue;
+      }
+      List<WTGEdge> validInboundEdges = Lists.newArrayList();
+      for (WTGEdge curEdge : n.getInEdges()) {
+        switch (curEdge.getEventType()) {
+          case implicit_back_event:
+          case implicit_home_event:
+          case implicit_rotate_event:
+          case implicit_power_event:
+            continue;
+        }
+        List<StackOperation> curStack = curEdge.getStackOps();
+        if (curStack != null && !curStack.isEmpty()) {
+          StackOperation curOp = curStack.get(curStack.size() - 1);
+          //If last op of this inbound edge is push
+          if (curOp.isPushOp()) {
+            NObjectNode pushedWindow = curOp.getWindow();
+            WTGNode pushedNode = wtg.getNode(pushedWindow);
+            if (pushedNode == n) {
+              validInboundEdges.add(curEdge);
+            }
+          }
+        }
+      }
+      if (validInboundEdges.isEmpty()) {
+        //No inBound edges. Fake them
+        WTGEdge fakeInEdge = FakeNodeEdgeGenerator.v().genFakeType1Path(n);
+        validInboundEdges.add(fakeInEdge);
       }
 
       for (WTGEdge e : validInboundEdges) {
@@ -1068,28 +1094,4 @@ import presto.android.gui.wtg.util.WTGU;
     Logger.verb(mtdTag, "Total Count: " + (VarUtil.v().P1Candidate + VarUtil.v().P2Candidate));
 
   }
-}              til.isReleaseResourceCall(unit)) {
-          //REL encountered
-
-          Integer pos = wtgUtil.getReleaseResourceField(unit);
-          if (pos == null) {
-            throw new RuntimeException("[Error]: can not find the resource local for stmt: " + unit);
-          }
-
-          Local resLocal = null;
-          if (pos == 0) {
-            resLocal = jimpleUtil.receiver(unit);
-          } else {
-            Value argValue = unit.getInvokeExpr().getArg(pos - 1);
-            if (!(argValue instanceof Local)) {
-              throw new RuntimeException("[Error]: the resource local is not type of local for stmt: " + unit);
-            }
-            resLocal = (Local) argValue;
-          }
-
-          int x = 0;
-          Set<NNode> backReachedNodes = queryHelper.allVariableValues(guiOutput.getFlowgraph().simpleNode(resLocal));
-          for (NNode backReachedNode : backReachedNodes) {
-            if (backReachedNode instanceof NObjectNode) {
-              x++;
-              NOb
+}
