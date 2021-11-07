@@ -53,7 +53,6 @@ function analyseAndroidApks(projectList, reportDir){
 function analyseAndroidProject(projectList, reportDir){
 	var reportPath = reportDir + pathSeparator + "analysis-results-folders.txt";
 	global.debugCache = new Object();
-	
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
         return new Promise((resolve, reject) => {
@@ -73,9 +72,9 @@ function analyseAndroidProject(projectList, reportDir){
 					
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
-        	
-        	console.log(inputFile);
-        	
+        	console.log("inputfile is" + inputFile);
+        	console.log("outputDir is" + outputDir);
+
         	mkdirp(outputDir, function(err) { 
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
@@ -83,7 +82,10 @@ function analyseAndroidProject(projectList, reportDir){
         		resolve();
         	}
         	else{
+
             //to generate svg file.
+
+
         	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
         		if(!model){
         			console.log('analysis error!');
@@ -105,7 +107,7 @@ function analyseAndroidProject(projectList, reportDir){
         	
         });
     }
-    
+   
     return Promise.all(projectList.map(project=>{
         return analyseProject(project.path + pathSeparator + project.modelFile, project, reportDir);
 
@@ -201,8 +203,8 @@ function analyseSloc(repoRecordPath){
 }
 
 function generateSlocReport(repoListPath, repoRecordPath){
-	 //to generate svg file.
-//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	//  to generate svg file.
+    //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
 	var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 
   var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoListPath+'" "'+repoRecordPath+'"';
@@ -224,6 +226,7 @@ var functionSelection = process.argv[2];
 var repoDesPath = process.argv[3];
 
 var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath).trim());
+
 
 //1. create a list of projects:
  		
@@ -255,7 +258,7 @@ var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
-	//4. calculate sloc for each repo
+//5. calculate sloc for each repo
 var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
 generateSlocReport(repoListPath, repoRecordPath);
@@ -281,11 +284,13 @@ else if(functionSelection === "--analyse-android-projects"){
 analyseAndroidProject(repo.projectList, repo.reportDir);
 
 }
+
 else if(functionSelection === "--filter-logs"){
 	
 //	filterLogs(repo.projectList, repo.reportDir);
-//	
+  
 //	var projectPaths = "";
+  
 	for(var i in repo.projectList){
 		var projectPath = repo.projectList[i].path; 
 		var logFile = repo.projectList[i].logFile;

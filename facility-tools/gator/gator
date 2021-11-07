@@ -61,7 +61,7 @@ def analyze(args, unknown):
     if not args.sdkpath:
         args.sdkpath = os.environ['ANDROID_SDK']
     print('...... resource decoded to %s' % apktool_dir)
-    cmd = ['java', '-Xmx16G', '-cp', jar, 'presto.android.Main',
+    cmd = ['java', '-Xmx12G', '-cp', jar, 'presto.android.Main',
            '-sootandroidDir', os.path.join(gator_dir, 'sootandroid'),
            '-sdkDir', args.sdkpath,
            '-listenerSpecFile', os.path.join(gator_dir, 'sootandroid', 'listeners.xml'),

@@ -25,7 +25,7 @@
 				node [fontsize=24 shape=rectangle]';
 
 			nodes.forEach((node) => {
-				graph += '"'+node.name+'" [';
+				graph += '"'+node.Name+'" [';
 				if(node.isWithinBoundary){
 					graph += " color=red";
 				}
@@ -51,8 +51,8 @@
 
 			edges.forEach((edge) => {
 				
-				var start = edge.start.name;
-				var end = edge.end.name;
+				var start = edge.start.Name;
+				var end = edge.end.Name;
 				var edge = '"'+start+'"->"'+end+'";';
 				if(!drawnEdges[edge]){
 				graph += '"'+start+'"->"'+end+'";';
@@ -66,7 +66,7 @@
 			graph += 'imagepath = \"./\"}';
 			dottyUtil = require("../../utils/DottyUtil.js");
 			dottyUtil.drawDottyGraph(graph, path, function(){
-				console.log("drawing is down");
+				console.log("drawing is done");
 			});
 
 			return graph;

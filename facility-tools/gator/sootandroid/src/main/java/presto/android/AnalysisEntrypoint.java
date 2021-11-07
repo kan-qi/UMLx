@@ -121,10 +121,17 @@ public class AnalysisEntrypoint {
         System.out.println("exit GUI analysis");
 
         //move the code analysis to our package.
+<<<<<<< HEAD
         if(Configs.codeAnalysis) {
             CodeAnalysis codeAnalysis = CodeAnalysis.v();
             codeAnalysis.run();
         }
+=======
+//        if(Configs.codeAnalysis) {
+//            CodeAnalysis codeAnalysis = CodeAnalysis.v();
+//            codeAnalysis.run();
+//        }
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 
         System.exit(0);
     }

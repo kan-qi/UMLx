@@ -285,6 +285,210 @@
 		cocomoData.EM.PROJ.SITE+","+
 		cocomoData.EM.PROJ.SCED ;
 	}
+
+
+	function estimateEffortandScheduleWithCocomo(cocomoData){
+    		// populateCocomoValues(cocomoData);
+    		// setDefaultValues(cocomoData);
+    		calEquivalentSize(cocomoData);
+    		var A = 2.94;
+    		var C = 3.67;
+    		var B = 0.91;
+    		var D = 0.28;
+
+    		var E = B + 0.01*(
+    			cocomoData.SF.PREC+cocomoData.SF.FLEX+cocomoData.SF.RESL+cocomoData.SF.TEAM+cocomoData.SF.PMAT
+    		);
+
+    		cocomoData.SIZE = cocomoData.sloc*0.001;
+    		cocomoData.PMNS = A*Math.pow(cocomoData.SIZE, E)*
+    		cocomoData.EM.PROD.DOCU*
+    		cocomoData.EM.PROD.RELY*
+    		cocomoData.EM.PROD.CPLX*
+    		cocomoData.EM.PROD.DATA*
+    		cocomoData.EM.PROD.RUSE*
+    		cocomoData.EM.PROJ.TOOL*
+    		cocomoData.EM.PROJ.SITE*
+    		cocomoData.EM.PROJ.SCED*
+    		cocomoData.EM.PERS.APEX*
+    		cocomoData.EM.PERS.ACAP*
+    		cocomoData.EM.PERS.PCAP*
+    		cocomoData.EM.PERS.PCON*
+    		cocomoData.EM.PERS.PLEX*
+    		cocomoData.EM.PERS.LTEX*
+    		cocomoData.EM.PLAT.PVOL*
+    		cocomoData.EM.PLAT.TIME*
+    		cocomoData.EM.PLAT.STOR;
+
+    		var F = D+ 0.2*(E - B);
+    		cocomoData.TDEV = C * Math.pow(cocomoData.PMNS/cocomoData.EM.PROJ.SCED, F)*100/100;
+
+    		if(cocomoData.TDEV != 0){
+    		cocomoData.STAFF = cocomoData.PMNS/cocomoData.TDEV;
+    		}
+
+    		if(cocomoData.TDEV != 0){
+    		cocomoData.PROD = cocomoData.SIZE/cocomoData.TDEV;
+    		}
+
+    		cocomoData.E_most_likely = cocomoData.PMNS;
+    		cocomoData.E_pessimistic = 1.25*cocomoData.PMNS;
+    		cocomoData.E_optimistic = 0.80*cocomoData.PMNS;
+
+    		cocomoData.TDEV_most_likely = cocomoData.TDEV;
+    		cocomoData.TDEV_pessimistic = C * Math.pow(cocomoData.E_pessimistic/cocomoData.EM.PROJ.SCED, F)*100/100;
+    		cocomoData.TDEV_optimistic = C * Math.pow(cocomoData.E_optimistic/cocomoData.EM.PROJ.SCED, F)*100/100;
+
+    		cocomoData.STAFF_most_likely = cocomoData.STAFF;
+    		if(cocomoData.TDEV_pessimistic != 0){
+    		cocomoData.STAFF_pessimistic = cocomoData.E_pessimistic/cocomoData.TDEV_pessimistic;
+    		cocomoData.STAFF_optimistic = cocomoData.E_optimistic/cocomoData.TDEV_optimistic;
+    		}
+
+    		cocomoData.PROD_most_likely = cocomoData.PROD;
+    		if(cocomoData.TDEV_pessimistic != 0){
+    		cocomoData.PROD_pessimistic = cocomoData.SIZE/cocomoData.TDEV_pessimistic;
+    		cocomoData.PROD_optimistic = cocomoData.SIZE/cocomoData.TDEV_optimistic;
+    		}
+
+    		cocomoData.PH_most_likely = cocomoData.E_most_likely*156;
+
+    		return cocomoData;
+    	}
+
+    	function calEquivalentSize(cocomoData){
+
+        		//AAM - adaptation adjustment modifier
+        		//SU - software understanding
+        		//AA - assessment and assimilation
+        		//AAF - adaptation adjustment factor
+        		//DM - design modified.
+        		//CM - code modified.
+        		//IM - integration modified.
+
+        		cocomoData.reused_sloc_aaf = cocomoData.reused_sloc_design_modified + cocomoData.reused_sloc_code_modified + cocomoData.reused_sloc_integration_modified;
+        		cocomoData.modified_sloc_aaf = cocomoData.modified_sloc_design_modified + cocomoData.modified_sloc_code_modified + cocomoData.modified_sloc_integration_modified;
+
+        		if(cocomoData.reused_sloc_aaf > 50){
+        		cocomoData.reused_sloc_aam = (cocomoData.aa_3+cocomoData.reused_sloc_aaf+cocomoData.aa_3*cocomoData.unfm_4)/100;
+        		}else{
+        		cocomoData.reused_sloc_aam = (cocomoData.aa_3+cocomoData.reused_sloc_aaf*(1+0.02*(cocomoData.aa_3*cocomoData.unfm_4)))/100;
+        		}
+
+        		cocomoData.reused_esloc = cocomoData.reused_sloc * cocomoData.reused_sloc_aam;
+
+        		if(cocomoData.modified_sloc_aaf > 50){
+        		cocomoData.modified_sloc_aam = (cocomoData.aa_3+cocomoData.modified_sloc_aaf+cocomoData.aa_3*cocomoData.unfm_4)/100;
+        		}else{
+        		cocomoData.modified_sloc_aam = (cocomoData.aa_3+cocomoData.modified_sloc_aaf*(1+0.02*(cocomoData.aa_3*cocomoData.unfm_4)))/100;
+        		}
+
+        		cocomoData.modified_esloc = cocomoData.modified_sloc * cocomoData.modified_sloc_aam;
+
+        		cocomoData.sloc = cocomoData.new_sloc + cocomoData.reused_esloc + cocomoData.modified_esloc;
+
+        	}
+
+        	function covertCOCOMORatings(modelLoad){
+
+        		COCOMOData = {
+        				Effort: 0,
+        				KSLOC: 0,
+        				Effort_Norm: 0,
+        				new_sloc:0,
+        				reused_sloc_design_modified:0,
+        				reused_sloc_code_modified:0,
+        				reused_sloc_integration_modified:0,
+        				modified_sloc_design_modified:0,
+        				modified_sloc_code_modified:0,
+        				modified_sloc_integration_modified:0,
+        				reused_sloc:0,
+        				modified_sloc:0,
+        				aa_1:0,
+        				aa_2:2,
+        				aa_3:4,
+        				aa_4:6,
+        				aa_5:8,
+        				unfm_1:0.0,
+        				unfm_2:0.2,
+        				unfm_3:0.4,
+        				unfm_4:0.6,
+        				unfm_5:0.8,
+        				unfm_6:1,
+        				SF: {
+        					PREC: COCOMO.SF.PREC.N,
+        					FLEX: COCOMO.SF.FLEX.N,
+        					RESL: COCOMO.SF.RESL.N,
+        					TEAM: COCOMO.SF.TEAM.N,
+        					PMAT: COCOMO.SF.PMAT.N
+        				},
+        				EM: {
+        					PROD:{
+        						RELY: COCOMO.EM.PROD.RELY.N,
+        						DATA: COCOMO.EM.PROD.DATA.N,
+        						CPLX: COCOMO.EM.PROD.CPLX.N,
+        						RUSE: COCOMO.EM.PROD.RUSE.N,
+        						DOCU: COCOMO.EM.PROD.DOCU.N
+        					},
+        					PLAT:{
+        						TIME: COCOMO.EM.PLAT.TIME.N,
+        						STOR: COCOMO.EM.PLAT.STOR.N,
+        						PVOL: COCOMO.EM.PLAT.PVOL.N
+        					},
+        					PERS:{
+        						ACAP: COCOMO.EM.PERS.ACAP.N,
+        						PCAP: COCOMO.EM.PERS.PCAP.N,
+        						PCON: COCOMO.EM.PERS.PCON.N,
+        						APEX: COCOMO.EM.PERS.APEX.N,
+        						PLEX: COCOMO.EM.PERS.PLEX.N,
+        						LTEX: COCOMO.EM.PERS.LTEX.N
+        					},
+        					PROJ:{
+        						TOOL: COCOMO.EM.PROJ.TOOL.N,
+        						SITE: COCOMO.EM.PROJ.SITE.N,
+        						SCED: COCOMO.EM.PROJ.SCED.N
+        					}
+        				}
+        			};
+
+
+        		// populate scale factor data
+        		COCOMOData['Effort'] = modelLoad['Effort'];
+        		COCOMOData['KSLOC'] = modelLoad['KSLOC'];
+        		COCOMOData['new_sloc'] = modelLoad['KSLOC']*1000;
+        		for(var j in COCOMOData.SF ){
+        			var rating = modelLoad[j];
+        			var value = COCOMO['SF'][j][rating];
+        			COCOMOData['SF'][j] = value;
+        		}
+        		// populate effort multiplier data
+        		// populate product data
+        		for(var j in COCOMOData.EM.PROD){
+        			var rating = modelLoad[j];
+        			var value = COCOMO['EM']['PROD'][j][rating];
+        			COCOMOData['EM']['PROD'][j] = value;
+        		}
+        		// populate platform data
+        		for(var j in COCOMOData.EM.PLAT){
+        			var rating = modelLoad[j];
+        			var value = COCOMO['EM']['PLAT'][j][rating];
+        			COCOMOData['EM']['PLAT'][j] = value;
+        		}
+        		// populate personnel data
+        		for(var j in COCOMOData.EM.PERS){
+        			var rating = modelLoad[j];
+        			var value = COCOMO['EM']['PERS'][j][rating];
+        			COCOMOData['EM']['PERS'][j] = value;
+        		}
+        		// populate project data
+        		for(var j in COCOMOData.EM.PROJ){
+        			var rating = modelLoad[j];
+        			var value = COCOMO['EM']['PROJ'][j][rating];
+        			COCOMOData['EM']['PROJ'][j] = value;
+        		}
+
+        		return COCOMOData;
+        	}
 	
 	
 	module.exports = {
@@ -293,6 +497,54 @@
 		loadModelEmpirics: loadModelEmpirics,
 		COCOMO: COCOMO,
 		//this function is not used for now.
+		getPredictionModels : function(predictionModelIdentifier){
+
+        		    if(predictionModelIdentifier !== "cocomo"){
+        		        return null;
+        		    }
+
+        		    var estimateProjectEffort = function(cocomoData){
+                    			var cocomoData = estimateEffortandScheduleWithCocomo(cocomoData);
+                    //			console.log(cocomoData);
+                    			return cocomoData;
+                    		}
+
+
+                    return {
+                       cocomo: {
+                                   predictEffort: estimateProjectEffort
+                                                                                                       },
+                    }
+
+        },
+        		genDefaultValues: function(){
+        			var COCOMO = {
+        			PREC: "N",
+        				FLEX: "N",
+        				RESL: "N",
+        				TEAM: "N",
+        				PMAT: "N",
+        					RELY: "N",
+        					DATA: "N",
+        					CPLX: "N",
+        					RUSE:"N",
+        					DOCU: "N",
+        					TIME:"N",
+        					STOR: "N",
+        					PVOL: "N",
+        					ACAP: "N",
+        					PCAP: "N",
+        					PCON: "N",
+        					APEX: "N",
+        					PLEX: "N",
+        					LTEX: "N",
+        					TOOL: "N",
+        					SITE: "N",
+        					SCED: "N"
+        			};
+
+        			return COCOMO;
+        		},
 		loadCOCOMOData: function(ModelDataFilePath, callbackfunc){
 			var umlFileManager = require("../UMLFileManager.js");
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){

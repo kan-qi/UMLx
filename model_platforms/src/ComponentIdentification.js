@@ -264,7 +264,7 @@
 		graph += 'imagepath = \"./\"}';
 		dottyUtil = require("../../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, path, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 		
 		return graph;
@@ -569,6 +569,10 @@
 	function calculateDis(node, linkage, distance) {
 
 		var dis = -1;
+
+		if(!node){
+		    return dis;
+		}
 		
 //		console.log("calculating distance");
 		
@@ -614,6 +618,10 @@
 
 	function convertTree(cluster, classes, nodesDis, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, linkage, distance) {
 		  var classClusters = {};
+
+		  if(!cluster){
+		  return classClusters;
+		  }
 		  
 			if (cluster.size == 1) {
 				

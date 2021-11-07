@@ -416,12 +416,25 @@
 		toModelEvaluationHeader: toModelEvaluationHeader,
 		toModelEvaluationRow: toModelEvaluationRow,
 		loadModelEmpirics: loadModelEmpirics,
-		COCOMO: COCOMO,
-		estimateProjectEffort: function(cocomoData){
-			var cocomoData = estimateEffortandScheduleWithCocomo(cocomoData);
-//			console.log(cocomoData);
-			return cocomoData;
+		getPredictionModel : function(predictionModelIdentifier){
+
+		    if(predictionModelIdentifier !== "cocomo"){
+		        return null;
+		    }
+
+		    var estimateProjectEffort = function(cocomoData){
+            			var cocomoData = estimateEffortandScheduleWithCocomo(cocomoData);
+            //			console.log(cocomoData);
+            			return cocomoData;
+            		}
+
+
+            return {
+               estimateProjectEffort: estimateProjectEffort
+            }
+
 		},
+		COCOMO: COCOMO,
 		genDefaultValues: function(){
 			var COCOMO = {
 			PREC: "N",

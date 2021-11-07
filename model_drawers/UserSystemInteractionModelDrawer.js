@@ -82,14 +82,14 @@
 		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
 
 
-//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {
+//		    if (err) throw err;
+//		})
 //
 //
-//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {
+//		    if (err) throw err;
+//		})
 
 
 		var activities = UseCase.Activities;
@@ -233,7 +233,7 @@
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 
 			console.log("the usim file is in" +graphFilePath);
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph
@@ -290,10 +290,11 @@
 		return graph ;
 	}
 
-	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
-		var activities = UseCase.Activities;
-		var precedenceRelations = UseCase.PrecedenceRelations;
-		console.log(precedenceRelations);
+	function drawTransactionsDiagramFunc(UseCase, graphFilePath, callbackfunc){
+//		var activities = UseCase.Activities;
+var transactions = UseCase.Transactions;
+//		var precedenceRelations = UseCase.PrecedenceRelations;
+//		console.log(precedenceRelations);
 		var graph = 'digraph g {\
 			fontsize=24\
 			node [shape=plaintext fontsize=24]';
@@ -312,44 +313,56 @@
 			}
 		}
 		var dottyDraw = new DottyDraw();
+        // var drawNodeID = {};
 
-		for(var i in activities){
-			var activity = activities[i];
+		for(var i in transactions){
+            var transaction = transactions[i];
+		    var prevActivity = null;
+            for(var j in transaction.Nodes){
 
-			var node = drawNode(activity._id, filterName(activity.Name));
+			var activity = transaction.Nodes[j];
+			activity.draw_id = activity._id+""+i+""+j;
+			var node = drawNode(activity.draw_id, filterName(activity.Name));
 
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, filterName(activity.Name));
+				node = drawStimulusNode(activity.draw_id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
+				node = drawOutOfScopeNode(activity.draw_id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				node = drawFragmentNode(activity._id, filterName(activity.Name));
+				node = drawFragmentNode(activity.draw_id, filterName(activity.Name));
 			}
 
 				graph += dottyDraw.draw(node);
-		}
 
-		console.log("activities...");
-		console.log(graph);
+				if(prevActivity){
+				graph += dottyDraw.draw('"'+prevActivity.draw_id+'"->"'+activity.draw_id+'";');
+				}
 
-		var precedenceRelations = UseCase.PrecedenceRelations;
-		for(var i in precedenceRelations){
-			var precedenceRelation = precedenceRelations[i];
-			console.log(precedenceRelation);
-				if(precedenceRelation.start && precedenceRelation.end){
-//				dotty += '"'+start.Name+'"->"'+end.Name+'";';
-
-				var start = precedenceRelation.start._id;
-				var end = precedenceRelation.end._id;
-				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+				prevActivity = activity;
 				}
 		}
+
+//		console.log("activities...");
+//		console.log(graph);
+//
+//		var precedenceRelations = UseCase.PrecedenceRelations;
+//		for(var i in precedenceRelations){
+//			var precedenceRelation = precedenceRelations[i];
+//			console.log(precedenceRelation);
+//				if(precedenceRelation.start && precedenceRelation.end){
+////				dotty += '"'+start.Name+'"->"'+end.Name+'";';
+//
+//				var start = precedenceRelation.start._id;
+//				var end = precedenceRelation.end._id;
+//				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+//				}
+//		}
 
 
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;
@@ -397,7 +410,7 @@
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;
@@ -407,7 +420,7 @@
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
-		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
+		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
 		var  domainModelElements = domainModel.Elements;
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
@@ -483,11 +496,9 @@
 		}
 
 	
-	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
-		
+	function drawComponentDiagram(dicComponent, dicClassUnits, graphFilePath, callbackfunc){
 
-
-		if(typeof dicComponent === 'undefined'){
+		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
      		return;
      	}
 
@@ -516,7 +527,7 @@
                    
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
-                         graph += ':'+attrUnits[j]["kind"];
+                         graph += ':'+attrUnits[j]["type"];
                          graph += '\\l';
                      }
                  }
@@ -613,6 +624,7 @@
       
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
+                         graph += ':'+attrUnits[j]["type"];
                          graph += '\\l';
                      }
                  }
@@ -683,7 +695,7 @@
 
 	}
 	
-	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+	function drawCompositeClassDiagram(dicCompositeClassUnits, dicClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
 		    if (err) throw err; 
@@ -763,6 +775,8 @@
 //     		console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+
+     			console.log("the test graphFilePath is:"+ graphFilePath);
      			console.log("class Diagram is done");
      		});
 

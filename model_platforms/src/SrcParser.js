@@ -29,12 +29,17 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
+<<<<<<< HEAD
 //	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
+=======
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 	var useCaseIdentifier = require("./UseCaseIdentification.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
+
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
 
 	var responsePatternsFile = "response-patterns.txt";
 	
@@ -175,7 +180,7 @@
 				
 //				debug.writeJson2("control_flow_graph", controlFlowGraph);
 				
-				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
+				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodUnits);
 				
 				Model.DomainModel = domainModelInfo.DomainModel;
 				
@@ -195,9 +200,9 @@
 						
 						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 						
-						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 						
-						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 						
 						debug.writeJson("constructed_model", Model);
 
@@ -208,13 +213,20 @@
 					});
 				}
 				else{
+<<<<<<< HEAD
 					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(codeAnalysisResults.sootCallGraph, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, componentInfo.dicComponents, componentInfo.dicClassComponent, ModelOutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 					
+=======
+					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.dicClassUnits, codeAnalysisResults.cfg, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+
+//					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.dicClassUnits, modelInfo.path+"/"+modelInfo.icfg, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 					modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 					
-					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 					
-					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 					
 					debug.writeJson("constructed_model", Model);
 
@@ -224,10 +236,22 @@
 					
 				}
 
-				
+			console.log("the AllComponents is " + componentInfo);
+
+			dependencyGraphDrawer.drawClassDependencyGraph(codeAnalysisResults, Model.OutputDir);
+
+            dependencyGraphDrawer.drawClassDependencyGraphGroupedByCompositeClass(codeAnalysisResults, componentInfo, Model.OutputDir);
+
+            dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
+
+            dependencyGraphDrawer.drawCompositeClassDependencyGraph(codeAnalysisResults, Model.OutputDir);
+
+            dependencyGraphDrawer.drawCompositeClassDependencyGraphByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
+
+			
 	}
 
-	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodParameters){
+	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodUnits){
 
 		var dicComponents = componentInfo.dicComponents;
 		var dicClassComponent = componentInfo.dicClassComponent;
@@ -267,10 +291,10 @@
 		}
 
 		var operationsBySign = {};
-		
+
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
-			
+
 			var startNode = edge.start;
 			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var callDomainElement = domainElementsByID[callComponentUUID];
@@ -291,20 +315,19 @@
 			if(callDomainElement == calleeDomainElement){
 				continue;
 			}
-			
+
+            var methodUnit = dicMethodUnits[endNode.UUID];
 			foundMethod = false;
 			for (var j in calleeDomainElement.Operations) {
 				if (calleeDomainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
-						calleeDomainElement.Operations[j].Name === endNode.methodName || operationsBySign[codeAnalysisUtil.genMethodSign(calleeDomainElement.Operations[j])]) {
-//					var method = calleeDomainElement.Operations[j];
+						calleeDomainElement.Operations[j].Name === endNode.methodName || operationsBySign[codeAnalysisUtil.genMethodSign(methodUnit)]) {
 					foundMethod = true;
 				}
 			}
 			
 			
 			if (!foundMethod) {
-
-				var parameters = dicMethodParameters[endNode.UUID];
+				var parameters = methodUnit.parameterUnits;
 				if (parameters == null) {
 					parameters = [];
 				}
@@ -317,7 +340,8 @@
 				
 				calleeDomainElement.Operations.push(operation);
 				
-				operationsBySign[codeAnalysisUtil.genMethodSign(operation)] = 1;
+				operationsBySign[codeAnalysisUtil.genMethodSign(methodUnit)] = 1;
+
 			}
 		}
 
@@ -325,6 +349,7 @@
 		
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
+
 			var startNode = edge.start;
 			var accessComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var accessDomainElement = domainElementsByID[accessComponentUUID];
@@ -335,11 +360,11 @@
 			var endNode = edge.end;
 			var accesseeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var accesseeDomainElement = domainElementsByID[accesseeComponentUUID];
-			
+
 			if(accessDomainElement == accesseeDomainElement){
 				continue;
 			}
-			
+
 			var foundAttr = false;
 			for (var j in accesseeDomainElement.Attributes) {
 				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") || attrsBySign[codeAnalysisUtil.genAttrSign(accesseeDomainElement.Attributes[j])]) {
@@ -358,7 +383,7 @@
 				attrsBySign[codeAnalysisUtil.genAttrSign(attr)] = 1;
 			}
 		}
-		
+//        process.exit();
 		DomainModel.Elements = domainElements;
 		
 		DomainModel.DiagramType = "domain_model";

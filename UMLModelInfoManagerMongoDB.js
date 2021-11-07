@@ -1,5 +1,7 @@
 (function() {
     // Retrieve
+    const fs = require('fs');
+    var path = require('path');
     var mongo = require('mongodb');
     var MongoClient = mongo.MongoClient;
     var umlModelExtractor = require("./UMLModelExtractor.js");
@@ -15,6 +17,120 @@
         var github = new GitHubApi({        
         }); 
     
+
+        function getExtension(filename) {
+    var ext = path.extname(filename || '').split('.');
+    return ext[ext.length - 1];
+}
+function save_model_utility(){
+//const fs = require('fs');
+//var path = require('path');
+var jsonDatalist = [];  //array to store each json file's data
+var dir = path.join(__dirname,'/data/GitAndroidAnalysis/accuracy_analysis2/models');
+console.log(dir)
+fs.readdirSync(dir).forEach(file => {
+    console.log(file)
+    var ext = getExtension(file); 
+    console.log(file)
+    console.log(ext)
+    if ((ext == 'json') && (file != 'package.json') ) {  //scan json file under folder
+        jsonDatalist.push(JSON.parse(fs.readFileSync(dir+ '/'+file)));
+    }
+});
+var MongoClient = require('mongodb').MongoClient;
+var url_local = "mongodb://localhost:27017/";
+// make client connect to mongo service
+MongoClient.connect(url_local, function (err, db) {
+    if (err) throw err;
+    //console.log("Switched to " + db.databaseName + " database");
+    //var dbs_check=db.getMongo().getDBNames();
+    //var i;
+    //for (i=0; i< 
+
+    var dbase = db.db("model-1"); //here
+    // create modelinfo collection
+    //if (db.getCollection('estimation_models').exists())
+    //{
+    dbase.listCollections().toArray(function(err, items){
+      if (err) throw err;
+      console.log(items);
+      var icheck;
+      var count_exist;
+      count_exist=0;
+      for(icheck=0; icheck<items.length; icheck++)
+      {
+          console.log(items[icheck].name);
+          if (items[icheck].name == "estimation_models")
+          {
+                // for (var i in jsonDatalist) { //save data into mongodb from array
+           // dbase.collection('estimation_models').save(jsonDatalist[i], function (err, records) {
+            //if (err) throw err;
+           // console.log("record added");
+            //  console.log(jsonDatalist[i]['model_name'])
+       //// });
+                count_exist=1;
+             }
+            //  return 0
+          }
+
+
+      
+
+    
+    if(count_exist==0)
+    {
+    dbase.createCollection("estimation_models", function (err, res) {
+       // if (err) throw err;
+        console.log("Collection created!");
+        //db.close();   //close method has also been moved to client obj
+    });
+    for (var i in jsonDatalist) { //save data into mongodb from array
+        dbase.collection('estimation_models').save(jsonDatalist[i], function (err, records) {
+            if (err) throw err;
+            console.log("record added");
+        });
+    }
+  }
+  else
+  {
+    console.log(jsonDatalist);
+     for (var i in jsonDatalist) { //save data into mongodb from array
+       // dbase.collection('estimation_models').save(jsonDatalist[i], function (err, records) {
+            //if (err) throw err;
+           // console.log("record added");
+            console.log(jsonDatalist[i]['model_name']);
+            let query={ model_name: jsonDatalist[i]['model_name']};
+            var records_check;
+            records_check= dbase.collection('estimation_models').findOne(query);
+              if(records_check)
+              {
+                console.log(query);
+                       dbase.collection('estimation_models').deleteOne(query);//, function (err, records) {
+           // if (err) throw err;
+            //console.log("record deleted");
+        //}); 
+                      dbase.collection('estimation_models').save(jsonDatalist[i]);
+       
+              }
+              else
+              {
+
+                console.log(query);
+                   dbase.collection('estimation_models').save(jsonDatalist[i]);
+          
+              }
+
+          
+
+       }
+
+
+  }
+ });
+    //}
+
+});
+  }
     function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
 		var modelQuery = {
@@ -626,7 +742,7 @@ function deleteRepo(repoId, callbackfunc) {
             ], function(err, result)
             {
                if(err) throw err;
-                console.log("Result RepoID: "+ result[0].Repos[0]._id);
+                //console.log("Result RepoID: "+ result[0].Repos[0]._id);
                 db.close();
                 callbackfunc(result[0]);
             });
@@ -1124,6 +1240,8 @@ function deleteRepo(repoId, callbackfunc) {
             });
         });
     }
+
+
 
     function saveModelInfo(modelInfo, repoId, callbackfunc)
     {
@@ -1754,6 +1872,7 @@ function deleteRepo(repoId, callbackfunc) {
 		queryRepoInfoByPage:queryRepoInfoByPage,
 		queryUseCaseInfo: queryUseCaseInfo,
 		saveEstimation: saveEstimation,
+    save_model_utility: save_model_utility,
 		saveModelInfoCharacteristics : saveModelInfoCharacteristics,
 		clearDB: function(callbackfunc){
 			MongoClient.connect(url, function(err, db) {

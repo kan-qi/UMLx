@@ -19,7 +19,7 @@
 	var jp = require('jsonpath');
 	var uuidV1 = require('uuid/v1');
 	var kdmModelUtils = require("./KDMModelUtils.js");
-	var kdmModelDrawer = require("./KDMModelDrawer.js");
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
 	var FileManagerUtils = require("../../utils/FileManagerUtils.js");
 
 	function analyseCode(jsonString, outputDir) {
@@ -34,7 +34,7 @@
 		var dicMethodUnits = {};
 		var dicAttrUnits = {};
 		var dicMethodClass = {};
-		var dicMethodParameters = {};
+//		var dicMethodParameters = {};
 		var methodUnitsByName = {};
 		var classUnits = [];
 		
@@ -53,7 +53,7 @@
 					isWithinBoundary: referencedClassUnit.isWithinBoundary,
 					methodUnits: [],
 					attrUnits: []
-			}
+			};
 			
 			dicClassUnits[classUnit.UUID] = classUnit;
 			classUnits.push(classUnit);
@@ -82,10 +82,10 @@
 				
 				for(var k in methodUnit.parameterUnits){
 					var parameterUnit = referencedMethodUnit.parameterUnits[k];
-					if(!dicMethodParameters[methodUnit.UUID]){
-						dicMethodParameters[methodUnit.UUID] = [];
-					}
-					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
+//					if(!dicMethodParameters[methodUnit.UUID]){
+//						dicMethodParameters[methodUnit.UUID] = [];
+//					}
+//					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
 				}
 			}
 			
@@ -96,7 +96,8 @@
 						type: referencedAttrUnit.type,
 						UUID: referencedAttrUnit.UUID
 				}
-				dicAttrUnits[attrUnit.UUID] = attrUnit;				
+				dicAttrUnits[attrUnit.UUID] = attrUnit;
+				classUnit.attrUnits.push(attrUnit);
 			}
 		}
 		
@@ -163,15 +164,26 @@
 			referencedClassUnits: classUnits,
 			referencedCompositeClassUnits: compositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters
+//			dicMethodParameters: dicMethodParameters,
+			cfg: androidAnalysisResults.cfg
 		};
+<<<<<<< HEAD
 	
+=======
+
+		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
 	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+<<<<<<< HEAD
 		
+=======
+				
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 		return result;
 	}
 	

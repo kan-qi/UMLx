@@ -15,8 +15,9 @@
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../../utils/RScriptUtil.js');
-	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
-	
+	//var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
+	var UCPPredictionModels = require('./UCPPredictionModels.js');
+
 	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {
 			  "EUCP": {
@@ -65,19 +66,19 @@
 				  }
 				}
 
-	
+
 	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
-	
+
 	function initEvaluator(callbackfunc){
-		
+
 		//readTransactionWeightingSchema
 		fs.readFile(transactionWeightingJsonFile, 'utf-8', (err, str) => {
 			   if (err) throw err;
 //			    console.log(data);
-			  
+
 		});
 	}
-	
+
 	
 //	function determineTransactionWeight(dimensions, schema){
 //		var weightingSchema = transactionWeightingSchema[schema];
@@ -297,11 +298,6 @@
 							});
 			});
 	}
-	
-	function estimateProjectEffort(modelInfo, sizeMetric){
-		return Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].effortAdj[0]);
-	}
-	
 
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,
@@ -311,7 +307,54 @@
 		evaluateUseCase: evaluateUseCase,
 		evaluateModel: evaluateModel,
 		analyseRepoEvaluation: analyseRepoEvaluation,
-		estimateProjectEffort: estimateProjectEffort
+		getPredictionModels : function(){
+
+		                    var estimateProjectEffort = null;
+
+                            	var eucpConfig = {
+                            	sizeMetric : "EUCP",
+                            	transactionMetric : "SWTI",
+                            	estimationResultsFile : "estimationResultEUCP.json",
+                            	label: "eucp_effort_prediction",
+                            	predictionModel: "./evaluators/UseCasePointEvaluator/statistical_models/eucp_linear_regression_model.rds"
+                            	}
+
+                            	var exucpConfig = {
+                            	sizeMetric : "EXUCP",
+                            	transactionMetric : "SWTII",
+                            	estimationResultsFile : "estimationResultEXUCP.json",
+                            	label: "exucp_effort_prediction",
+                            	predictionModel: "./evaluators/UseCasePointEvaluator/statistical_models/exucp_linear_regression_model.rds"
+                            	}
+
+
+                            	var ducpConfig = {
+                            	sizeMetric : "DUCP",
+                            	transactionMetric : "SWTIII",
+                            	estimationResultsFile : "estimationResultDUCP.json",
+                            	label: "ducp_effort_prediction",
+                            	predictionModel: "./evaluators/UseCasePointEvaluator/statistical_models/ducp_linear_regression_model.rds"
+                            	}
+
+                            return {
+                               eucp_lm: {
+                                        predictEffort: function(modelInfo, key, callbackfunc){
+                                                             UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, eucpConfig);
+                                                         }
+                               },
+                               exucp_lm: {
+                                          predictEffort: function(modelInfo, key, callbackfunc){
+                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, exucpConfig);
+                                                         }
+                                          },
+                                ducp_lm: {
+                                         predictEffort: function(modelInfo, key, callbackfunc){
+                                                              UCPPredictionModels.predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, ducpConfig);
+                                                         }
+                                          },
+                            }
+
+         },
 	}
 	
 	
