@@ -1,3 +1,4 @@
+
 package org.umlx;
 
 import com.google.gson.Gson;
@@ -29,7 +30,6 @@ import java.util.*;
 //dump the call graph from FlowDroid
 public class UMLxAndroidToolKit {
     public UMLxAndroidToolKit(){}
-    
     private static int numOfLayoutFiles(String inputDir, String outputDir) {
     	  FileManagerUtil fileUtil = new FileManagerUtil(outputDir);
           Map<String, List<String>> filePaths = new HashMap<String, List<String>>();
@@ -90,6 +90,12 @@ public class UMLxAndroidToolKit {
 
 //      java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
 
+//        java -cp "out/production/Android-toolkit;libs/*" org.umlx.UMLxAndroidToolKit "f:/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "f:/D/Andr
+//        oid_SDK/platforms" "./"
+
+//        java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
+
+
         if (args.length < 2){
             printUsage();
             return;
@@ -115,6 +121,12 @@ public class UMLxAndroidToolKit {
 //      org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
 //      org.umlx.Configs.sdkDir = "/mnt/f/D/Android_SDK/platforms";
 //      org.umlx.Configs.outputDir = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
+
+
+//        org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
+//        org.umlx.Configs.sdkDir = "/mnt/f/D/Android_SDK/platforms";
+//        org.umlx.Configs.outputDir = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
+
 
         //read manifest object
         try {
@@ -145,11 +157,11 @@ public class UMLxAndroidToolKit {
         System.out.println(Configs.appPkg);
 
         File apkFile = new File(Configs.project);
-//        String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
-//        if (!extension.equals(".apk") || !apkFile.exists()){
-//            DebugOutput.v().println("apk-file not exists "+ apkFile.getName());
-//            return;
-//        }
+        String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
+        if (!extension.equals(".apk") || !apkFile.exists()){
+            DebugOutput.v().println("apk-file not exists "+ apkFile.getName());
+            return;
+        }
 
         Configs.appName = apkFile.getName();
 
@@ -189,7 +201,9 @@ public class UMLxAndroidToolKit {
                 c.setApplicationClass();
                 components.add(c);
                 for(String mtd : flowDroidCallbacks.get(cls)) {
+
 //                  SootMethod entryPoint = c.getMethodByNameUnsafe(mtd);
+
                     SootMethod entryPoint = c.getMethodUnsafe(mtd);
                     if (entryPoint == null) {
                         continue;
@@ -284,7 +298,8 @@ public class UMLxAndroidToolKit {
 
         ICFG icfg = new ICFG();
 //
-        PackManager.v().getPack("jtp").add( new Transform("jtp.myTransform", new BodyTransformer() {
+        PackManager.v().getPack("jtp").add(
+                new Transform("jtp.myTransform", new BodyTransformer() {
                     protected void internalTransform(Body body, String phase, Map options) {
 //                        System.out.print("jtp.myTransform");
                         if(!body.getMethod().getDeclaringClass().getName().startsWith(Configs.appPkg)){
@@ -322,11 +337,12 @@ public class UMLxAndroidToolKit {
 
         Options.v().setPhaseOption("jb", "on");
         Options.v().setPhaseOption("cg", "on");
-        Options.v().setPhaseOption("jtp.npc", "on");
 
+        Options.v().setPhaseOption("jtp.npc", "on");
         final CodeAnalysis.CodeAnalysisResult[] codeAnalysisResult = new CodeAnalysis.CodeAnalysisResult[1];
 
         PackManager.v().getPack("wjtp").add(new Transform("wjtp.umlxcx", new SceneTransformer(){
+
             @Override
             protected void internalTransform(String s, Map<String, String> map) {
                codeAnalysisResult[0] = CodeAnalysis.v().run();
@@ -367,7 +383,7 @@ public class UMLxAndroidToolKit {
 					"\",\"Screens\":\""+GatorConnector.v().numScreens+
                     "\",\"ActivityNames\": "+nameStrJSON+
 					",\"EventHandlers\":\""+GatorConnector.v().numEventHandlers+"\"}";
-			
+
 		AndroidAttrsWriter.v().print(AndroidAttrs);
     }
 
@@ -399,7 +415,7 @@ public class UMLxAndroidToolKit {
                         filteredCallbackMethodSigs.put(sc, cd);
                         DebugOutput.v().println("method: "+cd.getName());
                     }
-        }
+            }
 
         DebugOutput.v().println("compoents and callbacks: end");
         entryPointCreator.setCallbackFunctions(filteredCallbackMethodSigs);
@@ -431,5 +447,4 @@ public class UMLxAndroidToolKit {
     }
 
 }
-
 

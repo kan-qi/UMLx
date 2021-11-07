@@ -66,19 +66,19 @@
 				  }
 				}
 
-
+	
 	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
-
+	
 	function initEvaluator(callbackfunc){
-
+		
 		//readTransactionWeightingSchema
 		fs.readFile(transactionWeightingJsonFile, 'utf-8', (err, str) => {
 			   if (err) throw err;
 //			    console.log(data);
-
+			  
 		});
 	}
-
+	
 	
 //	function determineTransactionWeight(dimensions, schema){
 //		var weightingSchema = transactionWeightingSchema[schema];
@@ -298,6 +298,11 @@
 							});
 			});
 	}
+	
+	function estimateProjectEffort(modelInfo, sizeMetric){
+		return Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].effortAdj[0]);
+	}
+	
 
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,

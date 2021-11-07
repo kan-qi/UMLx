@@ -1,0 +1,174 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("utils/feature_selection.R")
+source("utils/data_selection.R")
+source("utils/model_funcs.R")
+source("accuracy_confidence_evaluation.R")
+source("transaction_based_model.R")
+source("size_metric_based_models.R")
+source("neuralnet_model_1.R")
+source("stepwise_linear_model.R")
+library(jsonlite)
+library(reshape)
+library(tidyverse)
+library(fitdistrplus)
+library(egg)
+library(gridExtra)
+library(plyr)
+require(MASS)
+
+```
+Combined Data Effort Values
+```{r descriptive statistics, fig.width=5,fig.height=2.5}
+#The previous dataset
+#modelData <- selectData("dsets/modelEvaluations-1-3.csv")
+#The current dataset
+modelData <- selectData("dsets/android_dataset_5_15.csv")
+#modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
+rownames(modelData) <- modelData$Project
+modelData$Project <- NULL
+```
+
+#load the comparative models. Each model for comparison should include two functions for evaluateion:
+#1. m_fit(params, trainSet)
+# params: a list of hyper parameters
+# trainSet: the training dataset
+#2. m_predict(model, testSet)
+# model: the trained model
+# testSet: the testing Set
+
+# After create the two functions, register your model into the "models" list, as shown beblow, with a list of hyper-parameters indexed with the model name.
+
+```{r swtiii, warning = FALSE}
+
+#initialize models for training, testing, and evaluation. The models are put into a list with model names referencing a list of hyper-parameters, which will be passed to the model training function.
+
+models = list()
+#register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
+models$tm1 = trainsaction_based_model(modelData)
+
+#initialize the size metric based models
+size_models <- size_metric_models()
+#register the list of the size metric based models. 
+models = append(models, size_models)
+
+#intialize the step-wise learning model
+models$step_lnr <- stepwise_linear_model(modelData)
+
+#initialize the neuralnet model
+models$neuralnet = neuralnet_model(modelData)
+
+#models$ucp = list()
+#models$cocomo = list()
+
+#load the machine learning based models
+#to create a model, following 3 steps:
+# 1.create the model training function by rewriting this following template function
+#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
+# 2.create the prediction function by rewriting this following template function
+#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
+# 3.add your model name into the "models"(above) variable for referencing
+#  models.MODEL_NAME <- list(hyper-params...)
+# examples can be found in the size_metric_based_models.R or transaction_based_model.R
+  
+```
+comparison between the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
+```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
+
+benchmarkResults <- modelBenchmark(models, modelData)
+
+model_names <- benchmarkResults$model_names
+accuracy_metrics <- benchmarkResults$accuracy_metrics
+#plot for the cross validation results
+cvResults <- benchmarkResults$cvResults
+avgPreds <- cvResults[["avgPreds"]]
+avgPreds <- data.frame(avgPreds)
+meltAvgPreds = melt(avgPreds, id.vars="Pred")
+colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info")
+ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+print("melt avg preds info as lines and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+###plot for the bootstrapping results
+bsRet <- benchmarkResults$bsResults
+#bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
+
+#save as csv
+#write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
+#write.csv(iterResults, file='iterResults.csv', quote=F, row.names = F)
+
+#read from csv
+#bsEstimations <- read.csv('bsEstimations.csv')
+#rownames(bsEstimations) <- c('lower','mean','upper')
+#iterResults <- read.csv('iterResults.csv')
+
+# plot bootstrapping results
+
+model_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, names(models)[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
+
+df <- data.frame(t(bsEstimations))
+df$labels <- rownames(df)
+df$model_labels <- model_labels
+df$metric_labels <- metric_labels
+
+
+for (i in 1:length(metric_labels)){
+    g = metric_labels[i]
+    selectedData <- df[df$metric_labels == g,]
+    p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) + 
+    geom_crossbar(width = 0.5, position = "dodge") + 
+    #coord_flip() +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    xlab('model') +
+    ylab(g) +
+    ggtitle(g)
+    print(p)
+}
+
+# family-wise hypothesis test
+source('familywiseHypoTest.R')
+foldResults <- cvResults$foldResults
+# sig_cv <- familywiseHypoTest(iterationResults=foldResults, accuracy_metrics, model_names)
+
+# head(sig_cv)
+
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names)
+
+head(sig_bs)
+
+```

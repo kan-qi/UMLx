@@ -81,7 +81,8 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "NOET,NOAAE,NORT,NEM,NSR,NOA,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
+//		return "NOET,NOAAE,NORT,NEM,NSR,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
+	    return "NOET,NOAAE,NORT,NEM,NSR,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,NT,NOC,NOA,NOUC,NOR,ANAPUC,ANRPUC,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -93,8 +94,7 @@
 				+ modelInfo["SizeMetricAnalytics"].NORT + "," //Number of relationship types
 		// Costagliola [7]
 				+ modelInfo["SizeMetricAnalytics"].NEM + "," //Number of External Methods
-				+ modelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested 
-				+ modelInfo["SizeMetricAnalytics"].NOA + "," //Number of Attributes
+				+ modelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested
 				+ modelInfo["SizeMetricAnalytics"].NOS + "," //Number of use cases/scenario scripts 
 				+ modelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
 				+ modelInfo["SizeMetricAnalytics"].MPC + "," //Methods per class
@@ -110,22 +110,20 @@
 		        + modelInfo["SizeMetricAnalytics"].ANWMC + "," //Average number of weighted methods per classes
 		        + modelInfo["SizeMetricAnalytics"].ADIT + "," //Average depth of inheritance tree 
 		        + modelInfo["SizeMetricAnalytics"].NOCPBC + "," //Average number of children per base class
-	   // Albrecht [3]
-		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
-		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
-		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types 
-		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
+//	   // Albrecht [3]
+//		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
+//		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
+//		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types
+//		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
 	  // Karner [4]
 		        + modelInfo["SizeMetricAnalytics"].NT + "," //Number of Transactions
 		        + modelInfo["SizeMetricAnalytics"].NOC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOA + "," //Number of actors
 	 // Kim [9]
-				+ modelInfo["SizeMetricAnalytics"].NOA + ","  //Number of actors
 				+ modelInfo["SizeMetricAnalytics"].NOUC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOR + "," //Number of roles
 				+ modelInfo["SizeMetricAnalytics"].ANAPUC + "," //Average number of actors per use case
 				+ modelInfo["SizeMetricAnalytics"].ANRPUC + "," //Average number of roles per use case
-				+ modelInfo["SizeMetricAnalytics"].UCP + "," //Use Case Points
 				+ modelInfo["SizeMetricAnalytics"].NOC + "," //Number of classes
 				+ modelInfo["SizeMetricAnalytics"].NOIR + ","  //Number of Inheritance Relationships
 				+ modelInfo["SizeMetricAnalytics"].NOUR + "," //Number of use relationships
@@ -144,7 +142,6 @@
 				+ modelInfo["SizeMetricAnalytics"].NOAPC + "," //Number of attributes per class 
 				+ modelInfo["SizeMetricAnalytics"].NODET + "," //Number of data element types
 				+ modelInfo["SizeMetricAnalytics"].NORET + "," //Number of records
-				+ modelInfo["SizeMetricAnalytics"].NOA +"," //Number of associations
 				+ modelInfo["SizeMetricAnalytics"].NOMPC + "," //Number of methods per class
 				+ modelInfo["SizeMetricAnalytics"].NPPM + "," //Number of parameters per method
 				+ modelInfo["SizeMetricAnalytics"].NMT; //Number of method types
@@ -156,7 +153,7 @@
 	}
 
 	function toDomainModelEvaluationHeader() {
-		return "NOET,NOAAE,NORT,NEM,NSR, NOA,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCA,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
+		return "NOET,NOAAE,NORT,NEM,NSR, WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCA,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOMPC,NPPM,NMT";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -169,8 +166,7 @@
 		+ domainModelInfo["SizeMetricAnalytics"].NORT + "," //Number of relationship types
 		// Costagliola [7]
 		+ domainModelInfo["SizeMetricAnalytics"].NEM + "," //Number of External Methods
-		+ domainModelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested 
-		+ domainModelInfo["SizeMetricAnalytics"].NOA + "," //Number of Attributes
+		+ domainModelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested
 		
 		// should be applied to individual classes
 		+ domainModelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
@@ -211,7 +207,6 @@
         + domainModelInfo["SizeMetricAnalytics"].NOAPC + "," //Number of attributes per class 
         + domainModelInfo["SizeMetricAnalytics"].NODET + "," //Number of data element types
         + domainModelInfo["SizeMetricAnalytics"].NORET + "," //Number of records
-        + domainModelInfo["SizeMetricAnalytics"].NOA + "," //Number of associations
         + domainModelInfo["SizeMetricAnalytics"].NOMPC + "," //Number of methods per class
         + domainModelInfo["SizeMetricAnalytics"].NPPM + "," //Number of parameters per method
         + domainModelInfo["SizeMetricAnalytics"].NMT; //Number of method types
@@ -231,8 +226,7 @@
 				NORT :0, //Number of relationship types
 				// Costagliola [7]
 				NEM :0, //Number of External Methods
-				NSR :0, //Number of Services Requested 
-				NOA :0, //Number of Attributes
+				NSR :0, //Number of Services Requested
 				
 				// should be applied to individual classes
 				WMC :0, //Weighted methods per class
@@ -273,7 +267,6 @@
 				NOAPC: 0, //Number of attributes per class 
 				NODET: 0, //Number of data element types
 				NORET: 0, //Number of records
-				NOA : 0, //Number of associations
 				NOMPC: 0, //Number of methods per class
 				NPPM: 0, //Number of parameters per method
 				NMT: 0, //Number of method types
@@ -284,8 +277,7 @@
 			domainModelInfo["SizeMetricAnalytics"].NEM = domainModelInfo["ComponentAnalytics"].ExternalOperNum; //Number of External Methods
         	domainModelInfo["SizeMetricAnalytics"].NSR = domainModelInfo["ComponentAnalytics"].ExternalOperNum; //Number of Services Requested 
 			domainModelInfo["SizeMetricAnalytics"].NOAAE = domainModelInfo["ComponentAnalytics"].AttributeNum; //Number of attributes of all the entities
-            domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ComponentAnalytics"].AttributeNum; //Number of Attributes
-			domainModelInfo["SizeMetricAnalytics"].NTLC = domainModelInfo["ComponentAnalytics"].TopLevelClasses; //Number of top level classes
+            domainModelInfo["SizeMetricAnalytics"].NTLC = domainModelInfo["ComponentAnalytics"].TopLevelClasses; //Number of top level classes
 			domainModelInfo["SizeMetricAnalytics"].MPC = domainModelInfo["ComponentAnalytics"].AvgOperation; //Methods per class
 			domainModelInfo["SizeMetricAnalytics"].WMC =  domainModelInfo["ComponentAnalytics"].WeightedOperNum; //Weighted methods per class
 			domainModelInfo["SizeMetricAnalytics"].ANWMC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].WeightedOperNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of weighted methods per classes
@@ -297,14 +289,15 @@
 			
 			var DIT = 0;
 			var totalDIT = 0;
+            var NUMS = 0;
+
 			for(var i in domainModelInfo.Elements){
 				var element = domainModelInfo.Elements[i];
 				
 				element.NOCH = element.numberOfChildren; //Number of children
 				element.DIT = element.depthInheritanceTree; //Depth in inheritance tree
 				element.CBO = element.couplingBetweenObjects; //Coupling between objects
-				
-				element.NUMS = 0; //Number of unique messages sent
+
 				element.NCI = element.numberOfClassesInherited; //Number of classes inherited
 				element.NCIF = element.numberOfClassesInheritedFrom; //Number of classes inherited from
 				// should be applied to individual classes
@@ -312,9 +305,11 @@
 				if(DIT < element.DIT){
 					DIT = element.DIT;
 				}
-				
-				totalDIT += DIT;
+                totalDIT += DIT;
+				NUMS += element.numberOfCalls; //Number of unique messages sent
 			}
+
+//			process.exit(0);
 			
 //			domainModelInfo["SizeMetricAnalytics"].EIF = 0; //External interface files
 //	        domainModelInfo["SizeMetricAnalytics"].ILF = 0; //Internal logic files
@@ -324,6 +319,7 @@
 			domainModelInfo["SizeMetricAnalytics"].NOCPBC = domainModelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass;
 	        
 			domainModelInfo["SizeMetricAnalytics"].DIT = DIT;
+			domainModelInfo["SizeMetricAnalytics"].NUMS = NUMS;
 			domainModelInfo["SizeMetricAnalytics"].ADIT = totalDIT/domainModelInfo.Elements.length == 0? 0: totalDIT/domainModelInfo.Elements.length;
 	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of classes
 	        
@@ -345,7 +341,6 @@
     		domainModelInfo["SizeMetricAnalytics"].NOIR = domainModelInfo["ComponentAnalytics"].GeneralNum; //Number of Inheritance Relationships
     		domainModelInfo["SizeMetricAnalytics"].NORR = domainModelInfo["ComponentAnalytics"].RealNum;  //Number of realize relationships
 	    	domainModelInfo["SizeMetricAnalytics"].NOASSOC = domainModelInfo["ComponentAnalytics"].AssocNum; //Number of associations
-			domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ComponentAnalytics"].AssocNum; //Number of associations
     		domainModelInfo["SizeMetricAnalytics"].NORT = domainModelInfo["ComponentAnalytics"].UsageNum+domainModelInfo["ComponentAnalytics"].GeneralNum+domainModelInfo["ComponentAnalytics"].RealNum+domainModelInfo["ComponentAnalytics"].AssocNum; //Number of relationship types
 		    domainModelInfo["SizeMetricAnalytics"].ANASSOCC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of associations per class
 		    domainModelInfo["SizeMetricAnalytics"].ANRELC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of relationships per class
@@ -407,11 +402,11 @@
 		        ANWMC:0, //Average number of weighted methods per classes
 		        ADIT:0, //Average depth of inheritance tree 
 		        NOCPBC:0, //Average number of children per base class
-	   // Albrecht [3]
-		        EIF:0, //External interface files
-		        ILF:0, //Internal logic files
-		        DET:0, //Data element types 
-		        FTR:0, //File type referenced
+//	   // Albrecht [3]
+//		        EIF:0, //External interface files
+//		        ILF:0, //Internal logic files
+//		        DET:0, //Data element types
+//		        FTR:0, //File type referenced
 	  // Karner [4]
 		        NT:0, //Number of Transactions
 		        NOC:0, //Number of use cases
@@ -422,7 +417,6 @@
 				NOR:0, //Number of roles
 				ANAPUC:0, //Average number of actors per use case
 				ANRPUC:0, //Average number of roles per use case
-				UCP:0, //Use Case Points
 				NOC:0, //Number of classes
 				NOIR:0,  //Number of Inheritance Relationships
 				NOUR:0, //Number of use relationships
@@ -453,19 +447,18 @@
 			var useCaseInfo = modelInfo.UseCases[i];
 
 			modelInfo["SizeMetricAnalytics"].NOS ++; //Number of use cases/scenario scripts
-			modelInfo["SizeMetricAnalytics"].NT  = useCaseInfo["ComponentAnalytics"].TranNum;
-			modelInfo["SizeMetricAnalytics"].NOA = useCaseInfo["ComponentAnalytics"].ActorNum;
-			
+			modelInfo["SizeMetricAnalytics"].NT  += useCaseInfo["ComponentAnalytics"].TranNum;
 			modelInfo["SizeMetricAnalytics"].NOUC ++;
-			modelInfo["SizeMetricAnalytics"].NOR = useCaseInfo["ComponentAnalytics"].ActorNum; //Number of roles
 		}
-		
+
+
+		modelInfo["SizeMetricAnalytics"].NOA = modelInfo["ComponentAnalytics"].ActorNum;
+		modelInfo["SizeMetricAnalytics"].NOR = modelInfo["ComponentAnalytics"].ActorNum; //Number of roles
 		modelInfo["SizeMetricAnalytics"].ANAPUC = modelInfo["SizeMetricAnalytics"].NOUC == 0 ? 0 : modelInfo["SizeMetricAnalytics"].NOA/modelInfo["SizeMetricAnalytics"].NOUC;
 		modelInfo["SizeMetricAnalytics"].ANRPUC = modelInfo["SizeMetricAnalytics"].NOUC == 0 ? 0 : modelInfo["SizeMetricAnalytics"].NOA/modelInfo["SizeMetricAnalytics"].NOUC;
-		modelInfo["SizeMetricAnalytics"].UCP = 0;
-
 		// analyse domain model
 		var domainModelInfo = modelInfo.DomainModel;
+
 
 
 		if(domainModelInfo && domainModelInfo["SizeMetricAnalytics"]){
@@ -475,8 +468,7 @@
 			modelInfo["SizeMetricAnalytics"].NORT = domainModelInfo["SizeMetricAnalytics"].NORT; //Number of relationship types
 			// Costagliola [7]
 			modelInfo["SizeMetricAnalytics"].NEM = domainModelInfo["SizeMetricAnalytics"].NEM; //Number of External Methods
-			modelInfo["SizeMetricAnalytics"].NSR = domainModelInfo["SizeMetricAnalytics"].NEM; //Number of Services Requested 
-			modelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["SizeMetricAnalytics"].NOA; //Number of Attributes
+			modelInfo["SizeMetricAnalytics"].NSR = domainModelInfo["SizeMetricAnalytics"].NEM; //Number of Services Requested
 			
 			// should be applied to individual classes
 			modelInfo["SizeMetricAnalytics"].WMC = domainModelInfo["SizeMetricAnalytics"].WMC; //Weighted methods per class
@@ -517,8 +509,7 @@
 			modelInfo["SizeMetricAnalytics"].NOAPC= domainModelInfo["SizeMetricAnalytics"].NOAPC; //Number of attributes per class 
 			modelInfo["SizeMetricAnalytics"].NODET= domainModelInfo["SizeMetricAnalytics"].NODET; //Number of data element types
 			modelInfo["SizeMetricAnalytics"].NORET= domainModelInfo["SizeMetricAnalytics"].NORET; //Number of records
-			modelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["SizeMetricAnalytics"].NOA; //Number of associations
-			modelInfo["SizeMetricAnalytics"].NOMPC= domainModelInfo["SizeMetricAnalytics"].NOA; //Number of methods per class
+			modelInfo["SizeMetricAnalytics"].NOMPC= domainModelInfo["SizeMetricAnalytics"].NOMPC; //Number of methods per class
 			modelInfo["SizeMetricAnalytics"].NPPM= domainModelInfo["SizeMetricAnalytics"].NPPM; //Number of parameters per method
 			modelInfo["SizeMetricAnalytics"].NMT= domainModelInfo["SizeMetricAnalytics"].NMT; //Number of method types
 	        

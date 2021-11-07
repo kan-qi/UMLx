@@ -177,9 +177,9 @@ simEffort <- function(url, user, pw) {
 
 sink(outputFile)
 
-#effortResult <- simEffort("https://api.github.com/repos/apache/carbondata", "flyqk", "qk@github/910304")
+effortResult <- simEffort("https://api.github.com/repos/apache/carbondata", "flyqk", "qk@github/910304")
 
-effortResult <- simEffort(gitUrl, "flyqk", "qk@github/910304")
+#effortResult <- simEffort(gitUrl, "flyqk", "qk@github/910304")
 
 print(effortResult);
 

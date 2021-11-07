@@ -16,7 +16,7 @@
 
 	// to output the header for data for the use cases.
 	function toModelEvaluationHeader() {
-		return "UseCase_Num,Tran_Num,Activity_Num,Component_Num,Precedence_Num,Stimulus_Num";
+		return "UseCase_Num,Tran_Num,Activity_Num,Component_Num,Precedence_Num,Stimulus_Num,Response_Num";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index) {
@@ -26,7 +26,8 @@
 				+ modelInfo["USIMAnalytics"].ActivityNum + ","
 				+ modelInfo["USIMAnalytics"].ComponentNum + ","
 				+ modelInfo["USIMAnalytics"].PrecedenceNum + ","
-				+ modelInfo["USIMAnalytics"].StimulusNum;
+				+ modelInfo["USIMAnalytics"].StimulusNum+","
+				+ modelInfo["USIMAnalytics"].ResponseNum;
 	}
 
 	function evaluateModel(modelInfo, callbackfunc) {
@@ -38,6 +39,7 @@
 				ComponentNum : 0,
 				PrecedenceNum : 0,
 				StimulusNum : 0,
+				ResponseNum: 0,
 				USIMAnalyticsFileName : "USIMAnalytics.csv"
 		}
 		
@@ -47,13 +49,14 @@
 			for ( var j in useCase.Activities) {
 				var activity = useCase.Activities[j]; // tag: elements
 				
-				if(activity.Stimulus){
-					modelInfo["USIMAnalytics"].StimulusNum++;
+				if(activity.isResponse){
+					modelInfo["USIMAnalytics"].ResponseNum++;
 				}
 				
 			}
 			modelInfo["USIMAnalytics"].ActivityNum += useCase.Activities.length;
 			modelInfo["USIMAnalytics"].TranNum += useCase.Transactions.length;
+			modelInfo["USIMAnalytics"].StimulusNum += useCase.Transactions.length;
 			modelInfo["USIMAnalytics"].PrecedenceNum += useCase.PrecedenceRelations.length;
 		}
 		

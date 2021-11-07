@@ -39,21 +39,21 @@ public class RepoBrowser extends JFrame{
 //	public static String projectRepoListFilePath = projectTempPath+"\\repositories.txt";
 	private FileListModel fileListModel;
 	private RepositoryTreePanel newContentPane;
-	
+
 	public RepoBrowser(String workpath){
-		
-		
+
+
 		//Create and set up the window.
         this.setTitle("RepositoryTreePanel");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
+
         //Create and set up the content pane.
 //        fileListModel = new FileListModel(filelist);
-        
+
         projectPath = workpath;
         projectRepoPath = projectPath + "\\repositories.txt";
         projectTempPath = projectPath + "\\temp";
-        
+
         File projectFolder = new File(projectPath);
         if(!projectFolder.exists()){
         	projectFolder.mkdir();
@@ -62,7 +62,7 @@ public class RepoBrowser extends JFrame{
         if(! projectTempFolder.exists()){
         	projectTempFolder.mkdir();
         }
-        
+
         newContentPane = new RepositoryTreePanel(projectRepoPath);
         newContentPane.setOpaque(true); //content panes must be opaque
         this.setContentPane(newContentPane);
@@ -72,7 +72,7 @@ public class RepoBrowser extends JFrame{
         this.setVisible(true);
 
 	}
-	
+
     class FileListModel extends AbstractTableModel {
         private static final boolean DEBUG = false;
         private String fileList;
@@ -85,9 +85,9 @@ public class RepoBrowser extends JFrame{
 //        {"Jane", new Boolean(true)},
 //        {"Joe", new Boolean(false)}
 //        };
-        
+
         private ArrayList<Object[]> data = new ArrayList<Object[]>();
-        
+
 
     	private void saveEditedFile(){
     		try{
@@ -101,9 +101,9 @@ public class RepoBrowser extends JFrame{
     		} catch (IOException e) {
     		   // do something
     		}
-    	
+
     	}
-        
+
         public FileListModel(String fileList){
         	this.fileList = fileList;
         	try(BufferedReader br = new BufferedReader(new FileReader(fileList))) {
@@ -115,19 +115,19 @@ public class RepoBrowser extends JFrame{
 				e.printStackTrace();
 			}
         }
- 
+
         public int getColumnCount() {
             return columnNames.length;
         }
- 
+
         public int getRowCount() {
             return data.size();
         }
- 
+
         public String getColumnName(int col) {
             return columnNames[col];
         }
- 
+
         public Object getValueAt(int row, int col) {
         	if(row == -1){
         		if(col != -1){
@@ -149,10 +149,10 @@ public class RepoBrowser extends JFrame{
         	else {
         		return data.get(row)[col];
         	}
-        	
+
             return null;
         }
- 
+
         /*
          * JTable uses this method to determine the default renderer/
          * editor for each cell.  If we didn't implement this method,
@@ -162,7 +162,7 @@ public class RepoBrowser extends JFrame{
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
- 
+
         /*
          * Don't need to implement this method unless your table's
          * editable.
@@ -176,7 +176,7 @@ public class RepoBrowser extends JFrame{
                 return true;
             }
         }
- 
+
         /*
          * Don't need to implement this method unless your table's
          * data can change.
@@ -188,20 +188,20 @@ public class RepoBrowser extends JFrame{
                                    + " (an instance of "
                                    + value.getClass() + ")");
             }
- 
+
             data.get(row)[col] = value;
             fireTableCellUpdated(row, col);
- 
+
             if (DEBUG) {
                 System.out.println("New value of data:");
                 printDebugData();
             }
         }
- 
+
         private void printDebugData() {
             int numRows = getRowCount();
             int numCols = getColumnCount();
- 
+
             for (int i=0; i < numRows; i++) {
                 System.out.print("    row " + i + ":");
                 for (int j=0; j < numCols; j++) {
@@ -216,7 +216,7 @@ public class RepoBrowser extends JFrame{
 	public static void main(String[] args) {
 		  //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-		
+
 //		  try {
 //              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //          } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -225,7 +225,7 @@ public class RepoBrowser extends JFrame{
 //
 //          setDefaultSize(24);
 
-          
+
 //		final String fileListPath = "./tools/temp/repositories.txt";
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -234,7 +234,7 @@ public class RepoBrowser extends JFrame{
         });
 
 	}
-	
+
 	public static void setDefaultSize(int size) {
 
 	    Set<Object> keySet = UIManager.getLookAndFeelDefaults().keySet();
@@ -256,14 +256,14 @@ public class RepoBrowser extends JFrame{
 	    }
 
 	}
-	
+
 	private void showMenu(){
 	 //create a menu bar
     final MenuBar menuBar = new MenuBar();
 
     //create menus
     Menu fileMenu = new Menu("File");
-    Menu editMenu = new Menu("Edit"); 
+    Menu editMenu = new Menu("Edit");
     final Menu aboutMenu = new Menu("About");
 
     //create menu items
@@ -278,7 +278,7 @@ public class RepoBrowser extends JFrame{
 
     MenuItem exitMenuItem = new MenuItem("Exit");
     exitMenuItem.setActionCommand("Exit");
-    
+
     MenuItem exportMenuItem = new MenuItem("Export");
     exportMenuItem.setActionCommand("Export");
 
@@ -290,7 +290,7 @@ public class RepoBrowser extends JFrame{
 
     MenuItem pasteMenuItem = new MenuItem("Paste");
     pasteMenuItem.setActionCommand("Paste");
- 
+
     MenuItemListener menuItemListener = new MenuItemListener();
 
     newMenuItem.addActionListener(menuItemListener);
@@ -302,7 +302,7 @@ public class RepoBrowser extends JFrame{
     pasteMenuItem.addActionListener(menuItemListener);
     exportMenuItem.addActionListener(menuItemListener);
 
-    final CheckboxMenuItem showWindowMenu = 
+    final CheckboxMenuItem showWindowMenu =
        new CheckboxMenuItem("Show About", true);
     showWindowMenu.addItemListener(new ItemListener() {
        public void itemStateChanged(ItemEvent e) {
@@ -338,7 +338,7 @@ public class RepoBrowser extends JFrame{
  }
 
  class MenuItemListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {            
+    public void actionPerformed(ActionEvent e) {
 //       statusLabel.setText(e.getActionCommand()  + " MenuItem clicked.");
     	if(e.getActionCommand().equals("Save")){
 //    		newContentPane.save();

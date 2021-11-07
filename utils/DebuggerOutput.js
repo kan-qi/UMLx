@@ -21,11 +21,10 @@
 	
 	function writeJson2(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		return;
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
-		//fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(message));
+		fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(message));
 	}
 	
 	function writeJson3(token, message, outputDir){

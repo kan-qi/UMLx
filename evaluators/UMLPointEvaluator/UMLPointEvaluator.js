@@ -174,8 +174,6 @@ CP = NOC+NOIR+NOUR+NORR+NOM+NOCA+NOASS
 		return repoInfo["UMLPointAnalytics"];
 	}
 
-
-
 	module.exports = {
 		toModelEvaluationHeader : toModelEvaluationHeader,
 		toModelEvaluationRow : toModelEvaluationRow,

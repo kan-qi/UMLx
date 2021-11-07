@@ -34,11 +34,9 @@
 	}
 	
 	function drawDottyGraph(dottyGraph, graphFilePath, callbackfunc){
-<<<<<<< HEAD
-=======
-		console.log(graphFilePath);
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
-		return;
+	    if(callbackfunc){
+	        callbackfunc(graphFilePath)
+	    }
 		var dir = path.dirname(graphFilePath);
 		var fileName = path.parse(graphFilePath).base.replace(/\.[^/.]+$/, "");
 		console.log("the output fileName %s\n", fileName);

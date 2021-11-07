@@ -891,13 +891,13 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// }
 		// }
 
-		for (SootClass callbackClass : callbackMethods.keySet()) {
-			// Output callback methods
-			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
-			for (CallbackDefinition callbackDef : callbackDefinitions) {
-				Debug2.v().println(callbackDef.toString());
-			}
-		}
+//		for (SootClass callbackClass : callbackMethods.keySet()) {
+//			// Output callback methods
+//			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+//			for (CallbackDefinition callbackDef : callbackDefinitions) {
+//				Debug2.v().println(callbackDef.toString());
+//			}
+//		}
 
 		Debug.v().println("output callback methods end");
 	}
@@ -1089,13 +1089,13 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// Collect the XML-based callback methods
 		collectXmlBasedCallbackMethods(lfp, jimpleClass);
 
-		for (SootClass callbackClass : callbackMethods.keySet()) {
-			// Output callback methods
-			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
-			for (CallbackDefinition callbackDef : callbackDefinitions) {
-				Debug2.v().println(callbackDef.toString());
-			}
-		}
+//		for (SootClass callbackClass : callbackMethods.keySet()) {
+//			// Output callback methods
+//			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+//			for (CallbackDefinition callbackDef : callbackDefinitions) {
+//				Debug2.v().println(callbackDef.toString());
+//			}
+//		}
 
 		// Construct the final callgraph
 		releaseCallgraph();

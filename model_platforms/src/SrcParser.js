@@ -29,10 +29,7 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
-<<<<<<< HEAD
 //	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
-=======
->>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 	var useCaseIdentifier = require("./UseCaseIdentification.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
@@ -44,6 +41,8 @@
 	var responsePatternsFile = "response-patterns.txt";
 	
 	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
+
+	var domainModelConstruction = require("./DomainModelConstruction.js");
 
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc, modelInfo) {
 			
@@ -213,15 +212,11 @@
 					});
 				}
 				else{
-<<<<<<< HEAD
-					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(codeAnalysisResults.sootCallGraph, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, componentInfo.dicComponents, componentInfo.dicClassComponent, ModelOutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
-					
-=======
+
 					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.dicClassUnits, codeAnalysisResults.cfg, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
 //					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.dicClassUnits, modelInfo.path+"/"+modelInfo.icfg, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
->>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 					modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 					
 					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
@@ -248,7 +243,7 @@
 
             dependencyGraphDrawer.drawCompositeClassDependencyGraphByComponent(codeAnalysisResults, componentInfo, Model.OutputDir);
 
-			
+
 	}
 
 	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodUnits){

@@ -30,6 +30,10 @@
           }
 	 }
 
+	 function isDirSync(filePath){
+	   return fs.lstatSync(filePath).isDirectory();
+	 }
+
 	 function existsSync(filePath){
 			return fs.existsSync(filePath);
 	 }
@@ -53,6 +57,29 @@
 		 
 		 return fileContents;
 	 }
+
+	  function readJSONFilesSync(filePaths){
+     		 var fileContents = [];
+     		 for(var i in filePaths){
+     		 var path = filePaths[i];
+     		 if( fs.existsSync(path) ) {
+     			 var fileContent = fs.readFileSync(path, 'utf8');
+     			 fileContents.push(JSON.parse(fileContent.trim()));
+     		 }
+     		 else{
+     			 fileContents.push(null);
+     		 }
+     		 }
+
+     		 return fileContents;
+      }
+
+      function writeJSONFilesSync(filePaths, jsonObjects){
+
+                  		 for(var i in filePaths){
+                  		  fs.writeFileSync(filePaths[i], JSON.stringify(jsonObjects[i]));
+                  		 }
+      	 }
 	 
 	 function readFileSync(filePath){
 		 if( fs.existsSync(filePath) ) {
@@ -185,7 +212,7 @@
 		},
 		readJSONSync: function(filePath, callbackfunc){
 			var str = fs.readFileSync(filePath, 'utf-8');
-				 var obj = JSON.parse(str);
+				 var obj = JSON.parse(str.trim());
 				  return obj
 		},
 		writeFiles: function(dir, files, callbackfunc){
@@ -237,6 +264,9 @@
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
 			existsSync: existsSync,
-			mkDirSync: mkDirSync
+			mkDirSync: mkDirSync,
+			readJSONFilesSync: readJSONFilesSync,
+			isDirSync: isDirSync,
+			writeJSONFilesSync: writeJSONFilesSync
 	}
 }())

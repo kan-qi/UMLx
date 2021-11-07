@@ -170,7 +170,7 @@
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
 			
-			functionPointProcessor.	processElement(element, domainModelInfo);
+			functionPointProcessor.processElement(element, domainModelInfo);
 			
 			var DET = element.attributeNum;
 			var RET = 1;

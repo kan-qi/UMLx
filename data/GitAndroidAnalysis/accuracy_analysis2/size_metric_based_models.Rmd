@@ -1,0 +1,125 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("transaction_weights_calibration4.R")
+source("comparison_between_size_metrics_sloc.R")
+source("data_selection.R")
+library(jsonlite)
+library(reshape)
+library(tidyverse)
+library(fitdistrplus)
+library(egg)
+library(gridExtra)
+library(plyr)
+require(MASS)
+
+```
+Combined Data Effort Values
+```{r descriptive statistics, fig.width=5,fig.height=2.5}
+dataSet <- selectData("modelEvaluations-1-3.csv")
+
+modelData <- dataSet[["modelData"]]
+combined <- dataSet[["combined"]]
+effort <- dataSet[["effort"]]
+
+```
+
+#load the comparative models. Each model for comparison should include two functions for evaluateion:
+1. model_train(dataset)
+2. model_predict(dataset)
+
+```{r swtiii, warning = FALSE}
+#train the transaction based models.
+SWTIIIresults <- performSearch(6, effort, combined, transactionFiles, c("TL", "TD", "DETs"))
+
+#for testing
+model3 <- SWTIIIresults[[SWTIIIModelSelector]][["model"]]
+
+#model <- model3
+
+#train the size metric based models
+
+
+#load the machine learning based models
+
+
+# the potential list of models
+model = list()
+  
+```
+comparison between SWTIII, UCP, COCOMO, a-priori COCOMO using cross-validation
+```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
+#df <- read.csv("modelEvaluations-8-16-3.csv")
+
+source("comparison_between_size_metrics_sloc.R")
+
+otherSizeMetricsData=modelData[c("Effort", "KSLOC", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP", "IFPUG", "MKII", "COSMIC")]
+otherSizeMetricsData <- na.omit(otherSizeMetricsData)
+
+comparisonRet <- modelBenchmark(models, dataset)
+
+cvResults <-comparisonRet[["cvResults"]]
+print(cvResults)
+
+avgPreds <- comparisonRet[["avgPreds"]]
+print('average improvement by ducp')
+print(colMeans(avgPreds[, "DUCP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by ucp')
+print(colMeans(avgPreds[, "UCP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by cocomo')
+print(colMeans(avgPreds[, "COCOMO"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by cocomo.apriori')
+print(colMeans(avgPreds[, "COCOMO Apriori"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by IFPUG')
+print(colMeans(avgPreds[, "IFPUG"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by MKII')
+print(colMeans(avgPreds[, "MKII"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by COSMIC')
+print(colMeans(avgPreds[, "COSMIC"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by SLOC')
+print(colMeans(avgPreds[, "SLOC"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by SLOC_LN')
+print(colMeans(avgPreds[, "SLOC_LN"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+
+avgPreds <- data.frame(avgPreds)
+print(avgPreds)
+meltAvgPreds = melt(avgPreds, id.vars="Pred")
+colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info")
+print(meltAvgPreds)
+ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+print("melt avg preds info as lines and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+#compare DUCP , UCP, and FP
+avgPreds_DUCP_UCP_FP <- avgPreds[, c("DUCP", "MKII", "Pred")]
+colnames(avgPreds_DUCP_UCP_FP) <- c("SWT-III", "IFPUG", "Pred")
+#print(avgPreds)
+meltAvgPreds_DUCP_UCP_FP = melt(avgPreds_DUCP_UCP_FP, id.vars="Pred")
+colnames(meltAvgPreds_DUCP_UCP_FP) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds_DUCP_UCP_FP) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (x%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+```

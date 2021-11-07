@@ -39,7 +39,6 @@
     var FileManagerUtil = require("../../utils/FileManagerUtils.js");
     var stringSimilarity = require('string-similarity');
 
-
 	function identifyComponents(
 		callGraph, 
 		accessGraph, 
@@ -138,9 +137,12 @@
 		
 		rootClusterClass.depth = maxLevel+1;
 		
-//		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
+		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
+        if(cutoffDepth > 7){
+            cutoffDepth = 7
+        }
 
-		var cutoffDepth = rootClusterClass.depth;
+//		var cutoffDepth = rootClusterClass.depth;
 
 		var currentLevel = [];
 		var currentLevelDepth = 0;
@@ -487,13 +489,17 @@
 		return classClusters;
 	}
 
-	function findAllClass(node) {
-		if (node.size == 1) {
+	function findAllClass(node, visitedNodes = new Set()) {
+	    if(visitedNodes.has(node)){
+	        return [];
+	    }
+		else if (node.size == 1) {
 			return [node.value];
 		}
 		else {
-			var left = findAllClass(node.left);
-			var right = findAllClass(node.right);
+		    visitedNodes.add(node);
+			var left = findAllClass(node.left, visitedNodes);
+			var right = findAllClass(node.right, visitedNodes);
 			var res = left.concat(right);
 			return res;
 		}
