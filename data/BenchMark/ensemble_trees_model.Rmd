@@ -1,0 +1,56 @@
+---
+title: "Ensemble Tree Model Report"
+author: "Rachel Zhu"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("ensemble_trees_model.R")
+```
+
+Loading data form the csv file.
+
+```{r loads data.}
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D1.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D2.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D3.csv"
+file <- "/Users/Shared/Relocated Items/Security/Rachel/Study/USC/Coursework/Directed Research/git/data/Benchmark/dsets/D4.csv"
+
+dataset <- load_data(file)
+```
+
+Pre-processing step checks missing values in the dataset, and deletes or imputes when necessary. When checking the dataset, the last observation is deleted since it contains missing values and some data-entry mistakes. It also duplicate rows and the columns with near zero variance, or without names. Categorical variables are labeled with numbers for further data processing. Visualizations of the prediction variable - Effort allows to find out the outliers with very low frequency but quite large values. In this sense, a threshold is set to remove them.
+
+```{r pre-processing data.}
+clean_step(dataset)
+```
+
+This step initializes the Model and returns an empty list under the model name.
+
+```{r model initialization.}
+ensemble_trees <- ensemble_trees_model(dataset)
+```
+
+Before running into modeling, Random Forest could find out the most related features with their related importances regarding the bunch of variables. Then it is followed by a cross validation of feature selections and a plot showing the relation between the error and number of variables.
+
+Since some functions, e.g. rfcv, could not take care of the observations less than 6, the model treats the datasets with different observations seperately. For example, for the datasets less than 6 observations, the cross validation is skipped.
+
+The next is to decide the number of trees in a Random Forest model. Using the initialized number of 100, it automatically capture the best tree size with the lowest errors. 
+
+Feeding both the features and number of trees, the model is built based on the indepedent variable - Effort. And the model is saved in a rds file as well. 
+
+```{r modeling.}
+ensemble_trees <- m_fit.ensemble_trees(ensemble_trees, dataset)
+```
+
+Finally, the model predicts the results if fed with test dataset.
+
+```{r prediction.}
+test <- dataset
+m_predict.ensemble_trees(ensemble_trees, test)
+```
