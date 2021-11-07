@@ -7,10 +7,15 @@
     var UMLxAnalyticToolKit = require("./utils/UMLxAnalyticToolKitCore.js");
     var srcParser = require('./model_platforms/src/SrcParser.js');
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     var modelDrawer = require('./model_drawers/UserSystemInteractionModelDrawer');
     var AndroidLogUtil = require('./utils/AndroidLogUtil');
 >>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
+=======
+    var modelDrawer = require('./model_drawers/UserSystemInteractionModelDrawer');
+    var AndroidLogUtil = require('./utils/AndroidLogUtil');
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
 
     function analyseAndroidApks(apkFilePath, reportDir){
@@ -18,6 +23,7 @@
         return AndroidLogUtil.generateAndroidAnalysis(apkFilePath, reportDir);
 
         /* dummy android apk analysis due to that gator command cannot run on local machine with MAC OS*/
+<<<<<<< HEAD
 //         return new Promise((resolve, reject) => {
 //             var project = {
 //                 "reportDir": reportDir,
@@ -36,6 +42,26 @@
 //                 "reportDir": reportDir,
 //                 "repoDir": reportDir,
 //                 "path": "/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release-1",
+=======
+        return new Promise((resolve, reject) => {
+            var project = {
+                "reportDir": reportDir,
+                "repoDir": reportDir,
+                "path": "/Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/output",
+                "modelFile": "android-analysis-output.json",
+                "stimulusFile": "gator-handlers.txt",
+//                "tag": "AnotherMonitor_release-1",
+                "tag": path.basename(apkFileName),
+                "apkFileName":"baiduCloud.apk",
+                //"logFile":"filtered_android_log.txt",
+                //"useCaseRec":"record.txt",
+                "clusterConfig": "S1W1L1"
+            }
+//             var project = {
+//                 "reportDir": reportDir,
+//                 "repoDir": reportDir,
+//                 "path": "/Users/diaozhuoran/desktop/DR2/UMLxKqi/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release-1",
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 //                 "modelFile": "android-analysis-output.json",
 //                 "stimulusFile": "gator-handlers.txt",
 // //                "tag": "AnotherMonitor_release-1",
@@ -44,9 +70,15 @@
 //                 "logFile":"filtered_android_log.txt",
 //                 "useCaseRec":"record.txt",
 //                 "clusterConfig": "S1W1L1"
+<<<<<<< HEAD
             // }
         //     setTimeout(resolve(project), 1000);
         // });
+=======
+//             }
+            setTimeout(resolve(project), 1000);
+        });
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
     }
 
     function analyseAndroidProject(project, reportDir, umlModelInfo){        
@@ -92,61 +124,64 @@
 //                                })
 //                            }, project);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                                var modelJson = FileManagerUtil.readJSONSync(inputFile);
+                                //var modelJson = JSON.parse(FileManagerUtil.readJSONSync(inputFile).trim());
+                                
+                                srcParser.isJSONBased = true;
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
-                            	var modelJson = JSON.parse(FileManagerUtil.readJSONSync(inputFile).trim());
-                            	srcParser.isJSONBased = true;
+                                            //var workDir = path.dirname(umlModelInfo.umlFilePath);
+                                            //umlModelInfo = modelJson;
+                                            
+                                            srcParser.extractUserSystermInteractionModel(modelJson, outputDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 
-
-                                	var path = require('path');
-                                			var workDir = path.dirname(umlModelInfo.umlFilePath);
-                                			srcParser.extractUserSystermInteractionModel(modelJson, outputDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
-
-                                				if(!model){
-                                					return;
-                                				}
-
-                                				// set up the model info properties
-                                				for(var i in model){
-                                					umlModelInfo[i] = model[i];
-                                				}
-
-                                				// set up the domain model
-                                				var domainModel = umlModelInfo.DomainModel;
-
-                                				var debug = require("./utils/DebuggerOutput.js");
-                                				debug.writeJson2("constructed_domain_model", domainModel, umlModelInfo.OutputDir);
-
-                                				for(var i in umlModelInfo.UseCases) {
-                                								var useCase = umlModelInfo.UseCases[i];
-
-                                								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
-
-                                									console.log("use case is drawn");
-                                								});
-                                								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
-
-                                									console.log("simple use case is drawn");
-                                								});
-
-                                //								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
-                                //									console.log("paths are drawn");
-                                //								});
-                                				}
-
-                                				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
-                                					console.log("domain model is drawn");
-                                				});
+                                                if(!model){
+                                                    return;
+                                                }
 
 
-                                				var debug = require("./utils/DebuggerOutput.js");
-                                				debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
+                                                // set up the model info properties
+                                                for(var i in model){
+                                                    umlModelInfo[i] = model[i];
+                                                }
 
-//                                				if(callbackfunc){
-                                                 //                                					callbackfunc(umlModelInfo);
-                                                 //                                				}
+                                                // set up the domain model
+                                                var domainModel = umlModelInfo.DomainModel;
 
-                                                  resolve(true, model);
+                                                var debug = require("./utils/DebuggerOutput.js");
+                                                debug.writeJson2("constructed_domain_model", domainModel, umlModelInfo.OutputDir);
+                                                for(var i in umlModelInfo.UseCases) {
+                                                                var useCase = umlModelInfo.UseCases[i];
 
+                                                                modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
+
+                                                                    console.log("use case is drawn");
+                                                                });
+                                                                modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
+
+                                                                    console.log("simple use case is drawn");
+                                                                });
+
+                                //                              pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+                                //                                  console.log("paths are drawn");
+                                //                              });
+                                                }
+                                                modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+                                                    console.log("domain model is drawn");
+                                                });
+
+
+                                                var debug = require("./utils/DebuggerOutput.js");
+                                                debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
+
+//                                              if(callbackfunc){
+                                                 //                                                 callbackfunc(umlModelInfo);
+                                                 //                                             }
+                                                  resolve(model);
+
+<<<<<<< HEAD
                                 			}, umlModelInfo);
 =======
                                 var modelJson = FileManagerUtil.readJSONSync(inputFile);
@@ -204,6 +239,9 @@
 
                                             }, umlModelInfo);
 >>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
+=======
+                                            }, umlModelInfo);
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
                         }
                     });

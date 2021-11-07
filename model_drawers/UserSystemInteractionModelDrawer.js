@@ -82,6 +82,7 @@
 		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
 
 
+<<<<<<< HEAD
 //		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {
 //		    if (err) throw err;
 //		})
@@ -90,6 +91,16 @@
 //		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {
 //		    if (err) throw err;
 //		})
+=======
+//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {  
+//		    if (err) throw err; 
+//		}) 
+//
+//
+//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {  
+//		    if (err) throw err; 
+//		}) 
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
 
 		var activities = UseCase.Activities;
@@ -233,7 +244,11 @@
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 
 			console.log("the usim file is in" +graphFilePath);
+<<<<<<< HEAD
 			console.log("drawing is done");
+=======
+			console.log("drawing is down");
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 		});
 
 		return graph
@@ -286,6 +301,7 @@
 
              graph += '}"]';
 
+<<<<<<< HEAD
 
 		return graph ;
 	}
@@ -295,6 +311,16 @@
 var transactions = UseCase.Transactions;
 //		var precedenceRelations = UseCase.PrecedenceRelations;
 //		console.log(precedenceRelations);
+=======
+                 
+		return graph ;
+	}
+
+	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+		var activities = UseCase.Activities;
+		var precedenceRelations = UseCase.PrecedenceRelations;
+		console.log(precedenceRelations);
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 		var graph = 'digraph g {\
 			fontsize=24\
 			node [shape=plaintext fontsize=24]';
@@ -313,6 +339,7 @@ var transactions = UseCase.Transactions;
 			}
 		}
 		var dottyDraw = new DottyDraw();
+<<<<<<< HEAD
         // var drawNodeID = {};
 
 		for(var i in transactions){
@@ -363,13 +390,57 @@ var transactions = UseCase.Transactions;
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is done");
+=======
+		
+		for(var i in activities){
+			var activity = activities[i];
+			
+			var node = drawNode(activity._id, filterName(activity.Name));
+			
+			if(activity.Stimulus){
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
+			} else if(activity.OutScope){
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
+			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
+			}
+			
+				graph += dottyDraw.draw(node);
+		}
+		
+		console.log("activities...");
+		console.log(graph);
+		
+		var precedenceRelations = UseCase.PrecedenceRelations;
+		for(var i in precedenceRelations){
+			var precedenceRelation = precedenceRelations[i];
+			console.log(precedenceRelation);
+				if(precedenceRelation.start && precedenceRelation.end){
+//				dotty += '"'+start.Name+'"->"'+end.Name+'";';
+
+				var start = precedenceRelation.start._id;
+				var end = precedenceRelation.end._id;
+				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+				}
+		}
+		
+		
+		graph += 'imagepath = \"./public\"}';
+	
+		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+			console.log("drawing is down");
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 		});
 
 		return graph;
 	}
 
 
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
 
 
@@ -390,6 +461,7 @@ var transactions = UseCase.Transactions;
 			}
 		}
 		var dottyDraw = new DottyDraw();
+<<<<<<< HEAD
 
 
 //		var j = 0;
@@ -415,17 +487,52 @@ var transactions = UseCase.Transactions;
 
 		return graph;
 
+=======
+		
+		
+//		var j = 0;
+		for(var i in DomainModel.Elements){
+			//arrange the nodes in the subgraph
+			
+			
+			
+			var domainObject = DomainModel.Elements[i];
+			var domainObjectToDraw = drawDomainObjectNode(domainObject);
+			
+			if(domainObjectToDraw){
+				graph += dottyDraw.draw(domainObjectToDraw);
+				
+			}
+		}
+		
+		graph += 'imagepath = \"./public\"}';
+		
+		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+			console.log("drawing is down");
+		});
+
+		return graph;
+		
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 	}
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
+<<<<<<< HEAD
 		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
+=======
+		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 		var  domainModelElements = domainModel.Elements;
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
               console.log("class diagram model is"+JSON.stringify(domainModelElements));
+<<<<<<< HEAD
 
+=======
+              
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
@@ -496,9 +603,17 @@ var transactions = UseCase.Transactions;
 		}
 
 	
+<<<<<<< HEAD
 	function drawComponentDiagram(dicComponent, dicClassUnits, graphFilePath, callbackfunc){
 
 		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
+=======
+	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
+		
+
+
+		if(typeof dicComponent === 'undefined'){
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
      		return;
      	}
 
@@ -516,6 +631,7 @@ var transactions = UseCase.Transactions;
                  graph += i;
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
+<<<<<<< HEAD
                  graph += filterName(curClass["name"]);
 
 
@@ -528,6 +644,20 @@ var transactions = UseCase.Transactions;
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
                          graph += ':'+attrUnits[j]["type"];
+=======
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = dicComponentElements[i]["attrUnits"];
+
+                 if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+                   
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+                         graph += ':'+classStorableUnits[j]["kind"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          graph += '\\l';
                      }
                  }
@@ -540,6 +670,7 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
+<<<<<<< HEAD
                          tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
                          var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
                          for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
@@ -547,6 +678,15 @@ var transactions = UseCase.Transactions;
                         		 tempStr += ",";
                         	 }
                         	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+=======
+                         tempStr += classMethodUnits[j]["name"] + '(';
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+                        	 if(k != 0){
+                        		 tempStr += ",";
+                        	 }
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -567,7 +707,11 @@ var transactions = UseCase.Transactions;
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
+<<<<<<< HEAD
                      graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
+=======
+                     graph += classInterfaceUnits[j]["name"] + ' ';
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                  		graph += "\\l";
                  }
                  }
@@ -612,6 +756,7 @@ var transactions = UseCase.Transactions;
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
+<<<<<<< HEAD
                  graph += filterName(curClass["name"]);
 
 
@@ -625,6 +770,20 @@ var transactions = UseCase.Transactions;
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
                          graph += ':'+attrUnits[j]["type"];
+=======
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = curClass["attrUnits"];
+
+                 
+             	if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+      
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          graph += '\\l';
                      }
                  }
@@ -637,15 +796,26 @@ var transactions = UseCase.Transactions;
 
                     	 tempStr += '+   ';
                     	 console.log(classMethodUnits[j]);
+<<<<<<< HEAD
                          tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
                          console.log(classMethodUnits[j]);
                          var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
                          for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+=======
+                         tempStr += classMethodUnits[j]["name"] + '(';
+                         console.log(classMethodUnits[j]);
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
                         	 
+<<<<<<< HEAD
                         	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+=======
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -666,7 +836,11 @@ var transactions = UseCase.Transactions;
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
+<<<<<<< HEAD
                      graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
+=======
+                     graph += classInterfaceUnits[j]["name"] + ' ';
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                  		graph += "\\l";
                  }
          		}
@@ -695,7 +869,11 @@ var transactions = UseCase.Transactions;
 
 	}
 	
+<<<<<<< HEAD
 	function drawCompositeClassDiagram(dicCompositeClassUnits, dicClassUnits, graphFilePath, callbackfunc){
+=======
+	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 
 		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
 		    if (err) throw err; 
@@ -716,6 +894,7 @@ var transactions = UseCase.Transactions;
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
+<<<<<<< HEAD
                  graph += filterName(curClass["name"]);
 
 
@@ -728,6 +907,20 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < attrUnits.length; j++) {
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
+=======
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = curClass["attrUnits"];
+
+                 
+                if(classStorableUnits){
+             	if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          graph += '\\l';
                      }
                  }
@@ -742,6 +935,7 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
+<<<<<<< HEAD
                          tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
                          var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
                          for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
@@ -749,6 +943,15 @@ var transactions = UseCase.Transactions;
                         		 tempStr += ",";
                         	 }
                         	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+=======
+                         tempStr += classMethodUnits[j]["name"] + '(';
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+                        	 if(k != 0){
+                        		 tempStr += ",";
+                        	 }
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -775,8 +978,11 @@ var transactions = UseCase.Transactions;
 //     		console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+<<<<<<< HEAD
 
      			console.log("the test graphFilePath is:"+ graphFilePath);
+=======
+>>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
      			console.log("class Diagram is done");
      		});
 

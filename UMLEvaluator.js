@@ -46,8 +46,8 @@
 			cocomoCalculator,
 			useCasePointEvaluator,
 			extendedUseCasePointEvaluator,
-			UMLSizeMetricEvaluator,
-			userStoryEvaluator
+			UMLSizeMetricEvaluator
+			//userStoryEvaluator
 			];
 	
 //	function setUp(){
@@ -251,7 +251,6 @@
 		}
 		
 		modelEvaluationStr += modelNum+","+ model.Name.replace(/,/gi, "");
-		
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.toModelEvaluationRow){
@@ -362,14 +361,16 @@
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.evaluateModel){
-				evaluator.evaluateModel(model, function(){
+				evaluator.evaluateModel(model, function(test){
 					console.log('model evaluation finishes');
 				});
 			}
 		}
 		
-		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
 
+		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
+		
+		
 		model.ModelEvaluationFileName = "modelEvaluation.csv";
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
@@ -380,6 +381,7 @@
 			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
 			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
+
 		umlFileManager.writeFiles(model.OutputDir, files, function(err){
 			if(err) {
 			 	console.log(err);
@@ -442,7 +444,7 @@
 		
 		}
 		else{
-			return model;
+			callbackfunc(model);
 		}
 		
 	}
