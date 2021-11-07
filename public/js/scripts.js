@@ -363,6 +363,9 @@ function predict_project_effort_func(show_loading_screen = true) {
 
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            $('#estimation-result-panel-body').css({border: "1px solid grey"});
+            $('#estimation-result-panel-body').css({"border-radius":"8px"});
+            
             var estimationModel = $(response).data("estimation-model");
             // console.log(estimationModel);
             console.log('#'+estimationModel+'-estimation-results-charts');

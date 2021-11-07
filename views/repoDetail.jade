@@ -63,14 +63,24 @@ div.block.panel.panel-default
     div.tab-content
       div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; margin-top: -60px")
         div.form-container
+          div(id="info" style = "text-align : center; font-size: 14px; margin-top:70px;margin-bottom:50px") Upload UML diagrams, KDM models, APKs to get effort estimates of your project
           form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
             // file browser
+            //- div.input-group
+            //-     input.form-control.form-blank(type='text',readonly)
+            //-     label.input-group-btn()
+            //-         span.btn.btn-dark.btn-submit Browse
+            //-             input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+            
             div.input-group
                 input.form-control.form-blank(type='text',readonly)
                 label.input-group-btn()
-                    span.btn.btn-dark.btn-submit Browse
-                        input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
-            button.btn.btn-dark.btn-submit(type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; margin-left: 30px; margin-right: 10px") Estimator
+                    span.span_browse.btn.btn-dark.btn-submit
+                        i.search_icon.fa.fa-search.fa-2x(aria-hidden="true")
+                          input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+              
+            
+            button.btn.btn-dark.btn-submit(type="button", data-toggle="modal", data-target="#exampleModalCenter") Estimator
             // Estimator Modal
             #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', )
               .modal-dialog.modal-dialog-centered(role='document', style="margin-top : 5%;" )
@@ -296,10 +306,52 @@ div.block.panel.panel-default
                     button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
             // Submit button
             div
-                button.btn.btn-dark.btn-submit.btn-lg(type='submit' style = "padding: 16px 31px") Submit
+                button.btn.btn-dark.btn-submit.btn-lg(type='submit' style = "padding: 16px 15px") Submit
         #sec-5
           #collapse0.panel-collapse
-            div(id="estimation-result-panel-body" style = "text-align : center; font-size: 14px") Upload UML diagrams, KDM models, APKs to get effort estimates of your project
+              //img(src="img/img2.png" style="min-width:800px;margin-top:50px; max-width:80%;max-height: 100%;")
+            div(id="estimation-result-panel-body" style = "text-align : center; font-size: 14px; border:")
+
+            //- table.ui.celled.striped.table(style="margin-left:auto;margin-right:auto;text-align:center")
+            //-   thead
+            //-     tr
+            //-       th Model
+            //-       th Effort(PH)
+            //-       th Schedule(Months)
+            //-       th PH/Month
+            //-       th EUCP
+            //-       th Personnel(Developers)
+            //-   tr
+            //-     td eucp_lm
+            //-     td.positive 39.99
+            //-     td 1.78
+            //-     td 40
+            //-     td 5.70
+            //-     td 1
+            //- br
+            //- table.restable(style="margin-left:auto;margin-right:auto;text-align:center")
+            //-   tr
+            //-     th Number
+            //-     th Use Case
+            //-     th Effort(PH)
+            //-     th EUCP
+            //-     th Schedule(Months)
+            //-     th Personnel(Developers)
+            //-   tr
+            //-     td 0
+            //-     td Use Case1
+            //-     td 19.99
+            //-     td 3.04
+            //-     td 1.42
+            //-     td 1
+            //-   tr
+            //-     td 1
+            //-     td Use Case
+            //-     td 19.99
+            //-     td 3.04
+            //-     td 1.42
+            //-     td 1
+        
         #loadingScreen.hidden
                 div.full-page-model
                 div.full-page-model-content
