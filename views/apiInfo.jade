@@ -1,0 +1,124 @@
+html
+    head
+        title API
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src="plotly.min.js")
+        script(type='text/javascript', src='/javascripts/jquery-2.1.4.min.js')
+        script(src="https://canvasjs.com/assets/script/canvasjs.min.js")
+
+        script(type='text/javascript', src='/javascripts/highstock.js')
+
+        script(type='text/javascript', src='/javascripts/exporting.js')
+        link(href='css/style.css', rel='stylesheet')
+        style.
+
+            h1{
+                color:black;
+                text-align:center;
+                margin-top: 60px;
+                padding-top: 40px;
+                font-size: 45;
+                font-family: Verdana;
+            }
+            td{
+                text-align: center;
+            }
+            table{
+                width: 50%;margin:auto
+            }
+            table, th, td
+              td
+              {
+              text-align:center;
+              }
+            tr:hover {background-color: #f5f5f5;}
+            th {
+              background-color: #4CAF50;
+              color: white;
+            }
+            td, th {
+              border: 1px solid #ddd;
+              padding: 8px;
+            }
+            a:link, a:visited {
+              background-color: #4CAF50;
+              color: white;
+              padding: 7px 13px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            a{
+                margin-left:65%;
+            }
+            a:hover, a:active {
+              background-color: darkgreen;
+            }
+
+
+
+        script.
+
+            window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+            	animationEnabled: true,
+            	zoomEnabled: true,
+            	title:{
+            		text: "#{api_data[1].date}"
+            	},
+            	data: data  // random generator below
+            });
+            chart.render();
+
+            }
+
+            var limit = 5;
+
+            var y = 0;
+            var data = [];
+            var dataSeries = { type: "line" };
+            var dataPoints = [];
+            for (var i = 0; i < limit; i += 1) {
+            	y += i;
+            	dataPoints.push({
+            		x: i,
+            		y: y
+            	});
+            }
+            dataSeries.dataPoints = dataPoints;
+            data.push(dataSeries);
+
+    body
+        h1 Here is API info
+
+
+        a(href='/login') BACK TO LOGIN PAGE.
+
+        div(id='api_info_table')
+          table.table.table-bordered
+          table
+           thead
+             tr
+              th ip
+              th date
+              th request_time
+
+
+           tbody
+
+             - for (var i = 0; i < api_data.length; i++) {
+               tr
+                td #{api_data[i].ip.toString()}
+                td #{api_data[i].date.toString()}
+                td #{JSON.stringify(api_data[i].request_time)}
+
+
+             - }
+
+        div(id="chartContainer" style="height: 300px; width: 70%;margin-top:100px;margin-left:270px")
+
+

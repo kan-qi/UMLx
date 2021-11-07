@@ -691,14 +691,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 				umlEvaluator.evaluateModel(modelInfo, function(){
 					console.log("model analysis complete");
 
-					// put apk activity info to model
-					modelInfo.apkFile = apkFlag;
-					if (modelInfo.apkFile) {
-						let data = fs.readFileSync(modelInfo.OutputDir + "/android-attrs.json");
-						modelInfo.apkAttrs = JSON.parse(data.toString());
-					}
-
-					effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
+	                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
 	                    if(!estimationResults){
 	                        console.log("error");
 	                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
@@ -737,31 +730,17 @@ app.get('/signup',function(req,res){
 	if(req.query.tk!=null && req.query.tk!=undefined){
 		res.render('signup', {tk:req.query.tk});
 	} else {
-	res.render('signup');
+	res.render('signupNew');
 	}
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
+	res.render('loginNew');
 });
-
-//MR++
-app.get('/displayjsondata',function(req,res){
-	let data = fs.readFileSync("./MR" + "/android-attrs1.json"); //Hard-coded Local JSON File Path
-	let jsondata = JSON.parse(data);
-	console.log(jsondata);
-	res.render('displayjsondata', {jsondata:jsondata});
-	//res.render('displayjsondata');
-});
-//MR--
 
 app.get('/logout',function(req,res){
 	res.clearCookie('appToken', { path: '/' });
-	if(req.cookies){
-		req.cookies.appToken = null;
-	}
-
-	res.redirect('/login');
+	res.redirect('/');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
@@ -1064,7 +1043,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { n
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
-
+    
     worker.on('message', (text) => {
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
@@ -1072,16 +1051,15 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml_file', maxCount: 1 }, { n
         res.redirect('/'); // 第二次redirect 
     });
 
-	console.log(req);
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
-
+    
     console.l("DEBUGGGG: before evaluate project");
 
-
+    
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
 
@@ -2101,8 +2079,6 @@ app.use(require('body-parser').json());
 app.post('/subscribe', (req, res) => {
     const token = req.cookies.appToken;
     const subscription = req.body;
-	const tracker = require("./TrackUserInfo.js");
-	tracker.tracker(req);
     if(subscription) {
         endpoints[token] = subscription;
         console.l('server received subsription endpoint');
