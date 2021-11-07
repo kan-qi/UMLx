@@ -564,8 +564,7 @@
 		}
 		
 	}
-	
-	
+
 	function dumpModelTransactionsInfo(modelInfo, transactionNum) {
 		// console.log("dump useCase analytics");
 		

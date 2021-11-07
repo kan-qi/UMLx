@@ -95,6 +95,8 @@
 		// Costagliola [7]
 				+ modelInfo["SizeMetricAnalytics"].NEM + "," //Number of External Methods
 				+ modelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested
+				+ modelInfo["SizeMetricAnalytics"].NATTR + "," //Number of Attributes //duplicate
+		// Minkiewicz [17]
 				+ modelInfo["SizeMetricAnalytics"].NOS + "," //Number of use cases/scenario scripts 
 				+ modelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
 				+ modelInfo["SizeMetricAnalytics"].MPC + "," //Methods per class
@@ -120,6 +122,7 @@
 		        + modelInfo["SizeMetricAnalytics"].NOC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOA + "," //Number of actors
 	 // Kim [9]
+//	            + modelInfo["SizeMetricAnalytics"].NOA + "," //Number of actors //duplicate
 				+ modelInfo["SizeMetricAnalytics"].NOUC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOR + "," //Number of roles
 				+ modelInfo["SizeMetricAnalytics"].ANAPUC + "," //Average number of actors per use case
@@ -145,7 +148,7 @@
 				+ modelInfo["SizeMetricAnalytics"].NOMPC + "," //Number of methods per class
 				+ modelInfo["SizeMetricAnalytics"].NPPM + "," //Number of parameters per method
 				+ modelInfo["SizeMetricAnalytics"].NMT; //Number of method types
-	
+
 	console.log("testing row");
 	console.log(row);
 		

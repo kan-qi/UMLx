@@ -63,6 +63,7 @@
      		 for(var i in filePaths){
      		 var path = filePaths[i];
      		 if( fs.existsSync(path) ) {
+     		    //console.log(path);
      			 var fileContent = fs.readFileSync(path, 'utf8');
      			 fileContents.push(JSON.parse(fileContent.trim()));
      		 }
@@ -148,13 +149,58 @@
 				    
 				    return data;
 		}
+
+
+		function parseCSVData2(csvData, header){
+                				 var data = [];
+                				    var lines = csvData.split(/\r?\n/g);
+                				    var headerLine = "";
+                				    var cols = [];
+                				    for(var i = 0; i < lines.length; i++){
+                				        //code here using lines[i] which will give you each line
+                				    	var line = lines[i];
+
+                				    	if(line === ""){
+                				    		continue;
+                				    	}
+
+                				    	var segs = line.split(/,/g);
+
+                				    	if(header && i==0){
+                				    		for(var j in segs){
+                				    			cols.push(segs[j].replace(/[^A-Za-z0-9_]/gi, ""));
+                				    		}
+                				    		headerLine = line;
+                				    		continue;
+                				    	}
+
+                				    	var dataElement = {};
+                				    	for(var j in segs){
+                				    		var col = cols[j];
+                				    		if(!col){
+                				    			col = j;
+                				    		}
+                				    		dataElement[col] = segs[j];
+                				    	}
+
+
+                				    	dataElement.line = line;
+
+                				    	data.push(dataElement);
+                				    }
+
+                				    return {
+                				        header : headerLine,
+                				        body: data
+                				    };
+                		}
 		
 	
 	module.exports = {
 		loadCSVFileAsString: function(csvFilePath, callbackfunc){
 			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
 				   if (err) throw err;
-//				    console.log(data);
+
 				   if(callbackfunc){
 					   callbackfunc(str);
 				   }
@@ -163,24 +209,37 @@
 		loadCSVFile:function(csvFilePath, header, callbackfunc){
 			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
 				   if (err) throw err;
-//				    console.log(str);
 				  
 				    data = parseCSVData(str, header);
-				    
-//				    console.log("csv data is loaded");
-//				    console.log(data);
-				    
+
 				    if(callbackfunc){
 				    	callbackfunc(data);
 				    }
 			});
 		},
+		loadCSVFile2:function(csvFilePath, header, callbackfunc){
+              fs.readFile(csvFilePath, 'utf-8', (err, str) => {
+                	if (err) throw err;
+
+                	data = parseCSVData2(str, header);
+
+                	if(callbackfunc){
+                			callbackfunc(data);
+                	}
+               });
+        },
 		loadCSVFileSync: function(csvFilePath, header){
 			var str = fs.readFileSync(csvFilePath, 'utf-8');
 				    data = parseCSVData(str, header);
 				    
 					return data;
 		},
+		loadCSVFileSync2: function(csvFilePath, header){
+            var str = fs.readFileSync(csvFilePath, 'utf-8');
+                	data = parseCSVData2(str, header);
+
+                	return data;
+        },
 		readFile: function(filePath, callbackfunc){
 			fs.readFile(filePath, 'utf-8', (err, str) => {
 				   if (err) {
@@ -258,6 +317,9 @@
 		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,
+			listFilesSync: function(folder){
+               return fs.readdirSync(folder);
+			},
 			readFilesSync : readFilesSync,
 			readFileSync: readFileSync,
 			writeFileSync: writeFileSync,

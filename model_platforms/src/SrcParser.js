@@ -178,8 +178,13 @@
 //				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.callGraph, ModelOutputDir);
 				
 //				debug.writeJson2("control_flow_graph", controlFlowGraph);
+<<<<<<< HEAD
 				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodUnits);
+=======
+
+				domainModelInfo = domainModelConstruction.createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.extendsGraph, codeAnalysisResults.compositionGraph, codeAnalysisResults.dicMethodUnits, dicResponseMethodUnits, codeAnalysisResults.dicClassUnits);
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 				
 				Model.DomainModel = domainModelInfo.DomainModel;
 				

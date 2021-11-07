@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 app.get('/save_model', function(req, res){
 
 	umlModelInfoManager.save_model_utility(function(){
@@ -49,3 +50,7 @@ console.log(jsonDatalist);
 
        }
 
+=======
+var UMLModelSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator1.js');
+UMLModelSizeMetricEvaluator.evaluateDomainModel();
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8

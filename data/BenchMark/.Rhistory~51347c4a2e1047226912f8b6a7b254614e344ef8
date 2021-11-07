@@ -1,0 +1,100 @@
+UCP_Dataset_OnlineV1.0 <- read.csv("D:/Research Projects/UMLx/data/BenchMark/UCP_Dataset_OnlineV1.0.csv", header=FALSE)
+View(UCP_Dataset_OnlineV1.0)
+china <- read.csv("D:/Research Projects/UMLx/data/BenchMark/china.csv")
+View(china)
+View(china)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+View(UCP_Dataset_OnlineV1.0)
+ucp_data <- UCP_Dataset_OnlineV1.0
+uc_num <- ucp_data[,"Simple UC"] + ucp_data[,"Average UC"]+ucp_data[,"Complex UC"]
+corr(uc_num, ucp_data$Real_Effort_Person_Hours)
+View(ucp_data)
+View(ucp_data)
+UCP_Dataset <- read.csv2("D:/Research Projects/UMLx/data/BenchMark/UCP_Dataset.csv")
+View(UCP_Dataset)
+ucp_data <- UCP_Dataset
+uc_num <- ucp_data[,"Simple UC"] + ucp_data[,"Average UC"]+ucp_data[,"Complex UC"]
+corr(uc_num, ucp_data$Real_Effort_Person_Hours)
+View(ucp_data)
+ucp_data <- UCP_Dataset
+uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+corr(uc_num, ucp_data$Real_Effort_Person_Hours)
+uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+cor(uc_num, ucp_data$Real_Effort_Person_Hours)
+print(uc_num)
+ucp_data <- UCP_Dataset
+uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+cor(uc_num, ucp_data$Real_Effort_Person_Hours)
+ucp_data$uc_num <- uc_num
+print(uc_num)
+lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
+ggplot(ucp_data, aes(x = uc_num, y = Real_Effort_Person_Hours)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+rs)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALS
+ggplot(ucp_data, aes(x = uc_num, y = Real_Effort_Person_Hours)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+ggplot(ucp_data, aes(x = uc_num, y = Real_Effort_Person_Hours)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+ggplot(ucp_data, aes(x = uc_num, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"EF"]*ucp_data[,"TCF"]
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucP_data$UCP <- UCP
+ggplot(ucp_data, aes(x = uc_num, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucP_data$UCP <- ucp
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucp_data$UCP <- ucp
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+UCP_Dataset_OnlineV1.1 <- read.csv("D:/Research Projects/UMLx/data/BenchMark/UCP_Dataset_OnlineV1.1.csv")
+View(UCP_Dataset_OnlineV1.1)
+View(UCP_Dataset_OnlineV1.1)
+ucp_data <- UCP_Dataset_OnlineV1.1
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+transaction_data <- read.csv('correlation-benchmark-11-11.csv')
+rownames(transaction_data) <- transaction_data$Project
+transaction_data$Project <- NULL
+tran_cor <- cor(transaction_data)
+useCaseBenchmark <- read.csv("UCP_Dataset_OnlineV1.1.csv")
+albrecht <- read.csv("albrecht.csv")
+china <- read.csv("china.csv")
+kermerer <- read.csv("kermerer.csv")
+miyazaki94 <- read.csv("miyazaki94.csv")
+kermerer <- read.csv("kermerer.csv")
+kemerer <- read.csv("kermerer.csv")
+kemerer <- read.csv("kemerer.csv")
+shilhavy <- read.csv("UCP_Dataset_OnlineV1.1.csv")
+corr(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+cor(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+cor(albrecht$Effort, albrecht$Input+albrecht$Output+albrecht$Inquiry)
+cor(china$Effort, china$Input+china$Output+china$Enquiry)
+cor(kemerer$EffortMM, kemerer$KSLOC)
+cor(miyazaki94$KLOC, miyazaki94$MM)
+cor.test(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+cor.test(albrecht$Effort, albrecht$Input+albrecht$Output+albrecht$Inquiry)
+cor.test(miyazaki94$KLOC, miyazaki94$MM)
+cor.test(kemerer$EffortMM, kemerer$KSLOC)
+cor.test(shilhavy$Real_Effort_Person_Hours, shilhavy$Simple_UC+shilhavy$Average_UC+shilhavy$Complex_UC)
+cor.test(albrecht$Effort, albrecht$Input+albrecht$Output+albrecht$Inquiry)
+cor.test(china$Effort, china$Input+china$Output+china$Enquiry)
+cor.test(kemerer$EffortMM, kemerer$KSLOC)
+cor.test(miyazaki94$KLOC, miyazaki94$MM)

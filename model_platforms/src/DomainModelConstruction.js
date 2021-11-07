@@ -7,6 +7,13 @@
  * Identify the stimuli.
  * Identify the boundary.
  * Identify the sytem components.....
+ *
+ * This file create a domain model by grouping the class units into domain elements.
+ * The domain elements provides system component level information.
+ * Class units are also classified into view, control, entity for operational transaction analysis.
+ * The rules are defined as follows:
+ *      1. response class units are view components.
+ *      2. entities are the class units that are 1. have more than 1 attributes, 2 used as parameters/return types, 3 don't change attributes of other class units.
  */
 (function() {
 	var fs = require('fs');
@@ -17,7 +24,7 @@
 	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
 	var stringSimilarity = require('string-similarity');
 	
-function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, extendsGraph, compositionGraph, dicMethodUnits, dicResponseMethodUnits){
+function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, extendsGraph, compositionGraph, dicMethodUnits, dicResponseMethodUnits, dicClassUnits){
         /*
         *   The elements of the domain model;
         *   Generally determine the type of the component
@@ -34,7 +41,17 @@ function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGr
 			Generalizations: [],
 			OutputDir : ModelOutputDir+"/domainModel",
 			AccessDir : ModelAccessDir+"/domainModel",
-			DiagramType : "class_diagram"
+			DiagramType : "class_diagram",
+		    dicComponents: dicComponents, //additional information for assessing the class level of information
+		    dicClassComponent: dicClassComponent,
+		    dicClassUnits: dicClassUnits,
+			callGraph: callGraph,
+			accessGraph: accessGraph,
+			typeDependencyGraph: typeDependencyGraph,
+			extendsGraph: extendsGraph,
+			compositionGraph: compositionGraph,
+			dicMethodUnits: dicMethodUnits,
+			dicResponseMethodUnits: dicResponseMethodUnits
 		}
 
 		var domainElementsByID = [];
@@ -49,32 +66,34 @@ function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGr
 				Name: component.name,
 				_id: 'c'+component.UUID.replace(/\-/g, "_"),
 				Attributes: [],
-				Operations: []
+				Operations: [],
+				isResponse: false
 			};
 
-			for(var i in component.classUnits){
-			    var classUnit = component.classUnits[i];
-			    for(var j in classUnit.methodUnits){
-                       var methodUnit = classUnit.methodUnits[j];
+			for(var j in component.classUnits){
+			    var classUnit = component.classUnits[j];
+			    for(var k in classUnit.methodUnits){
+                       var methodUnit = classUnit.methodUnits[k];
                        var parameters = methodUnit.signature.parameterUnits;
-                       				if (parameters == null) {
-                       					parameters = [];
-                       		    	}
-                       				var operation = {
-                       					Name: methodUnit.signature.name,
-                       					_id: 'a'+methodUnit.UUID.replace(/\-/g, ""),
-                       					Parameters: parameters.map((param)=>{return {Type: param.type}}),
-                       					ReturnVal: {}
-                       				}
+                       if (parameters == null) {
+                            parameters = [];
+                       	}
 
-                       				domainElement.Operations.push(operation);
+                       var operation = {
+                       		Name: methodUnit.signature.name,
+                       		_id: 'a'+methodUnit.UUID.replace(/\-/g, ""),
+                       		Parameters: parameters.map((param)=>{return {Type: param.type}}),
+                       		ReturnVal: {}
+                       	}
+
+                       	domainElement.Operations.push(operation);
 
                        if(dicResponseMethodUnits[methodUnit.UUID]){
-                            domainElement.Type = "boundary";
+                            domainElement.isResponse = true;
                        }
-                       else{
-                            domainElement.Type = "control";
-                       }
+//                       else if(domainElement.Type != "boundary"){
+//                            domainElement.Type = "control";
+//                       }
 			    }
 
 			    for(var j in classUnit.attrUnits){
@@ -96,9 +115,15 @@ function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGr
 
 			}
 
-			if(domainElement.Attributes.length >= 1.5 * domainElement.Operations.length){
-                                        domainElement.Type = "entity";
-                                   }
+            if(domainElement.isResponse){
+                domainElement.Type = "boundary";
+            }
+			else if(domainElement.Attributes.length >= 1.5 * domainElement.Operations.length){
+                 domainElement.Type = "entity";
+            }
+            else {
+                domainElement.Type = "control"
+            }
 
 			domainElements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;

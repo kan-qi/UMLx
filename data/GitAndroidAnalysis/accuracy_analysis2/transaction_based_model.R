@@ -26,6 +26,7 @@ library(ggplot2)
 library(MASS)
 library(mvtnorm)
 library(invgamma)
+library(classInt)
 
 combineData <- function(transactionFiles) {
 	# Combines all the data from multiple transaction analytics files into one
@@ -37,6 +38,10 @@ combineData <- function(transactionFiles) {
 	# Returns:
 	#   A data frame containing all the data in all the files.
   
+  if(length(transactionFiles) == 0){
+    data <- data.frame(TL = numeric(), TD = numeric(),  DETs = numeric())
+  }
+  else{
 	data <- NULL
 	
   	for(i in 1:length(transactionFiles)) {
@@ -48,7 +53,7 @@ combineData <- function(transactionFiles) {
   	    data <- rbind(data, transactionFile)
   	  }
   	}
-	
+  }
 	data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
 	data <- na.omit(data)
 	data
@@ -71,15 +76,8 @@ empiricalStats <- function(data){
   u = quantile(data, 0.975))
 }
 
-parametricKStest <- function(dist){
-  # perform parametric kermogorov smirnov test for goodness of fit of gamma distribution. 
-  #
-  # Args:
-  #   dist: an empirical distribution to perform goodness of fit test
-  #
-  # Returns:
-  #   the p-value of k-s test
-  
+
+distFit <- function(dist){
   tableValues <- table(dist)
   
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
@@ -92,6 +90,18 @@ parametricKStest <- function(dist){
   # Check result
   shape = coefficients(fit.gamma)["shape"]
   rate = coefficients(fit.gamma)["rate"]
+  
+  list(shape=shape, rate=rate)
+}
+
+parametricKStest <- function(dist, shape, rate){
+  # perform parametric kermogorov smirnov test for goodness of fit of gamma distribution. 
+  #
+  # Args:
+  #   dist: an empirical distribution to perform goodness of fit test
+  #
+  # Returns:
+  #   the p-value of k-s test
   
   ksResult <- ks.test(dist, "pgamma", shape, rate)
   ks = ksResult[['statistic']]
@@ -125,7 +135,7 @@ parametricKStest <- function(dist){
   parametric_test = sum(tests)/runs
   
   parametric_test
-
+  
 }
 
 chisqTest <- function(dist){
@@ -159,7 +169,7 @@ chisqTest <- function(dist){
   1-pchisq(X2,gdl) ## p-value
 }
 
-discretize <- function(shape, rate, n) {
+discretize <- function(dataset, n, fit=FALSE) {
 	# Discretizes continuous data into different levels of complexity based on
 	# quantiles of normal distribution defined by the data.
 	#
@@ -170,14 +180,29 @@ discretize <- function(shape, rate, n) {
 	# Returns:
 	#   A vector of cut points
   
-	if (n <= 1) {
-		return(c(-Inf, Inf))
-	}
+  if (n <= 1) {
+    return(c(-Inf, Inf))
+  }
   
+  if(fit){
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	
-	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
+  params <- distFit(dataset)
+	cutPoints <- qgamma(quantiles, params$shape, params$rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
+  }
+  else{
+  cutPoints <- as.vector(classIntervals(dataset, n)$brks)
+  cutPoints[1] <- -Inf
+  cutPoints[length(cutPoints)] <- Inf
+  lastPoint <- -1;
+    for(i in 1:length(cutPoints)){
+      if(cutPoints[i] <= lastPoint){
+        cutPoints[i] = lastPoint+0.1;
+      }
+      lastPoint = cutPoints[i]
+    }
+  cutPoints
+  }
 }
 
 classify <- function(data, cutPoints) {
@@ -193,6 +218,8 @@ classify <- function(data, cutPoints) {
   #   A vector that indicates how many data points fall into each bin.
   #
   
+  #data <- fileData
+  
   numVariables <- nrow(cutPoints)
   numBins <- ncol(cutPoints) - 1
   if(numVariables == 0){
@@ -207,12 +234,14 @@ classify <- function(data, cutPoints) {
     names(result) <- genColNames(nrow(cutPoints), numBins)
     if(nrow(data) > 0){
       for (i in 1:nrow(data)) {
-      classifications <- c()
+      sumCoord <- 0
+      #classifications <- c()
       for (p in rownames(cutPoints)) {
         parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-        classifications <- c(classifications, parameterResult)
+        #classifications <- c(classifications, parameterResult)
+        sumCoord <- sumCoord + parameterResult
       }
-      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
+      combinedClass <- paste("l", sumCoord-nrow(cutPoints)+1, sep = "")
       result[combinedClass] <- result[combinedClass] + 1
       }
     }
@@ -220,7 +249,7 @@ classify <- function(data, cutPoints) {
   }
 }
 
-calcMMRE <- function(testData, pred) {
+#calcMMRE <- function(testData, pred) {
   # Calculates mean magnitude relative error (MMRE).
   #
   # Args:
@@ -229,12 +258,12 @@ calcMMRE <- function(testData, pred) {
   #
   # Returns:
   #   MMRE
-  mmre <- abs(testData - pred)/testData
-  mean_value <- mean(mmre)
-  mean_value
-}
+#  mmre <- abs(testData - pred)/testData
+#  mean_value <- mean(mmre)
+#  mean_value
+#}
 
-calcPRED <- function(testData, pred, percent) {
+#calcPRED <- function(testData, pred, percent) {
   # Calculates percentage relative error deviation (PRED).
   #
   # Args:
@@ -245,11 +274,22 @@ calcPRED <- function(testData, pred, percent) {
   # Returns:
   #   PRED
   
-  value <- abs(testData - pred)/testData
-  percent_value <- percent/100
-  pred_value <- value <= percent_value
-  mean(pred_value)
-}
+#  value <- abs(testData - pred)/testData
+#  percent_value <- percent/100
+#  pred_value <- value <= percent_value
+#  mean(pred_value)
+#}
+
+
+mre <- function(x) abs(x[1] - x[2])/x[2]
+mmre <- function(mre) mean(mre)
+pred15 <- function(mre) length(mre[mre<=0.15])/length(mre)
+pred25 <- function(mre) length(mre[mre<=0.25])/length(mre)
+pred50 <- function(mre) length(mre[mre<=0.50])/length(mre)
+mdmre <- function(mre) median(mre)
+
+mse <-  function(x) mean((x[, 1] - x[, 2])^2)
+mae<- function(x) sum(apply(x, 1, function(x) abs(x[1] - x[2])))/length(x)
 
 crossValidate <- function(data, k, fit_func, predict_func){
   # Performs k-fold cross validation with Bayesian linear regression as training 
@@ -270,7 +310,11 @@ crossValidate <- function(data, k, fit_func, predict_func){
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
   foldMMRE <- vector(length = k)
-  foldPRED <- vector(length = k)
+  foldPRED15 <- vector(length = k)
+  foldPRED25 <- vector(length = k)
+  foldPRED50 <- vector(length = k)
+  foldMDMRE <- vector(length = k)
+  foldMAE <- vector(length = k)
   for (i in 1:k) {
     testIndexes <- which(folds == i, arr.ind = TRUE)
     testData <- data[testIndexes, ]
@@ -278,12 +322,103 @@ crossValidate <- function(data, k, fit_func, predict_func){
     
     model <- fit_func(trainData)
     predicted = predict_func(model, testData)
+    actual = testData$Effort
+    names(actual) <- rownames(testData)
+    #print("predicted:")
+    #print(predicted)
+    #print("actual:")
+    #print(testData$Effort)
+    intersectNames <- intersect(names(predicted), names(actual))
+    #print(intersectNames)
+    predict_vs_actual = data.frame(predicted = predicted[intersectNames],actual=actual[intersectNames])
+    #print(predict_vs_actual)
+    mre_vals = apply(predict_vs_actual, 1, mre)
+    #foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    #foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+    # relative errors
+    foldMMRE[i] <- mmre(mre_vals)
+    foldPRED15[i] <- pred15(mre_vals)
+    foldPRED25[i] <- pred25(mre_vals)
+    foldPRED50[i] <- pred50(mre_vals)
+    foldMDMRE[i] <- mdmre(mre_vals)
     
-    foldMSE[i] <- mean((predicted - testData$Effort)^2)
-    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
-    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+    # absolute errors
+    foldMSE[i] <- mse(predict_vs_actual)
+    foldMAE[i] <- mae(predict_vs_actual)
   }
-  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+  results <- c("MSE" = mean(foldMSE),
+               "MAE" = mean(foldMAE),
+               "MMRE" = mean(foldMMRE),
+               "PRED15" = mean(foldPRED15),
+               "PRED25" = mean(foldPRED25),
+               "PRED50" = mean(foldPRED50),
+               "MDMRE" = mean(foldMDMRE)
+               )
+}
+
+# rank the models
+rankModels <- function(accuracyMeasures){
+  accuracy_metrics <- names(accuracyMeasures)
+  cvRankResults <- data.frame(matrix(nrow=nrow(accuracyMeasures), ncol=0))
+  print(accuracy_metrics)
+  for (i in 1:length(accuracy_metrics)){
+    g = accuracy_metrics[i]
+    #print(g)
+    selectedData <- data.frame(matrix(nrow=nrow(accuracyMeasures), ncol=0))
+    selectedData[g] <- accuracyMeasures[, g]#delete the metric_labels
+    #print(selectedData)
+    if(g == "MMRE" || g == "MDMRE" || g == "MAE" || g == "MSE"){
+      selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,g], ties.method = "min")
+    }else{
+      selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,g], ties.method = "min")
+    }
+    
+    cvRankResults <- cbind(cvRankResults, selectedData)
+  }
+  
+  
+  #make a total rank(rank*) base on the ranks
+  rank_sum <- vector(mode = "integer",length = nrow(cvRankResults))
+  for (i in 1:nrow(cvRankResults)){
+    selectedData <- cvRankResults[i,]
+    for(j in 1:length(accuracy_metrics)){
+      rank_sum[i] <- rank_sum[i] + selectedData[,2*j]
+    }
+  }
+  
+  rank_sum <- rank(rank_sum, ties.method = "min")
+  #print(rank_sum)
+  cvRankResults["rank*"] <- rank_sum
+  cvRankResults
+}
+
+#profile iteration data
+profileIterationData <- function(iterResults){
+  lcuts <- lapply(iterResults, function(iterationResult){
+    iterationResult$bayesModel$cuts
+  })
+  
+  laccuracy <- as.data.frame(t(sapply(iterResults, function(iterationResult){
+    iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")]
+    #iterationResult$bayesModelAccuracyMeasure[c('MMRE', 'PRED', 'MSE')]
+  })))
+  
+  #print(laccuracy)
+  accuracyRanks <- rankModels(laccuracy)
+  #print(as.matrix(accuracyRanks))
+  
+  trainedModels <- lapply(iterResults, function(iterationResult){
+      trainedModel = cbind(as.data.frame(lapply(iterationResult$bayesModel$weights,Bayes.sum)),
+        as.data.frame(Bayes.sum(iterationResult$bayesModel$effortAdj)),
+        as.data.frame(Bayes.sum(iterationResult$bayesModel$sd))
+      )
+      tm <- t(as.matrix(trainedModel))
+      colnames(tm) <- 	c("mean","se","t","median","CrI", "CrI")
+      rownames(tm) <- c(names(iterationResult$bayesModel$weights), 'effortAdj', "sd")
+      tm
+  })
+  
+  list(lcuts = lcuts, laccuracy = round(accuracyRanks, 2), trainedModels = trainedModels)
 }
 
 
@@ -626,19 +761,35 @@ predict.blm <- function(model, newdata) {
   #newdata = testData
   #model = bayesianModel
   #print(mean(model[, col]))
+	
+	size <- calculateSize(model, newdata)
+	adj <- mean(model[,"effortAdj"])
+	size*adj
+}
+
+calculateSize <- function(model, data){
+  # Args:
+  #   model: a bayes linear regression model
+  #   data: data to perform transaction based size calculation
+  #
+  # Returns:
+  #   Vector of calculated transaction based size measurements
+  #newdata <- subset(newdata, !colnames(newdata) %in% c("Effort"))
+  
+  #data = testData
+  #model = bayesianModel
+  #print(mean(model[, col]))
   
   `%ni%` <- Negate(`%in%`)
-  newdata <- subset(newdata,select = colnames(newdata) %ni% c("Effort"))
+  data <- subset(data,select = colnames(data) %ni% c("Effort"))
   
-	ret <- apply(newdata, 1, function(x) {
-				effort <- 0
-				for (col in colnames(newdata)) {
-					effort <- effort + (mean(model[, col]) * x[col])
-				}
-				effort
-			})
-	
-	ret*mean(model[,"effortAdj"])
+  ret <- apply(data, 1, function(x) {
+    size <- 0
+    for (col in colnames(data)) {
+      size <- size + (mean(model[, col]) * x[col])
+    }
+    size
+  })
 }
 
 calEffortAdj <- function(regressionData){
@@ -651,7 +802,7 @@ calEffortAdj <- function(regressionData){
   #   an approximation of effort adjustment factor based on linear regression with prior weights
   
   summary <- summary(priorFit(regressionData))
-  print(summary)
+  #print(summary)
 
   effortAdj <- c(mean = summary$coefficients["transactionSum","Estimate"], var=summary$coefficients["transactionSum","Std. Error"]^2)
 }
@@ -686,8 +837,11 @@ readTransactionData <- function(filePath){
   #
   # Returns:
   #   the fitted linear model using the prior weights
-  
-  if (!file.exists(filePath)) {
+  #filePath = "d:/AndroidAnalysis/GatorAnalysisResults4/S1W1L1_5_29/prey_S1W1L1_2019-4-28@1559052797326_analysis/filteredTransactionEvaluation.csv"
+  if(!is.null(cachedTransactionFiles[[filePath]])){
+    #print("cache exits")
+    cachedTransactionFiles[[filePath]]
+  } else if (!file.exists(filePath)) {
     print(filePath)
     print("file doesn't exist")
     if(is.null(cachedTransactionFiles[[filePath]])){
@@ -695,9 +849,6 @@ readTransactionData <- function(filePath){
                                                         TD = numeric(), 
                                                         DETs = numeric())
     }
-    cachedTransactionFiles[[filePath]]
-  }
-  else if(!is.null(cachedTransactionFiles[[filePath]])){
     cachedTransactionFiles[[filePath]]
   }
   else {
@@ -751,6 +902,7 @@ loadTransactionData <- function(modelData){
   transactionFiles <- list()
   for (project in projects) {
     filePath <- transactionFileList[project, "transaction_file"]
+    #print(filePath)
     fileData <- readTransactionData(filePath)
     transactionFiles[[project]] <- fileData
     numOfTrans = numOfTrans + nrow(fileData)
@@ -792,6 +944,7 @@ generateRegressionData <- function(projects, cutPoints, effortData, transactionF
   regressionData <- as.data.frame(regressionData)
 }
 
+
 performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each
   # bin through linear regression.
@@ -808,7 +961,7 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   # Returns:
   #   A list in which the ith index gives the results of the search for i bins.
   
-  #n = 1
+  #n = 6
   #dataset = modelData
   #parameters = c("TL", "TD", "DETs")
   #k = 5
@@ -817,46 +970,56 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
   
   #load transaction data from the datasheet
   transactionData <- loadTransactionData(dataset)
+    
+  #distParams = list();
+  #distParams[['TL']] = list(shape=6.543586, rate=1.160249);
+  #distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
+  #distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
   
-  effortData <- transactionData$effort
-  combinedData <- transactionData$combined
-  transactionFiles = transactionData$transactionFiles
-  projects <- names(transactionData$transactionFiles)
   
-  distParams = list();
-  distParams[['TL']] = list(shape=6.543586, rate=1.160249);
-  distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
-  distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
+  #Ks parameteric test
+  #distParams = list();
+  #print(combinedData[,])
+  #hist(combinedData[combinedData$TL < 20 & combinedData$TL > 2,"TL"])
+  #hist(combinedData[combinedData$TD < 100, "TD"])
+  #hist(combinedData[combinedData$DETs < 10, "DETs"])
+  #n <- 5
+  #quantiles <- seq(1/n, 1 - (1/n), 1/n)
+  #print(classIntervals(combinedData[combinedData$DETs < 30, "DETs"], 6, style = 'quantile'))
+  #print(classIntervals(combinedData[,"TL"], 4)$brks)
+  #print(quantize(combinedData[,"TL"], quantiles))
+  
+  #distParams[['TL']] = (combinedData[combinedData$TL < 20 & combinedData$TL > 2,"TL"]);
+  #distParams[['TD']] = distFit(combinedData[combinedData$TD < 1000, "TD"]);
+  #distParams[['DETs']] = distFit(combinedData[combinedData$DETs < 10, "DETs"]);
   
   #paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   #paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
-  
+ 
   if(length(parameters) == 0){
     n = 1
   }
   
   searchResults <- list()
-  
   for (i in seq(1,n)) {
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
-      cutPoints[p, ] <- discretize(distParams[[p]][['shape']], distParams[[p]][['rate']], i)
+      cutPoints[p, ] <- discretize(transactionData$combined[,p], i)
     }
-    
     #generate classified regression data
-    regressionData <- generateRegressionData(projects, cutPoints, effortData, transactionFiles)
+    regressionData <- generateRegressionData(transactionData$projects, cutPoints, transactionData$effort, transactionData$transactionFiles)
     
     `%ni%` <- Negate(`%in%`)
     paramVals <- bayesfit(regressionData, 10000, 500)
     bayesianModel = list()
-    bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort"))
+    bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort", "sd"))
     bayesianModel$effortAdj = paramVals[,"effortAdj"] 
     bayesianModel$sd = paramVals[,"sd"] 
     bayesianModel$cuts <- cutPoints
     
     bm_validationResults <- crossValidate(regressionData, k, function(trainData) bayesfit(trainData, 1000, 500), predict.blm)
-    print(bm_validationResults)
+    #print(bm_validationResults)
     
     #the regression model fit
     regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData));
@@ -910,7 +1073,7 @@ predict.swt <- function(trainedModel, testData){
   predicted
 }
 
-m_fit.tm1 <- function(swtiii,dataset){
+fit.swt <- function(swtiii,dataset){
   # the model fitting function which would be repeated called during the cross validation and bootstrapping function
   #
   # Args:
@@ -941,23 +1104,296 @@ m_fit.tm1 <- function(swtiii,dataset){
   swtiii
 }
 
+m_fit.tm3 <- function(swtiii,dataset){
+  
+  print("swtiii model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swtiii, dataset)
+}
+
 # for model testing
-m_predict.tm1 <- function(swtiii, testData){
-  # the model fitting function which would be repeated called during the cross validation and bootstrapping function
-  #
-  # Args:
-  #   swtiii: a list of cut points, which are the hyper parameters of the transaction-based model.
-  #   dataset: the dataset based on which the model is fitted
-  #
-  # Returns:
-  #   the fitted transaction-based model
+m_predict.tm3 <- function(swtiii, testData){
   
   print("swtiii predict function")
   
   predict.swt(swtiii$m, testData)
 }
 
-trainsaction_based_model <- function(modelData){
+m_fit.tm2 <- function(swtii,dataset){
+  
+  print("swtii model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swtii, dataset)
+}
+
+# for model testing
+m_predict.tm2 <- function(swtii, testData){
+  
+  print("swtii predict function")
+  
+  predict.swt(swtii$m, testData)
+}
+
+m_fit.tm1 <- function(swti,dataset){
+  
+  print("swti model training")
+  #swtiii <- models$tm1
+  #dataset <- modelData
+  fit.swt(swti, dataset)
+}
+
+# for model testing
+m_predict.tm1 <- function(swti, testData){
+  
+  print("swti predict function")
+  
+  predict.swt(swti$m, testData)
+}
+
+transaction_based_model <- function(modelData){
+  # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
+  #
+  # Args:
+  #   modelData: a held-out dataset to search for the hyperparameter
+  #
+  # Returns:
+  #   the list of cuts points for the individual dimensions
+  
+  models = list()
+  
+  #cachedTransactionFiles = list()
+  SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  
+  #SWTIIIresults <- models$tm3$SWTIIIresults
+  accuracyMeasures <- as.data.frame(t(sapply(SWTIIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED')]
+    #     iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")] gives errors as some fields are NA
+
+  })))
+  accuracyRanks <- rankModels(accuracyMeasures)
+  #print(accuracyRanks)
+  #print(accuracyMeasures)
+  #SWTIIIModelSelector <- 3
+  SWTIIIModelSelector <- which.min(accuracyRanks[,'rank*'])
+  print(paste("swtiii: ", SWTIIIModelSelector, sep=""))
+ 
+  modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
+  
+  models$tm3 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIIIresults = SWTIIIresults
+  )
+  
+  SWTIIresults <- performSearch(6, modelData, c("TL", "TD"))
+  #SWTIIModelSelector <- 4
+  
+  #SWTIIresults <- models$tm2$SWTIIresults
+  accuracyMeasures <- as.data.frame(t(sapply(SWTIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED')]
+    #     iterResults$bayesModelAccuracyMeasure[c('MMRE', 'PRED25', 'MAE', "MDMRE")] gives errors as some fields are NA
+
+  })))
+  #print(accuracyMeasures)
+  accuracyRanks <- rankModels(accuracyMeasures)
+  #print(accuracyRanks)
+  SWTIIModelSelector <- which.min(accuracyRanks[,'rank*'])
+  #print(SWTIIModelSelector)
+  #print(paste("swtiii: ", SWTIIIModelSelector, sep=""))
+  
+  modelParams = SWTIIresults[[SWTIIModelSelector]][["bayesModel"]]
+  
+  models$tm2 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIIresults = SWTIIresults
+  )
+  
+  #cachedTransactionFiles = list()
+  SWTIresults <- performSearch(6, modelData, c())
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIModelSelector <- 1
+  
+  modelParams = SWTIresults[[SWTIModelSelector]][["bayesModel"]]
+  
+  models$tm1 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIresults = SWTIresults
+  )
+  
+  models
+  
+}
+
+
+trainsaction_based_model1 <- function(modelData){
+  # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
+  #
+  # Args:
+  #   modelData: a held-out dataset to search for the hyperparameter
+  #
+  # Returns:
+  #   the list of cuts points for the individual dimensions
+  
+  models = list()
+  
+  #cachedTransactionFiles = list()
+  SWTIresults <- performSearch(6, modelData, c())
+  #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  SWTIModelSelector <- 1
+  
+  modelParams = SWTIresults[[SWTIModelSelector]][["bayesModel"]]
+  
+  models$tm1 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIresults = SWTIresults
+  )
+  
+  models
+  
+}
+
+m_profile.tm1 <- function(model, dataset){
+  #model = trainedModels[['tm1']]
+  #dataset = modelData
+  
+  swti = model
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData1 <- generateRegressionData(projects, swti$m$cuts, effortData, transactionFiles)
+ 
+  regLevels1 <- colnames(regressionData1)[!(colnames(regressionData1) %in% c("Effort"))]
+
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels1)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swti_levels <- paste("swti_", regLevels1, sep="")
+  
+  colnames(profileData) <- c(swti_levels, "SWTI")
+  
+  regress1 <- as.matrix(regressionData1[,regLevels1])
+  rownames(regress1) <- rownames(regressionData1)
+  colnames(regress1) <- swti_levels
+  #print(regress1)
+  profileData[,swti_levels] <- regress1
+  
+  profileData$SWTI <- calculateSize(as.matrix(swti$m$paramVals), regressionData1)
+ 
+  profileData
+}
+
+m_profile.tm2 <- function(model, dataset){
+  #model = trainedModels[["tm2"]]
+  #dataset = modelData
+  
+  swtii = model
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData2 <- generateRegressionData(projects, swtii$m$cuts, effortData, transactionFiles)
+ 
+  regLevels2 <- colnames(regressionData2)[!(colnames(regressionData2) %in% c("Effort"))]
+  
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels2)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swtii_levels <- paste("swtii_", regLevels2, sep="")
+  
+  colnames(profileData) <- c(swtii_levels, "SWTII")
+  
+  regress2 <- as.matrix(regressionData2[,regLevels2])
+  rownames(regress2) <- rownames(regressionData2)
+  colnames(regress2) <- swtii_levels
+  #print(regress1)
+  profileData[,swtii_levels] <- regress2
+  
+  profileData$SWTII <- calculateSize(as.matrix(swtii$m$paramVals), regressionData2) 
+
+  profileData
+}
+
+m_profile.tm3 <- function(model, dataset){
+  #dataset = modelData
+  
+  swtiii = model
+  
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  regressionData3 <- generateRegressionData(projects, swtiii$m$cuts, effortData, transactionFiles)
+  
+  regLevels3 <- colnames(regressionData3)[!(colnames(regressionData3) %in% c("Effort"))]
+  
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(regLevels3)+1)
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  swtiii_levels <- paste("swtiii_", regLevels3, sep="")
+  
+  colnames(profileData) <- c(swtiii_levels, "SWTIII")
+  
+  regress3 <- as.matrix(regressionData3[,regLevels3])
+  rownames(regress3) <- rownames(regressionData3)
+  colnames(regress3) <- swtiii_levels
+  #print(regress1)
+  profileData[,swtiii_levels] <- regress3
+  
+  profileData$SWTIII <- calculateSize(as.matrix(swtiii$m$paramVals), regressionData3) 
+
+  profileData
+}
+
+m_save.tm1 <- function(model){
+  swti = model
+  #save the trained model: swti to the files.
+  saveRDS(swti,file = "models/swti.Rdata")
+}
+
+m_save.tm2 <- function(model){
+  swtii = model
+  #save the trained model: swti to the files.
+  saveRDS(swtii,file = "models/swtii.Rdata")
+}
+
+m_save.tm3 <- function(model){
+  swtiii = model
+  #save the trained model: swti to the files.
+  saveRDS(swtiii,file = "models/swtiii.Rdata")
+}
+trainsaction_based_model3 <- function(modelData){
   # initiate the transaction-based model by performing a search of optimal classification of transactions, which are defined as a set of cut points
   #
   # Args:
@@ -969,11 +1405,55 @@ trainsaction_based_model <- function(modelData){
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
-  SWTIIIModelSelector <- 4
- 
+  #SWTIIIModelSelector <- 3
+  #SWTIIIresults <- models$tm3$SWTIIIresults
+  accuracyMeasures <- sapply(SWTIIIresults, function(iterResults){
+    iterResults$bayesModelAccuracyMeasure[c('PRED', 'MMRE')]
+  })
+  print(as.data.frame(t(accuracyMeasures)))
+  SWTIIIModelSelector <- which.max(accuracyMeasures)
+  #print(SWTIIIModelSelector)
+  
   modelParams = SWTIIIresults[[SWTIIIModelSelector]][["bayesModel"]]
-  swtiiiParams = list(
-    cuts = modelParams$cuts
+  
+  tm3 = list(
+    cuts = modelParams$cuts,
+    trainedModel = list(
+      weights = lapply(modelParams$weights,Bayes.sum),
+      effortAdj = Bayes.sum(modelParams$effortAdj),
+      sd = Bayes.sum(modelParams$sd)
+    ),
+    SWTIIIresults = SWTIIIresults
   )
+  
+}
+
+transaction_data_profile <- function(dataset){
+  transactionData <- loadTransactionData(dataset)
+  effortData <- transactionData$effort
+  combinedData <- transactionData$combined
+  transactionFiles <- transactionData$transactionFiles
+  projects <- names(transactionData$transactionFiles)
+  
+  column_names <- c("Trans", "Stm", "Comp", 
+                    "TL", "TL_SE", "TD",
+                    "TD_SE", "DETs", "DETs_SE")
+  profileData <- matrix(nrow=nrow(dataset), ncol=length(column_names))
+  profileData <- as.data.frame(profileData)
+  rownames(profileData) <- rownames(dataset)
+  
+  colnames(profileData) <- column_names
+  profileData$Trans <- dataset$Tran_Num
+  profileData$Stm <- dataset$Stimulus_Num
+  profileData$Comp <- dataset$Component_Num
+  attr_means <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, mean)})))
+  attr_sds <- as.data.frame(t(sapply(transactionFiles, function(x){sapply(x, sd)})))
+  profileData$TL <- attr_means$TL
+  profileData$TD <- attr_means$TD
+  profileData$DETs <- attr_means$DETs
+  profileData$TL_SE <- attr_sds$TL
+  profileData$TD_SE <- attr_sds$TD
+  profileData$DETs_SE <- attr_sds$DETs
+  profileData
 }
 

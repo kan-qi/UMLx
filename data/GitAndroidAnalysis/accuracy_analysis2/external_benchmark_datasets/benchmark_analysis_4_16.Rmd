@@ -1,0 +1,126 @@
+---
+title: "BenchMark_Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+
+library(ggplot2)
+```
+
+```{r}
+#Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#ucp_data <- UCP_Dataset
+#ucp_data <- UCP_Dataset_OnlineV1.1
+
+ucp_data <- read.csv("UCP_Dataset_OnlineV1.1.csv")
+
+uc_num <- ucp_data[,"Simple_UC"] + ucp_data[,"Average_UC"]+ucp_data[,"Complex_UC"]
+cor(uc_num, ucp_data$Real_Effort_Person_Hours)
+ucp_data$uc_num <- uc_num
+print(cor(ucp_data$uc_num, ucp_data$Real_Effort_Person_Hours))
+print(cor.test(ucp_data$uc_num,ucp_data$Real_Effort_Person_Hours))
+lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
+
+ucp.lm = lm(Real_Effort_Person_Hours ~ UCP, data=ucp_data)
+print(summary(ucp.lm)$r.squared)
+
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"EF"]*ucp_data[,"TCF"]
+ucp_data$UCP <- ucp
+print(cor(ucp_data$UCP, ucp_data$Real_Effort_Person_Hours))
+
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+
+fp_data <- read.csv("china.csv")
+fp_num <- fp_data[,"Input"]+fp_data[,"Output"]+fp_data[,"Enquiry"];
+fp_data$fp_num <- fp_num
+cor(fp_data$fp_num, fp_data$Effort)
+
+print(cor.test(fp_data$fp_num,fp_data$Effort))
+
+afp.lm = lm(AFP ~ Effort, data=fp_data)
+print(summary(afp.lm)$r.squared)
+
+albrecht_data <- read.csv("albrecht.csv")
+albrecht.lm = lm(AdjFP ~ Effort, data=albrecht_data)
+print(summary(albrecht.lm)$r.squared)
+
+kemerer_data <- read.csv("kemerer.csv")
+kemerer.lm = lm(AdjFP ~ EffortMM, data=kemerer_data)
+print(summary(kemerer.lm)$r.squared)
+
+miyazaki94_data <- read.csv("miyazaki94.csv")
+miyazaki94.lm = lm(KLOC ~ MM, data=miyazaki94_data)
+print(summary(miyazaki94.lm)$r.squared)
+  
+```
+
+```{r}
+transaction_data <- read.csv('correlation-benchmark-11-11.csv')
+rownames(transaction_data) <- transaction_data$Project
+transaction_data$Project <- NULL
+tran_cor <- cor(transaction_data)
+tran_cor['KSLOC', 'Effort'] = 0.647
+tran_cor['Effort', 'KSLOC'] = 0.647
+tran_cor['Component', 'Effort'] = 0.626
+tran_cor['Effort', 'Component'] = 0.626
+print(tran_cor)
+
+library(corrplot)
+corrplot(tran_cor, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+```
+
+
+```{r}
+g <- make_ring(10)
+tkplot(g)
+
+## Saving a tkplot() to a file programatically
+g <- make_star(10, center=10) 
+E(g)$width <- sample(1:10, ecount(g), replace=TRUE)
+lay <- layout_nicely(g)
+
+id <- tkplot(g, layout=lay)
+canvas <- tk_canvas(id)
+tcltk::tkpostscript(canvas, file="./output.eps")
+tk_close(id)
+
+## Setting the coordinates and adding a title label
+g <- make_ring(10)
+id <- tkplot(make_ring(10), canvas.width=450, canvas.height=500)
+
+canvas <- tk_canvas(id)
+padding <- 20
+coords <- norm_coords(layout_in_circle(g), 0+padding, 450-padding,
+                      50+padding, 500-padding)
+tk_set_coords(id, coords)
+
+width <- as.numeric(tkcget(canvas, "-width"))
+height <- as.numeric(tkcget(canvas, "-height"))
+tkcreate(canvas, "text", width/2, 25, text="My title",
+         justify="center", font=tcltk::tkfont.create(family="helvetica",
+         size=20,weight="bold"))
+```
+

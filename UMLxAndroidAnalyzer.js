@@ -169,8 +169,14 @@
                                 var modelJson = FileManagerUtil.readJSONSync(inputFile);
                                 //var modelJson = JSON.parse(FileManagerUtil.readJSONSync(inputFile).trim());
 
+<<<<<<< HEAD
                                 srcParser.isJSONBased = true;
 =======
+=======
+//                                				if(callbackfunc){
+                                                 //                                					callbackfunc(umlModelInfo);
+                                                 //
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 
                                             //var workDir = path.dirname(umlModelInfo.umlFilePath);
                                             //umlModelInfo = modelJson;

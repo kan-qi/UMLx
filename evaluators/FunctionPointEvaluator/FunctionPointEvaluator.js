@@ -260,25 +260,25 @@
 					EI += assessComplexity(DET, FTR, EIEvaluation);
 					NI++;
 					
-					ERY++;
-					WRT++;
+					ERY += transaction["FPAnalytics"].boundaries;
+					WRT += transaction["FPAnalytics"].entities;
 				}
 				else if (functionalOperations.indexOf("EO") > -1) {
-					DM += assessComplexity(DET, FTR, EOEvaluation);
+					EO += assessComplexity(DET, FTR, EOEvaluation);
 					NE++;
-					
-					EXT++;
-					RED++;
+
+					EXT += transaction["FPAnalytics"].boundaries;
+					RED += transaction["FPAnalytics"].entities;
 				}
 				else {
 					EQ += assessComplexity(DET, FTR, EQEvaluation);
 					NI++;
 					NE++;
 
-					ERY++;
-					EXT++;
-					WRT++;
-					RED++;
+					ERY += 0.67*transaction["FPAnalytics"].boundaries;
+					EXT += 0.33*transaction["FPAnalytics"].boundaries;
+					WRT += 0.33*transaction["FPAnalytics"].entities;
+					RED += 0.67*transaction["FPAnalytics"].entities;
 				}
 				
 					FN ++;
@@ -297,6 +297,7 @@
 			useCaseInfo["FPAnalytics"].EXT = EXT;
 			useCaseInfo["FPAnalytics"].WRT = WRT;
 			useCaseInfo["FPAnalytics"].RED = RED;
+
 	}
 		
 	function assessComplexity(x, y, weightingSchema){
@@ -333,6 +334,71 @@
 		}
 		
 		return weight;
+	}
+
+
+	function dumpFunctionInfo(transactionalFunction, functionNum, useCaseName){
+
+    		var functionAnalyticsStr = "";
+
+    		var functionalOperation = "";
+
+    		for(var i in transactionalFunction['FPAnalytics'].functional){
+    		if(i > 0){
+    			functionalOperation += ";";
+    		}
+    		functionalOperation += transactionalFunction['FPAnalytics'].functional[i];
+
+    		}
+
+    		functionNum++;
+
+    		functionAnalyticsStr += functionNum+","+
+    		transactionalFunction.TransactionStr.replace(/,/gi, "")+","+
+    		transactionalFunction['FPAnalytics'].FunctionalTag+","+
+    		transactionalFunction['FPAnalytics'].DET+","+
+    		transactionalFunction['FPAnalytics'].FTR+","+
+    		transactionalFunction['FPAnalytics'].boundaries+","+
+    		transactionalFunction['FPAnalytics'].controls+","+
+    		transactionalFunction['FPAnalytics'].entities+","+
+    		transactionalFunction['FPAnalytics'].typeStr;
+
+
+    		return functionAnalyticsStr;
+    }
+
+
+	function dumpModelFunctionInfo(modelInfo, functionNum) {
+		// console.log("dump useCase analytics");
+
+		functionNum = !functionNum ? 0 : functionNum;
+
+		var functionAnalyticsStr = "";
+
+		var identifiedFunctions = {};
+
+		for(var i in modelInfo.UseCases){
+			var useCaseInfo = modelInfo.UseCases[i]
+
+			//need to eliminate the duplicate functions.
+			for(var j in useCaseInfo.Transactions){
+			var transactionalFunction = useCaseInfo.Transactions[j];
+
+			if(identifiedFunctions[transactionalFunction.TransactionStr]){
+				continue;
+			} else{
+				identifiedFunctions[transactionalFunction.TransactionStr] = 1;
+			}
+
+			functionAnalyticsStr += dumpFunctionInfo(transactionalFunction, functionNum++, useCaseInfo.Name)+"\n";
+		}
+		}
+
+		return {
+			functionAnalyticsStr: functionAnalyticsStr,
+			functionNum: functionNum
+		}
+
 	}
 	
 	function evaluateModel(modelInfo) {
@@ -386,13 +452,32 @@
 			}
 		}
 		
-		
+		//calculating ifpug function points
 		modelInfo["FPAnalytics"].IFPUG = modelInfo["FPAnalytics"].ILF + modelInfo["FPAnalytics"].EIF + modelInfo["FPAnalytics"].EI + modelInfo["FPAnalytics"].EO + modelInfo["FPAnalytics"].EQ;
-		
+
+		//calculating mark II function points
 		modelInfo["FPAnalytics"].MKII  = modelInfo["FPAnalytics"].NI*0.58 + modelInfo["FPAnalytics"].NE*1.66+ modelInfo["FPAnalytics"].OBJ*0.26;
-		
+
+		//calculating cosmic function points
 		modelInfo["FPAnalytics"].COSMIC  = modelInfo["FPAnalytics"].EXT + modelInfo["FPAnalytics"].ERY + modelInfo["FPAnalytics"].RED + modelInfo["FPAnalytics"].WRT;
-		
+
+
+        			 var modelFunctionInfoDump = dumpModelFunctionInfo(modelInfo);
+
+        				var functionAnalyticsStr = "id, function, functional, DET, FTR, boundaries, controls, entities, typeStr\n" + modelFunctionInfoDump.functionAnalyticsStr;
+
+        				modelInfo["FPAnalytics"].FunctionAnalyticsFileName = "functionEvaluation.csv";
+        				var files = [{fileName : modelInfo["FPAnalytics"].FunctionAnalyticsFileName , content : functionAnalyticsStr}];
+        				umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+        				 if(err){
+        					 console.log(err);
+        					 return;
+        				 }
+
+        					console.log("evaluate functions for the model");
+
+        			 });
+
 		return modelInfo["FPAnalytics"];
 
 	}
