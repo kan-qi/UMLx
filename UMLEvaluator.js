@@ -34,6 +34,7 @@
 	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
+
 	var userStoryEvaluator = require('./evaluators/StoryPointEvaluator/UserStoryEvaluator.js');
 	
 	var evaluators = [
@@ -46,8 +47,8 @@
 			cocomoCalculator,
 			useCasePointEvaluator,
 			extendedUseCasePointEvaluator,
-			UMLSizeMetricEvaluator
-			//userStoryEvaluator
+			UMLSizeMetricEvaluator,
+			userStoryEvaluator
 			];
 	
 //	function setUp(){
@@ -251,6 +252,7 @@
 		}
 		
 		modelEvaluationStr += modelNum+","+ model.Name.replace(/,/gi, "");
+		
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.toModelEvaluationRow){
@@ -361,13 +363,12 @@
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.evaluateModel){
-				evaluator.evaluateModel(model, function(test){
+				evaluator.evaluateModel(model, function(){
 					console.log('model evaluation finishes');
 				});
 			}
 		}
 		
-
 		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
 		
 		
@@ -381,7 +382,6 @@
 			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
 			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
-
 		umlFileManager.writeFiles(model.OutputDir, files, function(err){
 			if(err) {
 			 	console.log(err);

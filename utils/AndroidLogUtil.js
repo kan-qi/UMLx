@@ -319,7 +319,7 @@
 				}
 				
 				var activity = {
-						Name: methodUnit.signature.name,
+						Name: methodUnit.name,
 						_id: uuidV1().replace(/\-/g, "_"),
 						Type: "activity",
 						Stimulus: transaction.Nodes.length == 0? true: false,
@@ -370,17 +370,9 @@
 	}
 	
 	function generateAndroidAnalysis(apkFileName, outputDir) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-		var executeAPKAnalysis = function(apkFileName, outputDir, callback){			
-=======
-		  
+
 		var executeAPKAnalysis = function(apkFileName, outputDir, callback){
-			
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
-=======
-		var executeAPKAnalysis = function(apkFileName, outputDir, callback){			
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
+
 		 	if(!apkFileName){
 			  	console.log('empty apk name');
 			  	if(callback){
@@ -390,49 +382,14 @@
 		  	}
 
 		  	var apkName = apkFileName.replace(/\.apk/g, "");
-		  
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
-		  //  	var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:./libs/*\" org.umlx.UMLxAndroidToolKit " 
-				// + apkFileName + "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
-				// + "\"/Users/diaozhuoran/Library/Android/sdk/platforms/\" \" /Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/output\"";
-//			var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:/Users/diaozhuoran/desktop/DR2/UMLx404/UMLx/facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
-//				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
-//				+ "\"" + __dirname + "/../" + apkFileName + "\" "
-//				+ "\"" + __dirname + "/../" + outputDir + "\"";
-<<<<<<< HEAD
-			var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
-                				+ "\"" + apkFileName + "\" "
-                				+ "\"" + outputDir + "\"";
-			console.log(command);
-=======
-		   	var command = "java -cp \"/Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/out/production/Android-toolkit:./libs/*\" org.umlx.UMLxAndroidToolKit " 
-				+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
-				+ "\"/Users/diaozhuoran/Library/Android/sdk/platforms/\" \" /Users/diaozhuoran/desktop/DR2/UMLx323/UMLx/facility-tools/Android-toolkit/output\"";
 
-		   
-		   	//console.log(command);
-		   	//process.exit(1)
-=======
-			// var command = "java -cp \""+__basedir+"/facility-tools/Android-toolkit/out/production/Android-toolkit:"+__basedir+"/facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
-   //              				//+ "\"/Users/diaozhuoran/desktop/baiduCloud.apk\" "
-   //              				+ "\"" + __basedir+"/" + apkFileName + "\" "
-   //              				+ "\"" + __basedir+"/" + outputDir + "\"";
+		   	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+		   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+		   		"-client GUIHierarchyPrinterClient " +
+		   		"-outputDir \"" + outputDir + "/" + apkName + "\"";
 
-            // var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
-            //           +"org.umlx.UMLxAndroidToolKit \""+apkFileName+"\""
-            //           +" \""+outputDir+"\"";
+		   	console.log(command);
 
-            		var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" org.umlx.UMLxAndroidToolKit "
-                				+ "\"./" + apkFileName + "\" "
-                				+ "\"./" + outputDir + "\"";
-
-			console.log(command);
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
-
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 				if (error !== null) {
 					console.log("error in generating apk analysis.");
@@ -442,13 +399,14 @@
 				  	}
 					return;
 				}
-				
+
 				if(callback){
 					callback(outputDir)
 				}
-			});	
+			});
 		}
 		return checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir)
+
 	}
 	
 	
@@ -456,52 +414,18 @@
 		
 		
 		return new Promise(function (resolve, reject) {
+			
 
 			var apkName = apkFileName.replace(/\.apk/g, "");
 			 
 			var dir = outputDir +"/"+apkName;
 			
-<<<<<<< HEAD
-<<<<<<< HEAD
-			//var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
-			var fileNames = ["android-analysis-output.json"];
-=======
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
-=======
-			//var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
-			var fileNames = ["android-analysis-output.json"];
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 
 			/* parameters in project object are supposed to change to the local path */
 			var project = {
                 "reportDir": outputDir,
                 "repoDir": outputDir,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
-                "path": outputDir,
-                "modelFile": "android-analysis-output.json",
-                "stimulusFile": "gator-handlers.txt",
-                "tag": path.basename(apkFileName),
-                "apkFileName": path.basename(apkFileName),
-                "clusterConfig": "S1W1L1"
-            }
-			// var project = {
-   //              "reportDir": outputDir,
-   //              "repoDir": outputDir,
-   //              "path": outputDir + "/" + apkName,
-   //              "modelFile": "android-analysis-output.json",
-   //              "stimulusFile": "gator-handlers.txt",
-   //              "tag": apkName,
-   //              "apkFileName":apkFileName,
-   //              "logFile":"filtered_android_log.txt",
-   //              "useCaseRec":"record.txt",
-   //              "clusterConfig": "S1W1L1"
-   //          }
-<<<<<<< HEAD
-=======
                 "path": outputDir + "/" + apkName,
                 "modelFile": "android-analysis-output.json",
                 "stimulusFile": "gator-handlers.txt",
@@ -511,18 +435,15 @@
                 "useCaseRec":"record.txt",
                 "clusterConfig": "S1W1L1"
             }
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
-=======
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
-				
+
 			mkdirp(dir, function(err) {
 				      // to generate svg file.
 				  		
 			  	if(err){
 			  		console.log('error in creating output folder');
-			  		
+
 			  		reject(new Error('error in creating output folder.'));
-			  		
+
 			  		return;
 			  	}
 			
@@ -533,7 +454,7 @@
 					}
 					reject(new Error('File did not exists and was not created during the timeout.'));
 				}, timeout);
-				
+
 				var alreadyExist = true;
 				try{
 					for(var i in fileNames){
@@ -541,15 +462,7 @@
 					   require('fs').accessSync(dir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
 					}
 				}catch(e){
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 				console.log("watch on files...");
-=======
-	 console.log("watch on files...");
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
-=======
-	 				console.log("watch on files...");
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
+	// console.log("watch on files...");
 					alreadyExist = false;
 					var checkExists = {};
 					for(var i in fileNames){
@@ -560,14 +473,14 @@
 	// console.log(filename+" has changed");
 							checkExists[filename] = 1;
 							var allExists = true;
-							
+
 							for(var i in fileNames){
 								if(checkExists[fileNames[i]] == 0){
 									allExists = false;
 									break;
 								}
 							}
-							
+
 							if(allExists){
 								clearTimeout(timer);
 								if(watcher != null){
@@ -577,23 +490,15 @@
 							}
 						}
 					});
-					
+
 
 					if(executeAPKAnalysis){
-<<<<<<< HEAD
-<<<<<<< HEAD
-						executeAPKAnalysis(apkFileName, outputDir, function(result){
-=======
 						executeAPKAnalysis(apkFileName, dir, function(result){
->>>>>>> 1024ecfb3d3265b7d19f1cd444b5cf8fec4e14a6
-=======
-						executeAPKAnalysis(apkFileName, outputDir, function(result){
->>>>>>> 53791d2af104283679634fb9048200c4d8d53bd3
 							clearTimeout(timer);
 							if(watcher != null){
 								watcher.close();
 							}
-							
+
 							if(!result){
 								reject(new Error('analysis failed'));
 							}
@@ -607,11 +512,11 @@
 						if(watcher != null){
 							watcher.close();
 						}
-						
+
 						reject(new Error('analysis function doesn\'t exist.'));
 					}
 				}
-			
+
 				if(alreadyExist){
 					console.log("files already exist");
 					setTimeout(function () {
@@ -623,128 +528,7 @@
 					}, 10);
 				}
 			});
-		});	
-	}
-	
-	
-	function checkExistsWithTimeout1(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
-		
-		
-		return new Promise(function (resolve, reject) {
-
-			var apkName = apkFileName.replace(/\.apk/g, "");
-			 
-			var dir = outputDir +"/"+apkName;
-			
-			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
-
-			/* parameters in project object are supposed to change to the local path */
-			var project = {
-                "reportDir": outputDir,
-                "repoDir": outputDir,
-                "path": outputDir + "/" + apkName,
-                "modelFile": "android-analysis-output.json",
-                "stimulusFile": "gator-handlers.txt",
-                "tag": apkName,
-                "apkFileName":apkFileName,
-                "logFile":"filtered_android_log.txt",
-                "useCaseRec":"record.txt",
-                "clusterConfig": "S1W1L1"
-            }
-				
-			mkdirp(dir, function(err) {
-				      // to generate svg file.
-				  		
-			  	if(err){
-			  		console.log('error in creating output folder');
-			  		
-			  		reject(new Error('error in creating output folder.'));
-			  		
-			  		return;
-			  	}
-			
-				var watcher = null;
-				var timer = setTimeout(function () {
-					if(watcher != null){
-						watcher.close();
-					}
-					reject(new Error('File did not exists and was not created during the timeout.'));
-				}, timeout);
-				
-				var alreadyExist = true;
-				try{
-					for(var i in fileNames){
-					   console.log("check file existence: "+fileNames[i]);
-					   require('fs').accessSync(dir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
-					}
-				}catch(e){
-	            // console.log("watch on files...");
-					alreadyExist = false;
-					var checkExists = {};
-					for(var i in fileNames){
-						checkExists[fileNames[i]] = 0;
-					}
-					watcher = fs.watch(dir, function (eventType, filename) {
-						if (eventType === 'change') {
-	            // console.log(filename+" has changed");
-							checkExists[filename] = 1;
-							var allExists = true;
-							
-							for(var i in fileNames){
-								if(checkExists[fileNames[i]] == 0){
-									allExists = false;
-									break;
-								}
-							}
-							
-							if(allExists){
-								clearTimeout(timer);
-								if(watcher != null){
-									watcher.close();
-								}
-								resolve(project);
-							}
-						}
-					});
-					
-
-					if(executeAPKAnalysis){
-						executeAPKAnalysis(apkFileName, dir, function(result){
-							clearTimeout(timer);
-							if(watcher != null){
-								watcher.close();
-							}
-							
-							if(!result){
-								reject(new Error('analysis failed'));
-							}
-							else{
-								resolve(project);
-							}
-						});
-					}
-					else{
-						clearTimeout(timer);
-						if(watcher != null){
-							watcher.close();
-						}
-						
-						reject(new Error('analysis function doesn\'t exist.'));
-					}
-				}
-			
-				if(alreadyExist){
-					console.log("files already exist");
-					setTimeout(function () {
-						clearTimeout(timer);
-						if(watcher){
-							watcher.close();
-						}
-						resolve(project);
-					}, 10);
-				}
-			});
-		});	
+		});
 	}
 	
 	module.exports = {

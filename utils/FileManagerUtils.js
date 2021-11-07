@@ -183,7 +183,7 @@
 				   }
 			});
 		},
-		readJSONSync: function(filePath){
+		readJSONSync: function(filePath, callbackfunc){
 			var str = fs.readFileSync(filePath, 'utf-8');
 				 var obj = JSON.parse(str);
 				  return obj
@@ -200,10 +200,10 @@
 					});
 				  });
 			}
-			
+
 			let chain = Promise.resolve();
-			
-			mkdirp(dir, function(err) { 
+
+			mkdirp(dir, function(err) {
 				if(err) {
 					console.log(err);
 					if(!callbackfunc){
@@ -215,7 +215,7 @@
 				var file = files[i];
 				chain = chain.then(writeFile(dir+"/"+file.fileName, file.content));
 			}
-			
+
 			chain.then(function(){
 				if(callbackfunc){
 					callbackfunc();
@@ -227,7 +227,7 @@
 				}
 			});
 			});
-			
+
 		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,

@@ -9,6 +9,7 @@
 //				modelFile: ""
 //			}//model file paths
 //}
+
 	
 var path = require('path');
 var mkdirp = require('mkdirp');
@@ -27,7 +28,7 @@ var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 var pathSeparator = "/";
 
 
-function analyseAndroidApks(projectList, reportDir){
+var analyseAndroidApks = function analyseAndroidApks(apkFileName, reportDir){
 	console.log("analyse android apks");
 	
     	let final = [];
@@ -56,26 +57,26 @@ function analyseAndroidProject(projectList, reportDir){
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
         return new Promise((resolve, reject) => {
-        	
+
         var projectName = project.tag;
         if(!projectName){
         		projectName = ""
         }
-        	
+
    		 let date = new Date();
    	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
    	     analysisDate = analysisDate+"@"+Date.now();
-   	   
+
    	     projectName = projectName + "_"+analysisDate;
-        	
+
 					var outputDir = reportDir + pathSeparator + projectName + "_analysis";
-					
+
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
         	console.log("inputfile is" + inputFile);
         	console.log("outputDir is" + outputDir);
 
-        	mkdirp(outputDir, function(err) { 
+        	mkdirp(outputDir, function(err) {
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
         		console.log(inputFile+" doesn't exist.");
@@ -98,16 +99,16 @@ function analyseAndroidProject(projectList, reportDir){
             		console.log(message);
             		resolve();
         		})
-        		  
+
         	}, project);
-        	
+
         	}
       	  });
         	});
-        	
+
         });
     }
-   
+
     return Promise.all(projectList.map(project=>{
         return analyseProject(project.path + pathSeparator + project.modelFile, project, reportDir);
 
@@ -238,7 +239,7 @@ if(functionSelection === "--scan-repo"){
 	}
 
 	var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
-	
+
 	mkdirp(repoRecordPath, function(err) {
 		  var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
 		  FileManagerUtil.writeFileSync(repoListPath, projectPaths);
@@ -288,9 +289,9 @@ analyseAndroidProject(repo.projectList, repo.reportDir);
 else if(functionSelection === "--filter-logs"){
 	
 //	filterLogs(repo.projectList, repo.reportDir);
-  
+//	
 //	var projectPaths = "";
-  
+
 	for(var i in repo.projectList){
 		var projectPath = repo.projectList[i].path; 
 		var logFile = repo.projectList[i].logFile;
@@ -390,3 +391,5 @@ for(var i in transactionEvaluationContents){
 FileManagerUtil.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
 
 }
+
+
