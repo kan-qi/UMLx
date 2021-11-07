@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings">
+        <EditTextPreference android:title="@string/flid" android:key="prefFlid" android:summary="@string/flid_sum" android:defaultValue="@string/flid_val" />
+        <Preference android:title="@string/directory" android:key="prefDirectory" android:summary="@string/directory_sum" android:dependency="prefExternal" android:defaultValue="" />
+        <CheckBoxPreference android:title="@string/dailydownload" android:key="prefDailyDownload" android:summary="@string/dailydownload_sum" android:defaultValue="false" />
+        <EditTextPreference android:title="@string/hour" android:key="prefHour" android:summary="@string/hour_sum" android:dependency="prefDailyDownload" android:defaultValue="@string/hour_val" />
+        <EditTextPreference android:title="@string/minute" android:key="prefMinute" android:summary="@string/minute_sum" android:dependency="prefDailyDownload" android:defaultValue="@string/minute_val" />
+        <CheckBoxPreference android:title="@string/auto" android:key="prefAuto" android:summary="@string/pref_auto" android:dependency="prefDailyDownload" android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/adv_set">
+        <CheckBoxPreference android:title="@string/external_browser" android:key="prefExternal" android:summary="@string/external_sum" android:defaultValue="false" android:disableDependentsState="true" />
+        <CheckBoxPreference android:title="@string/wifionly" android:key="prefWIFI" android:summary="@string/wifi_sum" android:dependency="prefExternal" android:defaultValue="true" />
+        <EditTextPreference android:title="@string/base_url" android:key="prefBase" android:summary="@string/base_sum" android:defaultValue="@string/base_val" />
+        <EditTextPreference android:title="@string/selector" android:key="prefSelector" android:summary="@string/selector_sum" android:defaultValue="@string/selector_val" />
+        <EditTextPreference android:title="@string/mirrorurl" android:key="prefMirrorURL" android:summary="@string/mirrorurl_sum" android:defaultValue="@string/mirrorurl_val" />
+        <EditTextPreference android:title="@string/mirrordata" android:key="prefMirrorData" android:summary="@string/mirrordata_sum" android:defaultValue="@string/mirrordata_val" />
+    </PreferenceCategory>
+</PreferenceScreen>

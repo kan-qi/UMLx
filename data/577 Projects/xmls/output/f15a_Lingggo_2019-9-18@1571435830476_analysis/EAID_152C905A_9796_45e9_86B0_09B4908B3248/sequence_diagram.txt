@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Logininpage" as 09
+participant "showconfirmation" as 29
+participant "validateusenameandpassword" as 49
+
+User -> 09: Logoutpage()
+activate 09
+
+09 -> 49: validateusenameandpassword()
+activate 49
+
+49 -> 29: showconfirmation()
+activate 29
+
+29 -> 09: Homepage()
+deactivate 09
+
+deactivate 29
+
+49 -> 49: validateusenameandpassword()
+49 -> 29: showconfirmation()
+activate 29
+
+29 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 29: confirmlogoutbutton()
+activate 29
+
+29 -> 49: validateusenameandpassword()
+activate 49
+
+49 -> 29: showconfirmation()
+deactivate 29
+
+49 -> 49: validateusenameandpassword()
+deactivate 49
+
+@enduml

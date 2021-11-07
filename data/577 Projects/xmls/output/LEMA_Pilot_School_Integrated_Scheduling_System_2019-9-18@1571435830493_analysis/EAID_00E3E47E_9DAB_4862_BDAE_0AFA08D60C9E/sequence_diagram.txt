@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Displaycomfirminformation" as 39
+participant "Exportbutton" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Constraintsmanagementpage()
+activate 09
+
+09 -> 39: Displayconstraintdetails()
+activate 39
+
+39 -> 39: Updatechangedinformation()
+39 -> 39: Displayinformation()
+39 -> 09: Homepage()
+deactivate 09
+
+deactivate 39
+
+User -> 09: Makesomechanges()
+activate 09
+
+09 -> 49: Confirmbutton()
+activate 49
+
+49 -> 39: Updatechangedinformation()
+activate 39
+
+39 -> 39: Displayinformation()
+deactivate 39
+
+deactivate 49
+
+deactivate 09
+
+@enduml

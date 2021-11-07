@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "inputsallrequiredfields" as 09
+participant "Clicksendbutton" as 19
+participant "Logininpage" as 29
+participant "Gototheprofileofotherlanguagelearner" as 49
+participant "showconfirmation" as 99
+
+User -> 09: inputsallrequiredfields()
+activate 09
+
+09 -> 49: checkswhetherusernameemailalreadyexist()
+activate 49
+
+49 -> 09: checkswhetherLanguageLearnerinputsallrequiredfields()
+09 -> 49: createsaccountforLanguageLearnerbasedontheirinputs()
+49 -> 49: logsLanguageLearnerintothesystem()
+49 -> 99: showconfirmation()
+activate 99
+
+99 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 99
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: clickssubmitbutton()
+activate 19
+
+19 -> 49: checkswhetherusernameemailalreadyexist()
+activate 49
+
+49 -> 09: checkswhetherLanguageLearnerinputsallrequiredfields()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+@enduml

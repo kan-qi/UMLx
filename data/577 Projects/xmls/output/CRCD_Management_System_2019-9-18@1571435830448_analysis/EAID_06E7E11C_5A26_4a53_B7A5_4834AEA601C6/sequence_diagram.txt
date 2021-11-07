@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Catagorypage" as 09
+participant "Selectproductdata" as 19
+participant "Displayapprovalconfirmation" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Productviewpage()
+activate 19
+
+19 -> 19: Selectproductdata()
+19 -> 49: Displayproductinformation()
+activate 49
+
+49 -> 19: Productviewpage()
+19 -> 19: Selectproductdata()
+deactivate 19
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+@enduml

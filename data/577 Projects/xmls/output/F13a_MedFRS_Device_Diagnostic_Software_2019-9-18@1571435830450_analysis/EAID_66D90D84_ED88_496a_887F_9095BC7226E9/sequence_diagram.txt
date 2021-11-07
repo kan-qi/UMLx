@@ -1,0 +1,75 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Supervisor
+participant "Addbuildinghubbutton" as 09
+participant "ValidatesInput" as 19
+participant "Printsoutthelistofvictims" as 119
+
+Supervisor -> 09: Addbuildinghubbutton()
+activate 09
+
+09 -> 09: Redirectstotheaddbuildinghubformpage()
+09 -> 09: Buildinghubformpage()
+09 -> 19: Systemvalidatesinput()
+activate 19
+
+19 -> 19: Inputinvaliderror()
+19 -> 19: Validatesinputasbeingcorrect()
+19 -> 19: Systemupdatesrecordinthedatabase()
+19 -> 09: Redirectstothemanagementbuildingshubsdisasterspage()
+09 -> 09: Managebildingshubsdisasterspage()
+deactivate 09
+
+19 -> 09: buildinghubdb()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+19 -> 19: nullinputinformaitonerror()
+activate 19
+
+deactivate 19
+
+19 -> 119: Insertthenewrecordintodb()
+activate 119
+
+119 -> 09: buildinghubdb()
+activate 09
+
+deactivate 09
+
+deactivate 119
+
+Supervisor -> 19: nullinputinformaitonerror()
+activate 19
+
+deactivate 19
+
+Supervisor -> 19: Inputinvaliderror()
+activate 19
+
+19 -> 19: Validatesinputasbeingcorrect()
+deactivate 19
+
+Supervisor -> 09: Managebildingshubsdisasterspage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 09: Buildinghubformpage()
+activate 09
+
+09 -> 19: Systemvalidatesinput()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

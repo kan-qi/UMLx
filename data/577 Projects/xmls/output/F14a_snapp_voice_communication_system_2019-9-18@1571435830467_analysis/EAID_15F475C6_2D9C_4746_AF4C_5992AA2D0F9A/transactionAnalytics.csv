@@ -1,0 +1,10 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Customer:1-800 dial button-->Customer:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,Receeive Calls,4,0,1,2,0
+2,stl#Lead:softphone screen-->Lead:softphone screen,Receeive Calls,2,0,1,0,0
+3,stl#Lead:1-800 dial button-->Lead:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,Receeive Calls,4,0,1,2,0
+4,stl#Lead:voice mail panel-->Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,Receeive Calls,4,1,1,1,0
+5,stl#Lead:voice mail panel-->Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Receeive Calls,4,1,2,0,0
+6,stl#Twilio API:save call log-->Twilio API:save call log-->save call log:call log,Receeive Calls,3,0,0,2,0
+7,stl#Twilio API:popup income call dialog-->Twilio API:popup income call dialog-->popup income call dialog:income call dialog-->income call dialog:Agent,Receeive Calls,4,0,0,3,0
+8,stl#Twilio API:redirect to void mail-->Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,Receeive Calls,5,2,1,1,0
+9,stl#Twilio API:redirect to void mail-->Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Receeive Calls,5,2,2,0,0

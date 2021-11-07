@@ -680,17 +680,19 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, effor
     probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - postP - proposalProbability(proposal, chain[i, ]))))
     #the better way of calculating the acceptance rate
     
-    #acceptance = c()
+    acceptance = c()
     if(is.na(probab) == FALSE & runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
-      #acceptance = c(acceptance, "accept")
+      acceptance = c(acceptance, 1)
     }else{
       chain[i+1,] = chain[i,]
       #print("not accept")
-      #acceptance = c(acceptance, "not accept")
+      acceptance = c(acceptance, 0)
     }
   }
+  
+  #print(paste("acceptance rate:", sum(acceptance)/N))
   
   return(chain)
 }
@@ -807,6 +809,13 @@ calEffortAdj <- function(regressionData){
   effortAdj <- c(mean = summary$coefficients["transactionSum","Estimate"], var=summary$coefficients["transactionSum","Std. Error"]^2)
 }
 
+priorTranSum <- function(regressionData){
+  nominalWeights <- as.matrix(genMeans(ncol(regressionData)-1))
+  transactionData <- as.matrix(regressionData[, !(colnames(regressionData) %in% c("Effort"))])
+  transactionSum <-  transactionData %*% nominalWeights 
+  transactionSum
+}
+
 priorFit <- function(regressionData){
   # fit a linear model using the same of weighted transaction. The weights are prior weights.
   #
@@ -816,13 +825,11 @@ priorFit <- function(regressionData){
   # Returns:
   #   the fitted linear model using the prior weights
   
-  nominalWeights <- as.matrix(genMeans(ncol(regressionData)-1))
-  transactionData <- as.matrix(regressionData[, !(colnames(regressionData) %in% c("Effort"))])
-  transactionSum <-  transactionData %*% nominalWeights 
+ 
   transactionRegressionData <- matrix(nrow = nrow(regressionData), ncol=2)
   colnames(transactionRegressionData) <- c("transactionSum", "Effort")
   rownames(transactionRegressionData) <- rownames(regressionData)
-  transactionRegressionData[, "transactionSum"] = transactionSum
+  transactionRegressionData[, "transactionSum"] = priorTranSum(regressionData)
   transactionRegressionData[, "Effort"] = regressionData[, "Effort"]
   
   lm(Effort ~ . - 1, as.data.frame(transactionRegressionData))
@@ -1011,23 +1018,33 @@ performSearch <- function(n, dataset, parameters = c("TL", "TD", "DETs"), k = 5)
     regressionData <- generateRegressionData(transactionData$projects, cutPoints, transactionData$effort, transactionData$transactionFiles)
     
     `%ni%` <- Negate(`%in%`)
-    paramVals <- bayesfit(regressionData, 10000, 500)
+    paramVals <- bayesfit(regressionData, 50000, 500)
     bayesianModel = list()
     bayesianModel$weights = subset(paramVals, select = colnames(regressionData) %ni% c("Effort", "sd"))
     bayesianModel$effortAdj = paramVals[,"effortAdj"] 
     bayesianModel$sd = paramVals[,"sd"] 
     bayesianModel$cuts <- cutPoints
     
-    bm_validationResults <- crossValidate(regressionData, k, function(trainData) bayesfit(trainData, 1000, 500), predict.blm)
+    bm_validationResults <- crossValidate(regressionData, k, function(trainData) bayesfit(trainData, 50000, 500), predict.blm)
     #print(bm_validationResults)
     
     #the regression model fit
     regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData));
-    reg_validationResults <- crossValidate(regressionData, k,function(trainData) lm(Effort ~ . - 1, as.data.frame(trainData)), function(lm.fit, testData) predict(lm.fit, newData = testData))
+    reg_validationResults <- crossValidate(regressionData, k,function(trainData) lm(Effort ~ . - 1, as.data.frame(trainData)), function(lm.fit, testData) {
+      predictedVals <- predict(lm.fit, testData)
+      names(predictedVals) <- rownames(testData)
+      #print(rownames(testData))
+      #print(predictedVals)
+      predictedVals
+    })
     
     #the prior model fit
     priorModel <- priorFit(regressionData)
-    prior_validationResults <- crossValidate(regressionData, k, priorFit, function(priorModel, testData) predict(priorModel, newData = testData))
+    prior_validationResults <- crossValidate(regressionData, k, priorFit, function(priorModel, testData) {
+      predictedVals <- predict(priorModel, data.frame(transactionSum = priorTranSum(testData)))
+      names(predictedVals) <- rownames(testData)
+      predictedVals
+    })
     
     searchResults[[i]] <- list(
                                bayesModel = bayesianModel,
@@ -1163,9 +1180,13 @@ transaction_based_model <- function(modelData){
   
   models = list()
   
+  start_time1 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
   #cachedTransactionFiles = list()
   SWTIIIresults <- performSearch(6, modelData, c("TL", "TD", "DETs"))
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
+  end_time1 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
+  run_time1 <- end_time1 - start_time1
+  print(paste("SWTIII run time:", run_time1, sep=""))
   
   #SWTIIIresults <- models$tm3$SWTIIIresults
   accuracyMeasures <- as.data.frame(t(sapply(SWTIIIresults, function(iterResults){
@@ -1192,8 +1213,12 @@ transaction_based_model <- function(modelData){
     SWTIIIresults = SWTIIIresults
   )
   
+  start_time2 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
   SWTIIresults <- performSearch(6, modelData, c("TL", "TD"))
   #SWTIIModelSelector <- 4
+  end_time2 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
+  run_time2 <- end_time2 - start_time2
+  print(paste("SWTII run time:", run_time2, sep=""))
   
   #SWTIIresults <- models$tm2$SWTIIresults
   accuracyMeasures <- as.data.frame(t(sapply(SWTIIresults, function(iterResults){
@@ -1220,12 +1245,19 @@ transaction_based_model <- function(modelData){
     SWTIIresults = SWTIIresults
   )
   
+  
+  start_time3 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
   #cachedTransactionFiles = list()
   SWTIresults <- performSearch(6, modelData, c())
+  end_time3 <- as.numeric(as.numeric(Sys.time())*1000, digits=15)
+  run_time3 <- end_time3 - start_time3
+  print(paste("SWTI run time:", run_time3, sep=""))
+  
   #intialize the model with hyper parameters (cutpoints) decided by cross validatoin results for different ways of binning
   SWTIModelSelector <- 1
   
   modelParams = SWTIresults[[SWTIModelSelector]][["bayesModel"]]
+  end_time <- Sys.time()
   
   models$tm1 = list(
     cuts = modelParams$cuts,

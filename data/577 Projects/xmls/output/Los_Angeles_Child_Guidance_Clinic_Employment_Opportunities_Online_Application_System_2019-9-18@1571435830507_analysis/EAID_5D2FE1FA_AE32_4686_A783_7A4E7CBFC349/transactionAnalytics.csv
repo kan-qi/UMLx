@@ -1,0 +1,7 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Homepage-->User:Homepage,Approve Hire,2,1,0,0,0
+2,stl#User:marks the user as approved-->User:marks the user as approved-->marks the user as approved:modifies the Applicant profile to reflect User's change-->modifies the Applicant profile to reflect User's change:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,5,4,0,0,0
+3,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Approve Hire-->Approve Hire:returns the correct applicant,Approve Hire,6,5,0,0,0
+4,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,6,5,0,0,0
+5,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Homepage,Approve Hire,5,4,0,0,0
+6,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:modifies the Applicant profile to reflect User's change-->modifies the Applicant profile to reflect User's change:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,6,5,0,0,0

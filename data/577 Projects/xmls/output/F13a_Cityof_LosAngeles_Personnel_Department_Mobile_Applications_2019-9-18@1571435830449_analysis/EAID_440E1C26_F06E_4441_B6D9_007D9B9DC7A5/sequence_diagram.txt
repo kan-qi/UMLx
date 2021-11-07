@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor RSS feed retriver
+participant "Notification" as 09
+participant "UserProfilebutton" as 29
+participant "retryrequest" as 39
+participant "Neogov" as 69
+
+RSS feed retriver -> 09: Notification()
+activate 09
+
+deactivate 09
+
+RSS feed retriver -> 39: retriveRSSfeed()
+activate 39
+
+39 -> 39: retryrequest()
+39 -> 69: Neogov()
+activate 69
+
+deactivate 69
+
+deactivate 39
+
+39 -> 29: storeRSSfeedinXMLfile()
+activate 29
+
+29 -> 09: Notification()
+activate 09
+
+deactivate 09
+
+29 -> 29: XMLfile()
+deactivate 29
+
+39 -> 69: Neogov()
+activate 69
+
+deactivate 69
+
+@enduml

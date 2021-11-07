@@ -1,0 +1,101 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Showconfirmation" as 09
+participant "Clicksubmit" as 19
+participant "Homepage" as 29
+participant "addcontactsintoSalesforce" as 49
+participant "checkstaff��sauthority" as 69
+participant "Displayatextfiledforinput" as 99
+
+User  -> 09: typeincontactsnewinformation()
+activate 09
+
+09 -> 69: checkstaff��sauthority()
+activate 69
+
+69 -> 69: worker��sauthorityapproved()
+69 -> 49: updatecontactsinformationinSalesforce()
+activate 49
+
+49 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+49 -> 49: contactsdb()
+deactivate 49
+
+deactivate 69
+
+deactivate 09
+
+User  -> 19: clickcontactsid()
+activate 19
+
+19 -> 99: Displayatextfieldforinput()
+activate 99
+
+99 -> 69: checkstaff��sauthority()
+activate 69
+
+69 -> 69: worker��sauthorityapproved()
+deactivate 69
+
+deactivate 99
+
+deactivate 19
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 19: clickeditbutton()
+activate 19
+
+19 -> 99: Displayatextfieldforinput()
+activate 99
+
+99 -> 69: checkstaff��sauthority()
+activate 69
+
+deactivate 69
+
+deactivate 99
+
+deactivate 19
+
+User  -> 49: EditContactpage()
+activate 49
+
+49 -> 09: Editcontactinformation()
+activate 09
+
+09 -> 09: Showconfirmation()
+09 -> 49: Contactdb()
+deactivate 49
+
+09 -> 49: EditContactpage()
+activate 49
+
+49 -> 09: Editcontactinformation()
+deactivate 09
+
+deactivate 49
+
+09 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+@enduml

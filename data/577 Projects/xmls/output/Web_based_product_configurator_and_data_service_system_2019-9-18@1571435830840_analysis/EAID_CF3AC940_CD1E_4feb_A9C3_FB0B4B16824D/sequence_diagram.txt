@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Checkoutdata" as 19
+participant "selectsthewaytoreceivenotificationanemailoratext" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: ReceiveDatapage()
+activate 19
+
+19 -> 59: selectsthewaytoreceivenotificationanemailoratext()
+activate 59
+
+59 -> 09: Confirmationpage()
+activate 09
+
+09 -> 09: Homepage()
+deactivate 09
+
+09 -> 19: ReceiveDatapage()
+19 -> 59: selectsthewaytoreceivenotificationanemailoratext()
+deactivate 59
+
+deactivate 19
+
+@enduml

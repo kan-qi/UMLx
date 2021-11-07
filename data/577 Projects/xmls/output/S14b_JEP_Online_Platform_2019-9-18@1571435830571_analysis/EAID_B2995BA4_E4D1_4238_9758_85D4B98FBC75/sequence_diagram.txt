@@ -1,0 +1,104 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "userinfo" as 09
+participant "checkuscidexistornot" as 19
+participant "successmessage" as 29
+participant "searchpanal" as 39
+participant "displayinvalidemailformat" as 59
+participant "redirecttoapagewiththecurerntsiteslist" as 79
+
+User -> 09: userinformationinputpage()
+activate 09
+
+09 -> 19: checkuscidexistornot()
+activate 19
+
+19 -> 59: DisplayuscIdemptyerror()
+activate 59
+
+deactivate 59
+
+19 -> 19: USCIDexistingerror()
+deactivate 19
+
+19 -> 09: adduserintodb()
+09 -> 29: displaysuccessmessage()
+activate 29
+
+29 -> 29: successmessage()
+deactivate 29
+
+deactivate 09
+
+19 -> 59: displayinvalidemailformat()
+activate 59
+
+deactivate 59
+
+User -> 19: USCIDexistingerror()
+activate 19
+
+deactivate 19
+
+User -> 29: successmessage()
+activate 29
+
+deactivate 29
+
+User -> 39: usermanagementpage()
+activate 39
+
+39 -> 59: displayformwithtextinputarea()
+activate 59
+
+59 -> 09: userinformationinputpage()
+activate 09
+
+09 -> 19: checkuscidexistornot()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 59
+
+deactivate 39
+
+User -> 09: manageuserlink()
+activate 09
+
+09 -> 79: redirecttoapgageforusermanagement()
+activate 79
+
+79 -> 39: usermanagementpage()
+activate 39
+
+39 -> 59: displayformwithtextinputarea()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+79 -> 09: usermanagement()
+deactivate 09
+
+deactivate 79
+
+User -> 59: displayinvalidemailformat()
+activate 59
+
+deactivate 59
+
+User -> 59: DisplayuscIdemptyerror()
+activate 59
+
+deactivate 59
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Addproviderbutton" as 09
+participant "Rating" as 89
+
+User -> 09: Addproviderbutton()
+activate 09
+
+09 -> 09: Displayprovideraddpage()
+09 -> 09: providerinformationinputpage()
+09 -> 09: createanewprovider()
+09 -> 09: Provider()
+deactivate 09
+
+09 -> 09: Providercreatedsuccessmessage()
+activate 09
+
+09 -> 09: Updateproviderratinginformation()
+09 -> 89: Rating()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+User -> 09: providerinformationinputpage()
+activate 09
+
+09 -> 09: createanewprovider()
+deactivate 09
+
+User -> 09: Providercreatedsuccessmessage()
+activate 09
+
+09 -> 09: Updateproviderratinginformation()
+deactivate 09
+
+@enduml

@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Useraddbutton" as 09
+participant "Volunteers" as 19
+participant "Typesofattendance" as 29
+
+User -> 09: Invalidinputuserinformation()
+activate 09
+
+deactivate 09
+
+User -> 19: Viewgirlsvolunteersattendancebutton()
+activate 19
+
+19 -> 29: queryattendanceinformation()
+activate 29
+
+29 -> 29: Attendanceinformation()
+deactivate 29
+
+29 -> 29: Attendanceinformationpage()
+activate 29
+
+29 -> 29: queryattendancedetailinformation()
+29 -> 29: Attendancedetailinformation()
+deactivate 29
+
+29 -> 29: Attendanceinformation()
+activate 29
+
+deactivate 29
+
+29 -> 09: Invalidinputuserinformation()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: Attendanceinformationpage()
+activate 29
+
+29 -> 29: queryattendancedetailinformation()
+deactivate 29
+
+User -> 29: Attendancedetailinformation()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "answerstorage" as 09
+participant "quitwithoutsavingbutton" as 29
+participant "successmessage" as 39
+participant "comment" as 49
+participant "mapofselectedpaths" as 109
+
+administrator -> 09: outofavailablestorageerror()
+activate 09
+
+09 -> 49: insertthecomment()
+activate 49
+
+49 -> 49: comment()
+deactivate 49
+
+49 -> 09: errormessageforover500characters()
+deactivate 09
+
+49 -> 39: insertsuccess()
+activate 39
+
+deactivate 39
+
+administrator -> 09: errormessageforover500characters()
+activate 09
+
+deactivate 09
+
+administrator -> 29: savebutton()
+activate 29
+
+29 -> 09: savetotemporaryfile()
+activate 09
+
+09 -> 09: outofavailablestorageerror()
+09 -> 49: insertthecomment()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+09 -> 109: tempoararyfile()
+activate 109
+
+deactivate 109
+
+deactivate 29
+
+administrator -> 39: insertsuccess()
+activate 39
+
+deactivate 39
+
+@enduml

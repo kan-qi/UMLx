@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "userprofileandsearchpage" as 09
+participant "invalidinputinformation" as 29
+
+User -> 09: ProfileEditPage()
+activate 09
+
+09 -> 29: validateinputdata()
+activate 29
+
+29 -> 09: saveupdatedprofile()
+09 -> 09: Profile()
+deactivate 09
+
+deactivate 29
+
+User -> 09: Editprofilebutton()
+activate 09
+
+09 -> 09: displayeditprofilepage()
+09 -> 09: Profile()
+deactivate 09
+
+09 -> 09: ProfileEditPage()
+activate 09
+
+09 -> 29: validateinputdata()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+09 -> 29: incorrectuserinformation()
+activate 29
+
+deactivate 29
+
+User -> 29: incorrectuserinformation()
+activate 29
+
+deactivate 29
+
+User -> 29: Invalidinputdata()
+activate 29
+
+deactivate 29
+
+@enduml

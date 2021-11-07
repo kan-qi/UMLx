@@ -1,0 +1,72 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class savethread {
+~ savethread()
+}
+
+class likepostbutton {
+~ likepostbutton()
+~ postislikedmessage()
+~ grayedoutthreadlikebutton()
+~ Likeinformation()
+~ savethelikestatus()
+~ post()
+~ updatelikenumberofthepost()
+~ like()
+}
+
+class Invalidsearchinput {
+~ Invalidsearchinput()
+~ searchforumbutton()
+}
+
+class point {
+~ point()
+~ calculatepointsoftheowner()
+~ checkiftheuserhasenoughpoints()
+~ decreasethepoints()
+}
+
+class commentispostedsuccessfullymessage {
+~ commentispostedsuccessfullymessage()
+~ errorinthepostedcomment()
+~ comment()
+~ Pointisnotenoughmessage()
+~ Noresultmatchedmessage()
+~ postisunlikedmessage()
+}
+
+class Forumpage {
+~ Forumpage()
+~ Onlinestorepage()
+~ loadsearchformpage()
+~ redirecttoeditpage()
+~ threadinformationinputpage()
+}
+
+class Redeemgiftoption {
+~ Redeemgiftoption()
+}
+
+class user {
+~ user()
+}
+
+class CheckSQLinjections {
+~ CheckSQLinjections()
+~ Likeinformation()
+}
+
+class urlofleaderboard {
+~ urlofleaderboard()
+~ Noleaderserrormessage()
+}
+
+class decreasetheitmenuminstore {
+~ decreasetheitmenuminstore()
+~ redirecttothehomepage()
+~ Potentialsecurityerror()
+}
+
+@enduml

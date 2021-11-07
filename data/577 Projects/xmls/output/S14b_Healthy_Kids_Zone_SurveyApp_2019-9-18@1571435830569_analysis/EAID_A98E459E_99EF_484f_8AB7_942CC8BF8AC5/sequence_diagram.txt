@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "successmessage" as 09
+participant "retrieveschoolinformationfromdb" as 29
+
+administrator -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+administrator -> 09: sameschoolandnamemessage()
+activate 09
+
+deactivate 09
+
+administrator -> 29: schoollistpage()
+activate 29
+
+29 -> 29: retrieveschoolinformationfromdb()
+29 -> 09: displayerrormessageforsamenameandaddress()
+activate 09
+
+09 -> 09: sameschoolandnamemessage()
+deactivate 09
+
+29 -> 29: inserttheschoolandaddress()
+29 -> 29: schoolinformaiton()
+deactivate 29
+
+29 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+29 -> 29: schoolinformaiton()
+activate 29
+
+deactivate 29
+
+@enduml

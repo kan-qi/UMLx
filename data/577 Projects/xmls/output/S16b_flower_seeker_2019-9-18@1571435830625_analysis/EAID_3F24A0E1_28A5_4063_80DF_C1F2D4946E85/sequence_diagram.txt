@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "queryproductbycriteria" as 09
+participant "notavailableerrormessage" as 29
+
+User -> 09: productsearchpage()
+activate 09
+
+09 -> 09: queryproductbycriteria()
+09 -> 29: Noproducterrormessage()
+activate 29
+
+deactivate 29
+
+09 -> 09: product()
+deactivate 09
+
+09 -> 09: productpage()
+activate 09
+
+deactivate 09
+
+User -> 09: productpage()
+activate 09
+
+deactivate 09
+
+User -> 29: Noproducterrormessage()
+activate 29
+
+deactivate 29
+
+@enduml

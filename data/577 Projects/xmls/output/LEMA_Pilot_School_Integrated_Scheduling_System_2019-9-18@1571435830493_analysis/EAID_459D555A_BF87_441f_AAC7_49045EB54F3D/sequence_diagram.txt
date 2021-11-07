@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Inputusernameandpassword" as 19
+participant "Database" as 29
+participant "Displayconfirmation" as 39
+participant "Checkiftheidexists" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Inputusernameandpassword()
+activate 19
+
+19 -> 19: Validateusenameandpassword()
+19 -> 49: Checkiftheidexists()
+activate 49
+
+49 -> 29: Database()
+activate 29
+
+deactivate 29
+
+49 -> 39: Displayconfirmation()
+activate 39
+
+39 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+39 -> 19: Inputusernameandpassword()
+19 -> 19: Validateusenameandpassword()
+deactivate 19
+
+deactivate 39
+
+deactivate 49
+
+@enduml

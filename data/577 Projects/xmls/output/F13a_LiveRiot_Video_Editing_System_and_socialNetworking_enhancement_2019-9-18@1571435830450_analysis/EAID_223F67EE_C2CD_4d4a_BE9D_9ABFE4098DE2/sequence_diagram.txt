@@ -1,0 +1,97 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ViewMarketDirectorAccountsPage" as 09
+participant "pdfformatisnotvalidmessage" as 39
+participant "Confirmbox" as 49
+participant "Cancel" as 89
+
+User -> 09: AccountManagementPage()
+activate 09
+
+09 -> 09: REtrievealistofmarketingdirectoraccountrecords()
+09 -> 09: AccountManagementPage()
+09 -> 09: REtrievealistofmarketingdirectoraccountrecords()
+09 -> 09: directoraccountsdb()
+deactivate 09
+
+09 -> 09: listofdirectoraccountrecords()
+activate 09
+
+09 -> 49: PopupConfirmationbox()
+activate 49
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+39 -> 39: notexistorinvlideusername()
+deactivate 39
+
+39 -> 09: Redirecttoviewmarketdirectoraccountspage()
+09 -> 09: ViewMarketDirectorAccountsPage()
+deactivate 09
+
+49 -> 49: Confirmationbox()
+49 -> 89: Cancel()
+activate 89
+
+89 -> 09: ViewMarketDirectorAccountsPage()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+39 -> 39: notexistorinvlideusername()
+deactivate 39
+
+39 -> 09: Redirecttoviewmarketdirectoraccountspage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+User -> 09: listofdirectoraccountrecords()
+activate 09
+
+09 -> 49: PopupConfirmationbox()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 09: ViewMarketDirectorAccountsPage()
+activate 09
+
+deactivate 09
+
+User -> 39: notexistorinvlideusername()
+activate 39
+
+deactivate 39
+
+User -> 49: Confirmationbox()
+activate 49
+
+49 -> 89: Cancel()
+activate 89
+
+deactivate 89
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+@enduml

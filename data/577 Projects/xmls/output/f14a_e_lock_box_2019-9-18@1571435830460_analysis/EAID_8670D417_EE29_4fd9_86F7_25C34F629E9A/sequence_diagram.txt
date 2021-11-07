@@ -1,0 +1,139 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manageractor Youth
+participant "Usermanagementbutton" as 09
+participant "unauthorizedrequest" as 19
+participant "download" as 39
+participant "print" as 99
+participant "role" as 149
+participant "db" as 209
+
+Administrator -> 09: documentlist()
+activate 09
+
+09 -> 149: validateroleofuser()
+activate 149
+
+149 -> 09: querydocument()
+09 -> 209: db()
+activate 209
+
+deactivate 209
+
+09 -> 39: documentuploadpage()
+activate 39
+
+39 -> 39: Validateprintdownloadrequest()
+39 -> 149: role()
+deactivate 149
+
+39 -> 39: download()
+39 -> 09: FileManager()
+deactivate 09
+
+39 -> 09: filemanager()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+39 -> 19: unauthorizedrequest()
+activate 19
+
+deactivate 19
+
+39 -> 99: print()
+activate 99
+
+99 -> 99: Printerservice()
+deactivate 99
+
+99 -> 09: caseinformationpage()
+activate 09
+
+deactivate 09
+
+149 -> 149: role()
+activate 149
+
+deactivate 149
+
+149 -> 19: unauthorizedrequestmessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: unauthorizedrequest()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: unauthorizedrequestmessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 39: documentuploadpage()
+activate 39
+
+39 -> 39: Validateprintdownloadrequest()
+deactivate 39
+
+Case Manager -> 39: documentuploadpage()
+activate 39
+
+39 -> 39: Validateprintdownloadrequest()
+deactivate 39
+
+Case Manager -> 19: unauthorizedrequestmessage()
+activate 19
+
+deactivate 19
+
+Case Manager -> 19: unauthorizedrequest()
+activate 19
+
+deactivate 19
+
+Case Manager -> 09: documentlist()
+activate 09
+
+09 -> 149: validateroleofuser()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+Youth -> 19: unauthorizedrequest()
+activate 19
+
+deactivate 19
+
+Youth -> 39: documentuploadpage()
+activate 39
+
+39 -> 39: Validateprintdownloadrequest()
+deactivate 39
+
+Youth -> 19: unauthorizedrequestmessage()
+activate 19
+
+deactivate 19
+
+Youth -> 09: documentlist()
+activate 09
+
+09 -> 149: validateroleofuser()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EmailProtocol" as 09
+participant "savedsuccessfullymessage" as 19
+participant "Friends" as 29
+participant "RequestReferralButton" as 49
+
+User -> 19: messageeditpage()
+activate 19
+
+19 -> 19: sendemailmessage()
+19 -> 09: EmailProtocol()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: Friendselectionpage()
+activate 29
+
+29 -> 19: displaymessageeditpage()
+activate 19
+
+19 -> 19: messageeditpage()
+19 -> 19: sendemailmessage()
+deactivate 19
+
+deactivate 29
+
+User -> 29: Nofriedfoundmessage()
+activate 29
+
+deactivate 29
+
+User -> 49: RequestReferralButton()
+activate 49
+
+49 -> 29: displayfriendsbyorganization()
+activate 29
+
+29 -> 29: Friendselectionpage()
+29 -> 19: displaymessageeditpage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+29 -> 29: Friends()
+activate 29
+
+deactivate 29
+
+29 -> 29: Nofriedfoundmessage()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+@enduml

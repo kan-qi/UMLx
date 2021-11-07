@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Homepage" as 09
+participant "Showconfirmation" as 29
+participant "Endsession" as 39
+participant "Retypenew�Cpassword" as 59
+
+User  -> 09: Loginpage()
+activate 09
+
+09 -> 59: Validatepasswordandusename()
+activate 59
+
+59 -> 39: Endsession()
+activate 39
+
+39 -> 29: Showconfirmation()
+activate 29
+
+29 -> 09: Homepage()
+deactivate 09
+
+29 -> 09: Loginpage()
+activate 09
+
+09 -> 59: Validatepasswordandusename()
+deactivate 59
+
+deactivate 09
+
+deactivate 29
+
+deactivate 39
+
+User  -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

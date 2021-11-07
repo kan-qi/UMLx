@@ -1,0 +1,104 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Accessallstudentinformation" as 09
+participant "Homepage" as 19
+participant "teacher" as 29
+participant "Manageresourcesbutton" as 59
+participant "Database" as 69
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 69: Updateinformationindatabase()
+activate 69
+
+69 -> 69: Database()
+deactivate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Chooseoneuserandupdate()
+activate 29
+
+29 -> 69: Updateinformationindatabase()
+activate 69
+
+69 -> 69: Database()
+deactivate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+User -> 29: Chooseoneuserandupdate()
+activate 29
+
+29 -> 69: Updateinformationindatabase()
+activate 69
+
+69 -> 69: Database()
+deactivate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 69: Updateinformationindatabase()
+activate 69
+
+69 -> 69: Database()
+deactivate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 59: Manageresourcebutton()
+activate 59
+
+59 -> 09: Showlistofinformation()
+activate 09
+
+09 -> 69: Updateinformationindatabase()
+activate 69
+
+69 -> 69: Database()
+deactivate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 59
+
+@enduml

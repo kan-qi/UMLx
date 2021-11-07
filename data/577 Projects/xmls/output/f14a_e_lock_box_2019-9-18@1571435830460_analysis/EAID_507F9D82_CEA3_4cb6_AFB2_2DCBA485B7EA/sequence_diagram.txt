@@ -1,0 +1,137 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manageractor General staff
+participant "Usermanagementbutton" as 09
+participant "blankdescriptionerror" as 19
+participant "case" as 199
+participant "insertuserinfo" as 209
+participant "role" as 219
+
+Administrator -> 09: Addnewbutton()
+activate 09
+
+09 -> 19: displayactivitydescriptionpage()
+activate 19
+
+19 -> 19: activitydescriptionpage()
+19 -> 19: validateactivitydescription()
+19 -> 19: blankdescriptionerror()
+deactivate 19
+
+19 -> 209: insertactivityintocase()
+activate 209
+
+209 -> 199: caseinformation()
+activate 199
+
+deactivate 199
+
+deactivate 209
+
+19 -> 219: role()
+activate 219
+
+deactivate 219
+
+deactivate 09
+
+Administrator -> 19: blankdescriptionerror()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: activitydescriptionpage()
+activate 19
+
+19 -> 19: validateactivitydescription()
+deactivate 19
+
+Administrator -> 19: activitydescriptionpage()
+activate 19
+
+19 -> 19: validateactivitydescription()
+deactivate 19
+
+Administrator -> 09: Addnewbutton()
+activate 09
+
+09 -> 19: displayactivitydescriptionpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Administrator -> 19: blankdescriptionerror()
+activate 19
+
+deactivate 19
+
+Case Manager -> 19: activitydescriptionpage()
+activate 19
+
+19 -> 19: validateactivitydescription()
+deactivate 19
+
+Case Manager -> 09: Addnewbutton()
+activate 09
+
+09 -> 19: displayactivitydescriptionpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Case Manager -> 19: blankdescriptionerror()
+activate 19
+
+deactivate 19
+
+General staff -> 19: activitydescriptionpage()
+activate 19
+
+19 -> 19: validateactivitydescription()
+deactivate 19
+
+General staff -> 09: Addnewbutton()
+activate 09
+
+09 -> 19: displayactivitydescriptionpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+General staff -> 19: blankdescriptionerror()
+activate 19
+
+deactivate 19
+
+General staff -> 09: Addnewbutton()
+activate 09
+
+09 -> 19: displayactivitydescriptionpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+General staff -> 19: activitydescriptionpage()
+activate 19
+
+19 -> 19: validateactivitydescription()
+deactivate 19
+
+General staff -> 19: blankdescriptionerror()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "addtocartbutton" as 09
+participant "notavailableerrormessage" as 19
+participant "loginpage" as 39
+participant "queryauthenticationinfo" as 79
+participant "precheckifinputisempty" as 89
+participant "User" as 109
+
+User -> 09: Editprofilebutton()
+activate 09
+
+09 -> 19: displayprofileeditpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: existingprofileerrormessage()
+activate 19
+
+deactivate 19
+
+User -> 19: successfulchangemessage()
+activate 19
+
+deactivate 19
+
+User -> 39: profileeditpage()
+activate 39
+
+39 -> 89: precheckrequiredfields()
+activate 89
+
+89 -> 19: invalidinformationerrormessage()
+activate 19
+
+deactivate 19
+
+89 -> 79: updateprofileentry()
+activate 79
+
+79 -> 19: successfulchangemessage()
+activate 19
+
+deactivate 19
+
+79 -> 109: userinfo()
+activate 109
+
+deactivate 109
+
+deactivate 79
+
+deactivate 89
+
+deactivate 39
+
+User -> 19: invalidinformationerrormessage()
+activate 19
+
+deactivate 19
+
+@enduml

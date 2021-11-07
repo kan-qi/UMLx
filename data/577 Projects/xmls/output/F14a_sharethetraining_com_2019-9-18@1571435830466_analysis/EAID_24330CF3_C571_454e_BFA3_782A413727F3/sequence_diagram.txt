@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Course" as 19
+participant "receivepaymentresult" as 29
+participant "Invalidenteredinformation" as 79
+
+User -> 09: Loginpage()
+activate 09
+
+deactivate 09
+
+User -> 19: Courselist()
+activate 19
+
+19 -> 19: Opencoursesharemenu()
+19 -> 29: Sharemenu()
+activate 29
+
+29 -> 09: Redirecttologinpage()
+activate 09
+
+09 -> 09: Loginpage()
+deactivate 09
+
+29 -> 79: sendcourseinformationtousers()
+activate 79
+
+79 -> 79: Notification()
+deactivate 79
+
+deactivate 29
+
+deactivate 19
+
+User -> 29: Sharemenu()
+activate 29
+
+29 -> 09: Redirecttologinpage()
+activate 09
+
+deactivate 09
+
+29 -> 79: sendcourseinformationtousers()
+activate 79
+
+deactivate 79
+
+deactivate 29
+
+User -> 19: courselistbutton()
+activate 19
+
+19 -> 19: loadcourselist()
+19 -> 19: Courselist()
+19 -> 19: Opencoursesharemenu()
+deactivate 19
+
+19 -> 19: user()
+activate 19
+
+deactivate 19
+
+@enduml

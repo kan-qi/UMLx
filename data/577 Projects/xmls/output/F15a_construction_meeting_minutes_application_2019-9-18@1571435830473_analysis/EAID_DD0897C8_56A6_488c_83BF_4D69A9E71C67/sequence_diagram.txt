@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "submittedcommentsscreen" as 09
+participant "Selectingsettingsbutton" as 19
+participant "Administratorsdashboard" as 29
+participant "Attendeeisnotavailable" as 79
+participant "Updateacceptancestatus" as 99
+
+Administrator -> 09: emptypublishmeetingscreen()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: meetinglistandpushlishoptions()
+activate 19
+
+19 -> 99: Updatemeetingsstatus()
+activate 99
+
+99 -> 19: Meetings()
+deactivate 19
+
+99 -> 09: emptypublishmeetingscreen()
+activate 09
+
+deactivate 09
+
+99 -> 79: sendmessagestoattendeeslist()
+activate 79
+
+79 -> 79: attendeelist()
+deactivate 79
+
+99 -> 79: attendeelist()
+activate 79
+
+deactivate 79
+
+deactivate 99
+
+Administrator -> 29: Administratorsdashboard()
+activate 29
+
+29 -> 09: displaypublishmeetingsscreen()
+activate 09
+
+09 -> 19: Meetings()
+activate 19
+
+deactivate 19
+
+09 -> 19: meetinglistandpushlishoptions()
+activate 19
+
+19 -> 99: Updatemeetingsstatus()
+activate 99
+
+deactivate 99
+
+deactivate 19
+
+deactivate 09
+
+deactivate 29
+
+@enduml

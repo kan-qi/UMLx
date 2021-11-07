@@ -85,7 +85,8 @@ function analyseXMIModel(projectList, reportDir){
     function analyseModel(projectXMI, projectName, reportDir){
         return new Promise((resolve, reject) => {
 //        	config.setDebugOutputDir(projectPath+"/debug");
-        	
+
+        var startTime = new Date();
 
         if(!projectName){
         		projectName = ""
@@ -117,6 +118,18 @@ function analyseXMIModel(projectList, reportDir){
             		resolve();
             		return;
         		}
+
+        		var endTime = new Date();
+                                    var runTime = endTime - startTime;
+                                    var fs = require("fs"); //Load the filesystem module
+                                    var stats = fs.statSync(inputFile);
+                                    var fileSizeInBytes = stats["size"];
+                                    //Convert the file size to megabytes (optional)
+                                    var fileSizeInKbytes = fileSizeInBytes / 1000.0;
+                                    var fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
+
+                                    var runtime_analysis = "\n"+projectName+","+startTime+","+endTime+","+runTime+","+fileSizeInKbytes+","+fileSizeInMegabytes;
+                        		    FileManagerUtil.appendFileSync(reportDir+"//"+"runtime_analysis_results.csv", runtime_analysis);
         		console.log("finished sr analysis");
         		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
             		console.log('analysis finished!');
@@ -132,7 +145,9 @@ function analyseXMIModel(projectList, reportDir){
         	
         });
     }
-    
+
+    var runtime_analysis = "name, startTime, endTime, runTime, size (kb), size(mb)";
+    FileManagerUtil.writeFileSync(reportDir+"//"+"runtime_analysis_results.csv", runtime_analysis);
     return Promise.all(projectList.map(project=>{
         return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
     })).then(
@@ -152,6 +167,7 @@ function analyseXMIModel(projectList, reportDir){
             return new Promise((resolve, reject) => {
                 setTimeout(function(){
                 	console.log("analysis finished");
+                	//write runtime analysis results
                     resolve();
                 }, 0);
             });

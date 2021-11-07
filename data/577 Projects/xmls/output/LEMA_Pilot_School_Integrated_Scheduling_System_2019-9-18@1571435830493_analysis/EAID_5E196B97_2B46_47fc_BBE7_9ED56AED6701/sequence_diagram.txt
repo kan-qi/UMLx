@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Saveinformation" as 39
+participant "Database" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Teacherselectpage()
+activate 09
+
+09 -> 39: Saveinformation()
+activate 39
+
+39 -> 49: Updatedatabase()
+activate 49
+
+49 -> 39: Confirmationmessage()
+39 -> 09: Homepage()
+deactivate 09
+
+deactivate 39
+
+49 -> 49: Database()
+deactivate 49
+
+@enduml

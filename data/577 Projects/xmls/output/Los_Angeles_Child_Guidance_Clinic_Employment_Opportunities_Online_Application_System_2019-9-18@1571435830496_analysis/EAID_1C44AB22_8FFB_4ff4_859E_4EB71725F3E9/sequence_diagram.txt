@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "markstheuseraseitherqualifiedunqualifiedorprocessing" as 09
+participant "Homepage" as 19
+participant "selecttheappropriatepostings" as 29
+participant "EditApplicationsinformation" as 49
+
+User -> 09: markstheuseraseitherqualifiedunqualifiedorprocessing()
+activate 09
+
+09 -> 49: returnsthecorrectapplicant()
+activate 49
+
+49 -> 29: modifiestheApplicantprofiletoreflectUserschange()
+activate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: selecttheappropriatepostingandviewprofile()
+activate 29
+
+29 -> 49: returnsthecorrectapplicant()
+activate 49
+
+49 -> 29: modifiestheApplicantprofiletoreflectUserschange()
+deactivate 29
+
+deactivate 49
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 49: EditApplicationStatusPage()
+activate 49
+
+49 -> 49: EditApplicationsinformation()
+49 -> 49: Showconfirmationpage()
+49 -> 49: Applicationdb()
+deactivate 49
+
+49 -> 49: EditApplicationStatusPage()
+activate 49
+
+49 -> 49: EditApplicationsinformation()
+deactivate 49
+
+49 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

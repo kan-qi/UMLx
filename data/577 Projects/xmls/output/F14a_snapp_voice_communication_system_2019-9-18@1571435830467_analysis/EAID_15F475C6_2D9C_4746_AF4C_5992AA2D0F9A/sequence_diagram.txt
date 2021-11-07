@@ -1,0 +1,104 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Customeractor Leadactor Twilio API
+participant "assigncalltoagent" as 09
+participant "1800dialbutton" as 19
+participant "softphonescreen" as 29
+participant "voicemailpanel" as 49
+participant "TwilioAPI" as 89
+participant "loginpage" as 119
+
+Customer -> 19: 1800dialbutton()
+activate 19
+
+19 -> 09: assigncalltoagent()
+activate 09
+
+09 -> 89: TwilioAPI()
+activate 89
+
+89 -> 09: savecalllog()
+09 -> 119: calllog()
+activate 119
+
+deactivate 119
+
+deactivate 09
+
+89 -> 09: popupincomecalldialog()
+activate 09
+
+09 -> 119: incomecalldialog()
+activate 119
+
+119 -> 09: Agent()
+deactivate 09
+
+deactivate 119
+
+89 -> 49: redirecttovoidmail()
+activate 49
+
+49 -> 49: voicemailpanel()
+49 -> 89: connecttoTwilioAPIforagentscall()
+89 -> 09: agent()
+activate 09
+
+deactivate 09
+
+89 -> 29: softphonescreen()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+deactivate 49
+
+deactivate 19
+
+Lead -> 29: softphonescreen()
+activate 29
+
+deactivate 29
+
+Lead -> 19: 1800dialbutton()
+activate 19
+
+19 -> 09: assigncalltoagent()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+Lead -> 49: voicemailpanel()
+activate 49
+
+49 -> 89: connecttoTwilioAPIforagentscall()
+activate 89
+
+deactivate 89
+
+deactivate 49
+
+Twilio API -> 09: savecalllog()
+activate 09
+
+deactivate 09
+
+Twilio API -> 09: popupincomecalldialog()
+activate 09
+
+deactivate 09
+
+Twilio API -> 49: redirecttovoidmail()
+activate 49
+
+deactivate 49
+
+@enduml

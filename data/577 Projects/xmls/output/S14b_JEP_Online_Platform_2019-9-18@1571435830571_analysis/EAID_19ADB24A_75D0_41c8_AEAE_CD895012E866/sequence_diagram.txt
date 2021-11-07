@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "successmessage" as 09
+participant "redirecttoapagewiththecurerntsiteslist" as 19
+participant "viewlink" as 29
+participant "checkuscidexistornot" as 49
+participant "emptyannouncementform" as 59
+
+User -> 09: norecordmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: selectdirectoryandfilenamedialog()
+activate 19
+
+deactivate 19
+
+User -> 29: viewlink()
+activate 29
+
+29 -> 49: showtherecordofthestudent()
+activate 49
+
+49 -> 09: norecordmessage()
+activate 09
+
+deactivate 09
+
+49 -> 19: recordsofthestudentpage()
+activate 19
+
+19 -> 19: popouttheframetoasksuertochoosedirectoryandfilename()
+19 -> 19: selectdirectoryandfilenamedialog()
+deactivate 19
+
+49 -> 59: studentinfo()
+activate 59
+
+deactivate 59
+
+deactivate 49
+
+deactivate 29
+
+User -> 19: recordsofthestudentpage()
+activate 19
+
+19 -> 19: popouttheframetoasksuertochoosedirectoryandfilename()
+deactivate 19
+
+@enduml

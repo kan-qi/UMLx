@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "successmessage" as 09
+participant "deletesurveyfromdb" as 19
+
+administrator -> 09: confirmationmessage()
+activate 09
+
+09 -> 19: redirectsurveydeletionpage()
+activate 19
+
+19 -> 19: surveylistpage()
+19 -> 19: checkanswersundersurvey()
+19 -> 09: confirmmessageaboutirreversibleoperation()
+09 -> 19: surveymonkey()
+deactivate 19
+
+09 -> 09: confirmationmessage()
+09 -> 19: redirectsurveydeletionpage()
+activate 19
+
+deactivate 19
+
+09 -> 19: deletesurveyfromdb()
+activate 19
+
+19 -> 19: surveymonkey()
+deactivate 19
+
+19 -> 09: deletesuccesmessage()
+deactivate 09
+
+19 -> 19: surveydb()
+activate 19
+
+deactivate 19
+
+09 -> 19: surveydatabase()
+activate 19
+
+deactivate 19
+
+19 -> 19: surveydb()
+activate 19
+
+deactivate 19
+
+09 -> 19: deletesurveyfromdb()
+activate 19
+
+deactivate 19
+
+administrator -> 19: surveylistpage()
+activate 19
+
+19 -> 19: checkanswersundersurvey()
+deactivate 19
+
+administrator -> 09: deletesuccesmessage()
+activate 09
+
+deactivate 09
+
+@enduml

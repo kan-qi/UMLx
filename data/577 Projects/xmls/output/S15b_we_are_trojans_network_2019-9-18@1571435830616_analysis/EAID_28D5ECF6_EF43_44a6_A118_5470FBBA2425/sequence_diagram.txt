@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "likepostbutton" as 09
+participant "Invalidsearchinput" as 19
+participant "Forumpage" as 29
+participant "commentispostedsuccessfullymessage" as 39
+participant "decreasetheitmenuminstore" as 49
+participant "savethread" as 59
+participant "CheckSQLinjections" as 79
+
+User -> 09: startathreadbutton()
+activate 09
+
+09 -> 29: loadthreadinformationinputpage()
+activate 29
+
+29 -> 29: threadinformationinputpage()
+29 -> 79: Checktheinputthreadinformation()
+activate 79
+
+79 -> 79: CheckSQLinjections()
+79 -> 59: savethread()
+activate 59
+
+59 -> 39: Threadispostedsuccessfully()
+activate 39
+
+deactivate 39
+
+59 -> 59: thread()
+deactivate 59
+
+79 -> 49: Potentialsecurityerror()
+activate 49
+
+deactivate 49
+
+deactivate 79
+
+79 -> 19: Invalidinputthreadinformation()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Invalidinputthreadinformation()
+activate 19
+
+deactivate 19
+
+User -> 29: threadinformationinputpage()
+activate 29
+
+29 -> 79: Checktheinputthreadinformation()
+activate 79
+
+deactivate 79
+
+deactivate 29
+
+User -> 39: Threadispostedsuccessfully()
+activate 39
+
+deactivate 39
+
+User -> 49: Potentialsecurityerror()
+activate 49
+
+deactivate 49
+
+@enduml

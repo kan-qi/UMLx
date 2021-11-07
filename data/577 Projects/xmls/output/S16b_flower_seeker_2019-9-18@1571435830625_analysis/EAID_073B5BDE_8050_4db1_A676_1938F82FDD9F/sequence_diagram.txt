@@ -1,0 +1,49 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "loginpage" as 09
+participant "notavailableerrormessage" as 19
+participant "precheckifinputisempty" as 59
+participant "queryauthenticationinfo" as 69
+
+User -> 09: loginpage()
+activate 09
+
+09 -> 59: precheckifinputisempty()
+activate 59
+
+59 -> 19: errormessageforemptyinput()
+activate 19
+
+deactivate 19
+
+59 -> 19: invalidinputerrormessage()
+activate 19
+
+deactivate 19
+
+59 -> 69: queryauthenticationinfo()
+activate 69
+
+69 -> 69: userinfo()
+deactivate 69
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: invalidinputerrormessage()
+activate 19
+
+deactivate 19
+
+User -> 19: errormessageforemptyinput()
+activate 19
+
+deactivate 19
+
+@enduml

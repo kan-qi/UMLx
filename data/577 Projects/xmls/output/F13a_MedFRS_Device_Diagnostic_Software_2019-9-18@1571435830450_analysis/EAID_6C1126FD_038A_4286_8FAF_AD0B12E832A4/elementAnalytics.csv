@@ -1,0 +1,16 @@
+id,element,useCase,type,component
+1,User:"Emergency" button,Add/Chose Disaster,boundary,Emergencybutton
+2,User:Disaster page,Add/Chose Disaster,control,Disasterrecorddb
+3,User:Disaster page,Add/Chose Disaster,control,Disasterrecorddb
+4,User:Superviser's emergency disaster homepage,Add/Chose Disaster,boundary,Emergencybutton
+5,"Emergency" button:System redirects to Disaste page,Add/Chose Disaster,boundary,RedirectViewIndividualsPage
+6,Disaster page:validate theat all fields are non-empty,Add/Chose Disaster,control,ValidatesInput
+7,System redirects to Disaste page:Disaster page,Add/Chose Disaster,control,Disasterrecorddb
+8,System inserts the disaster record in the database:Disaster record db,Add/Chose Disaster,control,Disasterrecorddb
+9,System inserts the disaster record in the database:Superviser's emergency disaster homepage,Add/Chose Disaster,boundary,Emergencybutton
+10,validate theat all fields are non-empty:Superviser's emergency disaster homepage,Add/Chose Disaster,boundary,Emergencybutton
+11,validate theat all fields are non-empty:System inserts the disaster record in the database,Add/Chose Disaster,control,Disasterrecorddb
+12,stl#User:"Emergency" button,Add/Chose Disaster,Stimulus,undefined
+13,stl#User:Disaster page,Add/Chose Disaster,Stimulus,undefined
+14,stl#User:Disaster page,Add/Chose Disaster,Stimulus,undefined
+15,stl#User:Superviser's emergency disaster homepage,Add/Chose Disaster,Stimulus,undefined

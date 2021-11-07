@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor customer
+participant "notavailableerrormessage" as 09
+participant "precheckifinputisempty" as 19
+participant "loginpage" as 29
+
+customer -> 09: unreadmessage()
+activate 09
+
+09 -> 19: displaycommentinputpanel()
+activate 19
+
+19 -> 09: message()
+deactivate 09
+
+19 -> 19: replyinputpanel()
+19 -> 09: saverepliedmessage()
+activate 09
+
+09 -> 09: message()
+deactivate 09
+
+deactivate 19
+
+customer -> 19: replyinputpanel()
+activate 19
+
+19 -> 09: saverepliedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+customer -> 29: dashboardpage()
+activate 29
+
+29 -> 09: displayunreadmessage()
+activate 09
+
+09 -> 09: message()
+deactivate 09
+
+09 -> 09: unreadmessage()
+activate 09
+
+09 -> 19: displaycommentinputpanel()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 29
+
+@enduml

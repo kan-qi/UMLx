@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "questionlist" as 09
+participant "successmessage" as 19
+participant "insertanassociationintodb" as 39
+participant "mapofselectedpaths" as 89
+
+administrator -> 09: pathlist()
+activate 09
+
+09 -> 39: checkifassociationbetweenpathandsurveyindb()
+activate 39
+
+39 -> 39: pathandlocationinformation()
+deactivate 39
+
+39 -> 39: insertanassociationintodb()
+activate 39
+
+39 -> 39: pathandlocationinformation()
+deactivate 39
+
+39 -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+administrator -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+administrator -> 09: schoollistamdsurveylistpage()
+activate 09
+
+09 -> 89: loadpathlistfromthedatabase()
+activate 89
+
+89 -> 89: pathdb()
+deactivate 89
+
+89 -> 09: pathlist()
+09 -> 39: checkifassociationbetweenpathandsurveyindb()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+@enduml

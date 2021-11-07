@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "validationfailedmessage" as 09
+participant "addvewbutton" as 39
+participant "user" as 59
+participant "insertthenewusernameandpasswordintotheuserdb" as 109
+
+User -> 09: descriptionshouldnotbeblankmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: useinformationpage()
+activate 09
+
+deactivate 09
+
+User -> 09: informationinputpage()
+activate 09
+
+09 -> 09: validatethedescirpitonofactivity()
+09 -> 09: descriptionshouldnotbeblankmessage()
+deactivate 09
+
+09 -> 109: insertactivityintocase()
+activate 109
+
+109 -> 59: caseinfo()
+activate 59
+
+deactivate 59
+
+109 -> 09: useinformationpage()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+User -> 39: addvewbutton()
+activate 39
+
+39 -> 09: returnactivitydescriptionpage()
+activate 09
+
+09 -> 09: informationinputpage()
+09 -> 09: validatethedescirpitonofactivity()
+deactivate 09
+
+09 -> 59: user()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+@enduml

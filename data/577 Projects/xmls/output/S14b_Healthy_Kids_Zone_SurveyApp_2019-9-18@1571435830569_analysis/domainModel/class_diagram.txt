@@ -1,0 +1,78 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class updatesurveyindb {
+~ updatesurveyindb()
+~ surveylist()
+~ checkifassociationbetweenpathandsurveyindb()
+}
+
+class User {
+~ logoutuser()
+~ answer()
+}
+
+class Object1 
+
+class questionlist {
+~ questionlist()
+~ shcoollist()
+~ surveylist()
+~ pathlist()
+~ displayaquesitonlistofselectedquestiontype()
+~ schoollistpage()
+~ displayafunctionmenu()
+~ questioncategorypage()
+~ confirmationdialog()
+~ sendrequest()
+~ unsweredquestionsfoundmessage()
+}
+
+class successmessage {
+~ successmessage()
+~ sameschoolandnamemessage()
+~ insertsuccess()
+~ errormessageforover500characters()
+~ noanswerunderpathmessage()
+~ confirmationmessage()
+~ nosavedsurveyfoundmessage()
+}
+
+class mapofselectedpaths {
+~ mapofselectedpaths()
+~ pathdb()
+~ loadpathlistfromthedatabase()
+~ checkrelatedanswersunderpaths()
+~ redirectsurveydeletionpage()
+~ tempoararyfile()
+}
+
+class mapview {
+~ mapview()
+}
+
+class executefeaturenaanddisplaycategories {
+~ executefeaturenaanddisplaycategories()
+~ displayerrormessageforsamenameandaddress()
+~ deletetheschoolandaddress()
+~ Displayaconfirmationdialog()
+~ displaypathlist()
+~ retriveschoolpathandsurvey()
+~ pathandlocationinformation()
+}
+
+class quitwithoutsavingbutton {
+~ quitwithoutsavingbutton()
+~ savebutton()
+}
+
+class answerstorage {
+~ answerstorage()
+~ outofavailablestorageerror()
+~ errormessageforover500characters()
+~ savetotemporaryfile()
+~ checkcompleteanswers()
+~ insertanassociationintodb()
+}
+
+@enduml

@@ -1,0 +1,97 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "fillinfieldasrequired" as 19
+participant "ClickonAdd" as 29
+participant "Notificationdisplayed��Adduserprofile��" as 79
+participant "jobseekerdb" as 119
+participant "Savesindatabase" as 129
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Fillallrequiredfieldsincludingexpirationdate()
+activate 19
+
+19 -> 19: Validateenteredfields()
+19 -> 129: Savesindatabase()
+activate 129
+
+129 -> 119: Poststhejobonthewebsite()
+activate 119
+
+119 -> 79: DisplaysthejobontheJobspage()
+activate 79
+
+79 -> 79: Sendsemailnotificationtotheusers()
+79 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+deactivate 119
+
+deactivate 129
+
+19 -> 119: jobdb()
+activate 119
+
+deactivate 119
+
+deactivate 19
+
+User -> 29: Clickon��PostJob��()
+activate 29
+
+29 -> 09: DisplaysPostJobpage()
+activate 09
+
+09 -> 19: Validateenteredfields()
+activate 19
+
+19 -> 129: Savesindatabase()
+activate 129
+
+deactivate 129
+
+19 -> 119: jobdb()
+activate 119
+
+deactivate 119
+
+deactivate 19
+
+deactivate 09
+
+deactivate 29
+
+User -> 29: ClickonPost()
+activate 29
+
+29 -> 19: Validateenteredfields()
+activate 19
+
+19 -> 129: Savesindatabase()
+activate 129
+
+deactivate 129
+
+19 -> 119: jobdb()
+activate 119
+
+deactivate 119
+
+deactivate 19
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,112 @@
+id,element,useCase,type,component
+1,check if email id and number are valid:Invalid detail input message,Create/update user profile,boundary,Invaliddetailinputmessage
+2,Jobseeker:Invalid detail input message,Create/update user profile,boundary,Invaliddetailinputmessage
+3,save the info to local storage:Local storage,Create/update user profile,boundary,Localstorage
+4,User Profile button:redirect to profile page,Create/update user profile,boundary,Localstorage
+5,Jobseeker:User Profile button,Create/update user profile,boundary,UserProfilebutton
+6,check if email id and model number are existing:input the detail into user database,Create/update user profile,boundary,Invaliddetailinputmessage
+7,send details in an encrypted fashion to search:check if email id and model number are existing,Create/update user profile,control,checkifemailidandmodelnumberareexisting
+8,check if email id and number are valid:send details in an encrypted fashion to search,Create/update user profile,control,checkifemailidandmodelnumberareexisting
+9,user information update page:check if email id and number are valid,Create/update user profile,control,checkifemailidandmodelnumberareexisting
+10,save the info to local storage:display success message and redirect to home page,Create/update user profile,boundary,Invaliddetailinputmessage
+11,Jobseeker:home page,Create/update user profile,boundary,Localstorage
+12,save the info to local storage:home page,Create/update user profile,boundary,Localstorage
+13,input the detail into user database:user database,Create/update user profile,boundary,UserProfilebutton
+14,input the detail into user database:send saving notification,Create/update user profile,boundary,sendsavingnotification
+15,redirect to profile page:user information update page,Create/update user profile,boundary,sendsavingnotification
+16,send saving notification:save the info to local storage,Create/update user profile,boundary,Localstorage
+17,Jobseeker:saving success message,Create/update user profile,boundary,Invaliddetailinputmessage
+18,send saving notification:saving success message,Create/update user profile,boundary,Invaliddetailinputmessage
+19,Jobseeker:user information update page,Create/update user profile,boundary,sendsavingnotification
+20,stl#Jobseeker:Invalid detail input message,Create/update user profile,Stimulus,undefined
+21,stl#Jobseeker:User Profile button,Create/update user profile,Stimulus,undefined
+22,stl#Jobseeker:home page,Create/update user profile,Stimulus,undefined
+23,stl#Jobseeker:saving success message,Create/update user profile,Stimulus,undefined
+24,stl#Jobseeker:user information update page,Create/update user profile,Stimulus,undefined
+25,RSS feed retriver:Notification,Process Neogov RSS feed,control,Notification
+26,store RSS feed in XML file:Notification,Process Neogov RSS feed,control,Notification
+27,store RSS feed in XML file:XML file,Process Neogov RSS feed,boundary,UserProfilebutton
+28,retrive RSS feed:retry request,Process Neogov RSS feed,control,retryrequest
+29,retrive RSS feed:store RSS feed in XML file,Process Neogov RSS feed,boundary,UserProfilebutton
+30,RSS feed retriver:retrive RSS feed,Process Neogov RSS feed,control,retryrequest
+31,retrive RSS feed:Neogov,Process Neogov RSS feed,actor,Neogov
+32,retry request:Neogov,Process Neogov RSS feed,actor,Neogov
+33,stl#RSS feed retriver:Notification,Process Neogov RSS feed,Stimulus,undefined
+34,stl#RSS feed retriver:retrive RSS feed,Process Neogov RSS feed,Stimulus,undefined
+35,check method of notification:trigger download the list of jobs to a subscriber,Receive notifications when job opens,boundary,triggerdownloadthelistofjobstoasubscriber
+36,check method of notification:user profile database,Receive notifications when job opens,boundary,UserProfilebutton
+37,search through the user profile database:check method of notification,Receive notifications when job opens,control,Notification
+38,trigger download the list of jobs to a subscriber:job,Receive notifications when job opens,boundary,job
+39,subscribe to a job:job,Receive notifications when job opens,boundary,job
+40,search through the user profile database:user profile database,Receive notifications when job opens,boundary,UserProfilebutton
+41,RSS Parser timer:search through the user profile database,Receive notifications when job opens,boundary,UserProfilebutton
+42,subscribe button:subscribe to a job,Receive notifications when job opens,boundary,triggerdownloadthelistofjobstoasubscriber
+43,RSS feed retriver:subscribe button,Receive notifications when job opens,boundary,UserProfilebutton
+44,stl#RSS Parser timer:search through the user profile database,Receive notifications when job opens,Stimulus,undefined
+45,stl#RSS feed retriver:subscribe button,Receive notifications when job opens,Stimulus,undefined
+46,display the job search result in the job page:job list page,Search all existing jobs,boundary,job
+47,search jobs from job listings database:display the job search result in the job page,Search all existing jobs,boundary,triggerdownloadthelistofjobstoasubscriber
+48,Jobseeker:job list page,Search all existing jobs,boundary,job
+49,search jobs from job listings database:job listing database,Search all existing jobs,control,checkifemailidandmodelnumberareexisting
+50,redict to search page:search page,Search all existing jobs,control,RSSParsertimer
+51,search for jobs button:redict to search page,Search all existing jobs,boundary,Localstorage
+52,Jobseeker:search for jobs button,Search all existing jobs,boundary,UserProfilebutton
+53,send search term to the server:search jobs from job listings database,Search all existing jobs,control,checkifemailidandmodelnumberareexisting
+54,search page:validate if search term is non-empty,Search all existing jobs,control,checkifemailidandmodelnumberareexisting
+55,Jobseeker:search page,Search all existing jobs,control,RSSParsertimer
+56,validate if search term is non-empty:send search term to the server,Search all existing jobs,control,RSSParsertimer
+57,stl#Jobseeker:job list page,Search all existing jobs,Stimulus,undefined
+58,stl#Jobseeker:search for jobs button,Search all existing jobs,Stimulus,undefined
+59,stl#Jobseeker:search page,Search all existing jobs,Stimulus,undefined
+60,redirect to job description page:description page,Subscribe for notifications,control,Notification
+61,Jobseeker:description page,Subscribe for notifications,control,Notification
+62,display success message:redirect to job description page,Subscribe for notifications,boundary,triggerdownloadthelistofjobstoasubscriber
+63,Jobseeker:display success message,Subscribe for notifications,boundary,Invaliddetailinputmessage
+64,send job id subscription method and user details to search in encrypted fashion:display success message,Subscribe for notifications,boundary,Invaliddetailinputmessage
+65,email or text message notification choice:redirect to profile details page,Subscribe for notifications,boundary,UserProfilebutton
+66,read existing information:email or text message notification choice,Subscribe for notifications,control,Notification
+67,Jobseeker:email or text message notification choice,Subscribe for notifications,control,Notification
+68,read existing information:form for inputting user information,Subscribe for notifications,boundary,UserProfilebutton
+69,profile details page:send job id subscription method and user details to search in encrypted fashion,Subscribe for notifications,control,checkifemailidandmodelnumberareexisting
+70,Jobseeker:profile details page,Subscribe for notifications,boundary,UserProfilebutton
+71,redirect to profile details page:profile details page,Subscribe for notifications,boundary,UserProfilebutton
+72,read existing information:user profile database,Subscribe for notifications,boundary,UserProfilebutton
+73,subscription page:read existing information,Subscribe for notifications,control,Notification
+74,redirect to the subscription page:subscription page,Subscribe for notifications,boundary,triggerdownloadthelistofjobstoasubscriber
+75,subscribe button:redirect to the subscription page,Subscribe for notifications,boundary,triggerdownloadthelistofjobstoasubscriber
+76,save detail into user profile database:user profile database,Subscribe for notifications,boundary,UserProfilebutton
+77,send job id subscription method and user details to search in encrypted fashion:save detail into user profile database,Subscribe for notifications,boundary,UserProfilebutton
+78,send job id subscription method and user details to search in encrypted fashion:time out error message,Subscribe for notifications,boundary,Invaliddetailinputmessage
+79,Jobseeker:subscribe button,Subscribe for notifications,boundary,UserProfilebutton
+80,Jobseeker:subscription page,Subscribe for notifications,boundary,triggerdownloadthelistofjobstoasubscriber
+81,Jobseeker:time out error message,Subscribe for notifications,boundary,Invaliddetailinputmessage
+82,stl#Jobseeker:description page,Subscribe for notifications,Stimulus,undefined
+83,stl#Jobseeker:display success message,Subscribe for notifications,Stimulus,undefined
+84,stl#Jobseeker:email or text message notification choice,Subscribe for notifications,Stimulus,undefined
+85,stl#Jobseeker:profile details page,Subscribe for notifications,Stimulus,undefined
+86,stl#Jobseeker:subscribe button,Subscribe for notifications,Stimulus,undefined
+87,stl#Jobseeker:subscription page,Subscribe for notifications,Stimulus,undefined
+88,stl#Jobseeker:time out error message,Subscribe for notifications,Stimulus,undefined
+89,Apply noew link:redirect to website,View job descriptions,control,redirecttowebsite
+90,Jobseeker:Apply noew link,View job descriptions,boundary,Applynoewlink
+91,search job detail request:XML,View job descriptions,entity,XML
+92,display details in the job description page:job description detail,View job descriptions,boundary,Invaliddetailinputmessage
+93,search job detail request:display details in the job description page,View job descriptions,boundary,Invaliddetailinputmessage
+94,display unopen jobs:job description detail,View job descriptions,boundary,Invaliddetailinputmessage
+95,search job detail request:display unopen jobs,View job descriptions,boundary,job
+96,Jobseeker:job description detail,View job descriptions,boundary,Invaliddetailinputmessage
+97,jobs search list:search job detail request,View job descriptions,control,retryrequest
+98,Jobseeker:jobs search list,View job descriptions,boundary,job
+99,stl#Jobseeker:Apply noew link,View job descriptions,Stimulus,undefined
+100,stl#Jobseeker:job description detail,View job descriptions,Stimulus,undefined
+101,stl#Jobseeker:jobs search list,View job descriptions,Stimulus,undefined
+102,parse RSS feed:RSS,View open jobs,control,parseRSSfeed
+103,parse RSS feed:home page,View open jobs,boundary,Localstorage
+104,send request to the server:home page,View open jobs,boundary,Localstorage
+105,Jobseeker:home page,View open jobs,boundary,Localstorage
+106,parse RSS feed:send request to the server,View open jobs,control,retryrequest
+107,send request to the server:parse RSS feed,View open jobs,control,parseRSSfeed
+108,view open jobs button:send request to the server,View open jobs,control,retryrequest
+109,Jobseeker:view open jobs button,View open jobs,boundary,UserProfilebutton
+110,stl#Jobseeker:home page,View open jobs,Stimulus,undefined
+111,stl#Jobseeker:view open jobs button,View open jobs,Stimulus,undefined

@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Jobseeker
+participant "redirecttowebsite" as 09
+participant "Applynoewlink" as 19
+participant "XML" as 29
+participant "Invaliddetailinputmessage" as 39
+participant "job" as 69
+participant "retryrequest" as 89
+
+Jobseeker -> 19: Applynoewlink()
+activate 19
+
+19 -> 09: redirecttowebsite()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+Jobseeker -> 39: jobdescriptiondetail()
+activate 39
+
+deactivate 39
+
+Jobseeker -> 69: jobssearchlist()
+activate 69
+
+69 -> 89: searchjobdetailrequest()
+activate 89
+
+89 -> 29: XML()
+activate 29
+
+deactivate 29
+
+89 -> 39: displaydetailsinthejobdescriptionpage()
+activate 39
+
+39 -> 39: jobdescriptiondetail()
+deactivate 39
+
+89 -> 69: displayunopenjobs()
+69 -> 39: jobdescriptiondetail()
+activate 39
+
+deactivate 39
+
+deactivate 69
+
+deactivate 89
+
+@enduml

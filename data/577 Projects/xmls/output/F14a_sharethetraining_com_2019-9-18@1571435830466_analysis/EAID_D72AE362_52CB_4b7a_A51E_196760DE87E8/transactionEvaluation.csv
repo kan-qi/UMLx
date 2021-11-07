@@ -1,0 +1,10 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Login page-->User:Login page-->Login page:Redirect to home page-->Redirect to home page:Home page,Login,TRAN_NA,4,2,5,3,20
+2,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:user,Login,TRAN_NA,4,2,3.6666666666666665,3,14.666666666666666
+3,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:update role-->update role:cache,Login,TRAN_NA,5,3,3,4,15
+4,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:update role-->update role:Login success information,Login,TRAN_NA,5,2,4,4,20
+5,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:Login invalid message,Login,TRAN_NA,4,1,5,3,20
+6,stl#User:Login invalid message-->User:Login invalid message,Login,CTRL;EXTCLL;INT,2,0,5,1,10
+7,stl#User:Login success information-->User:Login success information,Login,CTRL;EXTCLL;INT,2,0,5,1,10
+8,stl#User:course detail page-->User:course detail page,Login,CTRL;EXTCLL;INT,2,0,5,1,10
+9,stl#User:Home page-->User:Home page,Login,CTRL;EXTCLL;INT,2,0,5,1,10

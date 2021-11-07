@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "commentispostedsuccessfullymessage" as 09
+participant "Forumpage" as 19
+participant "thread" as 49
+participant "likepostbutton" as 109
+
+User -> 09: commentispostedsuccessfullymessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Forumpage()
+activate 19
+
+19 -> 49: querythreaddetail()
+activate 49
+
+49 -> 09: loadcommentinputfield()
+activate 09
+
+09 -> 09: Postcommentpage()
+09 -> 09: validatethepostedcomment()
+09 -> 09: savecomment()
+09 -> 09: comment()
+deactivate 09
+
+09 -> 09: commentispostedsuccessfullymessage()
+activate 09
+
+deactivate 09
+
+09 -> 09: errorinthepostedcomment()
+activate 09
+
+deactivate 09
+
+09 -> 109: like()
+activate 109
+
+deactivate 109
+
+49 -> 49: thread()
+deactivate 49
+
+deactivate 19
+
+User -> 09: errorinthepostedcomment()
+activate 09
+
+deactivate 09
+
+User -> 09: Postcommentpage()
+activate 09
+
+09 -> 09: validatethepostedcomment()
+deactivate 09
+
+@enduml

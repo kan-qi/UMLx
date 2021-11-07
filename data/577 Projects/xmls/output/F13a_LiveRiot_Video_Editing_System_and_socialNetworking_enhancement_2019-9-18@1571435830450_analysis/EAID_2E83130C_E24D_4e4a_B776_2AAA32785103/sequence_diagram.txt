@@ -1,0 +1,85 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "DeleteButton" as 19
+participant "microwebsiteform" as 29
+participant "addasubscriberrecorderintothedatabase" as 69
+participant "checktherequiredfieldsarefilled" as 89
+
+User -> 09: pdfformatisnotvalidmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: EditButton()
+activate 19
+
+19 -> 29: RedirecttoaMicroWebsiteform()
+activate 29
+
+29 -> 19: EditButton()
+19 -> 29: RedirecttoaMicroWebsiteform()
+29 -> 29: microwebsiteform()
+29 -> 89: checktherequiredfieldsarefilled()
+activate 89
+
+89 -> 29: Microwebsiteform()
+29 -> 69: savereceipientinformationintodataabase()
+activate 69
+
+69 -> 09: RecipientInformation()
+activate 09
+
+deactivate 09
+
+69 -> 29: Redirecttomicrowebsitemanagementpage()
+29 -> 29: MicroWebsiteManagementPage()
+deactivate 29
+
+deactivate 69
+
+89 -> 09: pdfformatisnotvalidmessage()
+activate 09
+
+deactivate 09
+
+89 -> 69: savereceipientinformationintodataabase()
+activate 69
+
+69 -> 09: RecipientInformation()
+activate 09
+
+deactivate 09
+
+69 -> 29: Redirecttomicrowebsitemanagementpage()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+deactivate 89
+
+deactivate 19
+
+User -> 29: microwebsiteform()
+activate 29
+
+29 -> 89: checktherequiredfieldsarefilled()
+activate 89
+
+deactivate 89
+
+deactivate 29
+
+User -> 29: MicroWebsiteManagementPage()
+activate 29
+
+deactivate 29
+
+@enduml

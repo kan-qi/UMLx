@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "questionlist" as 09
+participant "loadsurveybutton" as 19
+participant "successmessage" as 29
+participant "mapofselectedpaths" as 39
+
+administrator -> 09: questioncategorypage()
+activate 09
+
+deactivate 09
+
+administrator -> 19: loadsurveybutton()
+activate 19
+
+19 -> 19: loadandcontinueasurveyfrorecord()
+19 -> 39: tempoararyfile()
+activate 39
+
+deactivate 39
+
+19 -> 09: questioncategorypage()
+activate 09
+
+deactivate 09
+
+19 -> 29: nosavedsurveyfoundmessage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+administrator -> 29: nosavedsurveyfoundmessage()
+activate 29
+
+deactivate 29
+
+@enduml

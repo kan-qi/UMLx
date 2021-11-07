@@ -1,0 +1,25 @@
+id,element,useCase,type,component
+1,Customer:payment page,Request and Pay,control,manageemployeescreen
+2,Customer:successful payment alert,Request and Pay,boundary,successfulpaymentalert
+3,Customer:invalid ticket number,Request and Pay,control,vidateticket
+4,Customer:error when submitting,Request and Pay,control,systemerrorwhenconnectingserver
+5,Customer:ticket input page,Request and Pay,control,vidateticket
+6,Thirdparty payment:update request queue,Request and Pay,control,vidateticket
+7,make payment:Thirdparty payment,Request and Pay,boundary,successfulpaymentalert
+8,alert successful in submission:successful payment alert,Request and Pay,boundary,successfulpaymentalert
+9,update request queue:alert successful in submission,Request and Pay,boundary,successfulpaymentalert
+10,pull advertisement for random venue:error when submitting,Request and Pay,control,systemerrorwhenconnectingserver
+11,vidate ticket:error when submitting,Request and Pay,control,systemerrorwhenconnectingserver
+12,vidate ticket:invalid ticket number,Request and Pay,control,vidateticket
+13,payment page:make payment,Request and Pay,boundary,successfulpaymentalert
+14,vidate ticket:payment page,Request and Pay,boundary,successfulpaymentalert
+15,successful payment alert:pull advertisement for random venue,Request and Pay,entity,venuelist
+16,update request queue:request queue,Request and Pay,entity,venuelist
+17,vidate ticket:ticket,Request and Pay,control,vidateticket
+18,ticket input page:vidate ticket,Request and Pay,control,vidateticket
+19,stl#Customer:payment page,Request and Pay,Stimulus,undefined
+20,stl#Customer:successful payment alert,Request and Pay,Stimulus,undefined
+21,stl#Customer:invalid ticket number,Request and Pay,Stimulus,undefined
+22,stl#Customer:error when submitting,Request and Pay,Stimulus,undefined
+23,stl#Customer:ticket input page,Request and Pay,Stimulus,undefined
+24,stl#Thirdparty payment:update request queue,Request and Pay,Stimulus,undefined

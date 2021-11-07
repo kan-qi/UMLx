@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ClickonAdd" as 09
+participant "Homepage" as 19
+participant "deleteemployeer" as 29
+
+User -> 09: clickconfirm()
+activate 09
+
+09 -> 29: deleteemployeer()
+activate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+29 -> 29: employeerdb()
+deactivate 29
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Clickdeleteemployeebutton()
+activate 29
+
+29 -> 29: popdeleteconfirminformation()
+29 -> 29: deleteemployeer()
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+29 -> 29: employeerdb()
+deactivate 29
+
+@enduml

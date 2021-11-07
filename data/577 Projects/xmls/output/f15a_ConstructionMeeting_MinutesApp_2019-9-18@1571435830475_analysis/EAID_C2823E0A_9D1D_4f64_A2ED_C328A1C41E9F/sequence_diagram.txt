@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "displaystheapprovesignupscreen" as 09
+participant "Hompage" as 39
+
+User -> 09: Selectstheapprovesignupoption()
+activate 09
+
+09 -> 09: displaystheapprovesignupscreen()
+09 -> 09: displaysrequestdetailssuchasuserinfoandaccounttype()
+09 -> 09: Therequestingusercannowlogintotheapplication()
+09 -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 09: Selectsasignuprequest()
+activate 09
+
+09 -> 09: displaysrequestdetailssuchasuserinfoandaccounttype()
+09 -> 09: Therequestingusercannowlogintotheapplication()
+deactivate 09
+
+User -> 09: Choosestoapprovesignuprequest()
+activate 09
+
+09 -> 09: Therequestingusercannowlogintotheapplication()
+09 -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+@enduml

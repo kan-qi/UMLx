@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Selectemployeedata" as 09
+participant "Catagorypage" as 19
+participant "Displayapprovalconfirmation" as 49
+
+User -> 09: Selectviewemployeepage()
+activate 09
+
+09 -> 09: Selectemployeedata()
+09 -> 49: Displayemployeesinformationpage()
+activate 49
+
+49 -> 09: Selectviewemployeepage()
+09 -> 09: Selectemployeedata()
+deactivate 09
+
+49 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Errormessageforupdatefailure" as 09
+participant "Price" as 19
+participant "profile" as 79
+
+User -> 09: inputinformationinvaliderrormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Sharepricebutton()
+activate 19
+
+19 -> 19: diplaypriceinputpage()
+19 -> 19: pricedetailinputpage()
+19 -> 19: verifyinputpriceinformation()
+19 -> 09: inputinformationinvaliderrormessage()
+activate 09
+
+deactivate 09
+
+19 -> 19: saveinputpriceinformation()
+19 -> 79: profile()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+User -> 19: pricedetailinputpage()
+activate 19
+
+19 -> 19: verifyinputpriceinformation()
+deactivate 19
+
+@enduml

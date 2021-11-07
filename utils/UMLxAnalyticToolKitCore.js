@@ -48,10 +48,11 @@
 				}
 				return;
 			}
+
 			UMLEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 				console.log("model analysis complete");
 				
-//				console.log(modelInfo2);
+//				console.log(modelInfo2)
 				
 				if(!modelInfo2){
 //					 res.redirect('/');
@@ -70,7 +71,7 @@
 							callbackfunc(modelInfo2);
 						}
 						return;
-					}
+				}
 				
 				
 				var debug = require("../utils/DebuggerOutput.js");
@@ -787,31 +788,34 @@
                     }
                 	return;
                 }
-                readUsecaseJson(model, function (html_table) {
-                    console.log("generate use cases");
-                    createStream(model, function (rt_object) {
-                        const yswi = rt_object.swtI;
-                        const yswtii = rt_object.swtII;
-                        const yswtiii = rt_object.swtIII;
-                        const xcategories = rt_object.category;
-
-                        // console.log("xcategories"+xcategories);
-                        // console.log("yswi"+yswi);
-                        // console.log("yswii"+yswtii);
-                        // console.log("yswiii"+yswtiii);
-
-                        getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
-                            writeHTML(model, data);
-                            //console.log(`result : [${xcategories}]`);
-                            copyAuxiliaryFiles(model, function(message){
-                                //console.log(message);
-                                if(callbackfunc){
-                                    callbackfunc(model);
-                                }
-                            });
-                        });
-                    });
-                });
+                 if(callbackfunc){
+                    callbackfunc(model);
+                  }
+//                readUsecaseJson(model, function (html_table) {
+//                    console.log("generate use cases");
+//                    createStream(model, function (rt_object) {
+//                        const yswi = rt_object.swtI;
+//                        const yswtii = rt_object.swtII;
+//                        const yswtiii = rt_object.swtIII;
+//                        const xcategories = rt_object.category;
+//
+//                        // console.log("xcategories"+xcategories);
+//                        // console.log("yswi"+yswi);
+//                        // console.log("yswii"+yswtii);
+//                        // console.log("yswiii"+yswtiii);
+//
+//                        getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+//                            writeHTML(model, data);
+//                            //console.log(`result : [${xcategories}]`);
+//                            copyAuxiliaryFiles(model, function(message){
+//                                //console.log(message);
+//                                if(callbackfunc){
+//                                    callbackfunc(model);
+//                                }
+//                            });
+//                        });
+//                    });
+//                });
 
             }, properties);
         }

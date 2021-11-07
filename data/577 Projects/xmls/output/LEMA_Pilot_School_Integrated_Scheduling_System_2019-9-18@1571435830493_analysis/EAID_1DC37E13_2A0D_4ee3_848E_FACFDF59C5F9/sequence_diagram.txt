@@ -1,0 +1,82 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Exportbutton" as 09
+participant "Homepage" as 19
+participant "Displaycomfirminformation" as 59
+participant "Database" as 79
+participant "Studentcourselist" as 99
+
+User -> 09: Lockbutton()
+activate 09
+
+09 -> 79: Updaelockstatus()
+activate 79
+
+79 -> 59: Confirmationpage()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+79 -> 79: Database()
+deactivate 79
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: Savebutton()
+activate 09
+
+09 -> 19: Displaymessagepage()
+activate 19
+
+19 -> 99: Saveselectedcourse()
+activate 99
+
+99 -> 79: Database()
+activate 79
+
+deactivate 79
+
+99 -> 79: Updaelockstatus()
+activate 79
+
+79 -> 59: Confirmationpage()
+activate 59
+
+deactivate 59
+
+79 -> 79: Database()
+deactivate 79
+
+deactivate 99
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Currentsemeterpage()
+activate 19
+
+19 -> 19: Displaymessagepage()
+19 -> 99: Saveselectedcourse()
+activate 99
+
+deactivate 99
+
+deactivate 19
+
+@enduml

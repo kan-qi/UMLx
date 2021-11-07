@@ -1,0 +1,31 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "validateaccountinformation" as 19
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Createaccountpage()
+activate 19
+
+19 -> 19: Createaccountinformation()
+19 -> 19: validateaccountinformation()
+19 -> 19: Confirmationpage()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+19 -> 19: Createaccountpage()
+19 -> 19: Createaccountinformation()
+deactivate 19
+
+@enduml

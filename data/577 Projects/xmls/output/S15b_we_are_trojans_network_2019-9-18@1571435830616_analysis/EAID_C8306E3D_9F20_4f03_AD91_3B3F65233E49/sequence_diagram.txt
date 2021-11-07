@@ -1,0 +1,78 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "errorwhensavingprofile" as 09
+participant "likepostbutton" as 69
+participant "Forumpage" as 119
+
+User -> 09: profileeditpage()
+activate 09
+
+09 -> 09: saveeditedprofile()
+09 -> 09: errorwhensavingprofile()
+deactivate 09
+
+09 -> 69: like()
+activate 69
+
+deactivate 69
+
+09 -> 09: profile()
+activate 09
+
+deactivate 09
+
+09 -> 09: profileisupdatedfeedback()
+activate 09
+
+09 -> 09: redirecttoprofilepage()
+09 -> 09: profiledetailpage()
+09 -> 09: loaduserprofile()
+09 -> 09: profile()
+deactivate 09
+
+09 -> 119: redirecttoeditpage()
+activate 119
+
+119 -> 09: profileeditpage()
+activate 09
+
+09 -> 09: saveeditedprofile()
+deactivate 09
+
+deactivate 119
+
+User -> 09: errorwhensavingprofile()
+activate 09
+
+deactivate 09
+
+User -> 09: viewprofilebutton()
+activate 09
+
+09 -> 09: loaduserprofile()
+09 -> 09: profile()
+deactivate 09
+
+User -> 09: profileisupdatedfeedback()
+activate 09
+
+09 -> 09: redirecttoprofilepage()
+deactivate 09
+
+User -> 09: profiledetailpage()
+activate 09
+
+09 -> 09: loaduserprofile()
+deactivate 09
+
+09 -> 119: redirecttoeditpage()
+activate 119
+
+deactivate 119
+
+@enduml

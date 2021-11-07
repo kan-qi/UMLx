@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class db {
+~ db()
+}
+
+class Usermanagementbutton {
+~ Usermanagementbutton()
+~ invalidinputinformationerror()
+~ unauthorizederrormessage()
+~ usereditpage()
+~ User()
+~ caseinformationpage()
+~ documentlist()
+~ Generalstaff()
+~ Creaenewcasebutton()
+~ generatearandompassword()
+~ usernameandreceivedpasswordinput()
+~ Reportbutton()
+~ FileManager()
+}
+
+class activationsuccessmessage {
+~ activationsuccessmessage()
+~ userisalreadyactivatederror()
+~ activtatetheuser()
+~ unauthorizedrequestmessage()
+~ savecaseinformation()
+~ Validatetheinformationofdescription()
+~ informatininvaliderrormessage()
+~ displayinformationeditpage()
+~ invalidsecurityquestions()
+}
+
+class checkthestatusofuser {
+~ checkthestatusofuser()
+~ verifytheroleoftheuser()
+~ createacasefortheuser()
+~ inactivtatetheuser()
+~ Usergrouplist()
+~ validateroleofuser()
+~ validateanswerofsecurityquestion()
+}
+
+class Administrator {
+~ Administrator()
+~ userisalreadyinactivatederror()
+}
+
+class unauthorizedrequest {
+~ unauthorizedrequest()
+~ findemailaddressoftheselectedyouth()
+~ Resetsecurityquestions()
+}
+
+class print {
+~ print()
+~ Printerservice()
+}
+
+class download {
+~ download()
+~ Validateprintdownloadrequest()
+~ documentuploadpage()
+}
+
+class case {
+~ case()
+~ User()
+~ caseinformation()
+~ querydetailofacase()
+~ Addactivitiestocase()
+}
+
+class emailpassword {
+~ emailpassword()
+~ generatearandompassword()
+~ insertusernameandreceivedpasswordintoDB()
+~ Emailprotocol()
+~ sendemailpage()
+~ emailtemplate()
+~ reportdetailpage()
+~ Resetpasswordbutton()
+}
+
+class insertuserinfo {
+~ insertuserinfo()
+~ validateinputinformation()
+~ User()
+~ displayuserinformation()
+~ insertactivityintocase()
+}
+
+class blankdescriptionerror {
+~ blankdescriptionerror()
+~ activitydescriptionpage()
+~ verificationcodeinputfield()
+~ reportgenerationpage()
+~ invalidanswerforsecurityquestion()
+~ Validatetheinformationofdescription()
+}
+
+class savereporttodb {
+~ savereporttodb()
+}
+
+class role {
+~ role()
+~ validateroleofuser()
+}
+
+@enduml

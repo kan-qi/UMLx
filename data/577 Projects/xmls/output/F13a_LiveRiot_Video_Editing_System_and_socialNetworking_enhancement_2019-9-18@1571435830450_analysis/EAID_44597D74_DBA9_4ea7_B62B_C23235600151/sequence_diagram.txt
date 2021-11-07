@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "DeleteButton" as 19
+participant "ViewMarketDirectorAccountsPage" as 29
+participant "User" as 59
+
+User -> 09: Invalidusernameandpasswordmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: LoginButton()
+activate 19
+
+19 -> 59: Verifyusernameandpassword()
+activate 59
+
+59 -> 09: Invalidusernameandpasswordmessage()
+activate 09
+
+deactivate 09
+
+59 -> 29: Redirecttomarketingdirectorshomepage()
+activate 29
+
+29 -> 29: MarketingDirectorshomepage()
+deactivate 29
+
+59 -> 59: UserInfo()
+deactivate 59
+
+59 -> 09: Userisauthorizedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: MarketingDirectorshomepage()
+activate 29
+
+deactivate 29
+
+User -> 09: Userisauthorizedmessage()
+activate 09
+
+deactivate 09
+
+@enduml

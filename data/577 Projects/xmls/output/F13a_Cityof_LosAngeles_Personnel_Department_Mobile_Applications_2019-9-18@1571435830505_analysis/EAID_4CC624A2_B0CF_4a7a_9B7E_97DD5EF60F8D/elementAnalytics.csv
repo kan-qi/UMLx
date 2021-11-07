@@ -1,0 +1,11 @@
+id,element,useCase,type,component
+1,parse RSS feed:RSS,View open jobs,control,parseRSSfeed
+2,parse RSS feed:home page,View open jobs,boundary,Localstorage
+3,send request to the server:home page,View open jobs,boundary,Localstorage
+4,Jobseeker:home page,View open jobs,boundary,Localstorage
+5,parse RSS feed:send request to the server,View open jobs,control,retryrequest
+6,send request to the server:parse RSS feed,View open jobs,control,parseRSSfeed
+7,view open jobs button:send request to the server,View open jobs,control,retryrequest
+8,Jobseeker:view open jobs button,View open jobs,boundary,UserProfilebutton
+9,stl#Jobseeker:home page,View open jobs,Stimulus,undefined
+10,stl#Jobseeker:view open jobs button,View open jobs,Stimulus,undefined

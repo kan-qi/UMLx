@@ -1,0 +1,88 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "selecttheappropriatepostings" as 09
+participant "clicksubmitbutton" as 19
+participant "Homepage" as 29
+participant "uploadrelevantdocuments" as 39
+participant "generateamessagetoinformUser" as 89
+
+User -> 09: selecttheappropriatepostings()
+activate 09
+
+09 -> 09: retrievesthepostingselected()
+09 -> 29: Showconfirmationpage()
+activate 29
+
+29 -> 09: ApproveHiredb()
+deactivate 09
+
+29 -> 29: Homepage()
+deactivate 29
+
+09 -> 89: respondswithamessageconfirming()
+activate 89
+
+89 -> 09: addcandidatetoapplicantlist()
+activate 09
+
+09 -> 89: generateamessagetoinformUser()
+deactivate 89
+
+deactivate 09
+
+User -> 19: clicksubmitbutton()
+activate 19
+
+19 -> 09: addcandidatetoapplicantlist()
+activate 09
+
+09 -> 89: generateamessagetoinformUser()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 39: uploadrelevantdocuments()
+activate 39
+
+39 -> 89: respondswithamessageconfirming()
+activate 89
+
+89 -> 09: addcandidatetoapplicantlist()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+deactivate 39
+
+User -> 39: fillsoutrelevantdata()
+activate 39
+
+39 -> 89: respondswithamessageconfirming()
+activate 89
+
+89 -> 09: addcandidatetoapplicantlist()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+deactivate 39
+
+@enduml

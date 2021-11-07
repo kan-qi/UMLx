@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "displaystheviewpendingtasksscreen" as 09
+participant "Selectsassignedtask" as 19
+participant "Hompage" as 29
+
+User -> 09: Choosestheoptiontoviewpendingtasksfromtheadministrator��sdashboard()
+activate 09
+
+09 -> 09: displaystheviewpendingtasksscreen()
+09 -> 09: Displaystasksdetailsandassignee()
+09 -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+09 -> 09: invalidinformationisdisplayedtotheuser()
+09 -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Selectsatask()
+activate 19
+
+19 -> 09: Displaystasksdetailsandassignee()
+activate 09
+
+09 -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+09 -> 09: invalidinformationisdisplayedtotheuser()
+deactivate 09
+
+deactivate 19
+
+User -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+@enduml

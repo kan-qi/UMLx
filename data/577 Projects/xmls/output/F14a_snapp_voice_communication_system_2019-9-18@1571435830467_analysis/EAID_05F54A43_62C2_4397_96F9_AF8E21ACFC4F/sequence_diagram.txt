@@ -1,0 +1,110 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Leadactor Twilio APIactor User Agent
+participant "customer" as 09
+participant "TwilioAPI" as 39
+participant "1800dialbutton" as 69
+participant "softphonescreen" as 99
+participant "loginpage" as 109
+participant "callernumber" as 139
+
+Lead -> 09: incomecallpopup()
+activate 09
+
+09 -> 99: answerphonecall()
+activate 99
+
+99 -> 39: TwilioAPI()
+activate 39
+
+39 -> 09: popupincomecallandcustomersnumber()
+09 -> 139: incomecallpopup()
+activate 139
+
+139 -> 99: answerphonecall()
+99 -> 109: calllog()
+activate 109
+
+deactivate 109
+
+deactivate 99
+
+deactivate 139
+
+deactivate 09
+
+39 -> 09: popupincomecallanduseragentnumber()
+activate 09
+
+09 -> 139: callernumber()
+activate 139
+
+139 -> 09: customer()
+deactivate 09
+
+139 -> 99: answerphonecall()
+activate 99
+
+99 -> 39: TwilioAPI()
+39 -> 09: popupincomecallandcustomersnumber()
+activate 09
+
+deactivate 09
+
+39 -> 09: popupincomecallanduseragentnumber()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 99
+
+deactivate 139
+
+Twilio API -> 09: popupincomecallandcustomersnumber()
+activate 09
+
+deactivate 09
+
+Twilio API -> 09: popupincomecallanduseragentnumber()
+activate 09
+
+deactivate 09
+
+User Agent -> 69: callautodialerbutton()
+activate 69
+
+69 -> 39: dialwithTwilioAPI()
+activate 39
+
+39 -> 39: TwilioAPI()
+39 -> 09: popupincomecallandcustomersnumber()
+activate 09
+
+deactivate 09
+
+39 -> 09: popupincomecallanduseragentnumber()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 69
+
+User Agent -> 09: incomecallpopup()
+activate 09
+
+09 -> 99: answerphonecall()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+@enduml

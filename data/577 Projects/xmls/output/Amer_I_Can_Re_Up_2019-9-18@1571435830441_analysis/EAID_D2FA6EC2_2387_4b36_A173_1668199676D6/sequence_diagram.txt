@@ -1,0 +1,35 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "displaythesacrificesforatask" as 19
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: editonemoresacrifices()
+activate 19
+
+19 -> 19: editthesacrificestothedatabase()
+19 -> 19: Sacrificesdb()
+deactivate 19
+
+19 -> 19: displaythesacrificesforatask()
+activate 19
+
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+19 -> 19: editonemoresacrifices()
+19 -> 19: editthesacrificestothedatabase()
+deactivate 19
+
+@enduml

@@ -1,0 +1,52 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Volunteer coach
+participant "LoginInfo" as 09
+participant "Typesofattendance" as 19
+
+Volunteer coach -> 09: Loginpage()
+activate 09
+
+09 -> 09: validatelogininformation()
+09 -> 19: Enterattendancedetailpage()
+activate 19
+
+19 -> 19: validateinputattendanceinfo()
+19 -> 19: Invalidinputattendanceinformation()
+deactivate 19
+
+19 -> 19: saveattendancedetail()
+activate 19
+
+19 -> 19: AttendanceDetail()
+deactivate 19
+
+19 -> 19: Duplicateattendanceinformation()
+activate 19
+
+deactivate 19
+
+09 -> 09: Login()
+deactivate 09
+
+Volunteer coach -> 19: Enterattendancedetailpage()
+activate 19
+
+19 -> 19: validateinputattendanceinfo()
+deactivate 19
+
+Volunteer coach -> 19: Invalidinputattendanceinformation()
+activate 19
+
+deactivate 19
+
+Volunteer coach -> 19: Duplicateattendanceinformation()
+activate 19
+
+deactivate 19
+
+@enduml

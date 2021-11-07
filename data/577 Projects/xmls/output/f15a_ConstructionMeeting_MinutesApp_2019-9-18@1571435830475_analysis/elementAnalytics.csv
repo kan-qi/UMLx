@@ -1,0 +1,218 @@
+id,element,useCase,type,component
+1,undefined,Use Case1,boundary,Object1
+2,stl#undefined,Use Case1,Stimulus,undefined
+3,User:Selects the approve signup option ,Approve Sign up,control,displaystheapprovesignupscreen
+4,User:Selects a signup request.,Approve Sign up,control,displaystheapprovesignupscreen
+5,User:Chooses to approve signup request.,Approve Sign up,control,displaystheapprovesignupscreen
+6,User:Hompage,Approve Sign up,boundary,Hompage
+7,Chooses to approve signup request.:The requesting user can now log into the application.,Approve Sign up,control,displaystheapprovesignupscreen
+8,The requesting user can now log into the application.:Hompage,Approve Sign up,boundary,Hompage
+9,Selects a signup request.:displays request details such as user info and account type,Approve Sign up,control,displaystheapprovesignupscreen
+10,Selects the approve signup option :displays the approve signup screen.,Approve Sign up,control,displaystheapprovesignupscreen
+11,displays request details such as user info and account type:The requesting user can now log into the application.,Approve Sign up,control,displaystheapprovesignupscreen
+12,displays the approve signup screen.:displays request details such as user info and account type,Approve Sign up,control,displaystheapprovesignupscreen
+13,stl#User:Selects the approve signup option ,Approve Sign up,Stimulus,undefined
+14,stl#User:Selects a signup request.,Approve Sign up,Stimulus,undefined
+15,stl#User:Chooses to approve signup request.,Approve Sign up,Stimulus,undefined
+16,stl#User:Hompage,Approve Sign up,Stimulus,undefined
+17,User:Selects the view submitted comments option,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+18,User:Selects a comment to view.,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+19,User:Hompage,Approve/Reject Comment,boundary,Hompage
+20,User:Presses the accept comment button.,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+21,Comment is accepted:Hompage,Approve/Reject Comment,boundary,Hompage
+22,Comment is displayed along with the assignee that submitted it:Comment is accepted,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+23,Presses the accept comment button.:Comment is accepted,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+24,displays the view submitted comments screen:Comment is displayed along with the assignee that submitted it,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+25,Selects a comment to view.:Comment is displayed along with the assignee that submitted it,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+26,Selects the view submitted comments option:displays the view submitted comments screen,Approve/Reject Comment,control,Selectstheviewsubmittedcommentsoption
+27,stl#User:Selects the view submitted comments option,Approve/Reject Comment,Stimulus,undefined
+28,stl#User:Selects a comment to view.,Approve/Reject Comment,Stimulus,undefined
+29,stl#User:Hompage,Approve/Reject Comment,Stimulus,undefined
+30,stl#User:Presses the accept comment button.,Approve/Reject Comment,Stimulus,undefined
+31,User:Chooses project,Change Project,boundary,Object1
+32,User:Selects settings button from the Android toolbar,Change Project,control,Selectstheviewsubmittedcommentsoption
+33,User:Selects change project option.,Change Project,control,Selectstheviewsubmittedcommentsoption
+34,User:Hompage,Change Project,boundary,Hompage
+35,Chooses project:invalid information is displayed to the user,Change Project,control,Selectstheviewsubmittedcommentsoption
+36,Dropdown settings menu is displayed.:displays the select a project screen.,Change Project,control,Selectstheviewsubmittedcommentsoption
+37,Selects settings button from the Android toolbar:Dropdown settings menu is displayed.,Change Project,control,Selectstheviewsubmittedcommentsoption
+38,invalid information is displayed to the user:Hompage,Change Project,boundary,Hompage
+39,Selects change project option.:displays the select a project screen.,Change Project,control,Selectstheviewsubmittedcommentsoption
+40,displays the select a project screen.:invalid information is displayed to the user,Change Project,control,Selectstheviewsubmittedcommentsoption
+41,invalid information is displayed to the user:project db,Change Project,boundary,Object1
+42,stl#User:Chooses project,Change Project,Stimulus,undefined
+43,stl#User:Selects settings button from the Android toolbar,Change Project,Stimulus,undefined
+44,stl#User:Selects change project option.,Change Project,Stimulus,undefined
+45,stl#User:Hompage,Change Project,Stimulus,undefined
+46,User:Hompage,Create New Meeting,boundary,Hompage
+47,User:Enters meeting information and attendee list,Create New Meeting,control,displaysthecreateameetingscreen
+48,User:Selects the create a meeting option ,Create New Meeting,control,displaysthecreateameetingscreen
+49,Creates a meeting with the entered information:Hompage,Create New Meeting,boundary,Hompage
+50,Creates a meeting with the entered information:meeting db,Create New Meeting,control,displaysthecreateameetingscreen
+51,Verifies attendee list contains valid users.  :Creates a meeting with the entered information,Create New Meeting,control,displaysthecreateameetingscreen
+52,Enters meeting information and attendee list:Verifies attendee list contains valid users.  ,Create New Meeting,control,displaysthecreateameetingscreen
+53,Selects the create a meeting option :displays the create a meeting screen.  ,Create New Meeting,control,displaysthecreateameetingscreen
+54,displays the create a meeting screen.  :Verifies attendee list contains valid users.  ,Create New Meeting,control,displaysthecreateameetingscreen
+55,stl#User:Hompage,Create New Meeting,Stimulus,undefined
+56,stl#User:Enters meeting information and attendee list,Create New Meeting,Stimulus,undefined
+57,stl#User:Selects the create a meeting option ,Create New Meeting,Stimulus,undefined
+58,User:Inputs desired information and selects the update option.,Create New Project,control,displaysthecreateaprojectscreen
+59,User:Selects the create a new project option ,Create New Project,control,displaysthecreateaprojectscreen
+60,User:Hompage,Create New Project,boundary,Hompage
+61,invalid information is displayed to the user:Hompage,Create New Project,boundary,Hompage
+62,Inputs desired information and selects the update option.:attempts to verify the inputs,Create New Project,control,attemptstoverifytheinputs
+63,Selects the create a new project option :displays the create a project screen.,Create New Project,control,displaysthecreateaprojectscreen
+64,attempts to verify the inputs:invalid information is displayed to the user,Create New Project,control,displaysthecreateaprojectscreen
+65,displays the create a project screen.:attempts to verify the inputs,Create New Project,control,attemptstoverifytheinputs
+66,invalid information is displayed to the user:project db,Create New Project,boundary,Object1
+67,stl#User:Inputs desired information and selects the update option.,Create New Project,Stimulus,undefined
+68,stl#User:Selects the create a new project option ,Create New Project,Stimulus,undefined
+69,stl#User:Hompage,Create New Project,Stimulus,undefined
+70,User:Inputs desired information and selects the update option.,Edit Meeting,control,attemptstoverifytheinputs
+71,User:Selects the edit meeting option.,Edit Meeting,entity,meetingdb
+72,User:Hompage,Edit Meeting,boundary,Hompage
+73,invalid information is displayed to the user:Hompage,Edit Meeting,boundary,Hompage
+74,Inputs desired information and selects the update option.:attempts to verify the inputs,Edit Meeting,control,attemptstoverifytheinputs
+75,Selects the edit meeting option.:displays the edit meeting screen.,Edit Meeting,entity,meetingdb
+76,attempts to verify the inputs:invalid information is displayed to the user,Edit Meeting,control,attemptstoverifytheinputs
+77,displays the edit meeting screen.:attempts to verify the inputs,Edit Meeting,control,attemptstoverifytheinputs
+78,invalid information is displayed to the user:meeting db,Edit Meeting,entity,meetingdb
+79,stl#User:Inputs desired information and selects the update option.,Edit Meeting,Stimulus,undefined
+80,stl#User:Selects the edit meeting option.,Edit Meeting,Stimulus,undefined
+81,stl#User:Hompage,Edit Meeting,Stimulus,undefined
+82,User:Selects the edit profile option.,Edit Profile,control,Selectstheeditprofileoption
+83,User:Inputs desired information and selects the update option.,Edit Profile,control,Selectstheeditprofileoption
+84,User:Hompage,Edit Profile,boundary,Hompage
+85,invalid information is displayed to the user:Hompage,Edit Profile,boundary,Hompage
+86,Inputs desired information and selects the update option.:attempts to verify the inputs,Edit Profile,control,attemptstoverifytheinputs
+87,Selects the edit profile option.:displays the edit profile screen.,Edit Profile,control,Selectstheeditprofileoption
+88,attempts to verify the inputs:invalid information is displayed to the user,Edit Profile,control,Selectstheeditprofileoption
+89,displays the edit profile screen.:attempts to verify the inputs,Edit Profile,control,attemptstoverifytheinputs
+90,stl#User:Selects the edit profile option.,Edit Profile,Stimulus,undefined
+91,stl#User:Inputs desired information and selects the update option.,Edit Profile,Stimulus,undefined
+92,stl#User:Hompage,Edit Profile,Stimulus,undefined
+93,User:Selects the edit project  option.,Edit Project,control,Selectstheeditprofileoption
+94,User:Hompage,Edit Project,boundary,Hompage
+95,User:Inputs desired information and selects the update option.,Edit Project,control,Selectstheeditprofileoption
+96,invalid information is displayed to the user:Hompage,Edit Project,boundary,Hompage
+97,Inputs desired information and selects the update option.:attempts to verify the inputs,Edit Project,control,attemptstoverifytheinputs
+98,invalid information is displayed to the user:Project db,Edit Project,boundary,Object1
+99,Selects the edit project  option.:displays the edit project screen.,Edit Project,control,Selectstheeditprofileoption
+100,attempts to verify the inputs:invalid information is displayed to the user,Edit Project,control,Selectstheeditprofileoption
+101,displays the edit project screen.:attempts to verify the inputs,Edit Project,control,attemptstoverifytheinputs
+102,stl#User:Selects the edit project  option.,Edit Project,Stimulus,undefined
+103,stl#User:Hompage,Edit Project,Stimulus,undefined
+104,stl#User:Inputs desired information and selects the update option.,Edit Project,Stimulus,undefined
+105,User:selects the export button.,Generate Logs,control,attemptstoverifytheinputs
+106,User:Chooses a meeting ,Generate Logs,boundary,Choosesameeting
+107,User:Hompage,Generate Logs,boundary,Hompage
+108,User:Chooses the option to generate meeting log ,Generate Logs,boundary,Choosesameeting
+109,Chooses a meeting :Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,Choosesameeting
+110,Chooses the option to generate meeting log :displays the generate meeting screen,Generate Logs,boundary,Choosesameeting
+111,invalid information is displayed to the user:Hompage,Generate Logs,boundary,Hompage
+112,Meeting is saved on the administrator��s android device in PDF format.:log db,Generate Logs,entity,logdb
+113,Meeting is saved on the administrator��s android device in PDF format.:invalid information is displayed to the user,Generate Logs,control,attemptstoverifytheinputs
+114,displays the generate meeting screen:Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,Choosesameeting
+115,selects the export button.:Meeting is saved on the administrator��s android device in PDF format.,Generate Logs,boundary,Choosesameeting
+116,stl#User:selects the export button.,Generate Logs,Stimulus,undefined
+117,stl#User:Chooses a meeting ,Generate Logs,Stimulus,undefined
+118,stl#User:Hompage,Generate Logs,Stimulus,undefined
+119,stl#User:Chooses the option to generate meeting log ,Generate Logs,Stimulus,undefined
+120,User:Login in page,Login,boundary,Hompage
+121,User:Homepage,Login,boundary,Hompage
+122,show confirmation page:Homepage,Login,boundary,Hompage
+123,Login in page:validate usename and password ,Login,control,validateusenameandpassword
+124,show confirmation page:Login in page,Login,boundary,Hompage
+125,validate usename and password :show confirmation page,Login,boundary,Hompage
+126,stl#User:Login in page,Login,Stimulus,undefined
+127,stl#User:Homepage,Login,Stimulus,undefined
+128,User:Hompage,Publish Meeting,boundary,Hompage
+129,User:Chooses the option to publish meeting ,Publish Meeting,boundary,Choosesameeting
+130,User:Chooses a created meeting for which to publish and then selects the publish button.,Publish Meeting,boundary,Choosesameeting
+131,Chooses a created meeting for which to publish and then selects the publish button.:Meeting is published and accessible to other administrators and users on the attendee list,Publish Meeting,control,validateusenameandpassword
+132,Chooses the option to publish meeting :displays the publish meeting screen.,Publish Meeting,boundary,Choosesameeting
+133,receive an in app notification:Hompage,Publish Meeting,boundary,Hompage
+134,Meeting is published and accessible to other administrators and users on the attendee list:receive an in app notification,Publish Meeting,control,attemptstoverifytheinputs
+135,displays the publish meeting screen.:Meeting is published and accessible to other administrators and users on the attendee list,Publish Meeting,control,validateusenameandpassword
+136,stl#User:Hompage,Publish Meeting,Stimulus,undefined
+137,stl#User:Chooses the option to publish meeting ,Publish Meeting,Stimulus,undefined
+138,stl#User:Chooses a created meeting for which to publish and then selects the publish button.,Publish Meeting,Stimulus,undefined
+139,User:Publishes a meeting ,Send Notification,boundary,Choosesameeting
+140,User:Hompage,Send Notification,boundary,Hompage
+141,User:Submits a comment to an assigned task,Send Notification,control,validateusenameandpassword
+142,Adds comment to the minute :sends a Parse Push notification ,Send Notification,control,validateusenameandpassword
+143,Publishes meeting and sends a Parse Push notification :Adds comment to the minute ,Send Notification,control,attemptstoverifytheinputs
+144,Submits a comment to an assigned task:Adds comment to the minute ,Send Notification,control,attemptstoverifytheinputs
+145,sends a Parse Push notification :Hompage,Send Notification,boundary,Hompage
+146,Publishes a meeting :Publishes meeting and sends a Parse Push notification ,Send Notification,boundary,Choosesameeting
+147,stl#User:Publishes a meeting ,Send Notification,Stimulus,undefined
+148,stl#User:Hompage,Send Notification,Stimulus,undefined
+149,stl#User:Submits a comment to an assigned task,Send Notification,Stimulus,undefined
+150,User:Selects the signup button,Sign up,control,attemptstoverifytheinputs
+151,User:Opens the Construction Meeting Minutes Android application.,Sign up,boundary,Choosesameeting
+152,User:Homepage,Sign up,boundary,Hompage
+153,User:Selects submit,Sign up,boundary,Object1
+154,submits the information to be approved by an administrator:Displays message to the user to notify them ,Sign up,control,attemptstoverifytheinputs
+155,Homepage:Displays message to the user to notify them ,Sign up,control,attemptstoverifytheinputs
+156,Opens the Construction Meeting Minutes Android application.:opens up to the login page,Sign up,boundary,Hompage
+157,Selects submit:submits the information to be approved by an administrator,Sign up,control,attemptstoverifytheinputs
+158,Selects the signup button:opens up to the signup page,Sign up,boundary,Hompage
+159,opens up to the login page:opens up to the signup page,Sign up,boundary,Hompage
+160,opens up to the signup page:submits the information to be approved by an administrator,Sign up,control,attemptstoverifytheinputs
+161,stl#User:Selects the signup button,Sign up,Stimulus,undefined
+162,stl#User:Opens the Construction Meeting Minutes Android application.,Sign up,Stimulus,undefined
+163,stl#User:Homepage,Sign up,Stimulus,undefined
+164,stl#User:Selects submit,Sign up,Stimulus,undefined
+165,User: Selects assigned task ,Submit Comment to Meeting Minutes,boundary,Selectsassignedtask
+166,User:Hompage,Submit Comment to Meeting Minutes,boundary,Hompage
+167,User:Inputs comment for selected task,Submit Comment to Meeting Minutes,boundary,Selectsassignedtask
+168, Selects assigned task :opens text box for user to input comment.,Submit Comment to Meeting Minutes,control,attemptstoverifytheinputs
+169,submitted a comment for a task.:Hompage,Submit Comment to Meeting Minutes,boundary,Hompage
+170,Inputs comment for selected task:Sends notification to administrator ,Submit Comment to Meeting Minutes,control,Sendsnotificationtoadministrator
+171,Sends notification to administrator :submitted a comment for a task.,Submit Comment to Meeting Minutes,boundary,Selectsassignedtask
+172,opens text box for user to input comment.:Sends notification to administrator ,Submit Comment to Meeting Minutes,control,Sendsnotificationtoadministrator
+173,stl#User: Selects assigned task ,Submit Comment to Meeting Minutes,Stimulus,undefined
+174,stl#User:Hompage,Submit Comment to Meeting Minutes,Stimulus,undefined
+175,stl#User:Inputs comment for selected task,Submit Comment to Meeting Minutes,Stimulus,undefined
+176,User:Chooses the option to view assign task,View Assigned Task,boundary,Selectsassignedtask
+177,User:Hompage,View Assigned Task,boundary,Hompage
+178,User:Selects a task,View Assigned Task,boundary,Selectsassignedtask
+179,Chooses the option to view assign task:displays the view assign  tasks screen.,View Assigned Task,boundary,Selectsassignedtask
+180,Displays tasks details and assignee:Hompage,View Assigned Task,boundary,Hompage
+181,Selects a task:Displays tasks details and assignee,View Assigned Task,boundary,Selectsassignedtask
+182,displays the view assign  tasks screen.:Displays tasks details and assignee,View Assigned Task,boundary,Selectsassignedtask
+183,stl#User:Chooses the option to view assign task,View Assigned Task,Stimulus,undefined
+184,stl#User:Hompage,View Assigned Task,Stimulus,undefined
+185,stl#User:Selects a task,View Assigned Task,Stimulus,undefined
+186,User:Selects a meeting,View Meeting,boundary,Choosesameeting
+187,User:Chooses the option to view meeting,View Meeting,boundary,Choosesameeting
+188,User:Hompage,View Meeting,boundary,Hompage
+189,Chooses the option to view meeting:displays the view meeting screen.,View Meeting,boundary,Choosesameeting
+190,Displays meeting details and assignee:Hompage,View Meeting,boundary,Hompage
+191,Selects a meeting:Displays meeting details and assignee,View Meeting,boundary,Selectsassignedtask
+192,displays the view meeting screen.:Displays meeting details and assignee,View Meeting,boundary,Selectsassignedtask
+193,stl#User:Selects a meeting,View Meeting,Stimulus,undefined
+194,stl#User:Chooses the option to view meeting,View Meeting,Stimulus,undefined
+195,stl#User:Hompage,View Meeting,Stimulus,undefined
+196,User:Chooses the option to view pending tasks from the administrator��s dashboard.,View Pending Tasks,control,displaystheviewpendingtasksscreen
+197,User:Selects a task,View Pending Tasks,boundary,Selectsassignedtask
+198,User:Hompage,View Pending Tasks,boundary,Hompage
+199,Chooses the option to view pending tasks from the administrator��s dashboard.:displays the view pending tasks screen.,View Pending Tasks,control,displaystheviewpendingtasksscreen
+200,Displays tasks details and assignee:Hompage,View Pending Tasks,boundary,Hompage
+201,Displays tasks details and assignee:invalid information is displayed to the user,View Pending Tasks,control,displaystheviewpendingtasksscreen
+202,Selects a task:Displays tasks details and assignee,View Pending Tasks,control,displaystheviewpendingtasksscreen
+203,displays the view pending tasks screen.:Displays tasks details and assignee,View Pending Tasks,control,displaystheviewpendingtasksscreen
+204,invalid information is displayed to the user:Hompage,View Pending Tasks,boundary,Hompage
+205,stl#User:Chooses the option to view pending tasks from the administrator��s dashboard.,View Pending Tasks,Stimulus,undefined
+206,stl#User:Selects a task,View Pending Tasks,Stimulus,undefined
+207,stl#User:Hompage,View Pending Tasks,Stimulus,undefined
+208,User:Hompage,View Status of Submitted comment,boundary,Hompage
+209,User:Chooses the option to view status of comment,View Status of Submitted comment,boundary,Choosesameeting
+210,User:Selects a comment,View Status of Submitted comment,boundary,Selectsassignedtask
+211,Chooses the option to view status of comment:displays the view comment screen.,View Status of Submitted comment,control,displaystheviewpendingtasksscreen
+212,Displays comment details and assignee:Hompage,View Status of Submitted comment,boundary,Hompage
+213,Selects a comment:Displays comment details and assignee,View Status of Submitted comment,control,displaystheviewpendingtasksscreen
+214,displays the view comment screen.:Displays comment details and assignee,View Status of Submitted comment,control,displaystheviewpendingtasksscreen
+215,stl#User:Hompage,View Status of Submitted comment,Stimulus,undefined
+216,stl#User:Chooses the option to view status of comment,View Status of Submitted comment,Stimulus,undefined
+217,stl#User:Selects a comment,View Status of Submitted comment,Stimulus,undefined

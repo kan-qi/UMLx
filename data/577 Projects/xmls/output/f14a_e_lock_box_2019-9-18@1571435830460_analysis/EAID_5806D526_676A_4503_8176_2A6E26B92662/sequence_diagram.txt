@@ -1,0 +1,211 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manageractor General staffactor Youth
+participant "Usermanagementbutton" as 09
+participant "activationsuccessmessage" as 29
+participant "Administrator" as 39
+participant "unauthorizedrequest" as 49
+participant "role" as 209
+participant "print" as 229
+participant "download" as 239
+participant "checkthestatusofuser" as 289
+
+Administrator -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+activate 239
+
+239 -> 209: role()
+activate 209
+
+deactivate 209
+
+239 -> 49: unauthorizedrequest()
+activate 49
+
+deactivate 49
+
+239 -> 229: print()
+activate 229
+
+229 -> 39: Administrator()
+activate 39
+
+39 -> 09: caseinformationpage()
+deactivate 09
+
+39 -> 09: documentlist()
+activate 09
+
+09 -> 289: verifytheroleoftheuser()
+activate 289
+
+289 -> 09: displaycaseinformationpage()
+09 -> 09: caseinformation()
+deactivate 09
+
+09 -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+239 -> 239: download()
+239 -> 09: Generalstaff()
+09 -> 09: documentlist()
+09 -> 289: verifytheroleoftheuser()
+289 -> 209: role()
+activate 209
+
+deactivate 209
+
+289 -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+deactivate 289
+
+deactivate 09
+
+09 -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+09 -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+deactivate 239
+
+deactivate 09
+
+39 -> 29: unauthorizedrequestmessage()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+deactivate 229
+
+Administrator -> 09: documentlist()
+activate 09
+
+deactivate 09
+
+Administrator -> 29: unauthorizedrequestmessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 49: unauthorizedrequest()
+activate 49
+
+deactivate 49
+
+Administrator -> 09: documentlist()
+activate 09
+
+09 -> 289: verifytheroleoftheuser()
+activate 289
+
+deactivate 289
+
+deactivate 09
+
+Administrator -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+Administrator -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+activate 239
+
+deactivate 239
+
+deactivate 09
+
+Case Manager -> 49: unauthorizedrequest()
+activate 49
+
+deactivate 49
+
+Case Manager -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+activate 239
+
+deactivate 239
+
+deactivate 09
+
+Case Manager -> 09: documentlist()
+activate 09
+
+09 -> 289: verifytheroleoftheuser()
+activate 289
+
+deactivate 289
+
+deactivate 09
+
+Case Manager -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+General staff -> 09: documentlist()
+activate 09
+
+deactivate 09
+
+General staff -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+General staff -> 09: caseinformationpage()
+activate 09
+
+deactivate 09
+
+Youth -> 09: caseinformationpage()
+activate 09
+
+09 -> 239: Validateprintdownloadrequest()
+activate 239
+
+deactivate 239
+
+deactivate 09
+
+Youth -> 49: unauthorizedrequestmessage()
+activate 49
+
+deactivate 49
+
+Youth -> 49: unauthorizedrequest()
+activate 49
+
+deactivate 49
+
+Youth -> 09: documentlist()
+activate 09
+
+09 -> 289: verifytheroleoftheuser()
+activate 289
+
+deactivate 289
+
+deactivate 09
+
+@enduml

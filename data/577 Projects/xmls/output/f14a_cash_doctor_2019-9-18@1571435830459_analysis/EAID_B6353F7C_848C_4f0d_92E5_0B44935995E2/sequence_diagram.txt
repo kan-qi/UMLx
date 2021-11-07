@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Addproviderbutton" as 09
+participant "loadphotofromlibrary" as 19
+participant "Errormessageforupdatefailure" as 39
+participant "sendemailincludingcredential" as 59
+participant "Price" as 69
+
+User -> 09: Sharepricethroughpicturecapturebutton()
+activate 09
+
+09 -> 19: loadphotofromlibrary()
+activate 19
+
+19 -> 19: photolist()
+19 -> 59: OCRreadthemedicalinformation()
+activate 59
+
+59 -> 39: updatetherecognizedinformationintodatabase()
+activate 39
+
+39 -> 69: Price()
+activate 69
+
+deactivate 69
+
+deactivate 39
+
+59 -> 19: unabletorecoginizeinformationfromphoto()
+deactivate 19
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: photolist()
+activate 19
+
+19 -> 59: OCRreadthemedicalinformation()
+activate 59
+
+deactivate 59
+
+deactivate 19
+
+User -> 19: unabletorecoginizeinformationfromphoto()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Showlistsofsemesters" as 09
+participant "Homepage" as 19
+participant "Accessallstudentinformation" as 39
+
+User -> 09: chooseareportsemester()
+activate 09
+
+09 -> 39: Returnstudentsperformancepage()
+activate 39
+
+39 -> 19: Homepge()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+deactivate 09
+
+User -> 19: Homepge()
+activate 19
+
+deactivate 19
+
+User -> 19: Viewperformancepage()
+activate 19
+
+19 -> 09: Showlistsofsemesters()
+activate 09
+
+09 -> 39: Returnstudentsperformancepage()
+activate 39
+
+39 -> 19: Homepge()
+deactivate 19
+
+deactivate 39
+
+deactivate 09
+
+@enduml

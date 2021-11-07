@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "businesslist" as 29
+participant "redirecttosearchpanel" as 39
+
+User -> 09: Homepage()
+activate 09
+
+09 -> 39: displayselectionpanel()
+activate 39
+
+39 -> 39: operationselectionpanel()
+39 -> 29: Querybusinessbyoptions()
+activate 29
+
+29 -> 09: Noresultfoundmessage()
+09 -> 39: redirecttosearchpanel()
+39 -> 39: operationselectionpanel()
+39 -> 29: Querybusinessbyoptions()
+29 -> 29: business()
+deactivate 29
+
+29 -> 29: businesslist()
+activate 29
+
+29 -> 29: Querybusinessinformation()
+29 -> 29: business()
+deactivate 29
+
+deactivate 39
+
+deactivate 09
+
+User -> 09: Noresultfoundmessage()
+activate 09
+
+09 -> 39: redirecttosearchpanel()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 29: businesslist()
+activate 29
+
+29 -> 29: Querybusinessinformation()
+deactivate 29
+
+User -> 39: operationselectionpanel()
+activate 39
+
+39 -> 29: Querybusinessbyoptions()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+@enduml

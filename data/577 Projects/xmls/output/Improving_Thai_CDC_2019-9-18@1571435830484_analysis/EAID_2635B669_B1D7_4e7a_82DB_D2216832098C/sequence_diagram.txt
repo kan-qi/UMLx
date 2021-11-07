@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Clicksubmit" as 09
+participant "selectcontacts" as 19
+participant "Homepage" as 29
+participant "checkstaff��sauthority" as 49
+participant "Displayatextfiledforinput" as 79
+
+User  -> 09: clickviewbutton()
+activate 09
+
+09 -> 49: checkstaff��sauthority()
+activate 49
+
+49 -> 49: worker��sauthorityapproved()
+49 -> 79: displayinformationoftheproject()
+activate 79
+
+79 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 79
+
+deactivate 49
+
+deactivate 09
+
+User  -> 19: selectaproject()
+activate 19
+
+19 -> 49: checkstaff��sauthority()
+activate 49
+
+49 -> 49: worker��sauthorityapproved()
+deactivate 49
+
+deactivate 19
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+@enduml

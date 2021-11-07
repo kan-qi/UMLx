@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actor
+participant "Queryprojectdetail" as 09
+participant "Selectingsettingsbutton" as 19
+
+Actor -> 09: Projectdetail()
+activate 09
+
+deactivate 09
+
+Actor -> 19: Selectingsettingsbutton()
+activate 19
+
+19 -> 19: Displaydropdownsettingsmenu()
+19 -> 19: dropdownsettingsmenu()
+19 -> 09: queryprojects()
+activate 09
+
+09 -> 09: Project()
+deactivate 09
+
+09 -> 09: Projectslistscreen()
+activate 09
+
+09 -> 09: Queryprojectdetail()
+09 -> 09: Project()
+deactivate 09
+
+09 -> 09: Projectdetail()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+Actor -> 09: Projectslistscreen()
+activate 09
+
+09 -> 09: Queryprojectdetail()
+deactivate 09
+
+Actor -> 19: dropdownsettingsmenu()
+activate 19
+
+19 -> 09: queryprojects()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+@enduml

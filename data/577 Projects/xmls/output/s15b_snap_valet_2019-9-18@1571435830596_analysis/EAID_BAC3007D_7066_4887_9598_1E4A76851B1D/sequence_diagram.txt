@@ -1,0 +1,106 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "valet" as 09
+participant "matchedresultsforlocations" as 19
+participant "venuelist" as 29
+participant "manageemployeescreen" as 39
+participant "systemerrorwhenconnectingserver" as 49
+participant "GooglePlacesAPI" as 69
+
+Valet -> 09: checkedinbyanothervalet()
+activate 09
+
+09 -> 29: Redirecttovenuelist()
+activate 29
+
+29 -> 29: venuelist()
+29 -> 49: checkifactive()
+activate 49
+
+49 -> 29: checkifvenueischeckedin()
+29 -> 29: venue()
+deactivate 29
+
+29 -> 09: checkedinbyanothervalet()
+09 -> 29: Redirecttovenuelist()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+49 -> 09: valet()
+activate 09
+
+deactivate 09
+
+49 -> 39: inactiveemployee()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+Valet -> 19: Confirmationrequestdialog()
+activate 19
+
+19 -> 69: Saveacceptance()
+activate 69
+
+69 -> 29: venue()
+activate 29
+
+deactivate 29
+
+69 -> 49: displayservererrormessage()
+activate 49
+
+49 -> 49: Servererrormessage()
+deactivate 49
+
+69 -> 09: valet()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+19 -> 39: navigatetoqueuescreen()
+activate 39
+
+39 -> 39: Queuescreen()
+deactivate 39
+
+deactivate 19
+
+Valet -> 29: venuelist()
+activate 29
+
+29 -> 49: checkifactive()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+Valet -> 39: Queuescreen()
+activate 39
+
+deactivate 39
+
+Valet -> 49: Servererrormessage()
+activate 49
+
+deactivate 49
+
+Valet -> 39: inactiveemployee()
+activate 39
+
+deactivate 39
+
+@enduml

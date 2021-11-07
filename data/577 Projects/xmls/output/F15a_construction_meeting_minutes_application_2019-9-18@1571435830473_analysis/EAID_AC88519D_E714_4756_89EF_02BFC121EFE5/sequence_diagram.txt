@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "UserInfo" as 09
+participant "Selectingsettingsbutton" as 19
+participant "submittedcommentsscreen" as 39
+participant "Attendeeisnotavailable" as 89
+
+Administrator -> 09: Informationinvalid()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: Editmeetingoption()
+activate 19
+
+19 -> 39: displaymeetingsscreen()
+activate 39
+
+39 -> 19: meeting()
+deactivate 19
+
+39 -> 19: meetinginformationscreen()
+activate 19
+
+19 -> 89: verifyattendeelist()
+activate 89
+
+89 -> 09: Informationinvalid()
+activate 09
+
+deactivate 09
+
+89 -> 09: saveuserinfo()
+activate 09
+
+09 -> 09: meetinginfo()
+deactivate 09
+
+deactivate 89
+
+deactivate 19
+
+deactivate 39
+
+Administrator -> 19: meetinginformationscreen()
+activate 19
+
+19 -> 89: verifyattendeelist()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+@enduml

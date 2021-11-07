@@ -1,0 +1,62 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+~ User()
+~ caselist()
+~ edituserinformation()
+}
+
+class specificdocumentrecord {
+~ specificdocumentrecord()
+~ printthedocument()
+~ documentdatabase()
+~ documentuploadpage()
+}
+
+class validationfailedmessage {
+~ validationfailedmessage()
+~ successmessage()
+~ validatetheroleofuser()
+~ caseinformationpage()
+~ descriptionshouldnotbeblankmessage()
+~ returnactivitydescriptionpage()
+~ validatethedescirpitonofactivity()
+~ correspondingrolesmainpage()
+~ wrongactionmessage()
+~ unauthorizedactioninformation()
+}
+
+class filedownloadinterface {
+~ filedownloadinterface()
+~ downloadthedocument()
+~ printer()
+}
+
+class insertthenewusernameandpasswordintotheuserdb {
+~ insertthenewusernameandpasswordintotheuserdb()
+~ Createnewcasebutton()
+~ insertcaseintocasedatabase()
+~ redirecttheusertothecorrespondingrolesmainpage()
+~ insertuserinformation()
+~ passwordresetpage()
+~ updatethepasswordtodatebase()
+~ insertdocumentintodocumentdb()
+}
+
+class addvewbutton {
+~ addvewbutton()
+~ UseManagementbutton()
+~ reportbutton()
+~ resetpasswordbutton()
+}
+
+class loginpage {
+~ loginpage()
+~ caseinfopage()
+~ redirecttonewcasepage()
+~ reportpage()
+~ choosefilepage()
+}
+
+@enduml

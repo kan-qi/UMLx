@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor customer
+participant "addtocartbutton" as 09
+participant "savecommentsconcerns" as 19
+participant "notavailableerrormessage" as 29
+participant "displaychatpanel" as 49
+
+customer -> 09: chatbutton()
+activate 09
+
+09 -> 49: displaychatpanel()
+activate 49
+
+49 -> 19: commentandconcernspanel()
+activate 19
+
+19 -> 19: savecommentsconcerns()
+19 -> 29: message()
+activate 29
+
+deactivate 29
+
+19 -> 19: successfulcommunicationmessage()
+deactivate 19
+
+deactivate 49
+
+deactivate 09
+
+customer -> 19: successfulcommunicationmessage()
+activate 19
+
+deactivate 19
+
+customer -> 29: exceededlimiterrormessage()
+activate 29
+
+deactivate 29
+
+customer -> 19: commentandconcernspanel()
+activate 19
+
+19 -> 19: savecommentsconcerns()
+deactivate 19
+
+@enduml

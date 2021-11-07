@@ -14,9 +14,6 @@ library(jsonlite)
 library(openxlsx)
 library(stringr)
 
-# Variables
-input_filename = "repos.xlsx"
-
 # set user-agent
 agent_user = "flyqk"
 agent_password = "qk@github/910304"
@@ -106,7 +103,7 @@ getAllCommits <- function(url) {
   #
   # Returns:
   #   A dataframe containing all the commits for that project.
-  
+  print(url)
   commits <- list()
   info <-GET(paste(url, "/commits?page=1", sep = ''), authentication)
   pages <- getTotalPages(info$headers$link)
@@ -184,6 +181,8 @@ simEffort <- function(url) {
   # Returns:
   #   Effort in person-hours
   
+  print(url)
+  
   commits <- getAllCommits(url)
   activeContributors <- getActiveContributors(commits)
   effort <- 0
@@ -197,7 +196,10 @@ simEffort <- function(url) {
 }
 
 
+# Variables
+input_filename = "web_repos.xlsx"
 input_data = read.xlsx(input_filename, colNames=TRUE) # import datasheet as DataFrame
+print("hello")
 for(i in 1:nrow(input_data)) {
   active_personnel = c()
   gitUrl = convertToAPI(input_data[i, 2])

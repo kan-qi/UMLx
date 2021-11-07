@@ -1,0 +1,75 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "clicksnext" as 09
+participant "Answersfrompagestoredascookie" as 19
+participant "User" as 29
+participant "Showsdatabaseinformation" as 49
+
+User -> 09: Clicklogoutbutton()
+activate 09
+
+09 -> 19: Returnsstaffmembertocombatconflictfrontpage()
+activate 19
+
+19 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+19 -> 49: showconfirmation()
+activate 49
+
+49 -> 19: Homepage()
+19 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+deactivate 49
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+19 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+User -> 29: Userdoesnotselectanyradiobutton()
+activate 29
+
+29 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+User -> 09: ClickContinuebutton()
+activate 09
+
+09 -> 19: Returnsstaffmembertocombatconflictfrontpage()
+activate 19
+
+19 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+19 -> 49: showconfirmation()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+deactivate 09
+
+@enduml

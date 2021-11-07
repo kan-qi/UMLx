@@ -1,0 +1,67 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "successmessage" as 09
+participant "redirecttoapagewiththecurerntsiteslist" as 19
+participant "displayinvalidemailformat" as 69
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: siteslink()
+activate 19
+
+19 -> 19: redirecttoapagewiththecurerntsiteslist()
+19 -> 69: siteinformation()
+activate 69
+
+deactivate 69
+
+19 -> 19: sitelist()
+19 -> 69: displaythespecificsiteinformaitonform()
+activate 69
+
+69 -> 19: siteinformationeditionpage()
+19 -> 69: updatethesiteinformaitonindb()
+69 -> 69: siteinformation()
+deactivate 69
+
+69 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+69 -> 69: siteinformation()
+activate 69
+
+deactivate 69
+
+User -> 19: siteinformationeditionpage()
+activate 19
+
+19 -> 69: updatethesiteinformaitonindb()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+User -> 19: sitelist()
+activate 19
+
+19 -> 69: displaythespecificsiteinformaitonform()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+@enduml

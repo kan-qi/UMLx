@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor User
+participant "Selectingsettingsbutton" as 09
+participant "submittedcommentsscreen" as 19
+participant "notification" as 49
+
+Administrator -> 09: meetingpublishbutton()
+activate 09
+
+09 -> 09: publishmeeting()
+09 -> 09: meeting()
+deactivate 09
+
+09 -> 49: sendnotification()
+activate 49
+
+49 -> 49: notification()
+deactivate 49
+
+User -> 19: Tasklistwithcommentbox()
+activate 19
+
+19 -> 19: addcomment()
+19 -> 19: comment()
+deactivate 19
+
+19 -> 49: sendnotification()
+activate 49
+
+49 -> 49: notification()
+deactivate 49
+
+@enduml

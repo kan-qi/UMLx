@@ -1,0 +1,161 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "clickson��Addeditstatus��button" as 09
+participant "Homepage" as 19
+participant "Taskdb" as 39
+participant "Showconfirmation" as 99
+participant "userwillbepromptedtoentersacrifices" as 279
+
+User -> 09: choosetoeditoralteranalreadyexistingtask()
+activate 09
+
+09 -> 39: displaytaskspage()
+activate 39
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+39 -> 39: Taskdb()
+deactivate 39
+
+39 -> 39: entersupto5taskspage()
+activate 39
+
+39 -> 279: enteredtaskswillbedisplayedinthettBox()
+activate 279
+
+279 -> 279: userwillbepromptedtoentersacrifices()
+279 -> 99: Showconfirmation()
+activate 99
+
+99 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+99 -> 39: Taskdb()
+deactivate 39
+
+deactivate 99
+
+279 -> 39: Taskdb()
+activate 39
+
+deactivate 39
+
+279 -> 39: displaytaskspage()
+activate 39
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+39 -> 39: Taskdb()
+deactivate 39
+
+39 -> 39: entersupto5taskspage()
+activate 39
+
+deactivate 39
+
+deactivate 279
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: choosetoeditoralteranalreadyexistingtask()
+activate 09
+
+09 -> 39: Taskdb()
+activate 39
+
+deactivate 39
+
+09 -> 99: showconfirmationpage()
+activate 99
+
+99 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 99
+
+deactivate 09
+
+User -> 39: entersupto5taskspage()
+activate 39
+
+39 -> 279: enteredtaskswillbedisplayedinthettBox()
+activate 279
+
+deactivate 279
+
+deactivate 39
+
+User -> 09: choosetoeditanalreadyexistingtask()
+activate 09
+
+09 -> 39: Taskdb()
+activate 39
+
+deactivate 39
+
+09 -> 99: showconfirmationpage()
+activate 99
+
+99 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 99
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 39: Edittaskpage()
+activate 39
+
+39 -> 39: Edittaskpage()
+39 -> 99: Showconfirmationpage()
+activate 99
+
+99 -> 39: Edittaskpage()
+39 -> 39: Edittaskpage()
+deactivate 39
+
+99 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+99 -> 39: taskdb()
+activate 39
+
+deactivate 39
+
+deactivate 99
+
+@enduml

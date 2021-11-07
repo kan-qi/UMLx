@@ -1,0 +1,42 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Selectingsettingsbutton" as 09
+participant "UserInfo" as 69
+
+User -> 09: meetingview()
+activate 09
+
+deactivate 09
+
+User -> 09: viewmeetingoption()
+activate 09
+
+09 -> 69: Querymeetingsbyuser()
+activate 69
+
+69 -> 09: listwithnomeetings()
+deactivate 09
+
+69 -> 09: meeting()
+activate 09
+
+deactivate 09
+
+69 -> 09: meetingview()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+User -> 09: listwithnomeetings()
+activate 09
+
+deactivate 09
+
+@enduml

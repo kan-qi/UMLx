@@ -1,0 +1,81 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Catagorypage" as 09
+participant "CreateADPformatfile" as 19
+participant "Validatevalues" as 39
+participant "Displayapprovalconfirmation" as 89
+
+User -> 09: timesheetselectpage()
+activate 09
+
+09 -> 39: Validateentries()
+activate 39
+
+39 -> 89: Displaysavinginformation()
+activate 89
+
+89 -> 39: Updatedatabase()
+39 -> 09: Homepage()
+deactivate 09
+
+39 -> 09: timesheetselectpage()
+activate 09
+
+09 -> 39: Validateentries()
+deactivate 39
+
+09 -> 39: Validateentry()
+activate 39
+
+39 -> 89: Displaysavinginformation()
+89 -> 39: Updatedatabase()
+39 -> 19: CreateADPformatfile()
+activate 19
+
+19 -> 09: timesheetselectpage()
+09 -> 39: Validateentries()
+deactivate 39
+
+09 -> 39: Validateentry()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 89
+
+09 -> 39: Validateentry()
+activate 39
+
+deactivate 39
+
+User -> 19: ADPformatsavingpage()
+activate 19
+
+19 -> 39: Updatedatabase()
+activate 39
+
+39 -> 19: CreateADPformatfile()
+deactivate 19
+
+deactivate 39
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

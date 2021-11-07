@@ -1,0 +1,153 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Supervisor
+participant "assignmentdetaildatabase" as 09
+participant "VlunteerDiasterHomepage" as 19
+participant "RedirectViewIndividualsPage" as 29
+participant "EMTformpage" as 39
+participant "Printsoutthelistofvictims" as 99
+participant "sendotdevice" as 159
+participant "Emergencybutton" as 219
+
+Supervisor -> 09: authentificationfailuremessage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 19: volunteerhomepage()
+activate 19
+
+deactivate 19
+
+Supervisor -> 29: Individualdetailspage()
+activate 29
+
+29 -> 99: authenticatetheOTP()
+activate 99
+
+99 -> 29: UpdateIndividualFormPage()
+29 -> 29: Redirecttodeletepage()
+29 -> 39: DeletePage()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+29 -> 159: sendotdevice()
+activate 159
+
+159 -> 29: receiveandstoratedeviceidatlocalstorage()
+activate 29
+
+29 -> 29: ManagementIndividualsPage()
+deactivate 29
+
+29 -> 39: localstorage()
+activate 39
+
+deactivate 39
+
+29 -> 19: volunteerhomepage()
+activate 19
+
+deactivate 19
+
+deactivate 159
+
+99 -> 159: generatesuniquedeviceid()
+activate 159
+
+159 -> 09: authentificationfailuremessage()
+activate 09
+
+deactivate 09
+
+159 -> 159: sendotdevice()
+159 -> 29: receiveandstoratedeviceidatlocalstorage()
+activate 29
+
+deactivate 29
+
+deactivate 159
+
+deactivate 99
+
+Supervisor -> 39: OTPpage()
+activate 39
+
+39 -> 39: checklocalstorage()
+39 -> 219: checkOTPenteredisnonempty()
+activate 219
+
+219 -> 29: Individualdetailspage()
+activate 29
+
+29 -> 99: authenticatetheOTP()
+activate 99
+
+deactivate 99
+
+deactivate 29
+
+219 -> 39: OTPemptyerrormessage()
+deactivate 39
+
+219 -> 99: authenticatetheOTP()
+activate 99
+
+99 -> 29: UpdateIndividualFormPage()
+activate 29
+
+deactivate 29
+
+99 -> 159: generatesuniquedeviceid()
+activate 159
+
+deactivate 159
+
+deactivate 99
+
+219 -> 39: localstorage()
+activate 39
+
+deactivate 39
+
+deactivate 219
+
+39 -> 19: volunteerhomepage()
+activate 19
+
+deactivate 19
+
+Supervisor -> 39: DeletePage()
+activate 39
+
+deactivate 39
+
+Supervisor -> 29: ManagementIndividualsPage()
+activate 29
+
+deactivate 29
+
+Supervisor -> 29: UpdateIndividualFormPage()
+activate 29
+
+29 -> 29: Redirecttodeletepage()
+deactivate 29
+
+29 -> 159: sendotdevice()
+activate 159
+
+deactivate 159
+
+Supervisor -> 39: OTPemptyerrormessage()
+activate 39
+
+deactivate 39
+
+@enduml

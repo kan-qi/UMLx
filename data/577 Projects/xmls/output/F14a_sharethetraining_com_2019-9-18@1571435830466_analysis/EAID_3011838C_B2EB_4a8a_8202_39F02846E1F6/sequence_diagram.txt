@@ -1,0 +1,63 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Invalidenteredinformation" as 09
+participant "savecourseinfo" as 19
+participant "Emailprotocol" as 39
+participant "acceptance" as 49
+
+Admin -> 09: courseinformationisnotvalidmessage()
+activate 09
+
+deactivate 09
+
+Admin -> 19: courselist()
+activate 19
+
+19 -> 19: loadcourseinformation()
+19 -> 19: course()
+deactivate 19
+
+19 -> 19: courseinformaton()
+activate 19
+
+19 -> 49: savetheacceptanceinformation()
+activate 49
+
+49 -> 49: acceptance()
+deactivate 49
+
+49 -> 09: courseinformationisnotvalidmessage()
+activate 09
+
+deactivate 09
+
+49 -> 39: sendemailtotrianer()
+activate 39
+
+39 -> 39: Emailprotocol()
+deactivate 39
+
+deactivate 19
+
+19 -> 19: savecourseinfo()
+activate 19
+
+19 -> 19: course()
+deactivate 19
+
+Admin -> 19: courseinformaton()
+activate 19
+
+19 -> 49: savetheacceptanceinformation()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+@enduml

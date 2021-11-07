@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "goal" as 09
+
+Weight loser -> 09: goaldetaildisplay()
+activate 09
+
+deactivate 09
+
+Weight loser -> 09: goalhassomesponsors()
+activate 09
+
+deactivate 09
+
+Weight loser -> 09: trackgoalbutton()
+activate 09
+
+09 -> 09: retrievegoaldetails()
+09 -> 09: goalhassomesponsors()
+deactivate 09
+
+09 -> 09: goalinfo()
+activate 09
+
+deactivate 09
+
+09 -> 09: showgoalsdetails()
+activate 09
+
+09 -> 09: goaldetaildisplay()
+deactivate 09
+
+@enduml

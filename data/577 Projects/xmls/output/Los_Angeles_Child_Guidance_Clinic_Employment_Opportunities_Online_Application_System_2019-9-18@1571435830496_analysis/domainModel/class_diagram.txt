@@ -1,0 +1,85 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+~ User()
+}
+
+class selecttheappropriatepostings {
+~ selecttheappropriatepostings()
+~ ApproveHiredb()
+~ addcandidatetoapplicantlist()
+~ markstheuserasapproved()
+~ returnsthecorrectapplicant()
+~ modifiestheApplicantprofiletoreflectUserschange()
+~ selectsCreateanAccount()
+~ generatespostingidentificationdata()
+~ Postingdb()
+~ generatesamessagetoinformtheUser()
+~ Postingiscreatedinthesystem()
+~ selectsExportReport()
+~ returnsdatafromthetimeperiod()
+~ removesthepostingfromonlineview()
+~ informsUserofthesuccessfulpostdeletion()
+~ fillsoutrelevantinformationabouttheposting()
+~ ChooseApplications()
+~ selectstheSaveButton()
+~ UserProfiledb()
+~ selectsForgotPassword()
+}
+
+class clicksubmitbutton {
+~ clicksubmitbutton()
+}
+
+class Homepage {
+~ Homepage()
+~ Showconfirmationpage()
+~ ViewApplicationPage()
+~ Loginpage()
+}
+
+class uploadrelevantdocuments {
+~ uploadrelevantdocuments()
+~ fillsoutrelevantdata()
+}
+
+class fillsoutalloftherequireddatacorrectly {
+~ fillsoutalloftherequireddatacorrectly()
+~ fillsintherestofthedetailsforthenewuser()
+~ checkstoensurethatthenewuserhascorrectcredentials()
+~ showconfirmationaboutthattheaccountcreatedandtheemailsent()
+~ outputsitsHiringDatainareadableformat()
+~ returnsthecorrectapplicant()
+~ sortsfilterstheapplicants()
+}
+
+class Accountdb {
+~ Accountdb()
+~ selectsCreateanAccount()
+~ fillsoutalegitimateaccountsidemail()
+~ sendsanemailtotheaccountsemail()
+~ Interviewdb()
+}
+
+class markstheuseraseitherqualifiedunqualifiedorprocessing {
+~ markstheuseraseitherqualifiedunqualifiedorprocessing()
+~ generatesamessagetoinformtheUser()
+~ savesthedatainthedatabase()
+~ informstheUserofthesuccess()
+~ looksthroughalistofqualifiedapplicants()
+~ markstheuserasinterviewing()
+~ returnsalloftheapplicantswhohaveappliedtotheposition()
+~ returnstheUserProfilefortheUser()
+}
+
+class Showconfirmation {
+~ Showconfirmation()
+~ returnsinformationaboutthatspecificposting()
+}
+
+class WebsiteViewer 
+
+class Object1 
+
+@enduml

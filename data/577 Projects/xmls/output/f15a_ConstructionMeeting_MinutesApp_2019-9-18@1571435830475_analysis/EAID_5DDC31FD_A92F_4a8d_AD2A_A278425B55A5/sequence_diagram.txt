@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "attemptstoverifytheinputs" as 09
+participant "Choosesameeting" as 19
+participant "Hompage" as 29
+participant "Object1" as 39
+
+User -> 09: Selectsthesignupbutton()
+activate 09
+
+09 -> 29: opensuptothesignuppage()
+activate 29
+
+29 -> 09: submitstheinformationtobeapprovedbyanadministrator()
+09 -> 09: Displaysmessagetotheusertonotifythem()
+deactivate 09
+
+deactivate 29
+
+User -> 19: OpenstheConstructionMeetingMinutesAndroidapplication()
+activate 19
+
+19 -> 29: opensuptotheloginpage()
+activate 29
+
+29 -> 29: opensuptothesignuppage()
+29 -> 09: submitstheinformationtobeapprovedbyanadministrator()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+29 -> 09: Displaysmessagetotheusertonotifythem()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+User -> 39: Selectssubmit()
+activate 39
+
+39 -> 09: submitstheinformationtobeapprovedbyanadministrator()
+activate 09
+
+09 -> 09: Displaysmessagetotheusertonotifythem()
+deactivate 09
+
+deactivate 39
+
+@enduml

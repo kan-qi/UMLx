@@ -1,0 +1,77 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "viewlink" as 09
+participant "emptyannouncementform" as 19
+participant "redirecttoapagewiththecurerntsiteslist" as 39
+participant "checkuscidexistornot" as 49
+participant "displayinvalidemailformat" as 119
+
+User -> 09: Myschedulelink()
+activate 09
+
+09 -> 49: checktheexistenceschedule()
+activate 49
+
+49 -> 119: Displaymyschedulepagewithscheduleinformation()
+activate 119
+
+119 -> 19: popfailurecheckinannouncement()
+activate 19
+
+19 -> 19: failurecheckinannouncement()
+deactivate 19
+
+119 -> 49: schedule()
+deactivate 49
+
+119 -> 19: popupsuccesscheckinannouncement()
+activate 19
+
+19 -> 19: successcheckinannouncement()
+deactivate 19
+
+119 -> 49: nonexistencealert()
+activate 49
+
+deactivate 49
+
+119 -> 39: myschedulepage()
+activate 39
+
+deactivate 39
+
+deactivate 119
+
+49 -> 49: schedule()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: failurecheckinannouncement()
+activate 19
+
+deactivate 19
+
+User -> 19: successcheckinannouncement()
+activate 19
+
+deactivate 19
+
+User -> 39: myschedulepage()
+activate 39
+
+deactivate 39
+
+User -> 49: nonexistencealert()
+activate 49
+
+deactivate 49
+
+@enduml

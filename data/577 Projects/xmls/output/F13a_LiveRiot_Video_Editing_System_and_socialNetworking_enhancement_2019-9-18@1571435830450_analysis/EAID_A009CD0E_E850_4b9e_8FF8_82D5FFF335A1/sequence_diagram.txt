@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "DeleteButton" as 09
+participant "Microwebsite" as 19
+participant "pdfformatisnotvalidmessage" as 29
+participant "Confirmbox" as 39
+
+User -> 09: DeleteButton()
+activate 09
+
+09 -> 39: Popupaconfirmbox()
+activate 39
+
+39 -> 09: DeleteButton()
+09 -> 39: Popupaconfirmbox()
+39 -> 39: Confirmbox()
+39 -> 19: Deletemicrowebsite()
+activate 19
+
+19 -> 29: Deactivatethelink()
+activate 29
+
+29 -> 19: Microwebsite()
+deactivate 19
+
+29 -> 19: Directtomicrowebsitemanagement()
+activate 19
+
+19 -> 19: Redirecttomicrowebsitemanagementpage()
+19 -> 19: MicroWebsiteManagementPage()
+deactivate 19
+
+19 -> 19: MicroWebsiteManagementPage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+19 -> 19: Microwebsite()
+activate 19
+
+deactivate 19
+
+19 -> 29: pdfformatisnotvalidmessage()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+deactivate 09
+
+User -> 19: MicroWebsiteManagementPage()
+activate 19
+
+deactivate 19
+
+User -> 29: pdfformatisnotvalidmessage()
+activate 29
+
+deactivate 29
+
+User -> 39: Confirmbox()
+activate 39
+
+39 -> 19: Deletemicrowebsite()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+@enduml

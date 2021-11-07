@@ -1,0 +1,42 @@
+id,element,useCase,type,component
+1,redirects to the sponsors to Paypal:Paypal,respond to a sponsorship request,entity,goal
+2,redirects to the sponsors to Paypal:Paypal,respond to a sponsorship request,entity,goal
+3,Sponsor:Paypal page,respond to a sponsorship request,boundary,Homepage
+4,Sponsor:error in receiving information from paypal,respond to a sponsorship request,boundary,errorinaccessfacebookinformation
+5,Sponsor:pledge money page,respond to a sponsorship request,boundary,Homepage
+6,Sponsor:error in the amount of money to donate,respond to a sponsorship request,boundary,errorinaccessfacebookinformation
+7,Sponsor:the link for invitation,respond to a sponsorship request,boundary,errorinaccessfacebookinformation
+8,Sponsor:remaining money options,respond to a sponsorship request,entity,transaction
+9,Sponsor:thank you message and ask for registration,respond to a sponsorship request,entity,transaction
+10,Sponsor:Invalid transaction message,respond to a sponsorship request,entity,transaction
+11,display thank you message:email protocol,respond to a sponsorship request,actor,emailprototocol
+12,ask the remaining money options:sponsors,respond to a sponsorship request,boundary,Theweightloseraddonesponsorsuccessfullymessage
+13,store the transaction details:Invalid transaction message,respond to a sponsorship request,entity,transaction
+14,Paypal page:store the transaction details,respond to a sponsorship request,entity,transaction
+15,redirects to the sponsors to Paypal:Paypal page,respond to a sponsorship request,boundary,Homepage
+16,ask the remaining money options:remaining money options,respond to a sponsorship request,entity,transaction
+17,store the transaction details:ask the remaining money options,respond to a sponsorship request,entity,transaction
+18,udpate the goal with donation:charity,respond to a sponsorship request,boundary,invokeaddcharityusecase
+19,display thank you message:thank you message and ask for registration,respond to a sponsorship request,entity,transaction
+20,remaining money options:display thank you message,respond to a sponsorship request,boundary,Theweightloseraddonesponsorsuccessfullymessage
+21,redirects to the sponsors to Paypal:error in receiving information from paypal,respond to a sponsorship request,boundary,errorinaccessfacebookinformation
+22,udpate the goal with donation:error in the amount of money to donate,respond to a sponsorship request,boundary,errorinaccessfacebookinformation
+23,validate the link:goal info,respond to a sponsorship request,entity,goal
+24,thank you message and ask for registration:invoke the "register" use case,respond to a sponsorship request,boundary,invokeaddcharityusecase
+25,open the pledge money page:pledge money page,respond to a sponsorship request,boundary,Homepage
+26,validate the link:open the pledge money page,respond to a sponsorship request,control,redirecttheusertocreatgoalpage
+27,pledge money page:validates the details,respond to a sponsorship request,control,exceedthetimelimite
+28,validates the details:redirects to the sponsors to Paypal,respond to a sponsorship request,control,redirecttheusertocreatgoalpage
+29,remaining money options:udpate the goal with donation,respond to a sponsorship request,control,redirecttheusertocreatgoalpage
+30,store the transaction details:transaction details,respond to a sponsorship request,entity,transaction
+31,store the transaction details:transaction,respond to a sponsorship request,entity,transaction
+32,the link for invitation:validate the link,respond to a sponsorship request,boundary,invlidpattern
+33,validates the details:transaction,respond to a sponsorship request,entity,transaction
+34,stl#Sponsor:Paypal page,respond to a sponsorship request,Stimulus,undefined
+35,stl#Sponsor:error in receiving information from paypal,respond to a sponsorship request,Stimulus,undefined
+36,stl#Sponsor:pledge money page,respond to a sponsorship request,Stimulus,undefined
+37,stl#Sponsor:error in the amount of money to donate,respond to a sponsorship request,Stimulus,undefined
+38,stl#Sponsor:the link for invitation,respond to a sponsorship request,Stimulus,undefined
+39,stl#Sponsor:remaining money options,respond to a sponsorship request,Stimulus,undefined
+40,stl#Sponsor:thank you message and ask for registration,respond to a sponsorship request,Stimulus,undefined
+41,stl#Sponsor:Invalid transaction message,respond to a sponsorship request,Stimulus,undefined

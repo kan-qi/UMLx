@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "validationfailedmessage" as 09
+participant "caselist" as 19
+participant "insertthenewusernameandpasswordintotheuserdb" as 89
+
+User -> 09: correspondingrolesmainpage()
+activate 09
+
+deactivate 09
+
+User -> 19: caselist()
+activate 19
+
+19 -> 19: Sendrequesttocasedatabase()
+19 -> 09: returntothecaseinformationpage()
+activate 09
+
+09 -> 09: caseinformationpage()
+deactivate 09
+
+09 -> 89: redirecttheusertothecorrespondingrolesmainpage()
+activate 89
+
+89 -> 09: correspondingrolesmainpage()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+19 -> 19: case()
+deactivate 19
+
+User -> 09: caseinformationpage()
+activate 09
+
+deactivate 09
+
+@enduml

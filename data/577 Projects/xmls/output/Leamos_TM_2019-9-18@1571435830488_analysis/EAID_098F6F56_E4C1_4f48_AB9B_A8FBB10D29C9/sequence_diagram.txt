@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Database" as 29
+participant "Displayconfirmation" as 39
+participant "Deletecustormer" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Studentviewpage()
+activate 09
+
+09 -> 49: Deletestudent()
+activate 49
+
+49 -> 39: Displayconfirmation()
+activate 39
+
+39 -> 29: Database()
+activate 29
+
+deactivate 29
+
+39 -> 09: Homepage()
+deactivate 09
+
+39 -> 09: Studentviewpage()
+activate 09
+
+09 -> 49: Deletestudent()
+deactivate 49
+
+deactivate 09
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,94 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 09
+participant "errorinaccessfacebookinformation" as 29
+participant "invlidpattern" as 39
+participant "Homepage" as 79
+participant "user" as 89
+participant "redirecttheusertocreatgoalpage" as 99
+participant "goal" as 149
+
+Weight loser -> 09: addnewweightpage()
+activate 09
+
+09 -> 29: checkifresponsecontainsuserinform()
+activate 29
+
+29 -> 99: adduserintothesystemifnotregistered()
+activate 99
+
+99 -> 79: redirecttohomepage()
+activate 79
+
+79 -> 09: displaysuccessmessage()
+deactivate 09
+
+79 -> 149: goal()
+activate 149
+
+deactivate 149
+
+deactivate 79
+
+99 -> 89: user()
+activate 89
+
+deactivate 89
+
+deactivate 99
+
+29 -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+Weight loser -> 09: displaysuccessmessage()
+activate 09
+
+deactivate 09
+
+Weight loser -> 29: loginfacebookbutton()
+activate 29
+
+29 -> 29: getinformationfromfacebook()
+29 -> 29: facebook()
+deactivate 29
+
+29 -> 09: addnewweightpage()
+activate 09
+
+09 -> 29: checkifresponsecontainsuserinform()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+29 -> 29: checkifresponsecontainsuserinform()
+activate 29
+
+29 -> 99: adduserintothesystemifnotregistered()
+activate 99
+
+deactivate 99
+
+29 -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+Weight loser -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+@enduml

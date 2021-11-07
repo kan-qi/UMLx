@@ -1,0 +1,67 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "demoinstructioncreatepanel" as 09
+participant "demoissavedmessage" as 29
+participant "parametersetdialog" as 49
+
+User -> 09: demoinstructioncreatepanel()
+activate 09
+
+09 -> 09: displaythedraggedanddroppeddemoinstructions()
+09 -> 49: popupdemochangedialog()
+activate 49
+
+49 -> 09: demoselector()
+09 -> 49: changetheparametersoftheelements()
+49 -> 09: savedemoinstructions()
+09 -> 29: demo()
+activate 29
+
+deactivate 29
+
+09 -> 29: demoissavedmessage()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+deactivate 49
+
+09 -> 09: savedemoinstructions()
+activate 09
+
+09 -> 29: demo()
+activate 29
+
+deactivate 29
+
+09 -> 29: demoissavedmessage()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User -> 09: demoselector()
+activate 09
+
+09 -> 49: changetheparametersoftheelements()
+activate 49
+
+deactivate 49
+
+09 -> 09: savedemoinstructions()
+deactivate 09
+
+User -> 29: demoissavedmessage()
+activate 29
+
+deactivate 29
+
+@enduml

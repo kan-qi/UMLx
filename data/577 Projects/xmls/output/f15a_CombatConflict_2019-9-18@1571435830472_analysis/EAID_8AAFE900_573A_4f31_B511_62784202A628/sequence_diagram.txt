@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Answersfrompagestoredascookie" as 09
+participant "clicksnext" as 19
+participant "User" as 29
+participant "Showsdatabaseinformation" as 99
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: ClickContinuebutton()
+activate 19
+
+19 -> 09: imputusenameandpassword()
+activate 09
+
+09 -> 09: validateusenameandpassword()
+09 -> 99: showconfirmation()
+activate 99
+
+99 -> 09: Homepage()
+deactivate 09
+
+deactivate 99
+
+deactivate 19
+
+User -> 29: Userdoesnotselectanyradiobutton()
+activate 29
+
+29 -> 09: validateusenameandpassword()
+activate 09
+
+09 -> 99: showconfirmation()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+deactivate 29
+
+User -> 19: Clickonlogininpage()
+activate 19
+
+19 -> 09: imputusenameandpassword()
+activate 09
+
+09 -> 09: validateusenameandpassword()
+deactivate 09
+
+deactivate 19
+
+@enduml

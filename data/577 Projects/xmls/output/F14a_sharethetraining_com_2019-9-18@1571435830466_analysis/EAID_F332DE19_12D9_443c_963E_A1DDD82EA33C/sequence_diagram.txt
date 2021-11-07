@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Trainer
+participant "updaterole" as 09
+participant "Homepage" as 19
+participant "Invalidenteredinformation" as 29
+participant "cache" as 39
+
+Trainer -> 09: scheduleupdatepage()
+activate 09
+
+09 -> 29: validateupdatedscheduleinfo()
+activate 29
+
+29 -> 29: Invalidinputscheduleinfo()
+deactivate 29
+
+29 -> 09: saveupdatedschedule()
+09 -> 39: schedule()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+Trainer -> 19: scheduleinfopage()
+activate 19
+
+19 -> 09: displayupdateschedulepage()
+activate 09
+
+09 -> 09: scheduleupdatepage()
+09 -> 29: validateupdatedscheduleinfo()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+deactivate 19
+
+Trainer -> 29: Invalidinputscheduleinfo()
+activate 29
+
+deactivate 29
+
+Trainer -> 39: loadschedulebutton()
+activate 39
+
+39 -> 29: queryscheduleinfo()
+activate 29
+
+29 -> 19: scheduleinfopage()
+activate 19
+
+19 -> 09: displayupdateschedulepage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+29 -> 39: schedule()
+deactivate 39
+
+deactivate 29
+
+@enduml

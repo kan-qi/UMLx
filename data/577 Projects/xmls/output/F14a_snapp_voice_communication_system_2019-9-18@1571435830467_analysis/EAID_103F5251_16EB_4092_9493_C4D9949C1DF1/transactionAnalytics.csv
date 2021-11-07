@@ -1,0 +1,11 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Manager:list of agents with status-->Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,View call los and listen to call recordings,4,0,3,0,0
+2,stl#Manager:list of agents with status-->Manager:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,View call los and listen to call recordings,4,0,3,0,0
+3,stl#Manager:view agent activities link-->Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:agent,View call los and listen to call recordings,4,0,3,0,0
+4,stl#Manager:view agent activities link-->Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,View call los and listen to call recordings,6,0,5,0,0
+5,stl#Manager:view agent activities link-->Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,View call los and listen to call recordings,6,0,5,0,0
+6,stl#Manager:call detailed information-->Manager:call detailed information,View call los and listen to call recordings,2,1,0,0,0
+7,stl#Manager:call record downloaded message-->Manager:call record downloaded message,View call los and listen to call recordings,2,0,0,1,0
+8,stl#Twilio API:download call records-->Twilio API:download call records-->download call records:call record downloaded message,View call los and listen to call recordings,3,0,0,2,0
+9,stl#Twilio API:download call records-->Twilio API:download call records-->download call records:call records,View call los and listen to call recordings,3,0,0,2,0
+10,stl#Twilio API:receive call information-->Twilio API:receive call information-->receive call information:call detailed information,View call los and listen to call recordings,3,1,0,1,0

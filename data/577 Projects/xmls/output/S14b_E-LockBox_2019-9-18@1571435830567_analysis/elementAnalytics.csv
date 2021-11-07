@@ -1,0 +1,280 @@
+id,element,useCase,type,component
+1,User:specific document record,Create a limited user_admin,boundary,specificdocumentrecord
+2,User:validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+3,User:file download interface,Create a limited user_admin,control,filedownloadinterface
+4,User:"create user" button,Create a limited user_admin,entity,userinfo
+5,User:validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+6,User:user information page,Create a limited user_admin,entity,userinfo
+7,User:role validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+8,User:success message,Create a limited user_admin,boundary,validationfailedmessage
+9,"create user" button:validate the role of user,Create a limited user_admin,boundary,validationfailedmessage
+10,download the document:file download interface,Create a limited user_admin,control,filedownloadinterface
+11,validate the role of users:download the document,Create a limited user_admin,control,filedownloadinterface
+12,generate a random password for the username:insert the new username and password into the user db,Create a limited user_admin,control,insertthenewusernameandpasswordintotheuserdb
+13,generate a random password for the username:user information page,Create a limited user_admin,entity,userinfo
+14,validate the role of user:generate a random password for the username,Create a limited user_admin,control,insertthenewusernameandpasswordintotheuserdb
+15,insert the new username and password into the user db:return generate success message,Create a limited user_admin,boundary,validationfailedmessage
+16,insert the new username and password into the user db:user info,Create a limited user_admin,entity,userinfo
+17,user information page:insert the new username and password into the user db,Create a limited user_admin,control,insertthenewusernameandpasswordintotheuserdb
+18,return generate success message:success message,Create a limited user_admin,boundary,validationfailedmessage
+19,role validation failed message:validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+20,validate the role of user:role validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+21,specific document record:validate the role of users,Create a limited user_admin,boundary,validationfailedmessage
+22,validate the role of users:user,Create a limited user_admin,entity,userinfo
+23,validate the role of user:user info,Create a limited user_admin,entity,userinfo
+24,validate the role of users:validation failed message,Create a limited user_admin,boundary,validationfailedmessage
+25,stl#User:specific document record,Create a limited user_admin,Stimulus,undefined
+26,stl#User:validation failed message,Create a limited user_admin,Stimulus,undefined
+27,stl#User:file download interface,Create a limited user_admin,Stimulus,undefined
+28,stl#User:"create user" button,Create a limited user_admin,Stimulus,undefined
+29,stl#User:validation failed message,Create a limited user_admin,Stimulus,undefined
+30,stl#User:user information page,Create a limited user_admin,Stimulus,undefined
+31,stl#User:role validation failed message,Create a limited user_admin,Stimulus,undefined
+32,stl#User:success message,Create a limited user_admin,Stimulus,undefined
+33,User:validation failed message,Create new case,boundary,validationfailedmessage
+34,User:Insert success message,Create new case,boundary,validationfailedmessage
+35,User:case information page,Create new case,boundary,validationfailedmessage
+36,User:validation failed message,Create new case,boundary,validationfailedmessage
+37,User:Create new case button,Create new case,control,insertthenewusernameandpasswordintotheuserdb
+38,print the document:printer,Create new case,entity,userinfo
+39,Create new case button:validate the role of users,Create new case,boundary,validationfailedmessage
+40,Insert success message:print the document,Create new case,boundary,specificdocumentrecord
+41,insert case into case database:Insert success message,Create new case,boundary,validationfailedmessage
+42,insert case into case database:case information,Create new case,entity,userinfo
+43,case information page:validate the ifnoramtion from case information page,Create new case,boundary,validationfailedmessage
+44,validate the role of users:case information page,Create new case,boundary,validationfailedmessage
+45,validate the ifnoramtion from case information page:insert case into case database,Create new case,control,insertthenewusernameandpasswordintotheuserdb
+46,validate the role of users:user,Create new case,entity,userinfo
+47,validate the ifnoramtion from case information page:user,Create new case,entity,userinfo
+48,validate the ifnoramtion from case information page:validation failed message,Create new case,boundary,validationfailedmessage
+49,validate the role of users:validation failed message,Create new case,boundary,validationfailedmessage
+50,stl#User:validation failed message,Create new case,Stimulus,undefined
+51,stl#User:Insert success message,Create new case,Stimulus,undefined
+52,stl#User:case information page,Create new case,Stimulus,undefined
+53,stl#User:validation failed message,Create new case,Stimulus,undefined
+54,stl#User:Create new case button,Create new case,Stimulus,undefined
+55,User:description should not be blank message,Log activity,boundary,validationfailedmessage
+56,User:use information page,Log activity,boundary,validationfailedmessage
+57,User:information input page,Log activity,boundary,validationfailedmessage
+58,User:add vew button,Log activity,boundary,addvewbutton
+59,add vew button:return activity description page,Log activity,boundary,validationfailedmessage
+60,insert activity into case:case info,Log activity,entity,user
+61,validate the descirpiton of activity:description should not be blank message,Log activity,boundary,validationfailedmessage
+62,information input page:validate the descirpiton of activity,Log activity,boundary,validationfailedmessage
+63,return activity description page:information input page,Log activity,boundary,validationfailedmessage
+64,insert activity into case:use information page,Log activity,boundary,validationfailedmessage
+65,validate the descirpiton of activity:insert activity into case,Log activity,control,insertthenewusernameandpasswordintotheuserdb
+66,return activity description page:user,Log activity,entity,user
+67,stl#User:description should not be blank message,Log activity,Stimulus,undefined
+68,stl#User:use information page,Log activity,Stimulus,undefined
+69,stl#User:information input page,Log activity,Stimulus,undefined
+70,stl#User:add vew button,Log activity,Stimulus,undefined
+71,User:wrong user info message,View document,entity,Userinfo
+72,User:corresponding role's main page,View document,boundary,validationfailedmessage
+73,User:login page,View document,boundary,loginpage
+74,validate the entries:User info,View document,entity,Userinfo
+75,check existing users:User info,View document,entity,Userinfo
+76,check existing users:redirect the user to the corresponding role's main page,View document,control,insertthenewusernameandpasswordintotheuserdb
+77,validate the entries:check existing users,View document,entity,Userinfo
+78,redirect the user to the corresponding role's main page:corresponding role's main page,View document,boundary,validationfailedmessage
+79,login page:validate the entries,View document,boundary,validationfailedmessage
+80,validate the entries:wrong user info message,View document,entity,Userinfo
+81,stl#User:wrong user info message,View document,Stimulus,undefined
+82,stl#User:corresponding role's main page,View document,Stimulus,undefined
+83,stl#User:login page,View document,Stimulus,undefined
+84,User:user information page,activate user,entity,Userinfo
+85,User:"Use Management" button,activate user,boundary,addvewbutton
+86,User:role validation failed message,activate user,boundary,validationfailedmessage
+87,User:wrong action message,activate user,boundary,validationfailedmessage
+88,User:status chage success message,activate user,boundary,validationfailedmessage
+89,"Use Management" button:validate the role of user,activate user,boundary,validationfailedmessage
+90,activate user status:user info,activate user,entity,Userinfo
+91,activate user status:status chage success message,activate user,boundary,validationfailedmessage
+92,check the status of user:activate user status,activate user,entity,Userinfo
+93,check the status of user:wrong action message,activate user,boundary,validationfailedmessage
+94,user information page:check the status of user,activate user,entity,Userinfo
+95,return to the user information page:user information page,activate user,entity,Userinfo
+96,validate the role of user:return to the user information page,activate user,entity,Userinfo
+97,validate the role of user:role validation failed message,activate user,boundary,validationfailedmessage
+98,validate the role of user:user info,activate user,entity,Userinfo
+99,stl#User:user information page,activate user,Stimulus,undefined
+100,stl#User:"Use Management" button,activate user,Stimulus,undefined
+101,stl#User:role validation failed message,activate user,Stimulus,undefined
+102,stl#User:wrong action message,activate user,Stimulus,undefined
+103,stl#User:status chage success message,activate user,Stimulus,undefined
+104,User:corresponding role's main page,check case information,boundary,validationfailedmessage
+105,User:case list,check case information,boundary,caselist
+106,User:case information page,check case information,boundary,validationfailedmessage
+107,Send request to case database:return to the case information page,check case information,boundary,validationfailedmessage
+108,Send request to case database:case,check case information,boundary,caselist
+109,case list:Send request to case database,check case information,boundary,caselist
+110,return to the case information page:case information page,check case information,boundary,validationfailedmessage
+111,redirect the user to the corresponding role's main page:corresponding role's main page,check case information,boundary,validationfailedmessage
+112,return to the case information page:redirect the user to the corresponding role's main page,check case information,control,insertthenewusernameandpasswordintotheuserdb
+113,stl#User:corresponding role's main page,check case information,Stimulus,undefined
+114,stl#User:case list,check case information,Stimulus,undefined
+115,stl#User:case information page,check case information,Stimulus,undefined
+116,User:role validation failed message,create high level user,boundary,validationfailedmessage
+117,User:validation failed message,create high level user,boundary,validationfailedmessage
+118,User:"Use Management" button,create high level user,boundary,addvewbutton
+119,User:user information page,create high level user,boundary,validationfailedmessage
+120,"Use Management" button:validate the role of user,create high level user,boundary,validationfailedmessage
+121,insert user information:user info,create high level user,entity,User
+122,validate the information:insert user information,create high level user,control,insertthenewusernameandpasswordintotheuserdb
+123,return to the user information page:user information page,create high level user,boundary,validationfailedmessage
+124,validate the role of user:return to the user information page,create high level user,boundary,validationfailedmessage
+125,validate the role of user:role validation failed message,create high level user,boundary,validationfailedmessage
+126,validate the role of user:user info,create high level user,entity,User
+127,user information page:validate the information,create high level user,boundary,validationfailedmessage
+128,validate the information:validation failed message,create high level user,boundary,validationfailedmessage
+129,stl#User:role validation failed message,create high level user,Stimulus,undefined
+130,stl#User:validation failed message,create high level user,Stimulus,undefined
+131,stl#User:"Use Management" button,create high level user,Stimulus,undefined
+132,stl#User:user information page,create high level user,Stimulus,undefined
+133,User:case list,edit case,entity,User
+134,User:case information page,edit case,boundary,validationfailedmessage
+135,User:invalid  ifnormation message,edit case,boundary,validationfailedmessage
+136,User:case info page,edit case,boundary,loginpage
+137,User: case info page for editing,edit case,boundary,loginpage
+138, case info page for editing:validate case input information,edit case,boundary,validationfailedmessage
+139,return case info page for editing: case info page for editing,edit case,boundary,loginpage
+140,validate the role of user:User info,edit case,entity,User
+141,redirect to new case page:case info page,edit case,boundary,loginpage
+142,send request to case database:case information database,edit case,boundary,validationfailedmessage
+143,validate case input information:case information database,edit case,boundary,validationfailedmessage
+144,case information page:validate the role of user,edit case,boundary,validationfailedmessage
+145,display case information list page:case information page,edit case,boundary,validationfailedmessage
+146,case list:send request to case database,edit case,control,insertthenewusernameandpasswordintotheuserdb
+147,send request to case database:display case information list page,edit case,boundary,validationfailedmessage
+148,validate case input information:invalid  ifnormation message,edit case,boundary,validationfailedmessage
+149,validate case input information:redirect to new case page,edit case,boundary,loginpage
+150,validate the role of user:return case info page for editing,edit case,boundary,loginpage
+151,stl#User:case list,edit case,Stimulus,undefined
+152,stl#User:case information page,edit case,Stimulus,undefined
+153,stl#User:invalid  ifnormation message,edit case,Stimulus,undefined
+154,stl#User:case info page,edit case,Stimulus,undefined
+155,stl#User: case info page for editing,edit case,Stimulus,undefined
+156,User:"Use Management" button,edit user,boundary,addvewbutton
+157,User:validation failed message,edit user,boundary,validationfailedmessage
+158,User:role validation failed message,edit user,boundary,validationfailedmessage
+159,User:validation success information,edit user,boundary,validationfailedmessage
+160,User:user information page,edit user,boundary,validationfailedmessage
+161,"Use Management" button:validate the role of user,edit user,boundary,validationfailedmessage
+162,edit user information:user info,edit user,entity,User
+163,edit user information:validation success information,edit user,boundary,validationfailedmessage
+164,validate the information:edit user information,edit user,entity,User
+165,return to the user information page:user information page,edit user,boundary,validationfailedmessage
+166,validate the role of user:return to the user information page,edit user,boundary,validationfailedmessage
+167,validate the role of user:role validation failed message,edit user,boundary,validationfailedmessage
+168,validate the role of user:user info,edit user,entity,User
+169,user information page:validate the information,edit user,boundary,validationfailedmessage
+170,validate the information:validation failed message,edit user,boundary,validationfailedmessage
+171,stl#User:"Use Management" button,edit user,Stimulus,undefined
+172,stl#User:validation failed message,edit user,Stimulus,undefined
+173,stl#User:role validation failed message,edit user,Stimulus,undefined
+174,stl#User:validation success information,edit user,Stimulus,undefined
+175,stl#User:user information page,edit user,Stimulus,undefined
+176,User:role validation failed message,inactivate user,boundary,validationfailedmessage
+177,User:validation failed message,inactivate user,boundary,validationfailedmessage
+178,User:user information page,inactivate user,boundary,validationfailedmessage
+179,User:validation success information,inactivate user,boundary,validationfailedmessage
+180,User:"Use Management" button,inactivate user,boundary,addvewbutton
+181,"Use Management" button:validate the role of user,inactivate user,boundary,validationfailedmessage
+182,edit user information:user info,inactivate user,entity,User
+183,edit user information:validation success information,inactivate user,boundary,validationfailedmessage
+184,validate the information:edit user information,inactivate user,entity,User
+185,return to the user information page:user information page,inactivate user,boundary,validationfailedmessage
+186,validate the role of user:return to the user information page,inactivate user,boundary,validationfailedmessage
+187,validate the role of user:role validation failed message,inactivate user,boundary,validationfailedmessage
+188,validate the role of user:user info,inactivate user,entity,User
+189,user information page:validate the information,inactivate user,boundary,validationfailedmessage
+190,validate the information:validation failed message,inactivate user,boundary,validationfailedmessage
+191,stl#User:role validation failed message,inactivate user,Stimulus,undefined
+192,stl#User:validation failed message,inactivate user,Stimulus,undefined
+193,stl#User:user information page,inactivate user,Stimulus,undefined
+194,stl#User:validation success information,inactivate user,Stimulus,undefined
+195,stl#User:"Use Management" button,inactivate user,Stimulus,undefined
+196,User:validation failed message,report generation,boundary,validationfailedmessage
+197,User:report page,report generation,boundary,loginpage
+198,User:report button,report generation,boundary,addvewbutton
+199,User:validation failed message,report generation,boundary,validationfailedmessage
+200,print the document:printer,report generation,control,filedownloadinterface
+201,choose file page:validate file choise,report generation,boundary,validationfailedmessage
+202,validate the role of users:choose file page,report generation,boundary,loginpage
+203,validate file choise:document database,report generation,boundary,specificdocumentrecord
+204,generate report page:report page,report generation,boundary,loginpage
+205,validate file choise:generate report page,report generation,boundary,loginpage
+206,report page:print the document,report generation,boundary,specificdocumentrecord
+207,report button:validate the role of users,report generation,boundary,validationfailedmessage
+208,validate the role of users:user,report generation,entity,User
+209,validate file choise:validation failed message,report generation,boundary,validationfailedmessage
+210,validate the role of users:validation failed message,report generation,boundary,validationfailedmessage
+211,stl#User:validation failed message,report generation,Stimulus,undefined
+212,stl#User:report page,report generation,Stimulus,undefined
+213,stl#User:report button,report generation,Stimulus,undefined
+214,stl#User:validation failed message,report generation,Stimulus,undefined
+215,User:validate fail message,reset case,boundary,validationfailedmessage
+216,User:"reset password" button,reset case,boundary,addvewbutton
+217,User:case manage page,reset case,boundary,loginpage
+218,User:unauthorized action information,reset case,boundary,validationfailedmessage
+219,User:password reset page,reset case,control,insertthenewusernameandpasswordintotheuserdb
+220,"reset password" button:validate the role of user,reset case,boundary,validationfailedmessage
+221,"reset password" button:validate the role of user,reset case,boundary,validationfailedmessage
+222,validate the role of user:User information,reset case,entity,User
+223,update the password to datebase:User information,reset case,entity,User
+224,validate the role of user:User information,reset case,entity,User
+225,Validate the information from password reset page:validate fail message,reset case,boundary,validationfailedmessage
+226,Validate the information from password reset page:update the password to datebase,reset case,control,insertthenewusernameandpasswordintotheuserdb
+227,password reset page:Validate the information from password reset page,reset case,boundary,validationfailedmessage
+228,update the password to datebase:case manage page,reset case,boundary,loginpage
+229,return password reset page:password reset page,reset case,control,insertthenewusernameandpasswordintotheuserdb
+230,update the password to datebase:reset success message,reset case,boundary,validationfailedmessage
+231,validate the role of user:return password reset page,reset case,control,insertthenewusernameandpasswordintotheuserdb
+232,validate the role of user:return password reset page,reset case,control,insertthenewusernameandpasswordintotheuserdb
+233,validate the role of user:unauthorized action information,reset case,boundary,validationfailedmessage
+234,validate the role of user:unauthorized action information,reset case,boundary,validationfailedmessage
+235,stl#User:validate fail message,reset case,Stimulus,undefined
+236,stl#User:"reset password" button,reset case,Stimulus,undefined
+237,stl#User:case manage page,reset case,Stimulus,undefined
+238,stl#User:unauthorized action information,reset case,Stimulus,undefined
+239,stl#User:password reset page,reset case,Stimulus,undefined
+240,User:unauthorized action message,upload document,boundary,validationfailedmessage
+241,User:invalid description message,upload document,boundary,validationfailedmessage
+242,User:add vew button,upload document,boundary,addvewbutton
+243,User:document upload page,upload document,boundary,specificdocumentrecord
+244,User:update the case information page,upload document,boundary,validationfailedmessage
+245,add vew button:validate the role of user,upload document,boundary,validationfailedmessage
+246,insert document into document db:document db,upload document,boundary,specificdocumentrecord
+247,document upload page:validate information of description,upload document,boundary,validationfailedmessage
+248,validate the role of user:document upload page,upload document,boundary,specificdocumentrecord
+249,insert document into document db:update the case information page,upload document,boundary,validationfailedmessage
+250,validate information of description:insert document into document db,upload document,control,insertthenewusernameandpasswordintotheuserdb
+251,validate information of description:invalid description message,upload document,boundary,validationfailedmessage
+252,validate the role of user:unauthorized action message,upload document,boundary,validationfailedmessage
+253,validate the role of user:user,upload document,entity,User
+254,stl#User:unauthorized action message,upload document,Stimulus,undefined
+255,stl#User:invalid description message,upload document,Stimulus,undefined
+256,stl#User:add vew button,upload document,Stimulus,undefined
+257,stl#User:document upload page,upload document,Stimulus,undefined
+258,stl#User:update the case information page,upload document,Stimulus,undefined
+259,User:validation failed message,view document,boundary,validationfailedmessage
+260,User:"Use Management" button,view document,boundary,addvewbutton
+261,User:file download interface,view document,control,filedownloadinterface
+262,User:role validation failed message,view document,boundary,validationfailedmessage
+263,User:specific document record,view document,boundary,specificdocumentrecord
+264,"Use Management" button:validate the role of user,view document,boundary,validationfailedmessage
+265,download the document:user info,view document,entity,User
+266,download the document:file download interface,view document,control,filedownloadinterface
+267,validate the role of users:download the document,view document,control,filedownloadinterface
+268,return to the user information page:specific document record,view document,boundary,specificdocumentrecord
+269,validate the role of user:return to the user information page,view document,boundary,validationfailedmessage
+270,validate the role of user:role validation failed message,view document,boundary,validationfailedmessage
+271,specific document record:validate the role of users,view document,boundary,validationfailedmessage
+272,validate the role of users:user,view document,entity,User
+273,validate the role of user:user info,view document,entity,User
+274,validate the role of users:validation failed message,view document,boundary,validationfailedmessage
+275,stl#User:validation failed message,view document,Stimulus,undefined
+276,stl#User:"Use Management" button,view document,Stimulus,undefined
+277,stl#User:file download interface,view document,Stimulus,undefined
+278,stl#User:role validation failed message,view document,Stimulus,undefined
+279,stl#User:specific document record,view document,Stimulus,undefined

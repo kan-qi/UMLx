@@ -1,0 +1,60 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class order {
+~ order()
+~ orderhistorylist()
+}
+
+class notavailableerrormessage {
+~ notavailableerrormessage()
+~ checkdbifavailable()
+~ errormessageforemptyinput()
+~ CreateProfilePage()
+~ exceededlimiterrormessage()
+~ successfulchangemessage()
+~ senderrormessageforinvalidpaymentinformation()
+~ unreadmessage()
+}
+
+class addtocartbutton {
+~ addtocartbutton()
+~ cart()
+~ logoutbutton()
+~ Editprofilebutton()
+~ Trackorderbutton()
+}
+
+class precheckifinputisempty {
+~ precheckifinputisempty()
+~ precheckifrequiredinformationvalid()
+~ precheckrequiredfields()
+~ replyinputpanel()
+~ precheckiflengthofreviewislegal()
+}
+
+class loginpage {
+~ loginpage()
+~ catalogmanagepage()
+~ profileeditpage()
+~ dashboardpage()
+~ updatesuccessfulpage()
+~ noorderhistorypage()
+~ Uploadpage()
+}
+
+class queryauthenticationinfo {
+~ queryauthenticationinfo()
+~ informationisinvalid()
+~ category()
+~ saveuploadedinformationtodb()
+~ updateprofileentry()
+~ updateorderstatusinformation()
+~ storereviewandratinginformation()
+}
+
+class displaychatpanel {
+~ displaychatpanel()
+}
+
+@enduml

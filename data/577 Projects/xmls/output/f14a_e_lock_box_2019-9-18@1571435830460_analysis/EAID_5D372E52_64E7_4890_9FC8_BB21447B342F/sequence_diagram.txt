@@ -1,0 +1,93 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "activationsuccessmessage" as 09
+participant "Usermanagementbutton" as 19
+participant "unauthorizedrequest" as 29
+participant "role" as 59
+participant "case" as 69
+participant "checkthestatusofuser" as 109
+participant "emailpassword" as 119
+
+Administrator -> 09: casecreatedsuccessmessage()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: generatearandompassword()
+activate 19
+
+19 -> 119: emailpassword()
+activate 119
+
+119 -> 59: Emailprotocol()
+activate 59
+
+deactivate 59
+
+deactivate 119
+
+deactivate 19
+
+Administrator -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 19: usernameandreceivedpasswordinput()
+activate 19
+
+19 -> 119: insertusernameandreceivedpasswordintoDB()
+activate 119
+
+119 -> 69: User()
+activate 69
+
+deactivate 69
+
+119 -> 109: createacasefortheuser()
+activate 109
+
+109 -> 69: Case()
+activate 69
+
+deactivate 69
+
+109 -> 09: casecreatedsuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+deactivate 119
+
+deactivate 19
+
+Administrator -> 19: Createuserbutton()
+activate 19
+
+19 -> 59: validateroleofuser()
+activate 59
+
+59 -> 119: generatearandompassword()
+activate 119
+
+119 -> 119: emailpassword()
+deactivate 119
+
+59 -> 59: role()
+deactivate 59
+
+59 -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+@enduml

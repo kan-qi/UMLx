@@ -127,7 +127,7 @@ public class GatorConnector {
                 "-resourcePath "+resFolder+"/res " +
                 "-manifestFile "+resFolder+"/AndroidManifest.xml " +
                 "-project "+apkPath+" " +
-                "-apiLevel "+androidSDK+" " +
+                "-apiLevel "+andFroidSDK+" " +
                 "-guiAnalysis " +
                 "-benchmarkName "+appName+" " +
 //                "-android /mnt/f/D/Android_SDK/platforms/android-26/android.jar " +

@@ -1,0 +1,112 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "likepostbutton" as 09
+participant "commentispostedsuccessfullymessage" as 39
+participant "savethread" as 49
+participant "CheckSQLinjections" as 69
+participant "point" as 79
+
+User -> 09: unlikethreadbutton()
+activate 09
+
+09 -> 49: savetheunlikestatus()
+activate 49
+
+49 -> 69: Likeinformation()
+activate 69
+
+deactivate 69
+
+49 -> 49: updatelikenumberofthread()
+49 -> 79: calculatepointsoftheowner()
+activate 79
+
+79 -> 79: point()
+deactivate 79
+
+79 -> 39: postisunlikedmessage()
+activate 39
+
+deactivate 39
+
+79 -> 49: threadisunlikedmessage()
+deactivate 49
+
+49 -> 09: grayedoutthreadunlikebutton()
+deactivate 09
+
+49 -> 49: thread()
+activate 49
+
+deactivate 49
+
+49 -> 09: updatelikenumberofthepost()
+activate 09
+
+09 -> 79: calculatepointsoftheowner()
+activate 79
+
+79 -> 79: point()
+deactivate 79
+
+79 -> 39: postisunlikedmessage()
+activate 39
+
+deactivate 39
+
+79 -> 49: threadisunlikedmessage()
+activate 49
+
+deactivate 49
+
+09 -> 09: grayedoutpostunlikebutton()
+deactivate 09
+
+09 -> 09: post()
+activate 09
+
+deactivate 09
+
+User -> 09: grayedoutthreadunlikebutton()
+activate 09
+
+deactivate 09
+
+User -> 09: unlikepostbutton()
+activate 09
+
+09 -> 49: savetheunlikestatus()
+activate 49
+
+49 -> 69: Likeinformation()
+activate 69
+
+deactivate 69
+
+49 -> 49: updatelikenumberofthread()
+deactivate 49
+
+49 -> 09: updatelikenumberofthepost()
+deactivate 09
+
+User -> 39: postisunlikedmessage()
+activate 39
+
+deactivate 39
+
+User -> 49: threadisunlikedmessage()
+activate 49
+
+deactivate 49
+
+User -> 09: grayedoutpostunlikebutton()
+activate 09
+
+deactivate 09
+
+@enduml

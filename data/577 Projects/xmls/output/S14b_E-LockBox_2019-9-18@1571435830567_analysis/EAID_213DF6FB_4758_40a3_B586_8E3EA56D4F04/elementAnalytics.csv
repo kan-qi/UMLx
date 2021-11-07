@@ -1,0 +1,14 @@
+id,element,useCase,type,component
+1,User:wrong user info message,View document,entity,Userinfo
+2,User:corresponding role's main page,View document,boundary,validationfailedmessage
+3,User:login page,View document,boundary,loginpage
+4,validate the entries:User info,View document,entity,Userinfo
+5,check existing users:User info,View document,entity,Userinfo
+6,check existing users:redirect the user to the corresponding role's main page,View document,control,insertthenewusernameandpasswordintotheuserdb
+7,validate the entries:check existing users,View document,entity,Userinfo
+8,redirect the user to the corresponding role's main page:corresponding role's main page,View document,boundary,validationfailedmessage
+9,login page:validate the entries,View document,boundary,validationfailedmessage
+10,validate the entries:wrong user info message,View document,entity,Userinfo
+11,stl#User:wrong user info message,View document,Stimulus,undefined
+12,stl#User:corresponding role's main page,View document,Stimulus,undefined
+13,stl#User:login page,View document,Stimulus,undefined

@@ -1,0 +1,86 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Jobseeker
+participant "Invaliddetailinputmessage" as 09
+participant "Localstorage" as 29
+participant "UserProfilebutton" as 49
+participant "checkifemailidandmodelnumberareexisting" as 69
+participant "sendsavingnotification" as 139
+
+Jobseeker -> 09: Invaliddetailinputmessage()
+activate 09
+
+deactivate 09
+
+Jobseeker -> 49: UserProfilebutton()
+activate 49
+
+49 -> 29: redirecttoprofilepage()
+activate 29
+
+29 -> 139: userinformationupdatepage()
+activate 139
+
+139 -> 69: checkifemailidandnumberarevalid()
+activate 69
+
+69 -> 09: Invaliddetailinputmessage()
+activate 09
+
+deactivate 09
+
+69 -> 69: senddetailsinanencryptedfashiontosearch()
+69 -> 69: checkifemailidandmodelnumberareexisting()
+69 -> 09: inputthedetailintouserdatabase()
+activate 09
+
+09 -> 49: userdatabase()
+deactivate 49
+
+09 -> 139: sendsavingnotification()
+139 -> 29: savetheinfotolocalstorage()
+29 -> 29: Localstorage()
+deactivate 29
+
+29 -> 09: displaysuccessmessageandredirecttohomepage()
+deactivate 09
+
+29 -> 29: homepage()
+activate 29
+
+deactivate 29
+
+139 -> 09: savingsuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 139
+
+deactivate 69
+
+Jobseeker -> 29: homepage()
+activate 29
+
+deactivate 29
+
+Jobseeker -> 09: savingsuccessmessage()
+activate 09
+
+deactivate 09
+
+Jobseeker -> 139: userinformationupdatepage()
+activate 139
+
+139 -> 69: checkifemailidandnumberarevalid()
+activate 69
+
+deactivate 69
+
+deactivate 139
+
+@enduml

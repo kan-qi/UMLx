@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "displaysthecreateaprojectscreen" as 09
+participant "Hompage" as 29
+participant "attemptstoverifytheinputs" as 49
+participant "Object1" as 89
+
+User -> 09: Inputsdesiredinformationandselectstheupdateoption()
+activate 09
+
+09 -> 49: attemptstoverifytheinputs()
+activate 49
+
+49 -> 09: invalidinformationisdisplayedtotheuser()
+09 -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+09 -> 89: projectdb()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+deactivate 49
+
+User -> 09: Selectsthecreateanewprojectoption()
+activate 09
+
+09 -> 09: displaysthecreateaprojectscreen()
+09 -> 49: attemptstoverifytheinputs()
+activate 49
+
+49 -> 09: invalidinformationisdisplayedtotheuser()
+deactivate 09
+
+deactivate 49
+
+User -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,114 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "assignmentdetaildatabase" as 09
+participant "EMTformpage" as 19
+participant "VlunteerDiasterHomepage" as 49
+participant "ValidatesInput" as 69
+participant "Insertrecordintodb" as 79
+participant "checkthebarcodeambulancenumberandhospitalinfo" as 119
+participant "RedirectViewIndividualsPage" as 169
+
+Transport Coordinator -> 09: BuildingAssignmentsPage()
+activate 09
+
+09 -> 79: Insertrecordintodb()
+activate 79
+
+79 -> 19: EMTformpage()
+activate 19
+
+deactivate 19
+
+79 -> 19: Emptyerrormessage()
+activate 19
+
+deactivate 19
+
+79 -> 119: Hospitalinformation()
+activate 119
+
+deactivate 119
+
+79 -> 09: Updatesthedatabaseforbuildinginformation()
+09 -> 19: EMTformpage()
+activate 19
+
+deactivate 19
+
+09 -> 169: Redirectstothetransportcoordinatorshomepage()
+activate 169
+
+169 -> 19: Triagecategory()
+activate 19
+
+deactivate 19
+
+169 -> 79: Transportcoordinatorshomepage()
+deactivate 79
+
+deactivate 169
+
+09 -> 19: submittedaddEMTFormpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Transport Coordinator -> 19: submittedaddEMTFormpage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 19: EMTformpage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 19: Emptyerrormessage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 49: Transportcoordinatorshomepage()
+activate 49
+
+deactivate 49
+
+Transport Coordinator -> 69: victiminformationinputandmedicalinformationinput()
+activate 69
+
+69 -> 119: checkthebarcodeambulancenumberandhospitalinfo()
+activate 119
+
+119 -> 79: Insertrecordintodb()
+activate 79
+
+79 -> 19: EMTformpage()
+activate 19
+
+deactivate 19
+
+79 -> 19: Emptyerrormessage()
+activate 19
+
+deactivate 19
+
+79 -> 119: Hospitalinformation()
+deactivate 119
+
+79 -> 09: Updatesthedatabaseforbuildinginformation()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+deactivate 69
+
+@enduml

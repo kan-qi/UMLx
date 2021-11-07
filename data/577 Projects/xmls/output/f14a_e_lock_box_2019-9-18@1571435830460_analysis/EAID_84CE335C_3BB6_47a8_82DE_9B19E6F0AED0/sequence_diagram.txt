@@ -1,0 +1,138 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor User
+participant "activationsuccessmessage" as 09
+participant "LoginPage" as 19
+participant "blankdescriptionerror" as 29
+participant "emailpassword" as 59
+participant "insertuserinfo" as 119
+participant "case" as 129
+
+Administrator -> 09: validationfailedmessage()
+activate 09
+
+09 -> 19: redirecttohomepage()
+activate 19
+
+19 -> 19: homepage()
+deactivate 19
+
+deactivate 09
+
+Administrator -> 19: LoginPage()
+activate 19
+
+19 -> 119: validateinputinformation()
+activate 119
+
+119 -> 29: sendverificationcode()
+activate 29
+
+29 -> 59: Emailprotocol()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+119 -> 119: userinformation()
+deactivate 119
+
+deactivate 19
+
+Administrator -> 29: verificationcodeinputfield()
+activate 29
+
+29 -> 59: validatepassword()
+activate 59
+
+59 -> 19: homepage()
+activate 19
+
+deactivate 19
+
+59 -> 129: savecaseinformation()
+activate 129
+
+129 -> 129: case()
+deactivate 129
+
+129 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+59 -> 119: userinformation()
+activate 119
+
+deactivate 119
+
+59 -> 09: validationfailedmessage()
+activate 09
+
+09 -> 19: redirecttohomepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 59
+
+deactivate 29
+
+Administrator -> 19: homepage()
+activate 19
+
+deactivate 19
+
+Administrator -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 29: verificationcodeinputfield()
+activate 29
+
+29 -> 59: validatepassword()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: LoginPage()
+activate 19
+
+19 -> 119: validateinputinformation()
+activate 119
+
+deactivate 119
+
+deactivate 19
+
+User -> 19: homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: validationfailedmessage()
+activate 09
+
+09 -> 19: redirecttohomepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

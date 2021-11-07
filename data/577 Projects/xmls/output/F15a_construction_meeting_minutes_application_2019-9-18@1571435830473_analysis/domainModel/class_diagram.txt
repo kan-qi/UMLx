@@ -1,0 +1,76 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class notification {
+~ notification()
+}
+
+class Administratorsdashboard {
+~ Administratorsdashboard()
+~ useralreadyexiststoasts()
+~ generaluserdashboard()
+~ approveuserregistration()
+}
+
+class submittedcommentsscreen {
+~ submittedcommentsscreen()
+~ CommentView()
+~ approvesignupscreen()
+~ Createmeetingscreen()
+~ Tasklistwithcommentbox()
+~ errorfortoolongcomment()
+~ opencommentinputpage()
+~ pendingtasksscreen()
+}
+
+class Updateacceptancestatus {
+~ Updateacceptancestatus()
+~ updateuseraccountinformation()
+~ Notificationofunsuccessfulregistration()
+}
+
+class UserInfo {
+~ UserInfo()
+~ Retrievecommentanduserinfo()
+~ verifyattendeeinformation()
+~ accountinformation()
+~ meetinginfo()
+~ Verifydefaultuserlist()
+~ projectinfo()
+~ Viewuserregistrationinfo()
+~ Userinfoalreadycreated()
+~ Querymeetingsbyuser()
+}
+
+class Selectingsettingsbutton {
+~ Selectingsettingsbutton()
+~ dropdownsettingsmenu()
+~ createmeetingoption()
+~ meeting()
+~ querymeetingsbyproject()
+~ Selectprojectpage()
+~ selectadminoption()
+~ Displaypendingtasksbutton()
+}
+
+class Attendeeisnotavailable {
+~ Attendeeisnotavailable()
+~ Editdefaultattendeelist()
+~ attendeeinformationlist()
+~ generatemeetinglog()
+~ sendmessagestoattendeeslist()
+}
+
+class Displayerrormessage {
+~ Displayerrormessage()
+}
+
+class asignedtasklist {
+~ asignedtasklist()
+~ Assignee()
+~ Querytasklist()
+~ Task()
+~ querydetailoftaskandassignee()
+}
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Supervisor {
+~ Supervisor()
+}
+
+class EMTformpage {
+~ EMTformpage()
+~ Supervisorsemergencyhomepage()
+~ returnsaddEMTfrompage()
+~ Triagecategory()
+~ ViewIndividualspage()
+~ OTPemptyerrormessage()
+~ volunteerhomepage()
+~ Hospitalinformation()
+~ Loginpage()
+~ DeletePage()
+~ UpdateVictimsAssignmentsFormPage()
+~ OTPpage()
+~ checklocalstorage()
+~ FindVictimFormPage()
+~ SearchResultPage()
+}
+
+class Printsoutthelistofvictims {
+~ Printsoutthelistofvictims()
+~ Insertthenewrecordintodb()
+~ addvictimbutton()
+~ Categorizesthevictim()
+~ ManagementvictimsEMTasignmentspage()
+~ authenticatetheOTP()
+~ Victiminformationpageiwthlistofvictimdetails()
+~ Victiminfodb()
+}
+
+class ValidatesInput {
+~ ValidatesInput()
+~ nullinputinformaitonerror()
+~ Systemupdatesrecordinthedatabase()
+~ addindividualbutton()
+~ validatetheatallfieldsarenonempty()
+~ victiminformationinputandmedicalinformationinput()
+}
+
+class RedirectViewIndividualsPage {
+~ RedirectViewIndividualsPage()
+~ Insertthenewindividualsrecordintodb()
+~ receiveandstoratedeviceidatlocalstorage()
+~ addindividualbutton()
+~ SystemredirectstoDisastepage()
+~ ishebreathingpage()
+~ Respirationperfusionmetalstatuspage()
+~ RedirecttoMedFPSSupervisorcoordinatehomepage()
+~ RedirecttomanagementEMTassignmentspage()
+~ Manageindividualsspagewithlistofindividualdetails()
+~ Redirecttothevictiminformationpagewithlistofvictimdetails()
+}
+
+class Emergencybutton {
+~ Emergencybutton()
+~ Supervisersemergencydisasterhomepage()
+~ Managebuildingshubsdisastersbutton()
+~ checkOTPenteredisnonempty()
+~ updatebutton()
+}
+
+class VlunteerDiasterHomepage {
+~ VlunteerDiasterHomepage()
+~ MedFPShomepage()
+~ Emptyusernameandpassworderrormessage()
+~ Authenticatetheusernameandpassword()
+~ managementassigmentsdetailspage()
+~ Managementbuildingshubdisasterspage()
+~ buildshubsdiastersdb()
+~ Transportcoordinatorshomepage()
+~ clearsdeviceIDofvolunteer()
+~ sendsOTPtovolunteersemailID()
+}
+
+class assignmentdetaildatabase {
+~ assignmentdetaildatabase()
+~ Systemupdatesrecordinthedatabase()
+~ authentificationfailuremessage()
+~ volunteerinfodatabase()
+}
+
+class Insertrecordintodb {
+~ Insertrecordintodb()
+~ Transportcoordinatorshomepage()
+~ Usernameandpassworddb()
+~ trackingrecorddatabase()
+}
+
+@enduml

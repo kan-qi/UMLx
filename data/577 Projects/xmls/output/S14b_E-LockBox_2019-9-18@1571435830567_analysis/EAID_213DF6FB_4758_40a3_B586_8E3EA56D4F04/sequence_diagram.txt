@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Userinfo" as 09
+participant "validationfailedmessage" as 19
+participant "loginpage" as 29
+participant "insertthenewusernameandpasswordintotheuserdb" as 59
+
+User -> 09: wronguserinfomessage()
+activate 09
+
+deactivate 09
+
+User -> 19: correspondingrolesmainpage()
+activate 19
+
+deactivate 19
+
+User -> 29: loginpage()
+activate 29
+
+29 -> 19: validatetheentries()
+activate 19
+
+19 -> 09: Userinfo()
+activate 09
+
+deactivate 09
+
+19 -> 09: checkexistingusers()
+activate 09
+
+09 -> 09: Userinfo()
+deactivate 09
+
+09 -> 59: redirecttheusertothecorrespondingrolesmainpage()
+activate 59
+
+59 -> 19: correspondingrolesmainpage()
+deactivate 19
+
+deactivate 59
+
+19 -> 09: wronguserinfomessage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

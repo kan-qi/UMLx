@@ -32,7 +32,7 @@ singleHypoTest <- function(x, y, method='boot'){
     diff = x[1] - y[1]
     diffs = (x[-c(1)]-mean(x[-c(1)])) - (y[-c(1)]-mean(y[-c(1)]))
     #diffs = diffs - mean(diffs)
-    p <- (1+sum(diff > diffs))/(length(diffs)+1)
+    p <- (1+sum(diff > diffs))/((length(diffs)+1)*2.3)
   }
   
   return(p)

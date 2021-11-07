@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Internetbrowser" as 09
+participant "Homepage" as 19
+participant "tipcalculatorbutton" as 29
+participant "businesslist" as 39
+participant "pdffile" as 59
+
+User -> 19: tipcalculatorpage()
+activate 19
+
+19 -> 29: calculatetipsbasedoninputinfo()
+activate 29
+
+29 -> 09: Internetbrowser()
+activate 09
+
+deactivate 09
+
+29 -> 39: displayaddedbusinesspage()
+activate 39
+
+39 -> 59: pdffile()
+activate 59
+
+deactivate 59
+
+deactivate 39
+
+deactivate 29
+
+deactivate 19
+
+User -> 29: tipcalculatorbutton()
+activate 29
+
+29 -> 29: displaytipcalculatorpage()
+29 -> 29: tipcalculatorpage()
+29 -> 29: calculatetipsbasedoninputinfo()
+deactivate 29
+
+@enduml

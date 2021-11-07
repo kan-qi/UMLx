@@ -1,0 +1,99 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case manager
+participant "activationsuccessmessage" as 09
+participant "Usermanagementbutton" as 19
+participant "unauthorizedrequest" as 29
+participant "role" as 109
+
+Administrator -> 09: invalidsecurityquestions()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: casemanagementpage()
+activate 19
+
+deactivate 19
+
+Administrator -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 09: securityquestionsresetpage()
+activate 09
+
+09 -> 09: validatetypedinsecurityquestions()
+09 -> 09: invalidsecurityquestions()
+deactivate 09
+
+09 -> 09: saveupdatedsecurityquestions()
+activate 09
+
+09 -> 29: Securityquestions()
+activate 29
+
+deactivate 29
+
+09 -> 19: casemanagementpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Administrator -> 29: Resetsecurityquestions()
+activate 29
+
+29 -> 109: validateroleofuser()
+activate 109
+
+109 -> 109: role()
+deactivate 109
+
+109 -> 09: securityquestionsresetpage()
+activate 09
+
+09 -> 09: validatetypedinsecurityquestions()
+deactivate 09
+
+109 -> 29: unauthorizederrormessage()
+deactivate 29
+
+Case manager -> 29: Resetsecurityquestions()
+activate 29
+
+29 -> 109: validateroleofuser()
+activate 109
+
+deactivate 109
+
+deactivate 29
+
+Case manager -> 19: casemanagementpage()
+activate 19
+
+deactivate 19
+
+Case manager -> 29: unauthorizederrormessage()
+activate 29
+
+deactivate 29
+
+Case manager -> 09: invalidsecurityquestions()
+activate 09
+
+deactivate 09
+
+Case manager -> 09: securityquestionsresetpage()
+activate 09
+
+09 -> 09: validatetypedinsecurityquestions()
+deactivate 09
+
+@enduml

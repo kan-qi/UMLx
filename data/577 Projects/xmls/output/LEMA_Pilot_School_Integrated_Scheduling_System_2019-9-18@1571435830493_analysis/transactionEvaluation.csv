@@ -1,0 +1,59 @@
+id,transaction,useCase,transactional, TL, DETs, TD, TC, Arch_Diff
+1,User:Homepage,approve course preference,CTRL;EXTCLL;INT,2,0,2,1,4
+2,User: Student course list--> Student course list:Review course and approve-->Review course and approve:Update status in database-->Update status in database:Homepage,approve course preference,TRAN_NA,5,1,3,4,15
+3,User: Student course list--> Student course list:Review course and approve-->Review course and approve:Update status in database-->Update status in database:Database,approve course preference,TRAN_NA,5,0,3,4,15
+4,User: Student course list--> Student course list:Review course and approve-->Review course and approve:Update status in database-->Update status in database: Student course list--> Student course list:Review course and approve,approve course preference,TRAN_NA,6,0,3.6,5,21.6
+5,User:counselor student assignment menu-->counselor student assignment menu:Show list of stuedents-->Show list of stuedents:Allocate a counselor -->Allocate a counselor :Display updated counselor-->Display updated counselor:counselor student assignment menu-->counselor student assignment menu:Show list of stuedents,assign counselor,TRAN_NA,7,3,7,6,49
+6,User:counselor student assignment menu-->counselor student assignment menu:Show list of stuedents-->Show list of stuedents:Allocate a counselor -->Allocate a counselor :Display updated counselor-->Display updated counselor:Homepage,assign counselor,TRAN_NA,6,3,6,5,36
+7,User:assign student,assign counselor,CTRL;EXTCLL;INT,2,0,7,1,14
+8,User:Teacher select page-->Teacher select page:Save information-->Save information:Update database-->Update database:Database,assign teacher to course,TRAN_NA,5,2,2.25,4,11.25
+9,User:Teacher select page-->Teacher select page:Save information-->Save information:Update database-->Update database:Confirmation message-->Confirmation message:Homepage,assign teacher to course,TRAN_NA,6,2,2.4,5,14.399999999999999
+10,User:Input user name and password-->Input user name and password:Validate usename and password-->Validate usename and password:Check if the id exists-->Check if the id exists:Display confirmation-->Display confirmation:Input user name and password-->Input user name and password:Validate usename and password,authenticate,CTRL,7,1,3,6,21
+11,User:Input user name and password-->Input user name and password:Validate usename and password-->Validate usename and password:Check if the id exists-->Check if the id exists:Display confirmation-->Display confirmation:Homepage,authenticate,CTRL;EXTCLL;INT,6,1,2.4,5,14.399999999999999
+12,User:Input user name and password-->Input user name and password:Validate usename and password-->Validate usename and password:Check if the id exists-->Check if the id exists:Database,authenticate,CTRL;EXTCLL;DM;EI,5,2,2.5,4,12.5
+13,User:Export button-->Export button:Generate Csv file-->Generate Csv file:Display confirmation page-->Display confirmation page:Export button-->Export button:Generate Csv file,export activity info,TRAN_NA,6,1,2.6,5,15.600000000000001
+14,User:Export button-->Export button:Generate Csv file-->Generate Csv file:Display confirmation page-->Display confirmation page:Homepage,export activity info,TRAN_NA,5,0,2.75,4,13.75
+15,User:Export button-->Export button:Generate Csv file-->Generate Csv file:Display confirmation page-->Display confirmation page:Database,export activity info,TRAN_NA,5,1,2.25,4,11.25
+16,User:Export button,export activity info,CTRL;EXTCLL;INT,2,0,3,1,6
+17,User:Course list menu-->Course list menu:Calcuate course data-->Calcuate course data:Display course list-->Display course list:Display confirmation page-->Display confirmation page:Homepage,generate course section,TRAN_NA,6,1,3.4,5,20.4
+18,User:Course list menu-->Course list menu:Calcuate course data-->Calcuate course data:Display course list-->Display course list:Database,generate course section,TRAN_NA,5,2,3,4,15
+19,User:Click button-->Click button:Display course list-->Display course list:Display confirmation page-->Display confirmation page:Homepage,generate course section,TRAN_NA,5,1,3,4,15
+20,User:Click button-->Click button:Display course list-->Display course list:Database,generate course section,TRAN_NA,4,2,2.3333333333333335,3,9.333333333333334
+21,User:Control1,import district course list,CTRL,2,0,1,1,2
+22,User:Input course page-->Input course page:Intert all data at database-->Intert all data at database:database,import district course list,TRAN_NA,4,2,2.6666666666666665,3,10.666666666666666
+23,User:Input course page-->Input course page:Intert all data at database-->Intert all data at database:Display comfirm information-->Display comfirm information:Input course page-->Input course page:Intert all data at database,import district course list,TRAN_NA,6,3,2.2,5,13.200000000000001
+24,User:Input course page-->Input course page:Intert all data at database-->Intert all data at database:Display comfirm information-->Display comfirm information:Homepage,import district course list,TRAN_NA,5,1,2,4,10
+25,User:send students detail-->send students detail:Display page-->Display page:Confirmation page-->Confirmation page:Homepage,input course preference,TRAN_NA,5,1,4.25,4,21.25
+26,User:send students detail-->send students detail:Display page-->Display page:Confirmation page-->Confirmation page:Database,input course preference,TRAN_NA,5,2,3.5,4,17.5
+27,User:Select prefer course-->Select prefer course:Confirmation page-->Confirmation page:Homepage,input course preference,TRAN_NA,4,1,4,3,16
+28,User:Select prefer course-->Select prefer course:Confirmation page-->Confirmation page:Database,input course preference,TRAN_NA,4,2,3,3,12
+29,User:Students course menu-->Students course menu:Request students detail-->Request students detail:Display page-->Display page:Confirmation page-->Confirmation page:Homepage,input course preference,TRAN_NA,6,1,4.2,5,25.200000000000003
+30,User:Students course menu-->Students course menu:Request students detail-->Request students detail:Display page-->Display page:Confirmation page-->Confirmation page:Database,input course preference,TRAN_NA,6,2,3.6,5,21.6
+31,User:Make some changes-->Make some changes:course profie page-->course profie page:database,insert course detail,TRAN_NA,4,2,2.6666666666666665,3,10.666666666666666
+32,User:Make some changes-->Make some changes:course profie page-->course profie page:Display comfirmation page-->Display comfirmation page:Homepage,insert course detail,TRAN_NA,5,1,2.75,4,13.75
+33,User:Course detail page-->Course detail page:course profie page-->course profie page:database,insert course detail,TRAN_NA,4,3,2.6666666666666665,3,10.666666666666666
+34,User:Course detail page-->Course detail page:course profie page-->course profie page:Display comfirmation page-->Display comfirmation page:Homepage,insert course detail,TRAN_NA,5,2,2.75,4,13.75
+35,User:Make some changes-->Make some changes:Confirm button-->Confirm button:Update changed information-->Update changed information:Display information-->Display information:Homepage,set constraints,TRAN_NA,6,0,3.8,5,22.799999999999997
+36,User:Constraints management page-->Constraints management page:Display constraint details-->Display constraint details:Update changed information-->Update changed information:Display information-->Display information:Homepage,set constraints,TRAN_NA,6,0,4.6,5,27.599999999999998
+37,User:Current semeter page-->Current semeter page:Display message page-->Display message page:Save selected course-->Save selected course:Updae lock status-->Updae lock status:Database,set current semester course,TRAN_NA,6,1,4.4,5,26.400000000000002
+38,User:Current semeter page-->Current semeter page:Display message page-->Display message page:Save selected course-->Save selected course:Updae lock status-->Updae lock status:Confirmation page-->Confirmation page:Homepage,set current semester course,TRAN_NA,7,2,4,6,28
+39,User:Current semeter page-->Current semeter page:Display message page-->Display message page:Save selected course-->Save selected course:Database,set current semester course,TRAN_NA,5,1,4.25,4,21.25
+40,User:Save button-->Save button:Display message page-->Display message page:Save selected course-->Save selected course:Updae lock status-->Updae lock status:Database,set current semester course,TRAN_NA,6,2,3.8,5,22.799999999999997
+41,User:Save button-->Save button:Display message page-->Display message page:Save selected course-->Save selected course:Updae lock status-->Updae lock status:Confirmation page-->Confirmation page:Homepage,set current semester course,TRAN_NA,7,3,3.5,6,24.5
+42,User:Save button-->Save button:Display message page-->Display message page:Save selected course-->Save selected course:Database,set current semester course,TRAN_NA,5,2,3.5,4,17.5
+43,User:Lock button-->Lock button:Updae lock status-->Updae lock status:Database,set current semester course,TRAN_NA,4,0,4,3,16
+44,User:Lock button-->Lock button:Updae lock status-->Updae lock status:Confirmation page-->Confirmation page:Homepage,set current semester course,TRAN_NA,5,1,3.5,4,17.5
+45,User:Confirm information-->Confirm information:Display confirmation -->Display confirmation :Homepage,update course preference,CTRL;EXTCLL;INT,4,0,5,3,20
+46,User:Confirm information-->Confirm information:Display confirmation -->Display confirmation :Database,update course preference,CTRL;EXTCLL;DM;EI,4,1,4.666666666666667,3,18.666666666666668
+47,User:Send student detail-->Send student detail:Display detail-->Display detail:Display confirmation -->Display confirmation :Homepage,update course preference,TRAN_NA,5,0,4.5,4,22.5
+48,User:Send student detail-->Send student detail:Display detail-->Display detail:Display confirmation -->Display confirmation :Database,update course preference,TRAN_NA,5,1,4.25,4,21.25
+49,User:Student course page-->Student course page:Request student detail-->Request student detail:Display detail-->Display detail:Display confirmation -->Display confirmation :Homepage,update course preference,TRAN_NA,6,0,4.2,5,25.200000000000003
+50,User:Student course page-->Student course page:Request student detail-->Request student detail:Display detail-->Display detail:Display confirmation -->Display confirmation :Database,update course preference,TRAN_NA,6,1,4,5,24
+51,User:Course link button-->Course link button:Get  enrolled students list-->Get  enrolled students list:Request students data-->Request students data:Display page-->Display page:Homepage,view enrolled students,TRAN_NA,6,2,3.4,5,20.4
+52,User:Send student detail-->Send student detail:Display page-->Display page:Homepage,view enrolled students,TRAN_NA,4,1,4.333333333333333,3,17.333333333333332
+53,User:Click button-->Click button:Request student detail-->Request student detail:Display page-->Display page:Homepage,view final student schedule,TRAN_NA,5,1,3.25,4,16.25
+54,User:Send teacher detail-->Send teacher detail:Request teacher detail-->Request teacher detail:Display page-->Display page:Homepage,view final teacher schedule,TRAN_NA,5,1,3,4,15
+55,User:Select  year and semester page-->Select  year and semester page:Request teacher detail-->Request teacher detail:Display page-->Display page:Homepage,view final teacher schedule,TRAN_NA,5,1,3,4,15
+56,User:Course reigister page-->Course reigister page:Section conflicts page-->Section conflicts page:Request student detail data-->Request student detail data:Display page-->Display page:Homepage,view registered students,TRAN_NA,6,2,4.8,5,28.799999999999997
+57,User:Send students detail-->Send students detail:Display page-->Display page:Homepage,view registered students,TRAN_NA,4,1,5,3,20
+58,User:Student preference menu-->Student preference menu:Display progress-->Display progress:Homepage,view student progress,TRAN_NA,4,0,1.3333333333333333,3,5.333333333333333

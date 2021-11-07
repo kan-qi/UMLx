@@ -1,0 +1,67 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,User Agent:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,Call customers,4,4,0,0,0
+2,User Agent:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,Call customers,3,2,0,1,0
+3,User Agent:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,Call customers,6,6,0,0,0
+4,User Agent:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,Call customers,5,4,0,1,0
+5,User Agent:call details,Call customers,1,1,0,0,0
+6,User Agent:leads list-->leads list:query lead information-->query lead information:lead,Call customers,3,3,0,0,0
+7,User Agent:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,Call customers,8,8,0,0,0
+8,User Agent:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,Call customers,7,6,0,1,0
+9,User Agent:show leads list-->show leads list:query leads list-->query leads list:lead,Call customers,3,3,0,0,0
+10,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead,Call customers,5,5,0,0,0
+11,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,Call customers,10,10,0,0,0
+12,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,Call customers,9,8,0,1,0
+13,User Agent:login page-->login page:check login information-->check login information:login info,Call customers,3,0,0,3,0
+14,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:lead,Call customers,5,3,0,2,0
+15,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead,Call customers,7,5,0,2,0
+16,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,Call customers,12,10,0,2,0
+17,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,Call customers,11,8,0,3,0
+18,thirdparty call agency:call finishs and display call details-->call finishs and display call details:call details,Call customers,2,2,0,0,0
+19,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Monitor Agents,3,2,1,0,0
+20,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:Twilio API,Monitor Agents,3,3,0,0,0
+21,Manager:view agent activites button-->view agent activites button:query agent-->query agent:agent,Monitor Agents,3,1,0,2,0
+22,Manager:view agent activites button-->view agent activites button:query agent-->query agent:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Monitor Agents,5,3,1,1,0
+23,Manager:view agent activites button-->view agent activites button:query agent-->query agent:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:Twilio API,Monitor Agents,5,4,0,1,0
+24,Manager:softphone screen,Monitor Agents,1,0,1,0,0
+25,Customer:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,Receeive Calls,3,0,1,2,0
+26,Lead:softphone screen,Receeive Calls,1,0,1,0,0
+27,Lead:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,Receeive Calls,3,0,1,2,0
+28,Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,Receeive Calls,3,1,1,1,0
+29,Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Receeive Calls,3,1,2,0,0
+30,Twilio API:save call log-->save call log:call log,Receeive Calls,2,0,0,2,0
+31,Twilio API:popup income call dialog-->popup income call dialog:income call dialog-->income call dialog:Agent,Receeive Calls,3,0,0,3,0
+32,Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,Receeive Calls,4,2,1,1,0
+33,Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,Receeive Calls,4,2,2,0,0
+34,Lead:income call popup-->income call popup:answer phone call-->answer phone call:call log,Record calls and call details,3,0,1,1,1
+35,Lead:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,Record calls and call details,3,0,2,0,1
+36,Twilio API:popup income call and customer's number-->popup income call and customer's number:income call popup-->income call popup:answer phone call-->answer phone call:call log,Record calls and call details,4,0,2,1,1
+37,Twilio API:popup income call and customer's number-->popup income call and customer's number:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,Record calls and call details,4,0,3,0,1
+38,Twilio API:popup income call and user agent number-->popup income call and user agent number:caller number-->caller number:answer phone call-->answer phone call:Twilio API,Record calls and call details,4,0,3,0,1
+39,Twilio API:popup income call and user agent number-->popup income call and user agent number:caller number-->caller number:customer,Record calls and call details,3,0,1,0,2
+40,User Agent:call/auto dialer button-->call/auto dialer button:dial with Twilio API-->dial with Twilio API:Twilio API,Record calls and call details,3,0,2,1,0
+41,User Agent:income call popup-->income call popup:answer phone call-->answer phone call:call log,Record calls and call details,3,0,1,1,1
+42,User Agent:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,Record calls and call details,3,0,2,0,1
+43,Sales Agent:dropdown list for removing lead-->dropdown list for removing lead:remove lead from autodialing list-->remove lead from autodialing list:autodialing list,Remove lead from auto dialer list,3,2,0,1,0
+44,Sales Agent:dropdown list for removing lead-->dropdown list for removing lead:remove lead from autodialing list-->remove lead from autodialing list:success message for removing lead,Remove lead from auto dialer list,3,3,0,0,0
+45,Sales Agent:success message for removing lead,Remove lead from auto dialer list,1,1,0,0,0
+46,Customer:request manager conference button-->request manager conference button:send conference request-->send conference request:Twilio API,Request Manager Conference,3,1,2,0,0
+47,Customer:Popup of manager's acceptance-->Popup of manager's acceptance:autodialing list,Request Manager Conference,2,1,0,1,0
+48,Customer:conference cancel notification,Request Manager Conference,1,1,0,0,0
+49,Manager:connect to ongoing call-->connect to ongoing call:Twilio API,Request Manager Conference,2,0,2,0,0
+50,Manager:popup with request detail of the agent,Request Manager Conference,1,1,0,0,0
+51,Twilio API:Notify Manager-->Notify Manager:popup with request detail of the agent,Request Manager Conference,2,2,0,0,0
+52,Twilio API:notify cancel request-->notify cancel request:conference cancel notification,Request Manager Conference,2,2,0,0,0
+53,Twilio API:notify acceptance from manager-->notify acceptance from manager:Popup of manager's acceptance-->Popup of manager's acceptance:autodialing list,Request Manager Conference,3,2,0,1,0
+54,User Agent:status selector dropdown list-->status selector dropdown list:save status for lead-->save status for lead:Lead,Update Lead Status,3,1,2,0,0
+55,User Agent:status selector dropdown list-->status selector dropdown list:save status for lead-->save status for lead:changed status,Update Lead Status,3,0,3,0,0
+56,User Agent:changed status,Update Lead Status,1,0,1,0,0
+57,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,View call los and listen to call recordings,3,0,3,0,0
+58,Manager:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,View call los and listen to call recordings,3,0,3,0,0
+59,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:agent,View call los and listen to call recordings,3,0,3,0,0
+60,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,View call los and listen to call recordings,5,0,5,0,0
+61,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,View call los and listen to call recordings,5,0,5,0,0
+62,Manager:call detailed information,View call los and listen to call recordings,1,1,0,0,0
+63,Manager:call record downloaded message,View call los and listen to call recordings,1,0,0,1,0
+64,Twilio API:download call records-->download call records:call record downloaded message,View call los and listen to call recordings,2,0,0,2,0
+65,Twilio API:download call records-->download call records:call records,View call los and listen to call recordings,2,0,0,2,0
+66,Twilio API:receive call information-->receive call information:call detailed information,View call los and listen to call recordings,2,1,0,1,0

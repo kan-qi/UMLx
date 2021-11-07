@@ -530,7 +530,6 @@ function deleteRepo(repoId, callbackfunc) {
    	            });
    }
     
-    
     function queryModelInfo(modelId, repoId, callbackfunc){
         MongoClient.connect(url, function (err, db) {
 

@@ -178,7 +178,8 @@
 				useCaseEstimates.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
 				useCaseEstimates.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
 
-				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
+				//useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
+				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
 
 				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
 

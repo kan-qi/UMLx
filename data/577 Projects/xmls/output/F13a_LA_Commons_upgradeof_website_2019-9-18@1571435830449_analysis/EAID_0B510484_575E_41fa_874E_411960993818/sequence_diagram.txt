@@ -1,0 +1,49 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Visitor
+participant "Facebook" as 09
+participant "validatethelinkofimage" as 79
+
+Visitor -> 09: Facebookbutton()
+activate 09
+
+09 -> 09: displayanewwindowforloginfacebook()
+09 -> 09: facebooklogindialog()
+09 -> 09: checkusernameandpasswordtofacebookdatabase()
+09 -> 09: Facebook()
+deactivate 09
+
+09 -> 09: Facebookwall()
+activate 09
+
+09 -> 09: postpostsaboutprojectonLAcommanstaffsfacebooktimeline()
+09 -> 09: Facebook()
+deactivate 09
+
+09 -> 79: Invalidnameandpasswordmatchmessage()
+activate 79
+
+deactivate 79
+
+Visitor -> 09: Facebookwall()
+activate 09
+
+09 -> 09: postpostsaboutprojectonLAcommanstaffsfacebooktimeline()
+deactivate 09
+
+Visitor -> 79: Invalidnameandpasswordmatchmessage()
+activate 79
+
+deactivate 79
+
+Visitor -> 09: facebooklogindialog()
+activate 09
+
+09 -> 09: checkusernameandpasswordtofacebookdatabase()
+deactivate 09
+
+@enduml

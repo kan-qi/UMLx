@@ -1,0 +1,100 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Financial officer
+participant "transaction" as 09
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 19
+participant "errorinaccessfacebookinformation" as 29
+participant "Homepage" as 49
+participant "invokeaddcharityusecase" as 59
+participant "goal" as 129
+participant "redirecttheusertocreatgoalpage" as 149
+
+Financial officer -> 09: goaldetaildisplaywithtransactions()
+activate 09
+
+deactivate 09
+
+Financial officer -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+Financial officer -> 29: Paymentinformationpage()
+activate 29
+
+deactivate 29
+
+Financial officer -> 09: Invalidtransactionmessage()
+activate 09
+
+deactivate 09
+
+Financial officer -> 49: reportpage()
+activate 49
+
+49 -> 149: checkedachivedandfailedgoals()
+activate 149
+
+149 -> 129: goalinfo()
+activate 129
+
+deactivate 129
+
+149 -> 09: generatethereportofthetransactions()
+activate 09
+
+09 -> 09: goaldetaildisplaywithtransactions()
+deactivate 09
+
+09 -> 09: updatethetransactionstatuscompleted()
+activate 09
+
+09 -> 59: showmessagethemoneyhasbeensenttocharity()
+activate 59
+
+59 -> 59: externalcharity()
+deactivate 59
+
+59 -> 29: Paymentinformationpage()
+activate 29
+
+deactivate 29
+
+59 -> 09: approvethetransaction()
+09 -> 09: Invalidtransactionmessage()
+deactivate 09
+
+09 -> 09: sendsdetailtransactionstosponsorsviaemail()
+activate 09
+
+09 -> 19: sponsors()
+activate 19
+
+deactivate 19
+
+09 -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+09 -> 09: transaction()
+activate 09
+
+deactivate 09
+
+09 -> 09: transaction()
+activate 09
+
+deactivate 09
+
+deactivate 149
+
+deactivate 49
+
+@enduml

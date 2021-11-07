@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "logoutbutton" as 09
+participant "addnewcoursepage" as 29
+participant "deletionsuccessmessage" as 49
+participant "usernamedb" as 69
+
+User -> 09: logoutbutton()
+activate 09
+
+09 -> 49: showmessagethatsenssionwasclosed()
+activate 49
+
+49 -> 29: homepage()
+activate 29
+
+deactivate 29
+
+49 -> 09: logoutmessage()
+deactivate 09
+
+49 -> 69: usernamedb()
+activate 69
+
+deactivate 69
+
+deactivate 49
+
+User -> 09: logoutmessage()
+activate 09
+
+deactivate 09
+
+User -> 29: homepage()
+activate 29
+
+deactivate 29
+
+@enduml

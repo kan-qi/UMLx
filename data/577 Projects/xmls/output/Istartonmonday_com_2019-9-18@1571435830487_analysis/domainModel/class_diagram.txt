@@ -1,0 +1,81 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class jobdb {
+~ jobdb()
+~ Choosejobseeker()
+}
+
+class fillinfieldasrequired {
+~ fillinfieldasrequired()
+~ Validatesfield()
+~ Retrievealljobpostsfromdatabase()
+~ popdeleteconfirminformation()
+~ Fillthefields()
+}
+
+class ClickonAdd {
+~ ClickonAdd()
+~ Clickon��myprofile��link()
+~ Clickjobseeker��()
+~ Click��Sponsors��()
+~ Clickon��Home��()
+~ Clickdeletesponserbutton()
+~ Clickonposttestimonial()
+~ ClicksSubmit()
+~ Clicksubscribeorunsubscribe()
+~ Click��subscription��()
+~ Click��search��()
+~ ClickViewempolyer()
+}
+
+class Homepage {
+~ Homepage()
+~ Profilepagedisplayed()
+~ Openjobseekerpage()
+~ Opensponsorpage()
+~ Reviewjobspage()
+~ Confirmationpage()
+~ Loginpage()
+}
+
+class Notificationdisplayed��Adduserprofile�� {
+~ Notificationdisplayed��Adduserprofile��()
+~ Displayallpostsinmostrecentfirstorder()
+~ Profileupdatepagedisplayed()
+~ Sendsandemailnotificationofthenewuseraccountcreated()
+~ Displaysubscriptionpage()
+~ Displaynotificationsayingsubscribedorunsubscribed()
+~ Clickon��myprofile��link()
+~ displaysponserdetailinformation()
+~ diplayjobseekerlistprofile()
+}
+
+class Savesindatabase {
+~ Savesindatabase()
+~ Validatestheform()
+~ Validateusenameandpassword()
+~ Endsession()
+}
+
+class Logsintheuser {
+~ Logsintheuser()
+~ Advertisementdb()
+~ Updaterecordsfortheuserinthesubscriptiontable()
+~ Chooseemployer()
+}
+
+class PressSearchButton {
+~ PressSearchButton()
+~ DisplaySearchResult()
+~ Sortsearchresultincategoriesaspergivenbyemployer()
+~ Provideemailaddress()
+~ Choosesponser()
+}
+
+class Applyfilters {
+~ Applyfilters()
+~ MatchfilterstoJobseekerprofile()
+}
+
+@enduml

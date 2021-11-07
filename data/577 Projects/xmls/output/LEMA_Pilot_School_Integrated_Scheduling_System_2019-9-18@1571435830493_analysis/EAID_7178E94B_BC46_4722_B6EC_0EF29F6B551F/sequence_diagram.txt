@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Studentcourselist" as 09
+participant "Homepage" as 19
+participant "Control1" as 29
+participant "Displaycomfirminformation" as 59
+participant "Database" as 69
+
+User -> 09: Inputcoursepage()
+activate 09
+
+09 -> 69: Intertalldataatdatabase()
+activate 69
+
+69 -> 59: Displaycomfirminformation()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+59 -> 09: Inputcoursepage()
+09 -> 69: Intertalldataatdatabase()
+69 -> 69: database()
+deactivate 69
+
+deactivate 09
+
+deactivate 59
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Control1()
+activate 29
+
+deactivate 29
+
+@enduml

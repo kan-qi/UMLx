@@ -1,0 +1,97 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "questionlist" as 09
+participant "retriveschoolpathandsurvey" as 69
+participant "User" as 79
+
+administrator -> 09: questionlist()
+activate 09
+
+deactivate 09
+
+administrator -> 09: question()
+activate 09
+
+deactivate 09
+
+administrator -> 09: questioncategorylist()
+activate 09
+
+09 -> 09: displayaquesitonlistofselectedquestiontype()
+09 -> 09: displayquestionlist()
+09 -> 79: answer()
+activate 79
+
+deactivate 79
+
+09 -> 09: displayquestion()
+09 -> 09: question()
+deactivate 09
+
+09 -> 09: questionlist()
+activate 09
+
+deactivate 09
+
+09 -> 09: questionlist()
+activate 09
+
+deactivate 09
+
+09 -> 09: questionlist()
+activate 09
+
+deactivate 09
+
+administrator -> 09: shcoollist()
+activate 09
+
+09 -> 09: displaypathlist()
+09 -> 09: displaysurveylistandquestionlist()
+09 -> 09: surveylist()
+deactivate 09
+
+09 -> 09: pathlist()
+activate 09
+
+deactivate 09
+
+09 -> 09: surveylist()
+activate 09
+
+deactivate 09
+
+administrator -> 09: surveylist()
+activate 09
+
+deactivate 09
+
+administrator -> 09: pathlist()
+activate 09
+
+deactivate 09
+
+administrator -> 69: newsurveybutton()
+activate 69
+
+69 -> 69: retriveschoolpathandsurvey()
+69 -> 69: displayschoollist()
+69 -> 09: shcoollist()
+activate 09
+
+09 -> 09: displaypathlist()
+deactivate 09
+
+deactivate 69
+
+69 -> 09: surveylist()
+activate 09
+
+deactivate 09
+
+@enduml

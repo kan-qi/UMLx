@@ -1,0 +1,86 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "errorlertaboutconfliect" as 09
+participant "emptyannouncementform" as 19
+participant "sitelist" as 59
+
+User -> 09: errorlertaboutconfliect()
+activate 09
+
+deactivate 09
+
+User -> 19: emptyannouncementform()
+activate 19
+
+19 -> 09: checkconflictsituation()
+activate 09
+
+09 -> 09: errorlertaboutconfliect()
+deactivate 09
+
+09 -> 19: recordtheannouncementtodb()
+19 -> 19: directbacktoannouncementpage()
+19 -> 19: announcementpage()
+deactivate 19
+
+User -> 19: announcementlink()
+activate 19
+
+19 -> 19: displaypagewithannouncementlist()
+19 -> 19: announcementinfo()
+deactivate 19
+
+19 -> 19: announcementlist()
+activate 19
+
+19 -> 59: displaysitelist()
+activate 59
+
+59 -> 59: sitelistpage()
+59 -> 19: displayanemptyformforannouncement()
+19 -> 19: emptyannouncementform()
+19 -> 09: checkconflictsituation()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 59
+
+59 -> 59: sitelist()
+activate 59
+
+deactivate 59
+
+User -> 19: announcementlist()
+activate 19
+
+19 -> 59: displaysitelist()
+activate 59
+
+deactivate 59
+
+deactivate 19
+
+User -> 19: announcementpage()
+activate 19
+
+deactivate 19
+
+User -> 59: sitelistpage()
+activate 59
+
+59 -> 19: displayanemptyformforannouncement()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+@enduml

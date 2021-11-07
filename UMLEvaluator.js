@@ -401,33 +401,37 @@
 					console.log("test for model mkdir");
 					if(result){
 						//Needs to be upgraded soon
-						console.log("apply statistical analysis on the output evaluation");
-						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
-						console.log(command);
-						RScriptExec.runRScript(command,function(result2){
-							
-							if (!result2) {
-								console.log("=========output statistics error==========");
-							}
-							
-							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
-							console.log(command);
+//						console.log("apply statistical analysis on the output evaluation");
+//						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
+//						console.log(command);
+//						RScriptExec.runRScript(command,function(result2){
+//
+//							if (!result2) {
+//								console.log("=========output statistics error==========");
+//							}
+//
+//							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
+//							console.log(command);
+//
+//							RScriptExec.runRScript(command,function(result3){
+//								if (!result3) {
+//									if(callbackfunc){
+//										console.log("=========output statistics error==========");
+//									}
+//								}
+//								if(callbackfunc){
+//									callbackfunc(model);
+//								}
+//
+//							var debug = require("./utils/DebuggerOutput.js");
+//							debug.writeJson("new_model_8_21"+model._id, model);
+//
+//							});
+//						});
 
-							RScriptExec.runRScript(command,function(result3){
-								if (!result3) {
-									if(callbackfunc){
-										console.log("=========output statistics error==========");
-									}
-								}
-								if(callbackfunc){
+                                if(callbackfunc){
 									callbackfunc(model);
 								}
-								
-							var debug = require("./utils/DebuggerOutput.js");
-							debug.writeJson("new_model_8_21"+model._id, model);
-							
-							});
-						});
 					}
 					else {
 						if(callbackfunc){

@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Visitor
+participant "overmouseoveraneighborhoodpoint" as 09
+participant "displayanewsectionondashboard" as 29
+participant "validatethelinkofimage" as 39
+participant "choosemap" as 69
+participant "communityartsprogramandtrouds" as 89
+
+Visitor -> 09: Neighbourhoodsbutton()
+activate 09
+
+09 -> 09: displaydropdownlistforneighborhoods()
+09 -> 69: choosemap()
+activate 69
+
+69 -> 29: displayaninterativemap()
+activate 29
+
+29 -> 09: overmouseoveraneighborhoodpoint()
+09 -> 89: showaboxcontainingcommunityartsprogramandtours()
+activate 89
+
+89 -> 89: communityartsprogramandtrouds()
+deactivate 89
+
+deactivate 09
+
+deactivate 29
+
+deactivate 69
+
+Visitor -> 69: choosemap()
+activate 69
+
+69 -> 29: displayaninterativemap()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+Visitor -> 29: display404or500page()
+activate 29
+
+deactivate 29
+
+Visitor -> 09: displayneighborhoodpage()
+activate 09
+
+deactivate 09
+
+Visitor -> 39: linkinthebox()
+activate 39
+
+deactivate 39
+
+Visitor -> 09: overmouseoveraneighborhoodpoint()
+activate 09
+
+09 -> 89: showaboxcontainingcommunityartsprogramandtours()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,15 @@
+id,element,useCase,type,component
+1,User:looks through a list of qualified applicants ,Schedule Interview,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+2,User:marks the user as interviewing,Schedule Interview,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+3,User:Homepage,Schedule Interview,boundary,Homepage
+4,User:selects the appropriate applicant and views his/her profile,Schedule Interview,boundary,selecttheappropriatepostings
+5,modifies the Applicant profile to reflect User's change:Homepage,Schedule Interview,boundary,Homepage
+6,modifies the Applicant profile to reflect User's change:Interview db,Schedule Interview,entity,Accountdb
+7,looks through a list of qualified applicants :returns the correct applicant,Schedule Interview,control,fillsoutalloftherequireddatacorrectly
+8,marks the user as interviewing:modifies the Applicant profile to reflect User's change,Schedule Interview,boundary,selecttheappropriatepostings
+9,returns the correct applicant:modifies the Applicant profile to reflect User's change,Schedule Interview,boundary,selecttheappropriatepostings
+10,selects the appropriate applicant and views his/her profile:returns the correct applicant,Schedule Interview,control,fillsoutalloftherequireddatacorrectly
+11,stl#User:looks through a list of qualified applicants ,Schedule Interview,Stimulus,undefined
+12,stl#User:marks the user as interviewing,Schedule Interview,Stimulus,undefined
+13,stl#User:Homepage,Schedule Interview,Stimulus,undefined
+14,stl#User:selects the appropriate applicant and views his/her profile,Schedule Interview,Stimulus,undefined

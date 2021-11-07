@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "PressSearchButton" as 09
+participant "Homepage" as 19
+participant "ClickonAdd" as 29
+participant "Notificationdisplayed��Adduserprofile��" as 49
+participant "Logsintheuser" as 59
+
+User -> 09: Provideemailaddress()
+activate 09
+
+09 -> 59: Updaterecordsfortheuserinthesubscriptiontable()
+activate 59
+
+59 -> 49: Displaynotificationsayingsubscribedorunsubscribed()
+activate 49
+
+49 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Clicksubscribeorunsubscribe()
+activate 29
+
+29 -> 59: Updaterecordsfortheuserinthesubscriptiontable()
+activate 59
+
+59 -> 49: Displaynotificationsayingsubscribedorunsubscribed()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+deactivate 29
+
+User -> 29: Click��subscription��()
+activate 29
+
+29 -> 49: Displaysubscriptionpage()
+activate 49
+
+49 -> 59: Updaterecordsfortheuserinthesubscriptiontable()
+activate 59
+
+59 -> 49: Displaynotificationsayingsubscribedorunsubscribed()
+deactivate 49
+
+deactivate 59
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,141 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "successmessage" as 09
+participant "savedocumentintoserver" as 19
+participant "redirecttoapagewiththecurerntsiteslist" as 29
+participant "displayinvalidemailformat" as 39
+participant "checkuscidexistornot" as 69
+participant "emptyannouncementform" as 129
+participant "addstudentinfo" as 149
+
+User -> 09: addsuccessinformation()
+activate 09
+
+deactivate 09
+
+User -> 19: Documentslink()
+activate 19
+
+19 -> 39: displayapagethatcontentsaformforuploadingdocuments()
+activate 39
+
+39 -> 19: documentuploadpanel()
+19 -> 39: displaydocumentdetailpage()
+39 -> 129: usermanagement()
+activate 129
+
+deactivate 129
+
+39 -> 09: filedescirptionpage()
+activate 09
+
+09 -> 19: checkformatofdocument()
+19 -> 39: DisplayuscIdemptyerror()
+deactivate 39
+
+19 -> 69: USCIDexistingerror()
+activate 69
+
+deactivate 69
+
+19 -> 19: savedocumentintoserver()
+19 -> 19: deletedocument()
+19 -> 69: localstorage()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+19 -> 09: displaysuccessmessage()
+09 -> 149: displaystudentspage()
+activate 149
+
+149 -> 149: studentspage()
+149 -> 149: addstudentinfo()
+149 -> 129: usermanagement()
+activate 129
+
+deactivate 129
+
+149 -> 09: addsuccessinformation()
+deactivate 09
+
+deactivate 149
+
+09 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+19 -> 19: downloaddocument()
+activate 19
+
+deactivate 19
+
+19 -> 69: localstorage()
+activate 69
+
+deactivate 69
+
+19 -> 39: invalidformatdocumentmessage()
+activate 39
+
+deactivate 39
+
+User -> 29: studentspage()
+activate 29
+
+29 -> 149: addstudentinfo()
+activate 149
+
+deactivate 149
+
+deactivate 29
+
+User -> 39: invalidformatdocumentmessage()
+activate 39
+
+deactivate 39
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 39: DisplayuscIdemptyerror()
+activate 39
+
+deactivate 39
+
+User -> 69: USCIDexistingerror()
+activate 69
+
+deactivate 69
+
+User -> 19: documentuploadpanel()
+activate 19
+
+19 -> 39: displaydocumentdetailpage()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+User -> 09: filedescirptionpage()
+activate 09
+
+09 -> 19: checkformatofdocument()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

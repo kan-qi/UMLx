@@ -1,0 +1,77 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Indeed.comactor User
+participant "userprofileandsearchpage" as 09
+participant "Indeedcom" as 19
+participant "Loginpage" as 39
+participant "invalidinputinformation" as 49
+
+Indeed.com -> 09: Sortsearchresults()
+activate 09
+
+09 -> 39: Joblistpage()
+activate 39
+
+39 -> 49: validateinputdata()
+activate 49
+
+49 -> 49: Invalidinputdata()
+deactivate 49
+
+deactivate 39
+
+deactivate 09
+
+User -> 09: Jobsearchpage()
+activate 09
+
+09 -> 49: verifyinputinformation()
+activate 49
+
+49 -> 09: Profile()
+deactivate 09
+
+49 -> 19: SearchbyinputkeywordsfromIndeedcom()
+activate 19
+
+19 -> 19: Indeedcom()
+19 -> 09: Sortsearchresults()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+19 -> 09: Profile()
+activate 09
+
+deactivate 09
+
+49 -> 49: invalidinputinformation()
+deactivate 49
+
+User -> 39: Joblistpage()
+activate 39
+
+39 -> 49: validateinputdata()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+User -> 49: Invalidinputdata()
+activate 49
+
+deactivate 49
+
+User -> 49: invalidinputinformation()
+activate 49
+
+deactivate 49
+
+@enduml

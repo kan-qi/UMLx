@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "Listofcasestudieis" as 19
+participant "User" as 49
+participant "microwebsiteform" as 89
+
+User -> 09: 404Forbiddenpage()
+activate 09
+
+deactivate 09
+
+User -> 19: RelevantCaseStudiesbutton()
+activate 19
+
+19 -> 49: Checktheuserspermission()
+activate 49
+
+49 -> 19: RelevantCaseStudiesbutton()
+19 -> 49: Checktheuserspermission()
+49 -> 89: checkpermission()
+activate 89
+
+89 -> 09: 404Forbiddenpage()
+activate 09
+
+deactivate 09
+
+89 -> 19: Displaycasestudiescontent()
+19 -> 19: CaseStudiescontent()
+deactivate 19
+
+19 -> 09: Deactivatethelink()
+activate 09
+
+09 -> 89: Microwebsite()
+deactivate 89
+
+09 -> 89: Directtomicrowebsitemanagement()
+activate 89
+
+89 -> 09: 404Forbiddenpage()
+deactivate 09
+
+deactivate 89
+
+19 -> 89: Microwebsite()
+activate 89
+
+deactivate 89
+
+deactivate 49
+
+User -> 19: CaseStudiescontent()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,65 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "deletionsuccessmessage" as 09
+participant "requirementslists" as 19
+participant "incorrectinput" as 39
+participant "udpateuserprofile" as 69
+
+User -> 09: updaesuccessmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: requirementslists()
+activate 19
+
+deactivate 19
+
+User -> 19: updaterequiremeentspage()
+activate 19
+
+19 -> 39: checkcorrectnessoftheinput()
+activate 39
+
+39 -> 19: requirementslists()
+deactivate 19
+
+39 -> 19: courserequirements()
+activate 19
+
+deactivate 19
+
+39 -> 69: udpateuserprofile()
+activate 69
+
+69 -> 19: courserequirements()
+activate 19
+
+deactivate 19
+
+69 -> 39: incorrectinput()
+deactivate 39
+
+69 -> 19: showconfirmationrequirementisupdated()
+activate 19
+
+19 -> 09: updaesuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+deactivate 69
+
+User -> 39: incorrectinput()
+activate 39
+
+deactivate 39
+
+@enduml

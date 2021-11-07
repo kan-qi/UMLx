@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "emptyannouncementform" as 09
+participant "siteinfo" as 19
+participant "redirecttoapagewiththecurerntsiteslist" as 29
+participant "checkuscidexistornot" as 49
+
+User -> 09: failurecheckinannouncement()
+activate 09
+
+deactivate 09
+
+User -> 19: sitelist()
+activate 19
+
+19 -> 29: comparethecurrentlocationandsitelocation()
+activate 29
+
+29 -> 19: siteinfo()
+deactivate 19
+
+29 -> 09: popupsuccesscheckinannouncement()
+activate 09
+
+09 -> 09: successcheckinannouncement()
+deactivate 09
+
+29 -> 09: popfailurecheckinannouncement()
+activate 09
+
+09 -> 09: failurecheckinannouncement()
+deactivate 09
+
+29 -> 29: sitelistpage()
+deactivate 29
+
+User -> 29: sitelistpage()
+activate 29
+
+deactivate 29
+
+User -> 09: successcheckinannouncement()
+activate 09
+
+deactivate 09
+
+User -> 49: checkintabinthemaintab()
+activate 49
+
+49 -> 29: Openanewpagewithalistofsites()
+activate 29
+
+29 -> 19: siteinfo()
+activate 19
+
+deactivate 19
+
+29 -> 19: sitelist()
+activate 19
+
+19 -> 29: comparethecurrentlocationandsitelocation()
+deactivate 29
+
+deactivate 19
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,49 @@
+//- var data = [{"Number": "1", "UC": "UC1", "EXUCP":"4", "DUCP":"8", "Effort":"4", "Schedule":"8", "Personnel":"7", "UIDeveloper":"9", "FullStack":"19", "DatabaseDeveloper":"12"},{"Number": "2", "UC": "UC2", "EXUCP":"3", "DUCP":"1", "Effort":"3", "Schedule":"8", "Personnel":"3", "UIDeveloper":"3", "FullStack":"10", "DatabaseDeveloper":"23"}];
+if error
+  p #{error}
+if estimationResults
+  div(id='estimation-results-tables', data-estimation-model="#{estimationResults.EstimationModel}")
+    div.model-predictions
+      table.table.table-bordered
+        thead
+          tr
+            th Model
+            th Effort (PH)
+            th Schedule (Months)
+            th PH/Month
+            th Size Metric
+            //th #{estimationResults.SizeMetric}
+            th Personnel (Developers)
+        tbody
+          tr.estimation-table
+            //td #{estimationResults.EstimationModel}
+            td swtiii_bm
+            td #{estimationResults.Effort}
+            td #{estimationResults.Duration}
+            td #{estimationResults.HoursPerMonth}
+            //td #{estimationResults.SizeMeasurement}
+            td SWTIII
+            td #{estimationResults.Personnel}
+  div(id='#{estimationResults.EstimationModel}-estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{estimationResults.EstimationResultsFile}" data-myURL='url_id')
+    div(id='estimation-charts')
+  div.use-case-predictions.table-responsive
+    table.table.table-bordered
+      thead
+        tr
+          th#number_column Number
+          th#Use_Case Work Item
+          th#EffortPH Effort (PH)
+          th#SizeMeasurement SWTIII
+          //th#SizeMeasurement #{estimationResults.SizeMetric}
+          th#Duration Schedule (Months)
+          th#Personnel Personnel (Developers)
+      tbody
+        - for (var i = 0; i < estimationResults.UseCases.length; i++) {
+            tr.estimation-table
+              td #{i+1}
+              td #{estimationResults.UseCases[i].Name}
+              td #{estimationResults.UseCases[i].Effort}
+              td #{estimationResults.UseCases[i].SizeMeasurement}
+              td #{estimationResults.UseCases[i].Duration}
+              td #{estimationResults.UseCases[i].Personnel}
+        - }

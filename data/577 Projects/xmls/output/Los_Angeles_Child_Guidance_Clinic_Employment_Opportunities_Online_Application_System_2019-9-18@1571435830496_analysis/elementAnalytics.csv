@@ -1,0 +1,250 @@
+id,element,useCase,type,component
+1,User:select the appropriate postings ,Apply,boundary,selecttheappropriatepostings
+2,User:click submit button,Apply,boundary,clicksubmitbutton
+3,User:Homepage,Apply,boundary,Homepage
+4,User:upload relevant documents,Apply,boundary,uploadrelevantdocuments
+5,User:fills out relevant data ,Apply,boundary,uploadrelevantdocuments
+6,Show confirmation page:Approve Hire db,Apply,boundary,selecttheappropriatepostings
+7,Show confirmation page:Homepage,Apply,boundary,Homepage
+8,retrieves the posting selected:Show confirmation page,Apply,boundary,Homepage
+9,add candidate to applicant list :generate a message to inform User ,Apply,control,generateamessagetoinformUser
+10,click submit button:add candidate to applicant list ,Apply,boundary,selecttheappropriatepostings
+11,responds with a message confirming :add candidate to applicant list ,Apply,boundary,selecttheappropriatepostings
+12,fills out relevant data :responds with a message confirming ,Apply,control,generateamessagetoinformUser
+13,retrieves the posting selected:responds with a message confirming ,Apply,control,generateamessagetoinformUser
+14,upload relevant documents:responds with a message confirming ,Apply,control,generateamessagetoinformUser
+15,select the appropriate postings :retrieves the posting selected,Apply,boundary,selecttheappropriatepostings
+16,stl#User:select the appropriate postings ,Apply,Stimulus,undefined
+17,stl#User:click submit button,Apply,Stimulus,undefined
+18,stl#User:Homepage,Apply,Stimulus,undefined
+19,stl#User:upload relevant documents,Apply,Stimulus,undefined
+20,stl#User:fills out relevant data ,Apply,Stimulus,undefined
+21,User:Homepage,Approve Hire,boundary,Homepage
+22,User:marks the user as approved,Approve Hire,boundary,selecttheappropriatepostings
+23,User:Approve Hire,Approve Hire,boundary,selecttheappropriatepostings
+24,Approve Hire:returns the correct applicant,Approve Hire,boundary,selecttheappropriatepostings
+25,Show confirmation page:Approve Hire,Approve Hire,boundary,selecttheappropriatepostings
+26,Approve Hire db:Homepage,Approve Hire,boundary,Homepage
+27,Show confirmation page:Approve Hire db,Approve Hire,boundary,selecttheappropriatepostings
+28,modifies the Applicant profile to reflect User's change:Approve Hire db,Approve Hire,boundary,selecttheappropriatepostings
+29,Show confirmation page:Homepage,Approve Hire,boundary,Homepage
+30,returns the correct applicant:Show confirmation page,Approve Hire,boundary,Homepage
+31,marks the user as approved:modifies the Applicant profile to reflect User's change,Approve Hire,boundary,selecttheappropriatepostings
+32,returns the correct applicant:modifies the Applicant profile to reflect User's change,Approve Hire,boundary,selecttheappropriatepostings
+33,stl#User:Homepage,Approve Hire,Stimulus,undefined
+34,stl#User:marks the user as approved,Approve Hire,Stimulus,undefined
+35,stl#User:Approve Hire,Approve Hire,Stimulus,undefined
+36,User:fills out all of the required data correctly,Create Account,control,fillsoutalloftherequireddatacorrectly
+37,User:Homepage,Create Account,boundary,Homepage
+38,User:selects Create an Account ,Create Account,boundary,selecttheappropriatepostings
+39,Show confirmation page:Account db,Create Account,entity,Accountdb
+40,creates an account for the User:Account db,Create Account,entity,Accountdb
+41,creates an account for the User:Homepage,Create Account,boundary,Homepage
+42,Show confirmation page:Homepage,Create Account,boundary,Homepage
+43,Show confirmation page:selects Create an Account ,Create Account,entity,Accountdb
+44,returns a standard information form :Show confirmation page,Create Account,boundary,Homepage
+45,fills out all of the required data correctly:creates an account for the User,Create Account,entity,Accountdb
+46,returns a standard information form :creates an account for the User,Create Account,entity,Accountdb
+47,selects Create an Account :returns a standard information form ,Create Account,control,returnsastandardinformationform
+48,stl#User:fills out all of the required data correctly,Create Account,Stimulus,undefined
+49,stl#User:Homepage,Create Account,Stimulus,undefined
+50,stl#User:selects Create an Account ,Create Account,Stimulus,undefined
+51,User:fills in the rest of the details for the new user ,Create Employee Account,control,fillsoutalloftherequireddatacorrectly
+52,User:Homepage,Create Employee Account,boundary,Homepage
+53,User:enters in a unique login name for the new user,Create Employee Account,control,entersinauniqueloginnameforthenewuser
+54,Show confirmation page:Employee Account db,Create Employee Account,entity,Accountdb
+55,creates an account for the user and sends an email :Employee Account db,Create Employee Account,entity,Accountdb
+56,show confirmation about that the account created and the email sent:Homepage,Create Employee Account,boundary,Homepage
+57,Show confirmation page:Homepage,Create Employee Account,boundary,Homepage
+58,Show confirmation page:enters in a unique login name for the new user,Create Employee Account,control,entersinauniqueloginnameforthenewuser
+59,check the login name is available:Show confirmation page,Create Employee Account,boundary,Homepage
+60,check the login name is available:checks to ensure that the new user has correct credentials,Create Employee Account,control,fillsoutalloftherequireddatacorrectly
+61,enters in a unique login name for the new user:check the login name is available,Create Employee Account,control,entersinauniqueloginnameforthenewuser
+62,checks to ensure that the new user has correct credentials:creates an account for the user and sends an email ,Create Employee Account,control,entersinauniqueloginnameforthenewuser
+63,fills in the rest of the details for the new user :checks to ensure that the new user has correct credentials,Create Employee Account,control,fillsoutalloftherequireddatacorrectly
+64,creates an account for the user and sends an email :show confirmation about that the account created and the email sent,Create Employee Account,control,fillsoutalloftherequireddatacorrectly
+65,stl#User:fills in the rest of the details for the new user ,Create Employee Account,Stimulus,undefined
+66,stl#User:Homepage,Create Employee Account,Stimulus,undefined
+67,stl#User:enters in a unique login name for the new user,Create Employee Account,Stimulus,undefined
+68,User:Homepage,Create Posting,boundary,Homepage
+69,User:fills out relevant information,Create Posting,boundary,uploadrelevantdocuments
+70,User:Clicks Create button,Create Posting,boundary,clicksubmitbutton
+71,Clicks Create button:generates posting identification data,Create Posting,boundary,selecttheappropriatepostings
+72,generates a message to inform the User :Homepage,Create Posting,boundary,Homepage
+73,Show confirmation page:Homepage,Create Posting,boundary,Homepage
+74,generates a message to inform the User :Posting db,Create Posting,boundary,selecttheappropriatepostings
+75,Show confirmation page:Posting db,Create Posting,boundary,selecttheappropriatepostings
+76,Posting is created in the system:generates a message to inform the User ,Create Posting,boundary,selecttheappropriatepostings
+77,generates posting identification data:Posting is created in the system,Create Posting,boundary,selecttheappropriatepostings
+78,Show confirmation page:fills out relevant information,Create Posting,boundary,uploadrelevantdocuments
+79,generates posting identification data:Show confirmation page,Create Posting,boundary,Homepage
+80,fills out relevant information:generates posting identification data,Create Posting,boundary,selecttheappropriatepostings
+81,stl#User:Homepage,Create Posting,Stimulus,undefined
+82,stl#User:fills out relevant information,Create Posting,Stimulus,undefined
+83,stl#User:Clicks Create button,Create Posting,Stimulus,undefined
+84,User:selects an appropriate time period to look for data,Create reports,boundary,selecttheappropriatepostings
+85,User:Homepage,Create reports,boundary,Homepage
+86,User:selects Export Report,Create reports,boundary,selecttheappropriatepostings
+87,outputs its Hiring Data in a readable format:Homepage,Create reports,boundary,Homepage
+88,outputs its Hiring Data in a readable format:Posting db,Create reports,boundary,selecttheappropriatepostings
+89,returns data from the time period:outputs its Hiring Data in a readable format,Create reports,control,fillsoutalloftherequireddatacorrectly
+90,selects Export Report:outputs its Hiring Data in a readable format,Create reports,control,fillsoutalloftherequireddatacorrectly
+91,selects an appropriate time period to look for data:returns data from the time period,Create reports,boundary,selecttheappropriatepostings
+92,stl#User:selects an appropriate time period to look for data,Create reports,Stimulus,undefined
+93,stl#User:Homepage,Create reports,Stimulus,undefined
+94,stl#User:selects Export Report,Create reports,Stimulus,undefined
+95,User:selects the appropriate posting,Delete Employee Account,boundary,selecttheappropriatepostings
+96,User:Homepage,Delete Employee Account,boundary,Homepage
+97,User:click delete button,Delete Employee Account,boundary,clicksubmitbutton
+98,informs User of the successful post deletion:Homepage,Delete Employee Account,boundary,Homepage
+99,archives the posting :removes the posting from online view,Delete Employee Account,boundary,selecttheappropriatepostings
+100,click delete button:archives the posting ,Delete Employee Account,boundary,selecttheappropriatepostings
+101,selects the appropriate posting:archives the posting ,Delete Employee Account,boundary,selecttheappropriatepostings
+102,click delete button:removes the posting from online view,Delete Employee Account,boundary,selecttheappropriatepostings
+103,removes the posting from online view:informs User of the successful post deletion,Delete Employee Account,boundary,selecttheappropriatepostings
+104,removes the posting from online view:posting db,Delete Employee Account,boundary,selecttheappropriatepostings
+105,stl#User:selects the appropriate posting,Delete Employee Account,Stimulus,undefined
+106,stl#User:Homepage,Delete Employee Account,Stimulus,undefined
+107,stl#User:click delete button,Delete Employee Account,Stimulus,undefined
+108,User:Delete Posting Page,Delete Posting,boundary,selecttheappropriatepostings
+109,User:Homepage,Delete Posting,boundary,Homepage
+110,Delete Posting Page:Delete Posting information,Delete Posting,boundary,selecttheappropriatepostings
+111,Show confirmation page:Delete Posting Page,Delete Posting,boundary,selecttheappropriatepostings
+112,Delete Posting information:Show confirmation page,Delete Posting,boundary,Homepage
+113,Show confirmation page:Homepage,Delete Posting,boundary,Homepage
+114,Show confirmation page:Posting db,Delete Posting,boundary,selecttheappropriatepostings
+115,stl#User:Delete Posting Page,Delete Posting,Stimulus,undefined
+116,stl#User:Homepage,Delete Posting,Stimulus,undefined
+117,User:marks the user as either qualified unqualified or processing,Edit Application Status,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+118,User:Homepage,Edit Application Status,boundary,Homepage
+119,User:select the appropriate posting and view  profile,Edit Application Status,boundary,selecttheappropriatepostings
+120,User:Homepage,Edit Application Status,boundary,Homepage
+121,User:Edit Application Status Page,Edit Application Status,control,EditApplicationsinformation
+122,Show confirmation page:Application db,Edit Application Status,control,EditApplicationsinformation
+123,Edit Application Status Page:Edit Applications information,Edit Application Status,control,EditApplicationsinformation
+124,Show confirmation page:Edit Application Status Page,Edit Application Status,control,EditApplicationsinformation
+125,Edit Applications information:Show confirmation page,Edit Application Status,control,EditApplicationsinformation
+126,modifies the Applicant profile to reflect User's change:Homepage,Edit Application Status,boundary,Homepage
+127,Show confirmation page:Homepage,Edit Application Status,boundary,Homepage
+128,marks the user as either qualified unqualified or processing:returns the correct applicant,Edit Application Status,control,EditApplicationsinformation
+129,returns the correct applicant:modifies the Applicant profile to reflect User's change,Edit Application Status,boundary,selecttheappropriatepostings
+130,select the appropriate posting and view  profile:returns the correct applicant,Edit Application Status,control,EditApplicationsinformation
+131,stl#User:marks the user as either qualified unqualified or processing,Edit Application Status,Stimulus,undefined
+132,stl#User:Homepage,Edit Application Status,Stimulus,undefined
+133,stl#User:select the appropriate posting and view  profile,Edit Application Status,Stimulus,undefined
+134,stl#User:Homepage,Edit Application Status,Stimulus,undefined
+135,stl#User:Edit Application Status Page,Edit Application Status,Stimulus,undefined
+136,User:Homepage,Edit Posting,boundary,Homepage
+137,User:Clicks Submit,Edit Posting,boundary,clicksubmitbutton
+138,User:fills out relevant information about the posting,Edit Posting,boundary,selecttheappropriatepostings
+139,User:selects the appropriate posting and clicks Edit,Edit Posting,boundary,selecttheappropriatepostings
+140,User:Homepage,Edit Posting,boundary,Homepage
+141,User:View Application Page,Edit Posting,boundary,Homepage
+142,Changes are saved in the system:generates a message to inform the User,Edit Posting,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+143,Changes are saved in the system:Posting db,Edit Posting,boundary,selecttheappropriatepostings
+144,modifies posting identification data:Changes are saved in the system,Edit Posting,boundary,selecttheappropriatepostings
+145,Choose Applications:Show confirmation page,Edit Posting,boundary,Homepage
+146,View Application Page:Choose Applications,Edit Posting,boundary,selecttheappropriatepostings
+147,Clicks Submit:modifies posting identification data,Edit Posting,boundary,selecttheappropriatepostings
+148,generates a message to inform the User:Homepage,Edit Posting,boundary,Homepage
+149,Show confirmation page:Homepage,Edit Posting,boundary,Homepage
+150,Show confirmation page:Homepage,Edit Posting,boundary,Homepage
+151,Show confirmation page:Posting db,Edit Posting,boundary,selecttheappropriatepostings
+152,Show confirmation page:selects the appropriate posting and clicks Edit,Edit Posting,boundary,selecttheappropriatepostings
+153,retrieves the posting selected:Show confirmation page,Edit Posting,boundary,Homepage
+154,Show confirmation page:View Application Page,Edit Posting,boundary,Homepage
+155,fills out relevant information about the posting:modifies posting identification data,Edit Posting,boundary,selecttheappropriatepostings
+156,retrieves the posting selected:modifies posting identification data,Edit Posting,boundary,selecttheappropriatepostings
+157,selects the appropriate posting and clicks Edit:retrieves the posting selected,Edit Posting,boundary,selecttheappropriatepostings
+158,stl#User:Homepage,Edit Posting,Stimulus,undefined
+159,stl#User:Clicks Submit,Edit Posting,Stimulus,undefined
+160,stl#User:fills out relevant information about the posting,Edit Posting,Stimulus,undefined
+161,stl#User:selects the appropriate posting and clicks Edit,Edit Posting,Stimulus,undefined
+162,stl#User:Homepage,Edit Posting,Stimulus,undefined
+163,stl#User:View Application Page,Edit Posting,Stimulus,undefined
+164,User:selects the "Save" Button,Edit User Profile,boundary,selecttheappropriatepostings
+165,User:enters in the new values ,Edit User Profile,boundary,entersinthenewvalues
+166,User:Homepage,Edit User Profile,boundary,Homepage
+167,informs the User of the success:Homepage,Edit User Profile,boundary,Homepage
+168,saves the data in the database:User Profile db,Edit User Profile,boundary,selecttheappropriatepostings
+169,enters in the new values :saves the data in the database,Edit User Profile,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+170,saves the data in the database:informs the User of the success,Edit User Profile,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+171,selects the "Save" Button:saves the data in the database,Edit User Profile,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+172,stl#User:selects the "Save" Button,Edit User Profile,Stimulus,undefined
+173,stl#User:enters in the new values ,Edit User Profile,Stimulus,undefined
+174,stl#User:Homepage,Edit User Profile,Stimulus,undefined
+175,User:Login page,Login,boundary,Homepage
+176,User:Homepage,Login,boundary,Homepage
+177,Show confirmation:Homepage,Login,boundary,Homepage
+178,Login page:Validate usename and password,Login,control,Validateusenameandpassword
+179,Show confirmation:Login page,Login,boundary,Homepage
+180,Validate usename and password:Show confirmation,Login,control,Showconfirmation
+181,stl#User:Login page,Login,Stimulus,undefined
+182,stl#User:Homepage,Login,Stimulus,undefined
+183,User:Homepage,Logout,boundary,Homepage
+184,User:Logout page,Logout,boundary,Homepage
+185,End session:Show confirmation,Logout,control,Showconfirmation
+186,Validate usename and password :End session,Logout,control,Endsession
+187,Show confirmation:Homepage,Logout,boundary,Homepage
+188,Logout page:Validate usename and password ,Logout,control,Endsession
+189,Show confirmation:Logout page,Logout,boundary,Homepage
+190,stl#User:Homepage,Logout,Stimulus,undefined
+191,stl#User:Logout page,Logout,Stimulus,undefined
+192,User:Homepage,Retrieve Password,boundary,Homepage
+193,User:fills out a legitimate  account's id/email ,Retrieve Password,entity,Accountdb
+194,User:selects Forgot Password,Retrieve Password,boundary,selecttheappropriatepostings
+195,show confirmation page:Homepage,Retrieve Password,boundary,Homepage
+196,Show confirmation page:Homepage,Retrieve Password,boundary,Homepage
+197,Show confirmation page:User db,Retrieve Password,entity,User
+198,Show confirmation page:fills out a legitimate  account's id/email ,Retrieve Password,entity,Accountdb
+199,sends an email to the account's email:Show confirmation page,Retrieve Password,control,Showconfirmation
+200,fills out a legitimate  account's id/email :sends an email to the account's email,Retrieve Password,entity,Accountdb
+201,selects Forgot Password:sends an email to the account's email,Retrieve Password,entity,Accountdb
+202,sends an email to the account's email:show confirmation page,Retrieve Password,control,Showconfirmation
+203,stl#User:Homepage,Retrieve Password,Stimulus,undefined
+204,stl#User:fills out a legitimate  account's id/email ,Retrieve Password,Stimulus,undefined
+205,stl#User:selects Forgot Password,Retrieve Password,Stimulus,undefined
+206,User:looks through a list of qualified applicants ,Schedule Interview,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+207,User:marks the user as interviewing,Schedule Interview,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+208,User:Homepage,Schedule Interview,boundary,Homepage
+209,User:selects the appropriate applicant and views his/her profile,Schedule Interview,boundary,selecttheappropriatepostings
+210,modifies the Applicant profile to reflect User's change:Homepage,Schedule Interview,boundary,Homepage
+211,modifies the Applicant profile to reflect User's change:Interview db,Schedule Interview,entity,Accountdb
+212,looks through a list of qualified applicants :returns the correct applicant,Schedule Interview,control,fillsoutalloftherequireddatacorrectly
+213,marks the user as interviewing:modifies the Applicant profile to reflect User's change,Schedule Interview,boundary,selecttheappropriatepostings
+214,returns the correct applicant:modifies the Applicant profile to reflect User's change,Schedule Interview,boundary,selecttheappropriatepostings
+215,selects the appropriate applicant and views his/her profile:returns the correct applicant,Schedule Interview,control,fillsoutalloftherequireddatacorrectly
+216,stl#User:looks through a list of qualified applicants ,Schedule Interview,Stimulus,undefined
+217,stl#User:marks the user as interviewing,Schedule Interview,Stimulus,undefined
+218,stl#User:Homepage,Schedule Interview,Stimulus,undefined
+219,stl#User:selects the appropriate applicant and views his/her profile,Schedule Interview,Stimulus,undefined
+220,undefined,Use Case1,undefined,Object1
+221,stl#undefined,Use Case1,Stimulus,undefined
+222,User:selects the appropriate posting,View Applications,boundary,selecttheappropriatepostings
+223,User:sorts/filters the applicants ,View Applications,control,fillsoutalloftherequireddatacorrectly
+224,User:Homepage,View Applications,boundary,Homepage
+225,returns the applicants that match the sort/filter:Homepage,View Applications,boundary,Homepage
+226,returns all of the applicants who have applied to the position :returns the applicants that match the sort/filter,View Applications,control,fillsoutalloftherequireddatacorrectly
+227,selects the appropriate posting:returns all of the applicants who have applied to the position ,View Applications,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+228,sorts/filters the applicants :returns all of the applicants who have applied to the position ,View Applications,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+229,stl#User:selects the appropriate posting,View Applications,Stimulus,undefined
+230,stl#User:sorts/filters the applicants ,View Applications,Stimulus,undefined
+231,stl#User:Homepage,View Applications,Stimulus,undefined
+232,User:Homepage,View Job Postings,boundary,Homepage
+233,User:selects the appropriate postings ,View Job Postings,boundary,selecttheappropriatepostings
+234,returns information about that specific posting:Homepage,View Job Postings,boundary,Homepage
+235,Show confirmation page:Homepage,View Job Postings,boundary,Homepage
+236,Show confirmation page:selects the appropriate postings ,View Job Postings,boundary,selecttheappropriatepostings
+237,returns information about that specific posting:Show confirmation page,View Job Postings,control,Showconfirmation
+238,selects the appropriate postings :returns information about that specific posting,View Job Postings,control,Showconfirmation
+239,stl#User:Homepage,View Job Postings,Stimulus,undefined
+240,stl#User:selects the appropriate postings ,View Job Postings,Stimulus,undefined
+241,User:clicks "Edit User Profile" button,View User Profile,boundary,clicksubmitbutton
+242,User:Homepage,View User Profile,boundary,Homepage
+243,returns the User Profile for the User :Homepage,View User Profile,boundary,Homepage
+244,Show confirmation page:Homepage,View User Profile,boundary,Homepage
+245,Show confirmation page:clicks "Edit User Profile" button,View User Profile,boundary,clicksubmitbutton
+246,returns the User Profile for the User :Show confirmation page,View User Profile,control,Showconfirmation
+247,clicks "Edit User Profile" button:returns the User Profile for the User ,View User Profile,control,markstheuseraseitherqualifiedunqualifiedorprocessing
+248,stl#User:clicks "Edit User Profile" button,View User Profile,Stimulus,undefined
+249,stl#User:Homepage,View User Profile,Stimulus,undefined

@@ -1,0 +1,24 @@
+id,element,useCase,type,component
+1,Attendee:Home page,Register course,boundary,Homepage
+2,Attendee:Payment page,Register course,boundary,Homepage
+3,Attendee:registration success,Register course,boundary,Invalidenteredinformation
+4,Attendee:Course detail page,Register course,entity,course
+5,Send out confirmation email:Email protocol,Register course,control,Emailprotocol
+6,EventBrite:receive payment result,Register course,boundary,receivepaymentresult
+7,EventBrite:bring up payment page,Register course,boundary,Homepage
+8,setupPayment:EventBrite,Register course,boundary,receivepaymentresult
+9,make payment:EventBrite,Register course,boundary,receivepaymentresult
+10,Course detail page:setupPayment,Register course,boundary,receivepaymentresult
+11,Course detail page:Redirect to home page,Register course,boundary,Homepage
+12,Redirect to home page:Home page,Register course,boundary,Homepage
+13,Payment page:make payment,Register course,boundary,receivepaymentresult
+14,bring up payment page:Payment page,Register course,boundary,Homepage
+15,Send out confirmation email:registration success,Register course,boundary,receivepaymentresult
+16,receive payment result:Send out confirmation email,Register course,boundary,Invalidenteredinformation
+17,setupPayment:course,Register course,entity,course
+18,stl#Attendee:Home page,Register course,Stimulus,undefined
+19,stl#Attendee:Payment page,Register course,Stimulus,undefined
+20,stl#Attendee:registration success,Register course,Stimulus,undefined
+21,stl#Attendee:Course detail page,Register course,Stimulus,undefined
+22,stl#EventBrite:receive payment result,Register course,Stimulus,undefined
+23,stl#EventBrite:bring up payment page,Register course,Stimulus,undefined

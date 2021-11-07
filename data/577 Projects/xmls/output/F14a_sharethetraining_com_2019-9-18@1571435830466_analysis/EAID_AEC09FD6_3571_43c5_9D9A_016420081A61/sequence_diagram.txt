@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "deletecourse" as 09
+participant "Invalidenteredinformation" as 29
+participant "Emailprotocol" as 39
+
+Admin -> 09: deletecoursebutton()
+activate 09
+
+09 -> 29: showdeleteconfirmationbox()
+activate 29
+
+29 -> 29: Deleteconfirmationdialog()
+29 -> 09: deletecourse()
+09 -> 09: course()
+deactivate 09
+
+09 -> 39: sendemailtoattendees()
+activate 39
+
+39 -> 39: Emailprotocol()
+deactivate 39
+
+39 -> 09: deletesuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+Admin -> 09: deletesuccessmessage()
+activate 09
+
+deactivate 09
+
+Admin -> 29: Deleteconfirmationdialog()
+activate 29
+
+29 -> 09: deletecourse()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "displayaddedbusinesspage" as 09
+participant "redirecttosearchpanel" as 69
+
+Admin -> 09: businesslist()
+activate 09
+
+09 -> 09: queryinformationforaspecificbusiness()
+09 -> 09: business()
+deactivate 09
+
+09 -> 09: businessinfo()
+activate 09
+
+09 -> 09: savetheapprovalstatusofthebusiness()
+09 -> 09: business()
+deactivate 09
+
+Admin -> 09: addedbusinessbutton()
+activate 09
+
+09 -> 69: redirecttosearchpanel()
+activate 69
+
+69 -> 09: businessinputinformation()
+09 -> 09: savebusinessinformationforverification()
+09 -> 09: business()
+deactivate 09
+
+deactivate 69
+
+Admin -> 09: businessinfo()
+activate 09
+
+09 -> 09: savetheapprovalstatusofthebusiness()
+deactivate 09
+
+User -> 09: businessinputinformation()
+activate 09
+
+09 -> 09: savebusinessinformationforverification()
+deactivate 09
+
+User -> 09: Addabusinessbutton()
+activate 09
+
+09 -> 09: displayaddbusinesspage()
+09 -> 09: businessinputinformation()
+09 -> 09: savebusinessinformationforverification()
+deactivate 09
+
+@enduml

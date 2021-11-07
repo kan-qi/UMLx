@@ -1,0 +1,814 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("utils/feature_selection.R")
+source("utils/data_selection.R")
+source("utils/model_funcs.R")
+source("accuracy_confidence_evaluation.R")
+source("transaction_based_model.R")
+source("size_metric_based_models.R")
+source("neuralnet_model.R")
+source("stepwise_linear_model.R")
+source("lasso_regression_model.R")
+source("regression_tree_model.R")
+source('familywiseHypoTest.R')
+library(jsonlite)
+library(reshape)
+library(tidyverse)
+library(fitdistrplus)
+library(egg)
+library(gridExtra)
+library(plyr)
+library(lsr)
+require(MASS)
+
+```
+Combined Data Effort Values
+```{r descriptive statistics, fig.width=5,fig.height=2.5}
+#The previous dataset
+#modelData <- selectData("dsets/modelEvaluations-1-3.csv")
+#The current dataset
+#modelData <- selectData("dsets/android_dataset_6_4.csv")
+#modelData <- selectData("dsets/android_dataset_transactions_5_19.csv")
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
+dataset <- read.csv("dsets/combined_data_set_4.csv")
+dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
+dataset <- read.csv("dsets/combined_data_set_8_22.csv")
+dataset <- read.csv("dsets/combined_data_set_8_23.csv")
+dataset <- read.csv("dsets/combined_data_set_8_26.csv")
+dataset <- read.csv("dsets/combined_data_set_4_1.csv")
+modelData <- selectData(dataset)
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
+#dataset <- modelData
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("initialDate", "late"))
+
+#modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type", "Tools"))
+
+#data set exploratory statistics, eg, correlation statistics, marginal distributions, etc.
+
+#ggplot2.scatterplot(data=modelData, xName='SLOC',
+#                    yName='Effort',
+#                    groupName="Organization")
+
+#ggplot(modelData,aes(SLOC, Effort, color=Organization)) + 
+#  geom_point() + 
+#  scale_color_manual(values = c('#999999','#E69F00')) + 
+#  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+
+```
+
+#load the comparative models. Each model for comparison should include two functions for evaluateion:
+#1. m_fit(params, trainSet)
+# params: a list of hyper parameters
+# trainSet: the training dataset
+#2. m_predict(model, testSet)
+# model: the trained model
+# testSet: the testing Set
+
+# After create the two functions, register your model into the "models" list, as shown beblow, with a list of hyper-parameters indexed with the model name.
+
+```{r swtiii, warning = FALSE}
+
+#initialize models for training, testing, and evaluation. The models are put into a list with model names referencing a list of hyper-parameters, which will be passed to the model training function.
+#models1 = models
+models = list()
+#register the model into the models list with the hyper parameters returned from  the "trainsaction_based_model" function
+transaction_models <- trainsaction_based_model(modelData)
+models = append(models, transaction_models)
+
+#models$tm3 <- trainsaction_based_model3(modelData)
+
+#initialize the size metric based models
+size_models <- size_metric_models(modelData)
+#register the list of the size metric based models. 
+models = append(models, size_models)
+#models$cosmic = size_models$cosmic
+#models$fp = size_models$fp
+
+#intialize the step-wise learning model
+step_model <- stepwise_linear_model(modelData, regression_cols())
+models$step_lnr <- step_model
+
+#initialize the neuralnet model
+neuralnetModel = neuralnet_model(modelData, regression_cols())
+models$neuralnet = neuralnetModel
+
+#initialize the lasso regression model. having problems, need to debug
+las_model = lasso_model(modelData, regression_cols())
+models$lasso = las_model
+
+#initialize the regression tree model
+reg_tree_model = regression_tree_model(modelData, regression_cols())
+models$reg_tree = reg_tree_model
+
+#models backup
+#models1 = models
+
+#load the machine learning based models
+#to create a model, following 3 steps:
+# 1.create the model training function by rewriting this following template function
+#  m_fit.MODEL_NAME <- function(MODEL_NAME,dataset){}
+# 2.create the prediction function by rewriting this following template function
+#  m_predict.MODEL_NAME <- function(MODEL_NAME, testData){}
+# 3.add your model name into the "models"(above) variable for referencing
+#  models.MODEL_NAME <- list(hyper-params...)
+# examples can be found in the size_metric_based_models.R or transaction_based_model.R
+  
+```
+
+```{r evaluate the effectiveness of the size metrics, warning = FALSE}
+#using the entire dataset to train the models and evaluate some of the properties of the trained parameters.
+#currentModels = models
+#models = currentModels
+
+#fitEval = evalFit(models, modelData, c("R2", "eta-squared"))
+
+trainedModels <- modelTrain(models, modelData)
+outputData <- modelProfile(trainedModels, modelData)
+transactionData <- transaction_data_profile(modelData)
+outputData <- merge(outputData, transactionData, by="row.names")
+rownames(outputData) <- outputData$Row.names
+outputData$Row.names <- NULL
+write.csv(outputData, "output_data.csv")
+
+#evaluate the models for their size metrics
+sizeMetricLabels <- c('SWTI', 'SWTII', 'SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
+#sizeMetricLabels <- c('SWTIII', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
+#sizeMetricLabels <- c('SWTI', 'UUCP', 'AFP', 'COSMIC', 'SLOC', "LOG_SLOC")
+sizeMeasures <- data.frame(matrix(nrow=nrow(outputData), ncol=length(sizeMetricLabels)))
+rownames(sizeMeasures) <- rownames(outputData)
+colnames(sizeMeasures) <- sizeMetricLabels
+sizeMeasures[,sizeMetricLabels] <- outputData[,sizeMetricLabels]
+sizeMeasures <- na.omit(sizeMeasures)
+sizeMeasures <- sizeMeasures[!is.infinite(rowSums(sizeMeasures)),]
+effortData <- modelData[rownames(sizeMeasures), 'Effort']
+
+#run the correlation analysis of the size metrics
+sizeCor <- cor(sizeMeasures)
+print(round(sizeCor, digits=2))
+write.csv(round(sizeCor, digits=2), "size_metric_cor_matrix.csv")
+  
+#run the correlation analysis of size metrics and project effort
+effortCor <- apply(sizeMeasures, 2, function(x) {
+    d <- data.frame(x=x, Effort=effortData)
+    corT <- cor.test(d$x, d$Effort)
+    c(corT$estimate, corT$p.value)
+  })
+effortCor <- t(effortCor)
+colnames(effortCor) <- c("r", "p-value")
+effortCorRank <- as.data.frame(effortCor)
+effortCorRank["Rank"] <- rank(-effortCorRank[,"r"], ties.method = "min")
+effortCorRank <- effortCorRank[order(effortCorRank$Rank),]
+print(round(effortCorRank, 2))
+#print(cor(sizeMeasures$LOG_SLOC, log(effortData)))
+write.csv(round(effortCorRank, 2), "effort_cor_rank.csv")
+
+#draw scatter plot for the project description
+ggplot(outputData, aes(x=SLOC, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=LOG_SLOC, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=Trans, y=Effort)) + geom_point()+theme_bw()
+ggplot(outputData, aes(x=SWTI, y=Effort)) + geom_point()+theme_bw()
+#ggplot(outputData, aes(x=SWTII, y=Effort)) + geom_point()+theme_bw()
+#ggplot(outputData, aes(x=SWTIII, y=Effort)) + geom_point()+theme_bw()
+
+#print(models$tm2$cuts)
+
+```
+Benchmark the candidate models: SWTIII, UCP, COCOMO, a-priori COCOMO, using cross-validation and bootstrapping
+```{r benchmark of the candidate models, warning = FALSE, fig.width=5,fig.height=4}
+benchmarkResults <- modelBenchmark(models, modelData)
+#benchmarkResultsTest3 = benchmarkResults
+#benchmarkResultsTest1 = benchmarkResults
+#benchmarkResults = benchmarkResultsTest2
+
+benchmarkResults <- modelBenchmarkIndividual(models, modelData, benchmarkResultsTest1)
+
+benchmarkResults <- updateBenchmarkResults(benchmarkResults, benchmarkResultsTest2)
+
+#bechmark backup
+#benchmarkResults1 <- benchmarkResults
+
+#model_names <- benchmarkResults$model_names
+
+#test 1
+#model_names <- c("ucp", "fp", "cosmic", "sloc", "ln_sloc")
+#model_texts <- c("UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+#model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR")
+
+#test 2
+model_names <- c("neuralnet", "lasso", "reg_tree", "tm1", "ucp", "fp", "cosmic", "sloc", "ln_sloc", "step_lnr")
+model_texts <- c("NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
+model_estimator <- c("ANN", "LASSO", "REG TREE", "LSR", "LSR", "LSR", "LSR", "LSR", "LSR", "STEP")
+
+#model_names <- c("ucp", "fp", "cosmic", "sloc", "ln_sloc")
+#model_texts <- c("UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+#model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR")
+
+#test 3
+model_names <- c("tm1", "ucp", "fp", "cosmic", "sloc", "ln_sloc")
+model_texts <- c("TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
+
+#test 4
+#model_names <- c("ucp", "fp", "cosmic", "sloc", "ln_sloc", "step_lnr")
+#model_texts <- c("UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
+#model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR", "STEP")
+
+#test 5
+model_names <- c("tm1","tm2","tm3", "ucp", "fp", "cosmic", "sloc", "ln_sloc")
+model_texts <- c("SWTI","SWTII","SWTIII", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+model_estimator <- c("LSR","LSR","LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
+
+model_mapping <- data.frame(model_names=model_names, model_texts=model_texts, model_estimator=model_estimator)
+
+#accuracy_metrics <- c('mmre','pred15','pred25','pred50', 'mdmre', 'mae', 'predRange')
+#accuracy_metric_texts <- c('MMRE','PRED15','PRED25','PRED50', 'MDMRE', 'MAE', 'PREDRANGE')
+accuracy_metrics <- c('mmre', 'pred25', 'mdmre', 'mae')
+accuracy_metric_texts <- c('MMRE', 'PRED25', 'MDMRE', 'MAE')
+accuracy_mapping <- data.frame(accuracy_metrics = accuracy_metrics, accuracy_metric_texts=accuracy_metric_texts)
+#accuracy_metrics <- benchmarkResults$accuracy_metric
+#accuracy_metrics <- accuracy_metrics[!accuracy_metrics %in% c("pred15", "pred50")]
+goodness_fit_metrics = benchmarkResults$goodness_fit_metrics
+fitResults <- benchmarkResults$fitResults
+cvResults <- benchmarkResults$cvResults
+foldResults <- cvResults$foldResults
+bsRet <- benchmarkResults$bsResults
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
+
+model_labels <- c()
+for(i in 1:length(model_names)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, model_names[i])
+  }
+}
+print(model_labels)
+
+metric_labels <- c()
+for(i in 1:length(model_names)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
+
+accuracy_labels <- paste(model_labels, metric_labels, sep="_")
+model_mapping_2 <- data.frame(model_labels = model_labels, metric_labels=metric_labels, accuracy_labels = accuracy_labels)
+print(accuracy_labels)
+
+```
+
+```{r evaluate goodness of fit of the models}
+#evaluate goodness of fit
+goodnessRankResults = data.frame(model_labels = model_names)
+goodnessRankResults <- merge(goodnessRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+
+for (i in 1:length(goodness_fit_metrics)){
+  g = goodness_fit_metrics[i]
+  selectData = data.frame(matrix(ncol=0, nrow=length(model_names)))
+  selectData$model_labels <- model_names
+  rownames(selectData) = selectData$model_labels
+  selectData[, g] <- c()
+  for(j in 1:length(model_names)){
+  m = fitResults[[model_names[j]]]
+  m_name = model_names[j]
+  selectData[m_name, g] <- m[[g]]
+  }
+  selectData[, g] = round(selectData[, g],2)
+  goodnessRankResults <- merge(goodnessRankResults, selectData, by = "model_labels", all=FALSE)
+}
+
+
+goodnessRankResults["Rank"] <- rank(-goodnessRankResults[,"R2"], ties.method = "min")
+goodnessRankResults <- goodnessRankResults[order(goodnessRankResults$Rank),]
+print(goodnessRankResults)
+write.csv(goodnessRankResults, "goodness_rank_results_8_20.csv")
+```
+
+```{r evaluate the out-of-sample accuracy of the models}
+#evaluate cross-validation and plot the cross validation results for pred(.01)- pred(0.50)
+
+avgPreds <- cvResults[["avgPreds"]]
+avgPreds <- data.frame(avgPreds)
+avgPreds <- avgPreds[,names(avgPreds) %in% c(model_names, "Pred")]
+names(avgPreds) <- model_mapping$model_texts[match(names(avgPreds), model_mapping$model_names)]
+names(avgPreds)[1] = c("Pred")
+
+#apply new labels
+#colnames(avgPreds) <- c("Pred", "SWT", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "SWT-I", "SWT-II", "SWT-III", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "SWT-I", "SWT-II", "SWT-III", "UUCP", "AFP", "COSMIC", "SLOC", "LOG SLOC")
+#colnames(avgPreds) <- c("Pred", "NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
+meltAvgPreds = melt(avgPreds, id.vars="Pred")
+colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+#rank the cv results of different metric
+
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$label <- rownames(cvAccuracyResults)
+#cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults <- cvAccuracyResults[cvAccuracyResults$label %in% accuracy_labels,]
+cvAccuracyResults <- merge(cvAccuracyResults, model_mapping_2, by.x = "label", by.y="accuracy_labels", all=FALSE)
+cvAccuracyResults$label <- NULL
+
+#calculate ranking results
+cvRankResults <- data.frame(model_names)
+names(cvRankResults)<-c("model_labels")
+
+for (i in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[i]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  colnames(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#make a total rank(rank*) base on the ranks
+rank_sum <- vector(mode = "integer",length = length(model_names))
+for (i in 1:length(model_names)){
+  selectedData <- cvRankResults[i,]
+  for(j in 1:length(accuracy_metrics)){
+    rank_sum[i] <- rank_sum[i] + selectedData[,2*j+1]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+print(rank_sum)
+cvRankResults["rank*"] <- rank_sum
+
+
+#change the first line as the row name
+#cvRankResults <- merge(cvRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+#rownames(cvRankResults) = cvRankResults$model_texts
+#cvRankResults$model_labels = NULL
+#cvRankResults$model_estimator = NULL
+#cvRankResults$model_texts = NULL
+
+rownames(cvRankResults) <- model_mapping$model_texts[match(cvRankResults$model_labels, model_mapping$model_names)]
+cvRankResults$model_labels = NULL
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
+print(round(cvRankResults,2))
+
+write.csv(round(cvRankResults,2), "cv_rank_results.csv")
+
+# draw histogram base on ranking
+library(ggplot2)
+p <- list()
+for(i in 1:length(accuracy_metrics)){
+  g = paste("rank", i, sep = "")
+  selectedData <- cvRankResults[names(cvRankResults) == g]
+  names(selectedData) <- c("rank");
+  p[[i]] <- ggplot(selectedData, aes(x=rownames(cvRankResults), y=rank, fill=rownames(cvRankResults))) +
+    geom_bar(stat="identity", colour = "black") + 
+    #scale_y_discrete(expand = c(0, 0)) + 
+    guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+    geom_text(aes(label = rank, vjust = -0.3, hjust = 0.5)) +
+    #ggtitle(accuracy_metrics[i]) +
+    labs(caption=toupper(accuracy_metrics[i])) + 
+    theme(plot.caption = element_text(hjust=0.5, vjust = 2.5, size=rel(1)),
+          #axis.line=element_blank(),
+          axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
+}
+
+library("cowplot")
+
+prow <- plot_grid( p[[1]] + theme(legend.position="none"),
+                   p[[2]] + theme(legend.position="none"),
+                   p[[3]] + theme(legend.position="none"),
+                   p[[4]] + theme(legend.position="none"),
+                   align = 'vh',
+                   hjust = 0,
+                   nrow = 1
+                  )
+legend_b <- get_legend(p[[1]] + theme(legend.position="bottom", legend.justification="center"))
+title <- ggdraw() + draw_label("Ranking Result for Cross Validation", fontface='bold')
+p_cvRank <- plot_grid(title, prow, legend_b, ncol = 1, rel_heights = c(.2 , 1, .1))
+p_cvRank
+
+# draw overall ranking histogram
+selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
+names(selectedData) <- c("rank");
+p_cvAllRank <- ggplot(selectedData, aes(x=rownames(selectedData), y=rank, fill=rownames(selectedData))) +
+  geom_bar(stat="identity", colour = "black", width = 0.7) + 
+  #scale_y_discrete(expand = c(0, 0)) + 
+  guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+  ggtitle("Overall Ranking Result for Cross Validation") +
+  #labs(caption=toupper("Total Rank")) + 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(0.5)), legend.position = "bottom",legend.text=element_text(size=10), 
+        plot.title = element_text(hjust = 0.5), 
+        #axis.line=element_blank(),
+        axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
+p_cvAllRank
+
+```
+
+```{r evaluate overlapping of 84% confidence intervals}
+#evaluate bootstrap results
+#bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
+
+#save as csv
+#write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
+#write.csv(iterResults, file='iterResults.csv', quote=F, row.names = F)
+
+#read from csv
+#bsEstimations <- read.csv('bsEstimations.csv')
+#rownames(bsEstimations) <- c('lower','mean','upper')
+#iterResults <- read.csv('iterResults.csv')
+
+# plot bootstrapping results
+
+df <- data.frame(t(bsEstimations))
+df$label <- rownames(df)
+#df <- df[- grep("predRange", df$labels),]
+#df <- df[- grep("pred15", df$labels),]
+#df <- df[- grep("pred50", df$labels),]
+#df <- df[- grep("tm2", df$labels),]
+#df <- df[- grep("tm3", df$labels),]
+df <- df[df$label %in% accuracy_labels,]
+df <- merge(df, model_mapping_2, by.x = "label", by.y="accuracy_labels", all=FALSE)
+
+nonOverlappingPairs <- data.frame(matrix(ncol = 8, nrow = 0))
+overlappingPairAttrs <- c("model1", "model2", "metric", "direction", "mean1", "mean2", "84% CI1", "84% CI2")
+colnames(nonOverlappingPairs) <- overlappingPairAttrs
+for (i in 1:length(accuracy_metrics)){
+    g = metric_labels[i]
+    selectedData <- df[df$metric_labels == g,]
+    for (j in 1:(nrow(selectedData)-1)){
+      for (k in (j+1):nrow(selectedData)){
+        if(selectedData[j,]$lower>selectedData[k,]$upper | selectedData[j,]$upper<selectedData[k,]$lower){
+          #selectedData[j,] and selectedData[k,] non-overlap
+          direction = "="
+          if(selectedData[j,]$mean > selectedData[k,]$mean){
+            direction = "+"
+          }
+          else if(selectedData[j,]$mean < selectedData[k,]$mean){
+            direction = "-"
+          }
+          
+          if(selectedData[j,]$metric %in% c("mae", "mdmre", "mmre")){
+            if(direction == "+"){
+              direction = "-"
+            }
+            else if(direction == "-"){
+              direction = "+"
+            }
+          }
+          nonOverlap <- data.frame(
+            selectedData[j,]$model_labels,
+            selectedData[k,]$model_labels,
+            g,
+            direction,
+            round(selectedData[j,]$mean, 3),
+            round(selectedData[k,]$mean, 3),
+            paste0("[", as.character(round(selectedData[j,]$lower, 3)), ", ", as.character(round(selectedData[j,]$upper, 3)), "]"),
+            paste0("[", as.character(round(selectedData[k,]$lower, 3)), ", ", as.character(round(selectedData[k,]$upper, 3)), "]")
+            )
+          colnames(nonOverlap) <- overlappingPairAttrs
+          nonOverlappingPairs <- rbind(nonOverlappingPairs, nonOverlap)
+        }
+      }
+    }
+}
+
+print(nonOverlappingPairs)
+
+# apply filters on the overlapping results.
+filteredNonOverlappingPairs = nonOverlappingPairs[which(nonOverlappingPairs$metric %in% accuracy_metrics),]
+filteredNonOverlappingPairs = nonOverlappingPairs[which((nonOverlappingPairs$model1 %in% c("tm3", "tm2", "tm1") | nonOverlappingPairs$model2 %in% c("tm3", "tm2", "tm1"))) ,]
+nonOverlappingPairsIndices <- paste(filteredNonOverlappingPairs$model1, filteredNonOverlappingPairs$model2, filteredNonOverlappingPairs$metric, sep="-")
+
+write.csv(filteredNonOverlappingPairs,'nonOverlappingPairs.csv')
+
+print(filteredNonOverlappingPairs)
+print(nonOverlappingPairsIndices)
+
+for (i in 1:length(accuracy_metrics)){
+    g = accuracy_metrics[i]
+    g_label <- toupper(g)
+    selectedData <- df[df$metric_labels == g,]
+    p <- ggplot(selectedData, aes(x = label, y = mean)) + 
+    geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
+    geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
+    xlab('MODEL') +
+    ylab(g_label) +
+    scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+    ggtitle(paste(g_label, "- 84% Confidence Intervals", setp=""))+
+    theme_bw()
+    print(p)
+}
+
+# draw a partially ordered graph based on non-overlapping pairs
+
+
+# for (i in 1:length(metric_labels)){
+#     g = metric_labels[i]
+#     selectedData <- df[df$metric_labels == g,]
+#     p <- ggplot(selectedData, aes(x = labels, y = mean, ymin = lower, ymax = upper, fill = metric_labels)) +
+#     geom_crossbar(width = 0.5, position = "dodge") +
+#     #coord_flip() +
+#     scale_x_discrete(breaks=selectedData$label, labels=as.vector(selectedData$model_labels)) +
+#     xlab('model') +
+#     ylab(g) +
+#     ggtitle(g)
+#     print(p)
+# }
+
+
+# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
+library(igraph)
+for(metric_i in 1:length(accuracy_metrics)){
+  #print(accuracy_metrics[metric_i])
+  #if(accuracy_metrics[metric_i] == "predRange"){
+  #  next
+  #}
+  #print(accuracy_metrics)
+  selectedData <- nonOverlappingPairs[nonOverlappingPairs$metric == metric_labels[metric_i],]
+
+  m <- matrix(0, nrow = length(model_names), ncol = length(model_names), byrow = FALSE)
+  #colnames(m) <- names(models)
+  #rownames(m) <- names(models)
+  colnames(m) <- model_names
+  rownames(m) <- model_names
+  if(nrow(selectedData) > 0){
+  for(i in 1:nrow(selectedData)){
+    if(selectedData$direction[i] == "+"){
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = 1
+    }else if(selectedData$direction[i] == "-"){
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = 1
+    }
+  }
+  }
+  
+  edge_val <- c() 
+  # if A -> B -> C, remove edge A -> C
+  for(i in 1:length(model_names)){
+    for(j in 1:length(model_names)){
+      if(m[i,j] != 0){
+        edge_val <- c(edge_val, m[i,j]) 
+        for(k in 1:length(model_names)){
+          if(m[j,k] != 0)
+            m[i,k] = 0
+        }
+      }
+    }
+  }
+  
+  #plot the directed graph
+  model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
+  rownames(model_mean) <- model_names
+  colnames(model_mean) <- "mean"
+  if(nrow(selectedData) > 0){
+  for(i in 1:nrow(selectedData)){
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$mean1, 3)
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$mean2, 3)
+  }
+  }
+
+  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
+  
+lo <- layout.fruchterman.reingold(net, niter = 1000)
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+              edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label.cex=0.7)
+  
+#plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
+  title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
+}
+```
+
+```{r evaluate the p-values under family-wise control}
+
+sig_bs <- familywiseHypoTest(iterationResults=iterResults, accuracy_metrics, model_names, "boot")
+sig_bs = sig_bs[which(sig_bs$model1 %in% model_names | sig_bs$model2 %in% model_names),]
+
+#sig_bs$model1 <- model_mapping$model_texts[match(sig_bs_f$model1, model_mapping$model_names)]
+#sig_bs$model2 <- model_mapping$model_texts[match(sig_bs_f$model2, model_mapping$model_names)]
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+
+  df[,nums] <- round(df[,nums], digits = digits)
+
+  (df)
+}
+
+#print only pair comparisons that are related to transaction models
+sig_bs_f = sig_bs[which(sig_bs$BH_p_value < 0.05),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$metric %in% accuracy_metrics),]
+sig_bs_f = sig_bs_f[which(sig_bs_f$model1 %in% c("tm1", "tm2", "tm3") | sig_bs_f$model2 %in% c("tm1", "tm2", "tm3")),]
+sig_bs_f = sig_bs_f[order(sig_bs_f$bonferroni_p_value),]
+sig_bs_f = round_df(sig_bs_f, 2)
+print(sig_bs_f)
+
+#identify the parirs that are not identified from the 84% overlaps.
+sig_bs_f_indices <- paste(sig_bs_f$model1, sig_bs_f$model2, sig_bs_f$metric, sep="-")
+print(sig_bs_f_indices)
+sig_bs_f$index <- sig_bs_f_indices
+`%ni%` <- Negate(`%in%`)
+filtered_sig_bs_f = sig_bs_f[which(sig_bs_f$index %ni% nonOverlappingPairsIndices), ]
+
+write.csv(filtered_sig_bs_f,'sig_bs_f.csv')
+
+# Using the "sig_bs" results, create a graph to represent the direct graph for the models.
+library(igraph)
+for(metric_i in 1:length(accuracy_metrics)){
+  #print(accuracy_metrics[metric_i])
+  #if(accuracy_metrics[metric_i] == "predRange"){
+  #  next
+  #}
+  #print(accuracy_metrics)
+  selectedData <- sig_bs[sig_bs$metric == metric_labels[metric_i],]
+  m <- matrix(0, nrow = length(model_names), ncol = length(model_names), byrow = FALSE)
+  #colnames(m) <- names(models)
+  #rownames(m) <- names(models)
+  colnames(m) <- model_names
+  rownames(m) <- model_names
+  for(i in 1:nrow(selectedData)){
+    if(selectedData$BH_p_value[i] < 0.05){
+    if(selectedData$direction[i] == "+"){
+      m[as.character(selectedData$model1[i]), as.character(selectedData$model2[i])] = round(selectedData$BH_p_value[i], 3)
+    }else if(selectedData$direction[i] == "-"){
+      m[as.character(selectedData$model2[i]), as.character(selectedData$model1[i])] = round(selectedData$BH_p_value[i], 3)
+    }
+    }
+  }
+  
+  edge_val <- c() 
+  # if A -> B -> C, remove edge A -> C
+  for(i in 1:length(model_names)){
+    for(j in 1:length(model_names)){
+      if(m[i,j] != 0){
+        edge_val <- c(edge_val, m[i,j]) 
+        for(k in 1:length(model_names)){
+          if(m[j,k] != 0)
+            m[i,k] = 0
+        }
+      }
+    }
+  }
+  
+  #plot the directed graph
+  model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
+  rownames(model_mean) <- model_names
+  colnames(model_mean) <- "mean"
+  for(i in 1:nrow(selectedData)){
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model1)] = round(selectedData[i,]$model1_mean, 3)
+    model_mean[which(rownames(model_mean) == selectedData[i,]$model2)] = round(selectedData[i,]$model2_mean, 3)
+  }
+
+  net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
+  
+lo <- layout.fruchterman.reingold(net, niter = 1000)
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+              edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label = edge_val, edge.label.cex=0.7)
+  
+#plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
+  
+  title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
+}
+
+
+# filter for 
+
+```
+
+```{r stratified analysis, warning = FALSE}
+projectCategories <- as.matrix(read.csv("./project_categorization.csv"))
+print(projectCategories)
+nCategories <- nrow(projectCategories)
+benchmarkLabels <- paste("b", seq(1, nCategories, by=1), sep="")
+categorizedBenchmarkResults = list()
+
+projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+
+for(i in 1:nCategories){
+  print(projectCategories[i, ])
+  categorizedDataset <- selectData(datasheet, selector=projectCategories[i,])
+  
+  #categorizedDataset <- selectData("dsets/combined_data_set_4_1.csv", c("type", "Entertainment"))
+  #print(rownames(categorizedDataset))
+
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
+  
+  #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
+  
+  #print(categorizedDataset)
+  benchmarkResults <- modelBenchmark(models, categorizedDataset)
+  categorizedBenchmarkResults[[benchmarkLabels[i]]] <- benchmarkResults
+  
+  # calculate the rank information
+  
+}
+
+projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
+projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
+
+#print the categorized benchmark results
+for(i in 1: nCategories){
+benchmarkResults = categorizedBenchmarkResults[[names(categorizedBenchmarkResults)[i]]]
+  
+cvResults <- benchmarkResults$cvResults
+
+
+cvAccuracyResults <- data.frame(cvResults$accuracyResults)
+cvAccuracyResults$label <- rownames(cvAccuracyResults)
+#cvAccuracyResults <- cvAccuracyResults[- grep("predRange", cvAccuracyResults$label),]
+cvAccuracyResults <- cvAccuracyResults[cvAccuracyResults$label %in% accuracy_labels,]
+cvAccuracyResults <- merge(cvAccuracyResults, model_mapping_2, by.x = "label", by.y="accuracy_labels", all=FALSE)
+cvAccuracyResults$label <- NULL
+
+#calculate ranking results
+cvRankResults <- data.frame(model_names)
+names(cvRankResults)<-c("model_labels")
+
+for (j in 1:length(accuracy_metrics)){
+  g = accuracy_metrics[j]
+  selectedData <- cvAccuracyResults[cvAccuracyResults$metric_labels == g,]
+  selectedData <- selectedData[,-3]#delete the metric_labels
+  colnames(selectedData)<-c(g, "model_labels")
+  if(g == "mmre" || g == "mdmre" || g == "mae"){
+    selectedData[paste("rank", i, sep = "")] <- rank(selectedData[,1], ties.method = "min")
+  }else{
+    selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
+  }
+  
+  cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
+}
+
+#cvRankResults$model_labels = c("COSMIC", "IFPUG", "LASSO", "LOG SLOC", "NEURALNET", "REG TREE", "SLOC", "STEP LNR", "SWTI", "SWTII","SWTIII", "UCP")
+#cvRankResults <- merge(cvRankResults, model_mapping, by.x = "model_labels", by.y="model_names", all=FALSE)
+
+rownames(cvRankResults) <- model_mapping$model_texts[match(cvRankResults$model_labels, model_mapping$model_names)]
+cvRankResults$model_labels = NULL
+
+#make a total rank(rank*) base on the ranki
+rank_sum <- vector(mode = "integer",length = length(model_names))
+for (j in 1:length(model_names)){
+  selectedData <- cvRankResults[j,]
+  for(k in 1:length(accuracy_metrics)){
+    rank_sum[j] <- rank_sum[j] + selectedData[,2*k]
+  }
+}
+rank_sum <- rank(rank_sum, ties.method = "min")
+#print(rank_sum)
+cvRankResults["rank*"] <- rank_sum
+
+cvRankResults <- cvRankResults[order(cvRankResults$'rank*'),]
+
+#change the first line as the row name
+#rownames(cvRankResults) = cvRankResults[,1]
+#cvRankResults <- cvRankResults[,-1]
+
+#print(round(cvRankResults,2))
+# draw overall ranking histogram
+selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
+names(selectedData) <- c("rank");
+modelsName <- rownames(selectedData)
+p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
+  geom_bar(stat="identity", colour = "black", width = 0.7) + 
+  #scale_y_discrete(expand = c(0, 0)) + 
+  guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
+  geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
+  ggtitle(projectCategoryLabels[i]) +
+  #labs(caption=toupper("Total Rank")) + 
+  theme(plot.caption = element_text(hjust=0.5, size=rel(1)), legend.position = "bottom", 
+        plot.title = element_text(hjust = 0.5), 
+        #axis.line=element_blank(),
+        axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
+print(p_cvAllRank)
+
+}
+
+
+#9 categorized benchmarking results are produced
+#1-3 are the projects of sizes: small, medium, and large
+#4-6 are the projects of initialDate: early, normal, and late
+#7-10 are the projects of different types: Game, Tools, Entertainment, Productivity.
+
+
+```

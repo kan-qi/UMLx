@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "receivepaymentresult" as 09
+participant "Homepage" as 19
+participant "Course" as 39
+participant "Invalidenteredinformation" as 79
+
+User -> 09: Nomatchedresults()
+activate 09
+
+deactivate 09
+
+User -> 19: Searchpage()
+activate 19
+
+19 -> 39: Searchcoursebykeywords()
+activate 39
+
+39 -> 09: Nomatchedresults()
+activate 09
+
+deactivate 09
+
+39 -> 79: Savesignupinformation()
+activate 79
+
+79 -> 39: course()
+deactivate 39
+
+79 -> 19: homepage()
+deactivate 19
+
+deactivate 79
+
+39 -> 39: courselist()
+activate 39
+
+deactivate 39
+
+39 -> 39: course()
+activate 39
+
+deactivate 39
+
+19 -> 19: redirecttohomepage()
+activate 19
+
+19 -> 19: homepage()
+deactivate 19
+
+User -> 19: homepage()
+activate 19
+
+deactivate 19
+
+User -> 39: courselist()
+activate 39
+
+deactivate 39
+
+@enduml

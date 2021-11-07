@@ -1,0 +1,77 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "User" as 09
+participant "validationfailedmessage" as 19
+participant "loginpage" as 39
+participant "insertthenewusernameandpasswordintotheuserdb" as 139
+
+User -> 09: caselist()
+activate 09
+
+09 -> 139: sendrequesttocasedatabase()
+activate 139
+
+139 -> 19: caseinformationdatabase()
+activate 19
+
+deactivate 19
+
+139 -> 19: displaycaseinformationlistpage()
+activate 19
+
+19 -> 19: caseinformationpage()
+19 -> 19: validatetheroleofuser()
+19 -> 09: Userinfo()
+deactivate 09
+
+19 -> 39: returncaseinfopageforediting()
+activate 39
+
+39 -> 39: caseinfopageforediting()
+39 -> 19: validatecaseinputinformation()
+19 -> 19: caseinformationdatabase()
+deactivate 19
+
+19 -> 19: invalidifnormationmessage()
+activate 19
+
+deactivate 19
+
+19 -> 39: redirecttonewcasepage()
+39 -> 39: caseinfopage()
+deactivate 39
+
+deactivate 139
+
+User -> 19: caseinformationpage()
+activate 19
+
+19 -> 19: validatetheroleofuser()
+deactivate 19
+
+User -> 19: invalidifnormationmessage()
+activate 19
+
+deactivate 19
+
+User -> 39: caseinfopage()
+activate 39
+
+deactivate 39
+
+User -> 39: caseinfopageforediting()
+activate 39
+
+39 -> 19: validatecaseinputinformation()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+@enduml

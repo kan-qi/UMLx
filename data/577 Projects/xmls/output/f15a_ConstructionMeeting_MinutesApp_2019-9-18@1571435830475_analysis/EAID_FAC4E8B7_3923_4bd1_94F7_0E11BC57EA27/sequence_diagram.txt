@@ -1,0 +1,39 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Selectsassignedtask" as 09
+participant "Hompage" as 19
+
+User -> 09: Choosestheoptiontoviewassigntask()
+activate 09
+
+09 -> 09: displaystheviewassigntasksscreen()
+09 -> 09: Displaystasksdetailsandassignee()
+09 -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+User -> 09: Selectsatask()
+activate 09
+
+09 -> 09: Displaystasksdetailsandassignee()
+09 -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

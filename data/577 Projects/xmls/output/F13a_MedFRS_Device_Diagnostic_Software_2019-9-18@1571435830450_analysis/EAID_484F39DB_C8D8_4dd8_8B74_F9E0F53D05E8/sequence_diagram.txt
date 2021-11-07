@@ -1,0 +1,87 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Supervisor
+participant "EMTformpage" as 09
+participant "Printsoutthelistofvictims" as 39
+participant "ValidatesInput" as 69
+participant "RedirectViewIndividualsPage" as 99
+participant "assignmentdetaildatabase" as 139
+
+Supervisor -> 09: FindVictimFormPage()
+activate 09
+
+09 -> 69: Validatesinputasbeingcorrect()
+activate 69
+
+69 -> 09: Errormessage()
+deactivate 09
+
+69 -> 139: querydatabase()
+activate 139
+
+139 -> 09: SearchResultPage()
+activate 09
+
+deactivate 09
+
+139 -> 09: Triagecategory()
+activate 09
+
+deactivate 09
+
+139 -> 39: Victiminfodb()
+activate 39
+
+deactivate 39
+
+deactivate 139
+
+deactivate 69
+
+Supervisor -> 09: Errormessage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 09: SearchResultPage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 39: TrackVictimsbutton()
+activate 39
+
+39 -> 99: Redirecttothevictiminformationpagewithlistofvictimdetails()
+activate 99
+
+99 -> 39: Victiminformationpageiwthlistofvictimdetails()
+39 -> 99: Redirectstofindvictimformpage()
+99 -> 09: FindVictimFormPage()
+activate 09
+
+09 -> 69: Validatesinputasbeingcorrect()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+deactivate 99
+
+deactivate 39
+
+Supervisor -> 39: Victiminformationpageiwthlistofvictimdetails()
+activate 39
+
+39 -> 99: Redirectstofindvictimformpage()
+activate 99
+
+deactivate 99
+
+deactivate 39
+
+@enduml

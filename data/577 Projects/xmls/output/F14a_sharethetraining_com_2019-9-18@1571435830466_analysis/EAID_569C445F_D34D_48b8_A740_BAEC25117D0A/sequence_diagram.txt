@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Emailprotocol" as 09
+participant "Homepage" as 19
+participant "Logoutbutton" as 29
+participant "Invalidenteredinformation" as 39
+participant "cache" as 49
+
+User -> 19: homepage()
+activate 19
+
+19 -> 39: savecourseinformationforreview()
+activate 39
+
+39 -> 39: courseinformationisnotvalidmessage()
+deactivate 39
+
+39 -> 09: sendemailtotrianer()
+activate 09
+
+09 -> 09: Emailprotocol()
+deactivate 09
+
+deactivate 19
+
+User -> 29: Logoutbutton()
+activate 29
+
+29 -> 49: clearlocalcache()
+activate 49
+
+49 -> 49: cache()
+deactivate 49
+
+49 -> 19: homepage()
+activate 19
+
+19 -> 39: savecourseinformationforreview()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+deactivate 29
+
+User -> 39: courseinformationisnotvalidmessage()
+activate 39
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "fillinfieldasrequired" as 09
+participant "ClickonAdd" as 19
+participant "Homepage" as 29
+participant "Employerdb" as 69
+participant "Notificationdisplayed��Adduserprofile��" as 89
+
+User -> 09: fillinfieldasrequired()
+activate 09
+
+09 -> 09: Validatesfield()
+09 -> 89: Notificationdisplayed��Adduserprofile��()
+activate 89
+
+89 -> 69: Employerdb()
+activate 69
+
+deactivate 69
+
+89 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+deactivate 09
+
+User -> 19: ClickonAdd()
+activate 19
+
+19 -> 09: Validatesfield()
+activate 09
+
+09 -> 89: Notificationdisplayed��Adduserprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 19: Clickon��myprofile��link()
+activate 19
+
+19 -> 29: Profilepagedisplayed()
+activate 29
+
+29 -> 09: Validatesfield()
+activate 09
+
+09 -> 89: Notificationdisplayed��Adduserprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+deactivate 29
+
+deactivate 19
+
+@enduml

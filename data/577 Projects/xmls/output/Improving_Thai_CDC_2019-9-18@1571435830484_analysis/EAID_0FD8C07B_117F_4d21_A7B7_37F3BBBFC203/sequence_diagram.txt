@@ -1,0 +1,77 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "selectaproject" as 09
+participant "Homepage" as 19
+participant "Showconfirmation" as 29
+participant "Clicksubmit" as 39
+participant "checkstaff��sauthority" as 99
+
+User -> 09: selectaproject()
+activate 09
+
+09 -> 29: Popaconfirminformation()
+activate 29
+
+29 -> 99: checkstaff��sauthority()
+activate 99
+
+99 -> 99: staff��sauthorityapproved()
+99 -> 09: deleteprojectfromSalesforce()
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 99
+
+99 -> 09: projectdb()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: confirmrequest()
+activate 29
+
+29 -> 99: checkstaff��sauthority()
+activate 99
+
+99 -> 99: staff��sauthorityapproved()
+deactivate 99
+
+99 -> 09: projectdb()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+User -> 39: clickdeletebutton()
+activate 39
+
+39 -> 29: Popaconfirminformation()
+activate 29
+
+29 -> 99: checkstaff��sauthority()
+activate 99
+
+deactivate 99
+
+deactivate 29
+
+deactivate 39
+
+@enduml

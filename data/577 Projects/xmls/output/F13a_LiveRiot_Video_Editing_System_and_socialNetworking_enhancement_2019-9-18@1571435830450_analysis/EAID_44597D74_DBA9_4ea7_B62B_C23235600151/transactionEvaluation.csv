@@ -1,0 +1,8 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:User is authorized message-->User:User is authorized message,login,CTRL,2,1,4,1,8
+2,stl#User:Marketing Director's home page-->User:Marketing Director's home page,login,CTRL;EXTCLL;INT,2,0,3,1,6
+3,stl#User:Login Button-->User:Login Button-->Login Button:Verify username and password-->Verify username and password:User is authorized message,login,TRAN_NA,4,1,2.3333333333333335,3,9.333333333333334
+4,stl#User:Login Button-->User:Login Button-->Login Button:Verify username and password-->Verify username and password:User Info,login,TRAN_NA,4,1,1.6666666666666667,3,6.666666666666667
+5,stl#User:Login Button-->User:Login Button-->Login Button:Verify username and password-->Verify username and password:Redirect to marketing director's homepage-->Redirect to marketing director's homepage:Marketing Director's home page,login,TRAN_NA,5,1,2.25,4,11.25
+6,stl#User:Login Button-->User:Login Button-->Login Button:Verify username and password-->Verify username and password:Invalid username and password message,login,TRAN_NA,4,1,2.3333333333333335,3,9.333333333333334
+7,stl#User:Invalid username and password message-->User:Invalid username and password message,login,CTRL,2,0,4,1,8

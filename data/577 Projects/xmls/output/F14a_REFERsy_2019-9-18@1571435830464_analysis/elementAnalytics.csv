@@ -1,0 +1,143 @@
+id,element,useCase,type,component
+1,User:Account create page,Create a new account,boundary,saveuseraccount
+2,User:invalid input information,Create a new account,control,invalidinputinformation
+3,User:user profile page,Create a new account,boundary,saveuseraccount
+4,Account create page:validate input information,Create a new account,control,invalidinputinformation
+5,save user account:account,Create a new account,boundary,saveuseraccount
+6,validate input information:invalid input information,Create a new account,control,invalidinputinformation
+7,save user account:user profile page,Create a new account,boundary,saveuseraccount
+8,validate input information:save user account,Create a new account,boundary,saveuseraccount
+9,stl#User:Account create page,Create a new account,Stimulus,undefined
+10,stl#User:invalid input information,Create a new account,Stimulus,undefined
+11,stl#User:user profile page,Create a new account,Stimulus,undefined
+12,User:saved unsuccessfully message,Email subscription,boundary,saveuseraccount
+13,User:subscribe for notification button,Email subscription,control,invalidinputinformation
+14,User:invalid email address message,Email subscription,control,invalidinputinformation
+15,save preferences for subscription:account,Email subscription,boundary,saveuseraccount
+16,save preferences for subscription:invalid email address message,Email subscription,control,invalidinputinformation
+17,save preferences for subscription:saved unsuccessfully message,Email subscription,boundary,saveuseraccount
+18,subscribe for notification button:save preferences for subscription,Email subscription,control,invalidinputinformation
+19,stl#User:saved unsuccessfully message,Email subscription,Stimulus,undefined
+20,stl#User:subscribe for notification button,Email subscription,Stimulus,undefined
+21,stl#User:invalid email address message,Email subscription,Stimulus,undefined
+22,User:user profile and search page,Login,control,userprofileandsearchpage
+23,User:Login page,Login,control,Loginpage
+24,User:incorrect user information,Login,control,invalidinputinformation
+25,Login page:validate user information,Login,control,invalidinputinformation
+26,validate user information:account,Login,control,account
+27,save user account:account,Login,control,account
+28,save user account:incorrect user information,Login,control,invalidinputinformation
+29,validate user information:incorrect user information,Login,control,invalidinputinformation
+30,validate user information:save user account,Login,control,account
+31,validate user information:user profile and search page,Login,control,userprofileandsearchpage
+32,stl#User:user profile and search page,Login,Stimulus,undefined
+33,stl#User:Login page,Login,Stimulus,undefined
+34,stl#User:incorrect user information,Login,Stimulus,undefined
+35,User:Profile Edit Page,Loginout,control,userprofileandsearchpage
+36,User:Edit profile button,Loginout,control,userprofileandsearchpage
+37,User:incorrect user information,Loginout,control,invalidinputinformation
+38,User:Invalid input data,Loginout,control,invalidinputinformation
+39,Edit profile button:display edit profile page,Loginout,control,userprofileandsearchpage
+40,save updated profile:Profile,Loginout,control,userprofileandsearchpage
+41,display edit profile page:Profile,Loginout,control,userprofileandsearchpage
+42,Profile Edit Page:validate input data,Loginout,control,invalidinputinformation
+43,display edit profile page:Profile Edit Page,Loginout,control,userprofileandsearchpage
+44,display edit profile page:incorrect user information,Loginout,control,invalidinputinformation
+45,validate input data:save updated profile,Loginout,control,userprofileandsearchpage
+46,stl#User:Profile Edit Page,Loginout,Stimulus,undefined
+47,stl#User:Edit profile button,Loginout,Stimulus,undefined
+48,stl#User:incorrect user information,Loginout,Stimulus,undefined
+49,stl#User:Invalid input data,Loginout,Stimulus,undefined
+50,User:Save Favorite Job Button,Mark favorite jobs,control,Savefavoritejobs
+51,User:saved successfully message,Mark favorite jobs,boundary,savedsuccessfullymessage
+52,User:saved unsuccessfully message,Mark favorite jobs,boundary,savedsuccessfullymessage
+53,User:search saved unsuccessfully error message,Mark favorite jobs,boundary,savedsuccessfullymessage
+54,Save favorite jobs:Favorite Jobs,Mark favorite jobs,control,Savefavoritejobs
+55,Save Favorite Job Button:Save favorite jobs,Mark favorite jobs,control,Savefavoritejobs
+56,Save favorite jobs:saved unsuccessfully message,Mark favorite jobs,boundary,savedsuccessfullymessage
+57,Save favorite jobs:search saved unsuccessfully error message,Mark favorite jobs,boundary,savedsuccessfullymessage
+58,Save favorite jobs:saved successfully message,Mark favorite jobs,boundary,savedsuccessfullymessage
+59,stl#User:Save Favorite Job Button,Mark favorite jobs,Stimulus,undefined
+60,stl#User:saved successfully message,Mark favorite jobs,Stimulus,undefined
+61,stl#User:saved unsuccessfully message,Mark favorite jobs,Stimulus,undefined
+62,stl#User:search saved unsuccessfully error message,Mark favorite jobs,Stimulus,undefined
+63,User:search saved successfully message,Save search results,boundary,savedsuccessfullymessage
+64,User:search saved unsuccessfully error message,Save search results,boundary,savedsuccessfullymessage
+65,User:Save search button,Save search results,control,userprofileandsearchpage
+66,User:Invalid input data,Save search results,control,invalidinputinformation
+67,validate input data:Invalid input data,Save search results,control,invalidinputinformation
+68,Save search button:save filters and criteria,Save search results,control,Savefavoritejobs
+69,save filters and criteria:search saved successfully message,Save search results,boundary,savedsuccessfullymessage
+70,save filters and criteria:search result,Save search results,control,userprofileandsearchpage
+71,save filters and criteria:search saved unsuccessfully error message,Save search results,boundary,savedsuccessfullymessage
+72,save updated profile:search result,Save search results,control,userprofileandsearchpage
+73,validate input data:save updated profile,Save search results,control,userprofileandsearchpage
+74,search saved successfully message:validate input data,Save search results,control,invalidinputinformation
+75,stl#User:search saved successfully message,Save search results,Stimulus,undefined
+76,stl#User:search saved unsuccessfully error message,Save search results,Stimulus,undefined
+77,stl#User:Save search button,Save search results,Stimulus,undefined
+78,stl#User:Invalid input data,Save search results,Stimulus,undefined
+79,Indeed.com:Sort search results,Search for jobs,control,userprofileandsearchpage
+80,Search by input keywords from Indeed.com:Indeed.com,Search for jobs,control,Indeedcom
+81,User:Job search page,Search for jobs,control,userprofileandsearchpage
+82,User:Job list page,Search for jobs,control,Loginpage
+83,User:Invalid input data,Search for jobs,control,invalidinputinformation
+84,User:invalid input information,Search for jobs,control,invalidinputinformation
+85,validate input data:Invalid input data,Search for jobs,control,invalidinputinformation
+86,Job list page:validate input data,Search for jobs,control,invalidinputinformation
+87,Sort search results:Job list page,Search for jobs,control,Loginpage
+88,Job search page:verify input information,Search for jobs,control,invalidinputinformation
+89,verify input information:Profile,Search for jobs,control,userprofileandsearchpage
+90,Search by input keywords from Indeed.com:Profile,Search for jobs,control,userprofileandsearchpage
+91,verify input information:Search by input keywords from Indeed.com,Search for jobs,control,Indeedcom
+92,verify input information:invalid input information,Search for jobs,control,invalidinputinformation
+93,stl#Indeed.com:Sort search results,Search for jobs,Stimulus,undefined
+94,stl#User:Job search page,Search for jobs,Stimulus,undefined
+95,stl#User:Job list page,Search for jobs,Stimulus,undefined
+96,stl#User:Invalid input data,Search for jobs,Stimulus,undefined
+97,stl#User:invalid input information,Search for jobs,Stimulus,undefined
+98,send email message:Email Protocol,Send a referral request email,actor,EmailProtocol
+99,User:message edit page,Send a referral request email,boundary,savedsuccessfullymessage
+100,User:Friend selection page,Send a referral request email,control,Friends
+101,User:No fried found message,Send a referral request email,control,Friends
+102,User:Request Referral Button,Send a referral request email,boundary,RequestReferralButton
+103,Friend selection page:display message edit page,Send a referral request email,boundary,savedsuccessfullymessage
+104,display friends by organization:Friend selection page,Send a referral request email,control,Friends
+105,display friends by organization:Friends,Send a referral request email,control,Friends
+106,display friends by organization:No fried found message,Send a referral request email,control,Friends
+107,Request Referral Button:display friends by organization,Send a referral request email,control,Friends
+108,display message edit page:message edit page,Send a referral request email,boundary,savedsuccessfullymessage
+109,message edit page:send email message,Send a referral request email,boundary,savedsuccessfullymessage
+110,stl#User:message edit page,Send a referral request email,Stimulus,undefined
+111,stl#User:Friend selection page,Send a referral request email,Stimulus,undefined
+112,stl#User:No fried found message,Send a referral request email,Stimulus,undefined
+113,stl#User:Request Referral Button,Send a referral request email,Stimulus,undefined
+114,Facebook:query facebook info,Sign in social media accounts,control,queryfacebookinfo
+115,query facebook info:Facebook,Sign in social media accounts,control,queryfacebookinfo
+116,Google plus:query google plus info,Sign in social media accounts,control,queryfacebookinfo
+117,query google plus info:Google plus,Sign in social media accounts,control,Googleplus
+118,LinkedIn:query linkedin,Sign in social media accounts,control,queryfacebookinfo
+119,query linkedin:LinkedIn,Sign in social media accounts,control,invalidinputinformation
+120,User:social media login buttons,Sign in social media accounts,boundary,RequestReferralButton
+121,User:credential input page,Sign in social media accounts,control,Loginpage
+122,User:sign in error message,Sign in social media accounts,boundary,savedsuccessfullymessage
+123,credential input page:query google plus info,Sign in social media accounts,control,Googleplus
+124,credential input page:query facebook info,Sign in social media accounts,control,queryfacebookinfo
+125,credential input page:query linkedin,Sign in social media accounts,control,queryfacebookinfo
+126,display crendential input page:credential input page,Sign in social media accounts,control,Loginpage
+127,social media login buttons:display crendential input page,Sign in social media accounts,control,Loginpage
+128,query facebook info:sign in error message,Sign in social media accounts,boundary,savedsuccessfullymessage
+129,query facebook info:session,Sign in social media accounts,entity,session
+130,query google plus info:sign in error message,Sign in social media accounts,boundary,savedsuccessfullymessage
+131,query linkedin:sign in error message,Sign in social media accounts,boundary,savedsuccessfullymessage
+132,stl#Facebook:query facebook info,Sign in social media accounts,Stimulus,undefined
+133,stl#Google plus:query google plus info,Sign in social media accounts,Stimulus,undefined
+134,stl#LinkedIn:query linkedin,Sign in social media accounts,Stimulus,undefined
+135,stl#User:social media login buttons,Sign in social media accounts,Stimulus,undefined
+136,stl#User:credential input page,Sign in social media accounts,Stimulus,undefined
+137,stl#User:sign in error message,Sign in social media accounts,Stimulus,undefined
+138,validate input data:Invalid input data,Update user profile,control,invalidinputinformation
+139,User:Invalid input data,Update user profile,control,invalidinputinformation
+140,validate input data:save updated profile,Update user profile,control,userprofileandsearchpage
+141,Profile Edit Page:validate input data,Update user profile,control,invalidinputinformation
+142,stl#User:Invalid input data,Update user profile,Stimulus,undefined

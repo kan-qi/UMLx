@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "clickson��Addeditstatus��button" as 19
+participant "Showconfirmation" as 49
+participant "Taskdb" as 59
+participant "updatethepathinthedatabase" as 69
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: clickson��UploadPersonalLegend��()
+activate 19
+
+19 -> 69: checkwhetherthesyntaxenteredisthatofanURLornot()
+activate 69
+
+69 -> 69: updatethepathinthedatabase()
+69 -> 49: Displayconfirmationpage()
+activate 49
+
+49 -> 19: clickson��UploadPersonalLegend��()
+19 -> 69: checkwhetherthesyntaxenteredisthatofanURLornot()
+deactivate 69
+
+deactivate 19
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+69 -> 59: Userdb()
+activate 59
+
+deactivate 59
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "requestlist" as 09
+
+User -> 09: checkrequestsbutton()
+activate 09
+
+09 -> 09: loadrequests()
+09 -> 09: Request()
+deactivate 09
+
+09 -> 09: requestlist()
+activate 09
+
+09 -> 09: updatestatusofrequests()
+09 -> 09: Request()
+deactivate 09
+
+09 -> 09: requeststatusissuccessfullyupdated()
+activate 09
+
+deactivate 09
+
+User -> 09: requestlist()
+activate 09
+
+09 -> 09: updatestatusofrequests()
+deactivate 09
+
+User -> 09: requeststatusissuccessfullyupdated()
+activate 09
+
+deactivate 09
+
+@enduml

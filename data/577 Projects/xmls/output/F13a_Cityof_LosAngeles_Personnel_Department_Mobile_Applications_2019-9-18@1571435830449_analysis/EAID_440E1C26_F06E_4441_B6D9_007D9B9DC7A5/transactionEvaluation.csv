@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#RSS feed retriver:retrive RSS feed-->RSS feed retriver:retrive RSS feed-->retrive RSS feed:Neogov,Process Neogov RSS feed,CTRL;EXTIVK,3,1,2,2,6
+2,stl#RSS feed retriver:retrive RSS feed-->RSS feed retriver:retrive RSS feed-->retrive RSS feed:store RSS feed in XML file-->store RSS feed in XML file:XML file,Process Neogov RSS feed,TRAN_NA,4,0,2,3,8
+3,stl#RSS feed retriver:retrive RSS feed-->RSS feed retriver:retrive RSS feed-->retrive RSS feed:store RSS feed in XML file-->store RSS feed in XML file:Notification,Process Neogov RSS feed,TRAN_NA,4,0,2,3,8
+4,stl#RSS feed retriver:retrive RSS feed-->RSS feed retriver:retrive RSS feed-->retrive RSS feed:retry request-->retry request:Neogov,Process Neogov RSS feed,CTRL;EXTIVK,4,1,2,3,8
+5,stl#RSS feed retriver:Notification-->RSS feed retriver:Notification,Process Neogov RSS feed,CTRL,2,0,2,1,4

@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "LoginInfo" as 09
+participant "Useraddbutton" as 19
+participant "Removesession" as 29
+
+User -> 09: LoginPage()
+activate 09
+
+09 -> 09: checklogininformation()
+09 -> 29: Logfailturemessage()
+activate 29
+
+deactivate 29
+
+09 -> 09: LoginInfo()
+deactivate 09
+
+09 -> 09: Loginsuccessmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: LogoutButton()
+activate 19
+
+19 -> 29: Removesession()
+activate 29
+
+29 -> 29: session()
+deactivate 29
+
+deactivate 19
+
+User -> 29: Logfailturemessage()
+activate 29
+
+deactivate 29
+
+User -> 09: Loginsuccessmessage()
+activate 09
+
+deactivate 09
+
+@enduml

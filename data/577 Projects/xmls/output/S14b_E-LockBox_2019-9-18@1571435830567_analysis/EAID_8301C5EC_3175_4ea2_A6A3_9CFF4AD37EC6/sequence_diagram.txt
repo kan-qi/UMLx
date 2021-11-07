@@ -1,0 +1,68 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "validationfailedmessage" as 09
+participant "addvewbutton" as 49
+participant "User" as 69
+
+User -> 09: rolevalidationfailedmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: validationfailedmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: userinformationpage()
+activate 09
+
+09 -> 09: validatetheinformation()
+09 -> 69: edituserinformation()
+activate 69
+
+69 -> 69: userinfo()
+deactivate 69
+
+69 -> 09: validationsuccessinformation()
+deactivate 09
+
+09 -> 09: validationfailedmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: validationsuccessinformation()
+activate 09
+
+deactivate 09
+
+User -> 49: UseManagementbutton()
+activate 49
+
+49 -> 09: validatetheroleofuser()
+activate 09
+
+09 -> 09: returntotheuserinformationpage()
+09 -> 09: userinformationpage()
+09 -> 09: validatetheinformation()
+deactivate 09
+
+09 -> 09: rolevalidationfailedmessage()
+activate 09
+
+deactivate 09
+
+09 -> 69: userinfo()
+activate 69
+
+deactivate 69
+
+deactivate 49
+
+@enduml

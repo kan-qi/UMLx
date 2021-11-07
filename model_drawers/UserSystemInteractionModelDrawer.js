@@ -265,17 +265,20 @@
              }
 
              var classOperations = curClass["Operations"];
-             if (classOperations.length != 0){
+             if (classOperations){
                  graph += '|';
                  for(j = 0; j < classOperations.length;j++) {
                 	 graph += '+   ' ;
                      graph += filterName(classOperations[j]["Name"]) + '(';
+
+                     if(classOperations[j]["Parameters"]){
                      var para_len = classOperations[j]["Parameters"].length;
                      for (k = 0; k < classOperations[j]["Parameters"].length; k++) {
                     	 if(k != 0){
                     		 graph += ",";
                     	 }
                     	 graph += classOperations[j]["Parameters"][k]["Type"];
+                     }
                      }
 
                      graph += ')';
@@ -450,18 +453,20 @@ var transactions = UseCase.Transactions;
 
 
                  var classOperations = domainModelElements[i]["Operations"];
-                 if (classOperations.length != 0){
+                 if (classOperations){
                      graph += '|';
                      for(j = 0; j < classOperations.length;j++) {
 
                     	 graph += '+   ' ;
                          graph += classOperations[j]["Name"] + '(';
+                         if(classOperations[j]["Parameters"]){
                          var para_len = classOperations[j]["Parameters"].length;
                          for (k = 0; k < classOperations[j]["Parameters"].length; k++) {
                         	 if(k != 0){
                         		 graph += ",";
                         	 }
                         	 graph += classOperations[j]["Parameters"][k]["Type"];
+                         }
                          }
 
                          graph += ')';

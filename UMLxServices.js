@@ -604,6 +604,10 @@ app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
+//	{
+//		collect the user information.
+//		save database.
+//	}
 	res.render('estimationPage', {cookieName: "EstimationPageOptions"});
 });
 
@@ -684,7 +688,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
 	                    if(!estimationResults){
 	                        console.log("error");
-	                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
+	                        res.render('estimationResultPaneSimplified2', {error: "inter process error"});
 	                        return;
 	                    }
 
@@ -697,7 +701,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
 	                    	currentModel = modelInfo;
-	                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
+	                        res.render('estimationResultPaneSimplified2', {estimationResults:estimationResults, modelInfo: modelInfo});
 
 	                    });
 

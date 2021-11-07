@@ -1,0 +1,153 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Delete" as 09
+participant "Homepage" as 19
+participant "Database" as 29
+participant "Add" as 39
+participant "Showallusers" as 59
+participant "Accessallstudentinformation" as 89
+
+User -> 09: Delete()
+activate 09
+
+09 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+activate 29
+
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: update()
+activate 29
+
+29 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+User -> 39: Add()
+activate 39
+
+39 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+activate 29
+
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+deactivate 39
+
+User -> 09: delete()
+activate 09
+
+09 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+activate 29
+
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+deactivate 09
+
+User -> 59: Manageuserbutton()
+activate 59
+
+59 -> 59: Showallusers()
+59 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+activate 29
+
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+deactivate 59
+
+User -> 29: Update()
+activate 29
+
+29 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+User -> 39: add()
+activate 39
+
+39 -> 89: Updateuserinformation()
+activate 89
+
+89 -> 29: Database()
+activate 29
+
+deactivate 29
+
+89 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+deactivate 39
+
+@enduml

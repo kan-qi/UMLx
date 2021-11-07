@@ -1,0 +1,134 @@
+<GUIHierarchy app="AFHDownloader.apk">
+  <Activity name="org.afhdownloader.MainActivity">
+    <View type="android.support.design.widget.CoordinatorLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.support.design.widget.AppBarLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.support.v7.widget.Toolbar" id="2131230870" idName="toolbar">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="2131230761" idName="content1">
+          <Child>
+            <View type="android.widget.ListView" id="2131230801" idName="listView">
+              <Child>
+                <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+                  <Child>
+                    <View type="android.widget.TextView" id="2131230795" idName="label">
+                    </View>
+                    <View type="android.widget.ImageView" id="2131230792" idName="img">
+                    </View>
+                  </Child>
+                </View>
+                <View type="android.widget.TextView" id="16908308" idName="text1">
+                </View>
+              </Child>
+              <EventAndHandler event="touch" handler="&lt;org.afhdownloader.SwipeDismissListViewTouchListener: boolean onTouch(android.view.View,android.view.MotionEvent)&gt;" />
+              <EventAndHandler event="item_click" handler="&lt;org.afhdownloader.MainActivity$3: void onItemClick(android.widget.AdapterView,android.view.View,int,long)&gt;" />
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131230739" idName="action_settings">
+          <EventAndHandler event="item_selected" handler="&lt;org.afhdownloader.MainActivity: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131230738" idName="action_refresh">
+          <EventAndHandler event="item_selected" handler="&lt;org.afhdownloader.MainActivity: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131230737" idName="action_reboot">
+          <EventAndHandler event="item_selected" handler="&lt;org.afhdownloader.MainActivity: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="org.afhdownloader.SetPreferenceActivity">
+    <View type="android.support.design.widget.CoordinatorLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.support.design.widget.AppBarLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.support.v7.widget.Toolbar" id="2131230870" idName="toolbar">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="2131230761" idName="content1">
+          <Child>
+            <View type="android.widget.ListView" id="2131230801" idName="listView">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="org.afhdownloader.DirectoryPicker">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.Button" id="2131230750" idName="btnChoose">
+          <Text>Choose</Text>
+          <EventAndHandler event="click" handler="&lt;org.afhdownloader.DirectoryPicker$1: void onClick(android.view.View)&gt;" />
+        </View>
+        <View type="android.widget.ListView" id="16908298" idName="list">
+          <EventAndHandler event="item_click" handler="&lt;org.afhdownloader.DirectoryPicker$2: void onItemClick(android.widget.AdapterView,android.view.View,int,long)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="440" allocStmt="virtualinvoke $r3.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog show()&gt;()" allocMethod="&lt;org.afhdownloader.MainActivity: void message_dialog_yes_no(java.lang.String,android.content.DialogInterface$OnClickListener)&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_9: void onClick(android.view.View)&gt;" realHandler="&lt;org.afhdownloader.MainActivity$2$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                  <EventAndHandler event="click" handler="&lt;FakeName_5: void onClick(android.view.View)&gt;" realHandler="&lt;org.afhdownloader.MainActivity$4: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+</GUIHierarchy>

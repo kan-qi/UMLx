@@ -1,0 +1,87 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "redirecttosearchpanel" as 09
+participant "businesslist" as 19
+participant "Internetbrowser" as 39
+participant "Homepage" as 49
+participant "RegistrationDetail" as 59
+participant "pdffile" as 169
+
+Admin -> 09: addedbusinessbutton()
+activate 09
+
+deactivate 09
+
+Admin -> 19: businesslist()
+activate 19
+
+19 -> 19: queryinformationforaspecificbusiness()
+19 -> 19: business()
+deactivate 19
+
+19 -> 19: businessinfo()
+activate 19
+
+19 -> 19: savetheapprovalstatusofthebusiness()
+19 -> 19: business()
+deactivate 19
+
+Admin -> 19: businessinfo()
+activate 19
+
+19 -> 19: savetheapprovalstatusofthebusiness()
+deactivate 19
+
+User -> 49: Tippingguidepage()
+activate 49
+
+49 -> 09: searchforrelevantinformationonline()
+activate 09
+
+09 -> 39: Internetbrowser()
+activate 39
+
+deactivate 39
+
+09 -> 19: business()
+activate 19
+
+deactivate 19
+
+09 -> 19: displayaddedbusinesspage()
+activate 19
+
+19 -> 19: business()
+deactivate 19
+
+19 -> 169: pdffile()
+activate 169
+
+deactivate 169
+
+deactivate 09
+
+deactivate 49
+
+User -> 59: traverltippingguidesbutton()
+activate 59
+
+59 -> 49: displayTippingGuidePage()
+activate 49
+
+49 -> 49: Tippingguidepage()
+49 -> 09: searchforrelevantinformationonline()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+@enduml

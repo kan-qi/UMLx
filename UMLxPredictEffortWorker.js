@@ -51,6 +51,8 @@ process.on("message", (packed_obj) => {
                         process.send(JSON.stringify(return_obj));
                         return;
                     }
+                    
+                    console.log(estimationResults);
                     modelInfo[estimationModel] = estimationResults;
                     modelInfo.repo_id = repoInfo._id;
 
