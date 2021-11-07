@@ -1,48 +1,70 @@
-html
-  head
-    title UMLx SignUp
-    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
-    link(href='css/style.css', rel='stylesheet')
-    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
-    script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
-    script(type='text/javascript', src="js/scripts.js")
-    
-  body.signUp
-   div.clear
-   div.container
+//- html
+//-   head
+//-     title UMLx SignUp
+//-     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+//-     link(href='css/style.css', rel='stylesheet')
+//-     script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
+//-     script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+//-     script(type='text/javascript', src="js/scripts.js")
+//- body.signUp
+//-  div.cleart
+
+div
+    div.row(style="margin-left: 0; margin-right: 0")
+//- html
+//-   head
+//-     title UMLx SignUp
+//-     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+//-     link(href='css/style.css', rel='stylesheet')
+//-     script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
+//-     script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+//-     script(type='text/javascript', src="js/scripts.js")
+//- body.signUp
+//-  div.clear
+
+div.container
     div.row
      div.col-sm-4
       div#profileDiv
        div.panel-body
         div
-         img(src="img/anonymous.png" height="310px" width="310px")
+         img(src="img/anonymousNew.png" height="100px" width="100px" style="display:block; margin:0 auto")
          div.name-card
-           span.user-name-span #{profileInfo.userName}
-         div.email-card
+           span.user-name-span(style="text-align:center") #{profileInfo.userName}
+         div.email-card(style="text-align: center")
            span(class="glyphicon glyphicon-envelope") 
            span.email-span 
              a(href="mailto:#{profileInfo.email}") #{profileInfo.email}
        if profileInfo.isEnterprise
         div#messageDiv
-        div.panel.panel-default
-         div.panel-heading(style="font-size:20px;text-align:center;") Invite a User
+        div.panel.panel-default.invite(style="border-radius:13px; margin: 0 auto")
+         div.panel-heading(style="font-size:20px;text-align:center;border-radius: 13px 13px 0 0") Invite a User
          div.panel-body
           div
             form(id='invite-form')
               label.formLabel Email
               br
-              input.signUp(type='text', name='email', id='email')
+              input.signUp(type='text', name='email', id='email', style="border-radius:13px")
               br
-              input.btn.btn-primary.signUpButton(type='submit',value='Invite')
+              input.btn.btn-primary.signUpButton(type='submit',value='Invite',style="border-radius: 13px; background: #17a2b8")
      div.col-sm-8
-      h1 Repositories
+      h1(style="margin-bottom: 20px") Repositories
       ul
       if profileRep
-      h3.row
-          .col-sm-2 Index
-          .col-sm-6 Repo ID
-          .col-sm-4 Output Directory
-      .list-group
-          .col-sm-2 1
-          .col-sm-6 #{profileRep._id}
-          .col-sm-4 #{profileRep.OutputDir}
+      //- h3.row
+      //-     .col-sm-2 Index
+      //-     .col-sm-6 Repo ID
+      //-     .col-sm-4 Output Directory
+      //- .list-group
+      //-     .col-sm-2 1
+      //-     .col-sm-6 #{profileRep._id}
+      //-     .col-sm-4 #{profileRep.OutputDir}
+      table.table
+        tr
+          th.table-head Index
+          th.table-head Repo ID
+          th.table-head Output Directory
+        tr
+          td 1
+          td #{profileRep._id}
+          td #{profileRep.OutputDir}

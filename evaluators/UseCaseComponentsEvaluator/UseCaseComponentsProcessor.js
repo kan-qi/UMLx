@@ -20,7 +20,12 @@
 				var i = 0;
 				for(var j in transaction.Nodes)
 				{
+<<<<<<< HEAD
+					var node = transaction.Nodes[i];
+//					var components = diagram.allocate(node);
+=======
 					var node = transaction.Nodes[j];
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 
 					if(node.Component){
 						var component = node.Component;
@@ -30,8 +35,15 @@
 						if(component.Type=="control")controlNum++;
 						if(component.Type=="entity")entityNum++;
 					}
+<<<<<<< HEAD
+					
+//					transactionLength++;
+					TransactionStr += node.Name;
+					if(i !== transaction.Nodes.length - 1){
+=======
 
 					if(i !== 0){
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
 						TransactionStr += "-->";
 					}
 

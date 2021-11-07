@@ -40,13 +40,13 @@ import java.util.Map;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        Logger.trace("TIMECOST", "Main starting at " + System.currentTimeMillis());
-        Debug.v().setStartTime();
-        parseArgs(args);
-        checkAndPrintEnvironmentInformation(args);
-        setupAndInvokeSoot();
-    }
+  public static void main(String[] args) {
+    Logger.trace("TIMECOST", "Main starting at " + System.currentTimeMillis());
+    Debug.v().setStartTime();
+    parseArgs(args);
+    checkAndPrintEnvironmentInformation(args);
+    setupAndInvokeSoot();
+  }
 
     private static String readPackageName() {
         String packageName = "";
@@ -173,159 +173,159 @@ public class Main {
         Configs.processing();
     }
 
-    /**
-     * Print out information about execution environment.
-     *
-     * @param args
-     */
-    static void checkAndPrintEnvironmentInformation(String[] args) {
-        // Now, we only support *nix systems. SootAndroid has been tested on Ubuntu
-        // and Mac OS X.
-        String OS = System.getProperty("os.name").toLowerCase();
-        if (OS.indexOf("win") >= 0) {
-            throw new RuntimeException("Windows detected!");
-        }
-
-        // Print out some information about the execution commands.
-        if (Configs.verbose) {
-            // The complete Java command
-            String cmd = System.getProperty("sun.java.command");
-            Logger.verb("MAIN", "\n[command] " + cmd);
-
-            // The VM arguments
-            RuntimeMXBean RuntimemxBean = ManagementFactory.getRuntimeMXBean();
-            List<String> arguments = RuntimemxBean.getInputArguments();
-            for (String a : arguments) {
-                System.out.print("  [VM-Arg] " + a);
-            }
-            Logger.verb("MAIN", "\n");
-
-            // The arguments after main class is specified
-            for (String s : args) {
-                Logger.verb("MAIN", "  [MAIN-ARG] " + s);
-            }
-            Logger.verb("MAIN", "\n");
-        }
+  /**
+   * Print out information about execution environment.
+   *
+   * @param args
+   */
+  static void checkAndPrintEnvironmentInformation(String[] args) {
+    // Now, we only support *nix systems. SootAndroid has been tested on Ubuntu
+    // and Mac OS X.
+    String OS = System.getProperty("os.name").toLowerCase();
+    if (OS.indexOf("win") >= 0) {
+      throw new RuntimeException("Windows detected!");
     }
 
-    /**
-     * Computes the classpath to be used by soot.
-     */
-    static String computeClasspath() {
-        // Compute classpath
-        StringBuffer classpathBuffer =
-                new StringBuffer(Configs.android + ":" + Configs.jre);
-        for (String s : Configs.depJars) {
-            classpathBuffer.append(":" + s);
-        }
+    // Print out some information about the execution commands.
+    if (Configs.verbose) {
+      // The complete Java command
+      String cmd = System.getProperty("sun.java.command");
+      Logger.verb("MAIN", "\n[command] " + cmd);
 
-        // TODO(tony): add jar files of third-party libraries if necessary
-        for (String s : Configs.extLibs) {
-            classpathBuffer.append(":" + s + "/bin/classes");
-        }
+      // The VM arguments
+      RuntimeMXBean RuntimemxBean = ManagementFactory.getRuntimeMXBean();
+      List<String> arguments = RuntimemxBean.getInputArguments();
+      for (String a : arguments) {
+        System.out.print("  [VM-Arg] " + a);
+      }
+      Logger.verb("MAIN", "\n");
 
-        return classpathBuffer.toString();
+      // The arguments after main class is specified
+      for (String s : args) {
+        Logger.verb("MAIN", "  [MAIN-ARG] " + s);
+      }
+      Logger.verb("MAIN", "\n");
+    }
+  }
+
+  /**
+   * Computes the classpath to be used by soot.
+   */
+  static String computeClasspath() {
+    // Compute classpath
+    StringBuffer classpathBuffer =
+            new StringBuffer(Configs.android + ":" + Configs.jre);
+    for (String s : Configs.depJars) {
+      classpathBuffer.append(":" + s);
     }
 
-    /**
-     * Invoke soot.Main.main() with proper arguments.
-     */
-    static void setupAndInvokeSoot() {
-        String classpath = computeClasspath();
-        Logger.trace("SETUP", "classpath : " + classpath);
-        // Setup an artificial phase to call into our analysis entrypoint. We can
-        // run it with or without call graph construction (CHA is chosen here).
-        Configs.withCHA = true;
-        if (Configs.withCHA) {
-            String packName = "wjtp";
-            String phaseName = "wjtp.gui";
-            String[] sootArgs = {
-                    "-w",
-                    "-p", "cg", "all-reachable:true",
-                    "-p", "cg.cha", "enabled:true",
-                    "-p", phaseName, "enabled:true",
-                    "-f", "n",
-                    "-keep-line-number",
-                    "-process-multiple-dex",
-                    "-allow-phantom-refs",
-                    "-process-dir", Configs.bytecodes,
-                    "-cp", classpath,
-            };
+    // TODO(tony): add jar files of third-party libraries if necessary
+    for (String s : Configs.extLibs) {
+      classpathBuffer.append(":" + s + "/bin/classes");
+    }
 
-            readWidgetMap();
-            PrerunEntrypoint.v().run();
-            setupAndInvokeSootHelper(packName, phaseName, sootArgs);
+    return classpathBuffer.toString();
+  }
+
+  /**
+   * Invoke soot.Main.main() with proper arguments.
+   */
+  static void setupAndInvokeSoot() {
+    String classpath = computeClasspath();
+    Logger.trace("SETUP", "classpath : " + classpath);
+    // Setup an artificial phase to call into our analysis entrypoint. We can
+    // run it with or without call graph construction (CHA is chosen here).
+    Configs.withCHA = true;
+    if (Configs.withCHA) {
+      String packName = "wjtp";
+      String phaseName = "wjtp.gui";
+      String[] sootArgs = {
+              "-w",
+              "-p", "cg", "all-reachable:true",
+              "-p", "cg.cha", "enabled:true",
+              "-p", phaseName, "enabled:true",
+              "-f", "n",
+              "-keep-line-number",
+              "-process-multiple-dex",
+              "-allow-phantom-refs",
+              "-process-dir", Configs.bytecodes,
+              "-cp", classpath,
+      };
+            
+      readWidgetMap();
+      PrerunEntrypoint.v().run();
+      setupAndInvokeSootHelper(packName, phaseName, sootArgs);
+    } else {
+      String packName = "cg";
+      String phaseName = "cg.gui";
+      String[] sootArgs = {
+              "-w",
+              "-p", phaseName, "enabled:true",
+              "-f", "n",
+              "-keep-line-number",
+              "-allow-phantom-refs",
+              "-process-multiple-dex",
+              //      "-coffi",
+              "-process-dir", Configs.bytecodes,
+              "-cp", classpath,
+      };
+      readWidgetMap();
+      PrerunEntrypoint.v().run();
+      setupAndInvokeSootHelper(packName, phaseName, sootArgs);
+    }
+  }
+
+  /**
+   * Prepare a soot plugin that calls into our analysis entrypoint, and then
+   * invoke soot with the plugin enabled.
+   */
+  static void setupAndInvokeSootHelper(String packName, String phaseName,
+                                       String[] sootArgs) {
+    // Create the phase and add it to the pack
+    Pack pack = PackManager.v().getPack(packName);
+    pack.add(new Transform(phaseName, new SceneTransformer() {
+      @Override
+      protected void internalTransform(String phaseName,
+                                       Map<String, String> options) {
+        AnalysisEntrypoint.v().run();
+        //PrerunEntrypoint.v().run();
+      }
+    }));
+
+    // Print out arguments to Soot for debugging
+    for (String s : sootArgs) {
+      Logger.trace("MAIN", "  [SOOT-ARG] " + s);
+    }
+
+
+    // Finally, invoke Soot
+
+    //readAndApplySignatureList();
+
+    soot.Main.main(sootArgs);
+  }
+
+  static void readWidgetMap() {
+    //This is an ondemand implementation of signature patch
+    try {
+      FileReader fr = new FileReader(Configs.sootAndroidDir
+              + "/scripts/consts/widgetMap");
+      BufferedReader br = new BufferedReader(fr);
+      String curLine;
+      while ((curLine = br.readLine()) != null) {
+        String[] curLineArr = curLine.split(",");
+        if (curLineArr.length != 2) {
+          Logger.verb("MAIN", "[MAP] Str: " + curLine + " is not a valid map");
+        }
+        if (Configs.widgetMap.containsKey(curLineArr[0])) {
+          Logger.verb("MAIN", "[MAP] Str: collision at key " + curLineArr[0]);
         } else {
-            String packName = "cg";
-            String phaseName = "cg.gui";
-            String[] sootArgs = {
-                    "-w",
-                    "-p", phaseName, "enabled:true",
-                    "-f", "n",
-                    "-keep-line-number",
-                    "-allow-phantom-refs",
-                    "-process-multiple-dex",
-                    //      "-coffi",
-                    "-process-dir", Configs.bytecodes,
-                    "-cp", classpath,
-            };
-            readWidgetMap();
-            PrerunEntrypoint.v().run();
-            setupAndInvokeSootHelper(packName, phaseName, sootArgs);
+          Configs.widgetMap.put(curLineArr[0], curLineArr[1]);
         }
+      }
+      Logger.trace("MAIN", "[INFO] Widget map loaded");
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-    /**
-     * Prepare a soot plugin that calls into our analysis entrypoint, and then
-     * invoke soot with the plugin enabled.
-     */
-    static void setupAndInvokeSootHelper(String packName, String phaseName,
-                                         String[] sootArgs) {
-        // Create the phase and add it to the pack
-        Pack pack = PackManager.v().getPack(packName);
-        pack.add(new Transform(phaseName, new SceneTransformer() {
-            @Override
-            protected void internalTransform(String phaseName,
-                                             Map<String, String> options) {
-                AnalysisEntrypoint.v().run();
-                //PrerunEntrypoint.v().run();
-            }
-        }));
-
-        // Print out arguments to Soot for debugging
-        for (String s : sootArgs) {
-            Logger.trace("MAIN", "  [SOOT-ARG] " + s);
-        }
-
-
-        // Finally, invoke Soot
-
-        //readAndApplySignatureList();
-
-        soot.Main.main(sootArgs);
-    }
-
-    static void readWidgetMap() {
-        //This is an ondemand implementation of signature patch
-        try {
-            FileReader fr = new FileReader(Configs.sootAndroidDir
-                    + "/scripts/consts/widgetMap");
-            BufferedReader br = new BufferedReader(fr);
-            String curLine;
-            while ((curLine = br.readLine()) != null) {
-                String[] curLineArr = curLine.split(",");
-                if (curLineArr.length != 2) {
-                    Logger.verb("MAIN", "[MAP] Str: " + curLine + " is not a valid map");
-                }
-                if (Configs.widgetMap.containsKey(curLineArr[0])) {
-                    Logger.verb("MAIN", "[MAP] Str: collision at key " + curLineArr[0]);
-                } else {
-                    Configs.widgetMap.put(curLineArr[0], curLineArr[1]);
-                }
-            }
-            Logger.trace("MAIN", "[INFO] Widget map loaded");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  }
 }

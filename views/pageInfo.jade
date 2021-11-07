@@ -1,0 +1,82 @@
+html
+    head
+        title PAGE_REVIRE
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src='js/scripts.js')
+        link(href='css/style.css', rel='stylesheet')
+        style.
+
+            h1{
+                color:black;
+                text-align:center;
+                margin-top: 60px;
+                padding-top: 40px;
+                padding-bottom:20px;
+                font-size: 45;
+                font-family: Verdana;
+            }
+            td{
+                text-align: center;
+            }
+            table{
+                width: 50%;margin:auto
+            }
+            table, th, td
+              td
+              {
+              text-align:center;
+              }
+            tr:hover {background-color: #f5f5f5;}
+            th {
+              background-color: #4CAF50;
+              color: white;
+            }
+            td, th {
+              border: 1px solid #ddd;
+              padding: 8px;
+            }
+            a:link, a:visited {
+              background-color: #4CAF50;
+              color: white;
+              padding: 7px 13px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            a{
+                margin-left:65%;
+            }
+            a:hover, a:active {
+              background-color: darkgreen;
+            }
+        script.
+            var data = JSON.stringify(page_data);
+
+
+    body
+        h1 Here is page review info
+
+
+        a(href='/login') BACK TO LOGIN PAGE.
+
+        div(id='page_info_table')
+          table.table.table-bordered
+          table
+           thead
+             tr
+              th pageId
+              th date
+           tbody
+
+             - for (var i = 0; i < page_data.length; i++) {
+               tr
+                td #{JSON.stringify(page_data[i].Id)}
+                td #{JSON.stringify(page_data[i].Date)}
+             - }
+
+
+
+

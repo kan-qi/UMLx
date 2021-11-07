@@ -1,4 +1,36 @@
 html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
+        link(href="css/font-awesome.min.css", rel='stylesheet')
+        link(href='http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+        link(href='css/table.min.css', rel='stylesheet')
+        link(href='css/button.min.css', rel='stylesheet')
+        link(href='http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', rel='stylesheet')
+    body
+        include bannerNew
+        if message
+            div.message-box
+            p.message-text message:#{message}
+        //- include repoDetail
+
+        div(id='main-panel')
+            include mainPanel
+        script(type='text/javascript', src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+        script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+        script(type='text/javascript', src="https://code.jquery.com/jquery-1.12.4.js")
+        script(type='text/javascript', src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js")
+        script(type='text/javascript', src="http://d3js.org/d3.v4.min.js")
+        script(type='text/javascript', src="http://d3js.org/d3.v3.min.js")
+        script(type='text/javascript', src="js/charts.js")
+        script(type='text/javascript', src="js/scripts.js")
+        script(type='text/javascript', src="http://requirejs.org/docs/release/2.2.0/minified/require.js")
+
   head
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')

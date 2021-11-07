@@ -4,46 +4,18 @@
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
 	var FileManagerUtil = require("./FileManagerUtils.js");
-
-    var JSONStream = require( "JSONStream" );
 	
 //	var OutputDir = './debug';
 
 	function writeJson(token, message, callbackfunc){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var OutputDir = "./debug";
-		mkdirp(OutputDir, function(err) {
-		var strData = {}
-
-        try {
-		strData = JSON.stringify(message);
-		}
-        catch(error) {
-          console.error(error);
-          // expected output: ReferenceError: nonExistentFunction is not defined
-          // Note - error messages will vary depending on browser
-        }
-
-		fs.writeFile(OutputDir+'/'+token+'.json', strData, function(err){
+		mkdirp(OutputDir, function(err) { 
+		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
 			if(err){
 				console.log(err);
 			}
 		});
-
-//		var transformStream = JSONStream.stringify();
-//        var outputStream = fs.createWriteStream(OutputDir+'/'+token+'.json');
-//        transformStream.pipe( outputStream );
-//        message.forEach(transformStream.write);
-//        transformStream.end();
-//
-//        outputStream.on(
-//            "finish",
-//            function handleFinish() {
-//                console.log("Done");
-//            }
-//        );
-
-
 		});
 	}
 	
@@ -52,19 +24,7 @@
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
-
-		var strData = {}
-
-		 try {
-        		strData = JSON.stringify(message);
-        		}
-                catch(error) {
-                  console.error(error);
-                  // expected output: ReferenceError: nonExistentFunction is not defined
-                  // Note - error messages will vary depending on browser
-                }
-
-		fs.writeFileSync(outputDir+'/'+token+'.json', strData);
+		fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(message));
 	}
 	
 	function writeJson3(token, message, outputDir){
@@ -73,33 +33,10 @@
 		if(!outputDir){
 			outputDir = "./data/OpenSource/debug";
 		}
-
-		var strData = {}
-
-        		 try {
-                		strData = JSON.stringify(message);
-                		}
-                        catch(error) {
-                          console.error(error);
-                          // expected output: ReferenceError: nonExistentFunction is not defined
-                          // Note - error messages will vary depending on browser
-                        }
 		
-		var duplicate = JSON.parse(strData);
+		var duplicate = JSON.parse(JSON.stringify(message));
 		deleteAttrRecur(duplicate, "attachment")
-
-		var strData1 = {}
-
-                		 try {
-                        		strData = JSON.stringify(duplicate);
-                        		}
-                                catch(error) {
-                                  console.error(error);
-                                  // expected output: ReferenceError: nonExistentFunction is not defined
-                                  // Note - error messages will vary depending on browser
-                                }
-
-		fs.writeFileSync(outputDir+'/'+token+'.json', strData1);
+		fs.writeFileSync(outputDir+'/'+token+'.json', JSON.stringify(duplicate));
 	}
 	
 	function writeTxt(token, message, callbackfunc){

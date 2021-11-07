@@ -17,6 +17,7 @@ const privateVapidKey = "zi84jsmnux1jffj4Kt0XnSNWeKVYmQpmRd-lMZkqU-k";
 webpush.setVapidDetails('mailto:val@karpov.io', publicVapidKey, privateVapidKey);
 
 console.l = console.log;
+console.log = function() {};
 
 process.on("message", (req) => {
     console.l('stringed req');
@@ -41,11 +42,11 @@ function evaluateUploadedProject(req) {
     var umlFilePath = null;
     var umlOtherPath = null;
     //need to implement unzipped xml file data-analysis, for now only process single xml file!!
-    if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+    if(req.files['uml_file'] != null && req.files['uml_other'] != null){
         // console.log("================================path===================");
         console.l('uml-file && other not null');
-        umlFilePath = req.files['uml-file'][0].path;
-        umlOtherPath = req.files['uml-other'][0].path;
+        umlFilePath = req.files['uml_file'][0].path;
+        umlOtherPath = req.files['uml_other'][0].path;
 
         // console.log(umlFilePath);
         // console.log(umlOtherPath);
@@ -58,28 +59,16 @@ function evaluateUploadedProject(req) {
             }
         });
     }
-    else if (req.files['uml-file'] != null) {
-        var uploadedFile = req.files['uml-file'][0];
-        if (uploadedFile.mimetype == "text/xml") { // xml file
+    else if (req.files['uml_file'] != null) {
+        var uploadedFile = req.files['uml_file'][0];
+        if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file or apk file
             umlFilePath = uploadedFile.path;
             console.l("path:" + umlFilePath);
         }
-        else if (path.extname(uploadedFile.originalname) == ".apk") { // apk file
-            console.l("apk file found => go to UMLxAndroidAnalyzer.js");
-            androidAnalyzer.analyseAPKGator(
-                uploadedFile.path, 
-                (result) => {
-                    if (result != true) console.l("Android APK Analysis failed");
-                    else console.l("Android APK Analysis succeed");
-                    process.send('ok');
-                }
-            );
-            //process.send('ok');
-        }
     }
     //same problem as above comment
-    else if (req.files['uml-other'] != null) {
-        umlOtherPath = req.files['uml-other'][0].path;
+    else if (req.files['uml_other'] != null) {
+        umlOtherPath = req.files['uml_other'][0].path;
 
         console.log("================================path===================");
         console.log(umlOtherPath);
@@ -140,16 +129,23 @@ function evaluateUploadedProject(req) {
             console.l('umlFileInfo => ' + JSON.stringify(umlFileInfo));
             var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
             modelInfo.projectInfo = projectInfo;
+            if (path.extname(uploadedFile.originalname) == ".apk") {
+				modelInfo['apkFile'] = true;
+			}
             console.l('updated model info');
-            console.l(modelInfo);
+            //console.l(modelInfo);
             umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
                 //update model analytics.
-                console.l("model is extracted");
+                console.l("mdoel is extracted");
                 if(!modelInfo){
                     // res.end("error");
                     console.l('Error: model info null');
                     return;
                 }
+                if (!umlModelName) {
+                    umlModelName = "project" + repoId
+                }
+                modelInfo.Name = umlModelName;
                 umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
                     console.l("model analysis complete");
                     console.log(modelInfo2);
@@ -163,8 +159,8 @@ function evaluateUploadedProject(req) {
                             console.l("Error: effort prediction failed");
                         }
                         console.l("model effort predicted");
-                        var debug = require("./utils/DebuggerOutput.js");
-                        debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
+                        //var debug = require("./utils/DebuggerOutput.js");
+                        //debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
                         umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
                             //				console.log(modelInfo);
                             console.log("inside saveModelInfo");

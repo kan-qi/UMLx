@@ -7,74 +7,74 @@ input(type='hidden', value=model_id)#mymodelId
 input(type='hidden', value=repoID)#myrepoId
 //input(type='hidden', value=loadsPath)#myupLoadsPath	
 div.block.panel.panel-default
-  div.panel-heading
+  div.panel-heading(style="padding: 10px 0; background-color: white")
    div.panel-title.analytics-title.pull-left
     include breadcrumb
    if modelInfo
-    div.model-analytics-ops.pull-right
-     div.dropdown
-      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Model
-        span.caret
-      ul.dropdown-menu
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
-     div.dropdown
-      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
-        span.caret
-      ul.dropdown-menu
-        li
-          a.dropdown-item(id='update-model' onclick="openDialogueBoxForModelFileUpdate('#{repoID}','#{model_id}');" href="javaScript:void(0);") Model Version
-     div.dropdown
-      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
-        span.caret
-      ul.dropdown-menu
-        li
-          a.dropdown-item(id='reanalyse-model' href='reanalyseModel?model_id=#{modelInfo._id}') Re-analyse Model
-        li
-          a.dropdown-item(href='deleteModel?model_id=#{modelInfo._id}') Delete Model
-    div.clearFix
+    //- div.model-analytics-ops.pull-right
+    //-  div.dropdown
+    //-   button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Model
+    //-     span.caret
+    //-   ul.dropdown-menu
+    //-       li
+    //-         a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
+    //-       li
+    //-         a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+    //-       li
+    //-         a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+    //-       lif
+    //-         a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+    //-       li
+    //-         a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+    //-  div.dropdown
+    //-   button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+    //-     span.caret
+    //-   ul.dropdown-menu
+    //-     li
+    //-       a.dropdown-item(id='update-model' onclick="openDialogueBoxForModelFileUpdate('#{repoID}','#{model_id}');" href="javaScript:void(0);") Model Version
+    //-  div.dropdown
+    //-   button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+    //-     span.caret
+    //-   ul.dropdown-menu
+    //-     li
+    //-       a.dropdown-item(id='reanalyse-model' href='reanalyseModel?model_id=#{modelInfo._id}') Re-analyse Modmoel
+    //-     li
+    //-       a.dropdown-item(href='deleteModel?model_id=#{modelInfo._id}') Delete Model
+    div.clearFix(style="background-color: white")
   div.panel-body(id="model-stats-chart")
    div.model-info-content
-    ul.nav.nav-tabs
-     li.active
-      a(data-toggle='tab', href='#model-analytics') Overview
-     //li
-      //a(data-toggle='tab', href='#model-analysis') Analysis
-     //li
-      //a(data-toggle='tab', href='#model-empirical') Empirical
-     li
-      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
-     li
-      a(data-toggle='tab', href='#model-evaluation', id="model-evaluation-tab") Model Info
-     li
-      a(data-toggle='tab', href='#project-properties') Project Info
-     li
-      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="createDir(this);") Archive
-     li
-      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="createDir(this);") Uploads
+    //- ul.nav.nav-tabs
+    //-  li.active
+    //-   a(data-toggle='tab', href='#model-analytics') Overview
+    //-  //li
+    //-   //a(data-toggle='tab', href='#model-analysis') Analysis
+    //-  //li
+    //-   //a(data-toggle='tab', href='#model-empirical') Empirical
+    //-  li
+    //-   a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
+    //-  li
+    //-   a(data-toggle='tab', href='#model-evaluation', id="model-evaluation-tab") Model Info
+    //-  li
+    //-   a(data-toggle='tab', href='#project-properties') Project Info
+    //-  li
+    //-   a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="createDir(this);") Archive
+    //-  li
+    //-   a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="createDir(this);") Uploads
 
-     //li
-      //a(data-toggle='tab', href='#model-representation') Representation
+    //-  //li
+    //-   //a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
-        //div.col-sm-12.chart-row
-         //div.col-sm-6(id="chart-1") here should be distributions.
+        div.col-sm-12.chart-row(style="padding-left: 0; padding-right: 0")
+         div.col-sm-6(id="chart-1", style="padding-left: 0; padding-right: 0") here should be distributions.
         div.col-sm-12.chart-row
           div(id="details" )
-     //div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
-      //div.stats-chart.col-md-12(id="chart-1")
-      //div.stats-chart.col-md-6(id="chart-8")
-      //div.stats-chart.col-md-6(id="chart-9")
-      //div.stats-chart.col-md-6(id="chart-10")
-      //div.stats-chart.col-md-6(id="chart-11")
+     div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+      div.stats-chart.col-md-12(id="chart-1")
+      div.stats-chart.col-md-6(id="chart-8")
+      div.stats-chart.col-md-6(id="chart-9")
+      div.stats-chart.col-md-6(id="chart-10")
+      div.stats-chart.col-md-6(id="chart-11")
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
@@ -97,15 +97,15 @@ div.block.panel.panel-default
      // modified version issue #397, separate the model info page into three tabs
      div.tab-pane.fade(id="model-evaluation")
         div.model-evaluation
-         ul.nav.nav-pills
-             li.nav-item.active
-                a.nav-link(data-toggle="pill", href="#pills-EUCP")
+         ul.nav.nav-pills(style="text-align: center")
+             li.nav-item.active(style="display: inline-block; float: none; margin: 10px")
+                a.nav-link(data-toggle="pill", href="#pills-EUCP", style="border-radius: 13px; background-color: 17A2B8;  color: white")
                  | EUCP
-             li.nav-item
-                a.nav-link(data-toggle="pill", href="#pills-EXUCP")
+             li.nav-item(style="display: inline-block; float: none; margin: 10px")
+                a.nav-link(data-toggle="pill", href="#pills-EXUCP", style="border-radius: 13px; background-color: 17A2B8;  color: white")
                  | EXUCP
-             li.nav-link
-                a.nav-link(data-toggle="pill", href="#pills-DUCP")
+             li.nav-link(style="display: inline-block; float: none; margin: 10px")
+                a.nav-link(data-toggle="pill", href="#pills-DUCP", style="border-radius: 13px; background-color: 17A2B8;  color: white")
                  | DUCP
          div.tab-content
              div.tab-pane.fade.in.active(id="pills-EUCP")
@@ -131,14 +131,15 @@ div.block.panel.panel-default
         p #{modelInfo.umlFilePath}
         h3 Output Path
         p #{modelInfo.OutputDir}
-        h3 Evaluation
-         button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
-         table#dataTable.table.table-striped
+        div(style="margin-bottom: 10px")
+          h3(style="display: inline-block") Evaluation
+          button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);', style="border-radius:13px; background-color: #17A2B8; color: white; width: 80px") Modify
+        table#dataTable.table.table-striped
             tbody
                 tr
-                    td
-                     h4 Technical Complexity Factors
-                    td
+                    td(style="background-color: E7E7E7")
+                     h4 Enviornmental Complexity Factors
+                    td(style="background-color: E7E7E7")
                 tr
                     td Distributed System
                     td
@@ -347,10 +348,12 @@ div.block.panel.panel-default
                                     option 4
                                 if temp != 5
                                     option 5
+          table#dataTable.table.table-striped
+            tbody
                 tr
-                    td
-                     h4 Environmental Complexity Factors
-                    td
+                    td(style="background-color: E7E7E7")
+                     h4 Technical Complexity Factors
+                    td(style="background-color: E7E7E7")
                 tr
                     td Familiar with the project model that is used
                     td

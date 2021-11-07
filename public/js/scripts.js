@@ -1,17 +1,45 @@
-$(document).ready(function() {
-    $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
-        console.log(e.relatedTarget);
-        if (e.relatedTarget) {
-            $(e.relatedTarget).removeClass('active');
-        }
-    });    
-});
+// $(document).ready(function() {
+//     // $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
+//     //     console.log(e.relatedTarget);
+//     //     if (e.relatedTarget) {
+//     //         $(e.relatedTarget).removeClass('active');
+//     //     }
+//     // });    
 
+
+// });
+
+
+$(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+$(document).ready( function() {
+    $(':file').on('fileselect', function(event, numFiles, label) {
+
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+        if( input.length ) {
+            input.val(log);
+        } else {
+            if( log ) alert(log);
+        }
+    });
+});
 
 function showLoading() {
     var classList = document.getElementById("loadingScreen").classList;
+    console.log(classList);
     classList.remove("hidden");
-  }
+    console.log(classList);
+    console.log('a')
+    
+}
 
 function setCookie(cname, cvalue, exdays) {
     var expires = "";
@@ -318,11 +346,11 @@ function predict_project_effort_func(show_loading_screen = true) {
         document.getElementById("loadingScreen").classList.remove("hidden");
     }
 
-
+    
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
-        url: "predictProjectEffort",
+        url: "uploadUMLFile",
         cache: false,
         processData: false, // Don't process the files
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
@@ -335,6 +363,9 @@ function predict_project_effort_func(show_loading_screen = true) {
 
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            $('#estimation-result-panel-body').css({border: "1px solid grey"});
+            $('#estimation-result-panel-body').css({"border-radius":"8px"});
+            
             var estimationModel = $(response).data("estimation-model");
             // console.log(estimationModel);
             console.log('#'+estimationModel+'-estimation-results-charts');
@@ -2707,6 +2738,15 @@ $('#collapse2').on('hidden.bs.collapse', function () {
     $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
 });
 
+$('#collapse3').on('shown.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse3').on('hidden.bs.collapse', function () {
+    $(".collapseButtom3").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+
 var repoLink = "";
 // var repoLink = "public";
 var documentUrl;
@@ -3282,4 +3322,41 @@ function setEstimationCookie(cname,cvalue,exdays){
     d.setTime(d.getTime()+(exdays*24*60*60*1000));
     var expires = "expires="+d.toGMTString();
     document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function overviewClicked() {
+  window.location.hash = "overview";
+  window.location.reload();
+}
+
+function trendingClicked() {
+  window.location.hash = "trending";
+  window.location.reload();
+}
+
+function projectClicked() {
+  window.location.hash = "project";
+  window.location.reload();
+}
+
+function archiveClicked(get) {
+//   document.getElementById("main_page").style.display = "none";
+//   document.getElementById("model-nav").style.display = "none";
+//   document.getElementById("repo_trending").style.display = "none";
+//   document.getElementById("project_list").style.display = "none";
+
+//   console.log("get: " + get);
+//   walkRepoDir(get);
+
+//   document.getElementById("repo_archive").style.display = "none";
+//   document.getElementById("displayRepoArchive").style.display = "block";
+//   document.getElementById("profile").style.display = "none";
+  console.log(get);
+  window.location.hash = "archive";
+  window.location.reload();
+}
+
+function profileClicked() {
+  window.location.hash = "profile";
+  window.location.reload();
 }

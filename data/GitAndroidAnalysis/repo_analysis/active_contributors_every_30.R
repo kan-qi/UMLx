@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-
+  
 # This script calculates the number of active contributors of an open source
 # project using the Github API. Active contributors are defined as in:
 # Software effort estimation based on open source projects: Case study of Github
@@ -94,7 +94,10 @@ getAllContributors <- function(url) {
   contributors
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 getAllCommits <- function(url) {
   # Gets a list of all commits to a project.
   #
@@ -117,8 +120,12 @@ getAllCommits <- function(url) {
   commits
 }
 
+<<<<<<< HEAD
+getActiveContributors <- function(url) {
+=======
 
 getActiveContributors <- function(commits) {
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
   # Gets a list of all active/inactive contributors every 30 active days for a project.
   #
   # Args:
@@ -128,6 +135,10 @@ getActiveContributors <- function(commits) {
   #   A list of active/inactive users every 30 active days.
   
   active <- list()
+<<<<<<< HEAD
+  commits <- getAllCommits(url)
+=======
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
   currentMonthActiveDays <- c()
   currentMonthCommitCounts <- c()
   lifetimeCommitsCounts <- c()
@@ -170,7 +181,10 @@ getActiveContributors <- function(commits) {
   active
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 simEffort <- function(url) {
   # Simulates effort of given GitHUb repository based on active and inactive
   # contributors.
@@ -181,10 +195,17 @@ simEffort <- function(url) {
   # Returns:
   #   Effort in person-hours
   
+<<<<<<< HEAD
+<<<<<<< HEAD
+  activeContributors <- getActiveContributors(url)
+=======
+=======
   print(url)
   
+>>>>>>> 8e22dd3a45f4d9f3b5be12098ac584490ea37c6e
   commits <- getAllCommits(url)
   activeContributors <- getActiveContributors(commits)
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
   effort <- 0
   if(length(activeContributors)>0){
     for (i in 1:length(activeContributors)) {
@@ -212,8 +233,14 @@ for(i in 1:nrow(input_data)) {
   print(effortResult$effort)
   print("active personnel")
   print(effortResult$active_personnel)
+<<<<<<< HEAD
+  active_personnel = c(active_personnel,effortResult$active_personnel)
+  sink()
+}
+=======
   print("commits")
   print(effortResult$commits)
   active_personnel = c(active_personnel,effortResult$active_personnel)
   sink()
 }
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8

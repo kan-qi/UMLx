@@ -23,6 +23,8 @@
 		var parameterTypePatterns = ['event', 'Event'];
 		var parameterPatterns = ['event', 'Event'];
 
+		var scannedMethods = [];
+
 		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
 		 
 		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
@@ -123,9 +125,9 @@
 		
 		var dicClassUnits = codeAnalysisResults.dicClassUnits;
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
-
-		var dicResponseMethodUnits = {};
 		
+		var scannedMethods = [];
+
 		if (gatorFilePath && fs.existsSync(gatorFilePath)) {
 		 
 		var contents = fs.readFileSync(gatorFilePath, 'utf8');
@@ -137,7 +139,7 @@
 		for(var i in dicClassUnits){
 			var classUnit = dicClassUnits[i];
 
-			//console.log(classUnit);
+			console.log(classUnit);
 			
 			for(var j in classUnit.methodUnits){
 				
@@ -150,6 +152,8 @@
 				methodSigns.push(methodSign);
 			}
 		}
+		
+		var dicResponseMethodUnits = {};
 		
 		if(contents && methodSigns.length > 0){
 		var lines = contents.split(/\r?\n/g);

@@ -38,6 +38,164 @@
 	estimationResultsFile : "estimationResultDUCP.json",
 	label: "ducp_effort_prediction"
 	}
+<<<<<<< HEAD
+	
+	function estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig){
+    		//predict presonnel, schedule based on predicted effort
+
+    //		modelInfo.predictedDuration = projectDuration;
+    //		calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
+
+    		var availablePersonnel = Number.POSITIVE_INFINITY;
+    		var availableSchedule = Number.POSITIVE_INFINITY;
+    		var hoursPerMonth = 152;
+    		if(modelInfo.projectInfo){
+    			availablePersonnel = modelInfo.projectInfo.personnel;
+    			availableSchedule = modelInfo.projectInfo.schedule;
+    			hoursPerMonth = modelInfo.projectInfo.hoursPerMonth;
+    		}
+
+    		var projectEffortInPMCOCOMO = projectEffort/152;
+
+    		//estimate project duration based on COCOMO
+            /*
+            		 * PM_NS = A*Size^E*\prod_(i=1)^nEM_i
+            		 *
+            		 * TDEV_NS = C*(PM_NS)^F
+            		 *
+            		 * F = D + 0.2*0.01*\sum_(j=1)^5(SF_j)
+            		 * = D + 0.2*(E-B)
+            		 *
+            		 * A = 2.94
+            		 * B = 0.91
+            		 * C = 3.67
+            		 * D = 0.28
+            		 *
+            		 * P = PM_NS/TDEV_NS
+            		 *
+            		 * 152 is for PH/PM ratio
+            		 *
+            		 * y = 3.67*(x)^(0.28+0.2*(1.15-0.91))
+            */
+
+    		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
+
+    		if(projectDuration > availableSchedule){
+    			projectDuration = availableSchedule;
+    		}
+
+    		//calculate the personnel
+            var projectEffortInPM = projectEffort/hoursPerMonth;
+            var personnel = projectEffortInPM/projectDuration;
+            if(personnel > availablePersonnel){
+                //recalculate the productivity factors
+                personnel = availablePersonnel
+                 hoursPerMonth = projectEffort/(personnel*projectDuration)
+             }
+
+            if(personnel < 160){
+    		    estimationResults.feasible = true;
+    		}
+
+    		estimationResults.Personnel = Math.ceil(personnel);
+
+    		estimationResults.Duration = projectDuration.toFixed(2);
+
+    		estimationResults.HoursPerMonth = hoursPerMonth;
+
+    		var useCaseEstimatesById = {};
+
+    		for(var i in estimationResults.UseCases){
+    			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
+    		}
+
+    		var viewEffortWeight = 0;
+    		var controlEffortWeight = 0;
+    		var modelEffortWeight = 0;
+
+    		//distribute project effort
+    		for(var i in modelInfo.UseCases){
+    			var useCase = modelInfo.UseCases[i];
+
+    			var useCaseEstimates = useCaseEstimatesById[useCase._id];
+    			if(!useCaseEstimates){
+    				useCaseEstimatesById[useCase._id] = {
+    						Name: useCase.Name,
+    						_id: useCase._id,
+    				}
+    				useCaseEstimates = useCaseEstimatesById[useCase._id];
+    			}
+
+    			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
+
+    			var useCaseMetric = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+    			var modelMetric = modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+    			var useCaseEffort = (modelMetric == 0) ? 0 : projectEffort/modelMetric*useCaseMetric;
+
+    			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
+
+    			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
+
+    			if(availableSchedule && useCaseDuration > availableSchedule){
+    				useCaseDuration = availableSchedule;
+    			}
+
+    			var useCaseEffortInPM = useCaseEffort/hoursPerMonth;
+
+    			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
+
+    			// prioritization information of the use cases.
+    			useCaseEstimates.feasible = true;
+
+    			if(useCasePersonnel > availablePersonnel){
+    				// try to fit the resource using personnel as invariant.
+    				var refitSchedule = useCaseEffortInPM/useCasePersonnel;
+    				if(refitSchedule > availableSchedule){
+    					useCaseEstimates.feasible = false;
+    				} else{
+    					useCaseDuration = refitSchedule;
+    				}
+    			}
+
+    				var boundaryNum =  useCase["ComponentAnalytics"].BoundaryNum > 0 ? useCase["ComponentAnalytics"].BoundaryNum : 2;
+    				var controlNum = useCase["ComponentAnalytics"].ControlNum > 0 ? useCase["ComponentAnalytics"].ControlNum : 1;
+    				var entityNum = useCase["ComponentAnalytics"].EntityNum > 0 ? useCase["ComponentAnalytics"].EntityNum : 1;
+    				var totalNum = boundaryNum + controlNum + entityNum;
+
+    			    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
+    			    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
+    				var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+
+    				viewEffortWeight += personnel_UI_estimated;
+    				controlEffortWeight += personnel_FS_estimated;
+    				modelEffortWeight += personnel_DB_estimated;
+
+
+    				useCaseEstimates.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
+    				useCaseEstimates.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
+    				useCaseEstimates.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
+
+    				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
+
+    				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
+
+    				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
+
+    				estimationResults.UseCases.push(useCaseEstimates);
+    		}
+
+    		var totalWeight = viewEffortWeight+controlEffortWeight+modelEffortWeight;
+    		estimationResults.Personnel_UI = parseFloat(viewEffortWeight/totalWeight*100).toFixed(2)+"%";
+    		estimationResults.Personnel_DB = parseFloat(modelEffortWeight/totalWeight*100).toFixed(2)+"%";
+    		estimationResults.Personnel_FS = parseFloat(controlEffortWeight/totalWeight*100).toFixed(2)+"%";
+
+    		//console.log("estimation result");
+    		//console.log(estimationResults);
+            //process.exit();
+    	}
+
+
+=======
 
 	/*
 	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
@@ -198,6 +356,7 @@
 
 	}
 
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 	// distribute the effort to different types of components.
 	function estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		

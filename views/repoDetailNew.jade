@@ -1,0 +1,855 @@
+<<<<<<< HEAD
+-var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
+input(type='hidden', value=repoID)#myrepoId
+div.block.panel.panel-default
+  div.panel-body(id="repo-stats-chart")
+   div.repo-info-content
+    div.tab-content
+      div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; margin-top: -60px")
+        div.form-container
+          form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+            // file browser
+            div.input-group
+                input.form-control.form-blank(type='text',readonly)
+                label.input-group-btn()
+                    span.btn.btn-dark.btn-submit Browse
+                        input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+            button.btn.btn-dark.btn-submit(type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; margin-left: 30px; margin-right: 10px") Estimator
+            // Estimator Modal
+            #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', )
+              .modal-dialog.modal-dialog-centered(role='document', style="margin-top : 5%;" )
+                .modal-content
+                  .modal-header
+                    //- h2#exampleModalLongTitle.modal-title.text-center Choose the parameters 
+                    #sec-4(style = "margin-top: 10px; margin-bottom: -20px")
+                      .panel-group
+                          .panel.panel-default(style = "text-align : center")
+                            div(style  = "display: inline-block; font-size: 16px") Select Estimator
+                              //-         div.panel_triangle_toggle
+                              //-             a(data-toggle='collapse', href='#collapse3')
+                              //-                 //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                              //-                 span.glyphicon.glyphicon-triangle-left.collapseButtom3
+                              //- #collapse3.panel-collapse()
+                            .form-group(style = "margin-bottom: 0px; display: inline-block; vertical-align: middle !important; padding:10px")
+                                .panel-body(style = "padding: 0px;")
+                                    div(id="model-query-box" style = "margin-left: 30%;")
+                                        div.row-item(id='model-selector-box')
+                                          //- div.autocomplete(style="width:300px;")
+                                          //-   input#model.estimation-form-control.form-control(type="text", name='model', placeholder="Estimator")
+                                          select#model.estimation-form-control.form-control(name='model')
+                                              option#estimator1(value="eucp_lm") EUCP
+                                              option#estimator2(value="exucp_lm") EXUCP
+                                              option#estimator3(value="ducp_lm") DUCP
+                  
+                    //- button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    //-   span(aria-hidden='true') ×
+                  .modal-body(style = "height: 400px; overflow-y: auto;")
+                    #sec-1
+                      .panel-group
+                          .panel.panel-default
+                              .panel-heading
+                                h4.panel-title
+                                    div.panel_words Technical Complexity Factor
+                                    div.panel_triangle_toggle
+                                        a(data-toggle='collapse', href='#collapse1')
+                                            //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                            span.glyphicon.glyphicon-triangle-left.collapseButtom1
+                              #collapse1.panel-collapse.collapse
+                                  .panel-body
+                                      .form-group
+                                          label.control-label(for='distributed_system') Distributed System
+                                          select#distributed_system.form-control(name='distributed_system')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='response_time') Response time or throughput performance objectives
+                                          select#response_time.form-control(name='response_time')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='end_user_efficiency') End user efficiency
+                                          select#end_user_efficiency.form-control(name='end_user_efficiency')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='complex_internal_processing') Complex internal processing
+                                          select#complex_internal_processing.form-control(name='complex_internal_processing')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='code_must_be_reusable') Code must be reusable
+                                          select#code_must_be_reusable.form-control(name='code_must_be_reusable')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_install') Easy to install
+                                          select#easy_to_install.form-control(name='easy_to_install')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_use') Easy to use
+                                          select#easy_to_use.form-control(name='easy_to_use')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='portable') Portable
+                                          select#portable.form-control(name='portable')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_change') Easy to change
+                                          select#easy_to_change.form-control(name='easy_to_change')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='concurrent') Concurrent
+                                          select#concurrent.form-control(name='concurrent')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='includes_special_security_objectives') Includes special security objectives
+                                          select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+                                          select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+                                          select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5     
+                    #sec-2
+                      .panel-group
+                          .panel.panel-default
+                              .panel-heading
+                                  h4.panel-title
+                                      div.panel_words Environmental Factors
+                                      div.panel_triangle_toggle
+                                          a(data-toggle='collapse', href='#collapse2')
+                                              //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                              span.glyphicon.glyphicon-triangle-left.collapseButtom2
+                              #collapse2.panel-collapse.collapse
+                                  .panel-body
+                                      .form-group
+                                          label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+                                          select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='application_experience') Application experience
+                                          select#application_experience.form-control(name='application_experience')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='object_oriented_experience') Object-oriented experience
+                                          select#object_oriented_experience.form-control(name='object_oriented_experience')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='lead_analyst_capability') Lead analyst capability
+                                          select#lead_analyst_capability.form-control(name='lead_analyst_capability')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='motivation') Motivation
+                                          select#motivation.form-control(name='motivation')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='stable_requirements') Stable requirements
+                                          select#stable_requirements.form-control(name='stable_requirements')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='part_time_staff') Part-time staff
+                                          select#part_time_staff.form-control(name='part_time_staff')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='difficult_programming_language') Difficult programming language
+                                          select#difficult_programming_language.form-control(name='difficult_programming_language')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                  .modal-footer
+                    button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
+            // Submit button
+            div
+                button.btn.btn-dark.btn-submit.btn-lg(type='submit' style = "padding: 16px 31px") Submit
+        #sec-5
+          #collapse0.panel-collapse
+            div(id="estimation-result-panel-body" style = "text-align : center; font-size: 14px") Upload UML diagrams, KDM models, APKs to get effort estimates of your project
+        #loadingScreen.hidden
+                div.full-page-model
+                div.full-page-model-content
+                    div(style='padding: 30px')
+                        img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                        p Processing...
+      //div.tab-pane.fade(id="repo_estimation")
+        include estimationPanel
+      div.tab-pane.fade(id="repo_trending")
+       if repoInfo
+          div.col-sm-12.scatter-plot-row(class="card" id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+          div.break-line.col-sm-12.status-row
+            h3 Cilk cards to see trending lines!
+          div.col-sm-12.status-row
+            div.col-sm-2
+              div#project-card.analytics-card(class = "card mb-3 red-card")
+                div(class="card-header") 
+                  span Projects
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-folder-open.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{totalRec}
+            div.col-sm-2
+              div#usecase-card.analytics-card(class = "card mb-3 green-card")
+                div(class="card-header") 
+                  span User Cases
+                  label.switch
+                    input(type="checkbox")
+                    span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-user.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.UseCaseNum}
+            div.col-sm-2
+              div#transaction-card.analytics-card(class = "card mb-3 purple-card")
+                div(class="card-header") 
+                  span TXNS
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-transfer.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.NT}
+            div.col-sm-2 
+              div#class-card.analytics-card(class = "card mb-3 yellow-card ")
+                div(class="card-header") 
+                  span Classes
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-sort-by-order.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EntityNum}
+            div.col-sm-2
+              div#sloc-card.analytics-card(class = "card mb-3 blue-card")
+                div(class="card-header") 
+                  span SLOC
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-tasks.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.SLOC}
+            div.col-sm-2
+              div#schedule-card.analytics-card(class = "card mb-3 brown-card")
+                div(class="card-header") 
+                  span Schedule
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-calendar.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.schedule}
+          div.col-sm-12.status-row  
+            div.col-sm-2
+              div#personnel-card.analytics-card(class = "card mb-3 gray-card")
+                div(class="card-header") 
+                  span Personnel
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-briefcase.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.personnel}
+            div.col-sm-2 
+              div#eucp-card.analytics-card(class = "card mb-3 red-card cyan-card")
+                div(class="card-header") 
+                  span EUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EUCP}
+            div.col-sm-2
+              div#exucp-card.analytics-card(class = "card mb-3 orange2-card ")
+                div(class="card-header") 
+                  span EXUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EXUCP}
+            div.col-sm-2
+              div#ducp-card.analytics-card(class = "card mb-3 purple-card purple2-card")
+                div(class="card-header") 
+                  sapn DUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.DUCP}
+            div.col-sm-2
+              div#effort-card.analytics-card(class = "card mb-3 yellow-card orange-card")
+                div(class="card-header") 
+                  span Effort
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-leaf.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.effort}
+            div.col-sm-2
+              div#estimate-card.analytics-card(class = "card mb-3 blue-card gray2-card")
+                div(class="card-header") 
+                  span Est Effort
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round 
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-tree-conifer.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.estimatedEffort}
+      div.tab-pane.fade(id="project_list")
+        .container
+          h3.row
+            .col-sm-2 Index
+            .col-sm-8 Project Name
+            .col-sm-2 Date
+          .list-group
+            - var pageIndex = (currentPage - 1)*(pageSize) + 1
+            div(id='page-panel')
+              each item in repoInfo.Models
+                a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
+                  .col-sm-2 #{pageIndex++}
+                  .col-sm-8 #{item.Name}
+                  .col-sm-2 #{item.creationTime}
+              include pagination.jade
+      div.tab-pane.fade(id="repo_archive")
+          p #{repoInfo.OutputDir}
+        div#displayRepoArchive
+      div.tab-pane.fade(id="profile")
+        include profile.jade
+       
+=======
+-var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
+input(type='hidden', value=repoID)#myrepoId
+div.block.panel.panel-default
+  div.panel-body(id="repo-stats-chart")
+   div.repo-info-content
+    div.tab-content
+      div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; margin-top: -60px")
+        div.form-container
+          form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+            // file browser
+            div.input-group
+                input.form-control.form-blank(type='text',readonly)
+                label.input-group-btn()
+                    span.btn.btn-dark.btn-submit Browse
+                        input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+            button.btn.btn-dark.btn-submit(type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; margin-left: 30px; margin-right: 10px") Estimator
+            // Estimator Modal
+            #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true', )
+              .modal-dialog.modal-dialog-centered(role='document', style="margin-top : 5%;" )
+                .modal-content
+                  .modal-header
+                    //- h2#exampleModalLongTitle.modal-title.text-center Choose the parameters 
+                    #sec-4(style = "margin-top: 10px; margin-bottom: -20px")
+                      .panel-group
+                          .panel.panel-default(style = "text-align : center")
+                            div(style  = "display: inline-block; font-size: 16px") Select Estimator
+                              //-         div.panel_triangle_toggle
+                              //-             a(data-toggle='collapse', href='#collapse3')
+                              //-                 //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                              //-                 span.glyphicon.glyphicon-triangle-left.collapseButtom3
+                              //- #collapse3.panel-collapse()
+                            .form-group(style = "margin-bottom: 0px; display: inline-block; vertical-align: middle !important; padding:10px")
+                                .panel-body(style = "padding: 0px;")
+                                    div(id="model-query-box" style = "margin-left: 30%;")
+                                        div.row-item(id='model-selector-box')
+                                          //- div.autocomplete(style="width:300px;")
+                                          //-   input#model.estimation-form-control.form-control(type="text", name='model', placeholder="Estimator")
+                                          select#model.estimation-form-control.form-control(name='model')
+                                              option#estimator1(value="eucp_lm") EUCP
+                                              option#estimator2(value="exucp_lm") EXUCP
+                                              option#estimator3(value="ducp_lm") DUCP
+                  
+                    //- button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    //-   span(aria-hidden='true') ×
+                  .modal-body(style = "height: 400px; overflow-y: auto;")
+                    #sec-1
+                      .panel-group
+                          .panel.panel-default
+                              .panel-heading
+                                h4.panel-title
+                                    div.panel_words Technical Complexity Factor
+                                    div.panel_triangle_toggle
+                                        a(data-toggle='collapse', href='#collapse1')
+                                            //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                            span.glyphicon.glyphicon-triangle-left.collapseButtom1
+                              #collapse1.panel-collapse.collapse
+                                  .panel-body
+                                      .form-group
+                                          label.control-label(for='distributed_system') Distributed System
+                                          select#distributed_system.form-control(name='distributed_system')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='response_time') Response time or throughput performance objectives
+                                          select#response_time.form-control(name='response_time')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='end_user_efficiency') End user efficiency
+                                          select#end_user_efficiency.form-control(name='end_user_efficiency')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='complex_internal_processing') Complex internal processing
+                                          select#complex_internal_processing.form-control(name='complex_internal_processing')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='code_must_be_reusable') Code must be reusable
+                                          select#code_must_be_reusable.form-control(name='code_must_be_reusable')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_install') Easy to install
+                                          select#easy_to_install.form-control(name='easy_to_install')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_use') Easy to use
+                                          select#easy_to_use.form-control(name='easy_to_use')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='portable') Portable
+                                          select#portable.form-control(name='portable')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='easy_to_change') Easy to change
+                                          select#easy_to_change.form-control(name='easy_to_change')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='concurrent') Concurrent
+                                          select#concurrent.form-control(name='concurrent')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='includes_special_security_objectives') Includes special security objectives
+                                          select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+                                          select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+                                          select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
+                                              option 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5     
+                    #sec-2
+                      .panel-group
+                          .panel.panel-default
+                              .panel-heading
+                                  h4.panel-title
+                                      div.panel_words Environmental Factors
+                                      div.panel_triangle_toggle
+                                          a(data-toggle='collapse', href='#collapse2')
+                                              //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                              span.glyphicon.glyphicon-triangle-left.collapseButtom2
+                              #collapse2.panel-collapse.collapse
+                                  .panel-body
+                                      .form-group
+                                          label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+                                          select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='application_experience') Application experience
+                                          select#application_experience.form-control(name='application_experience')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='object_oriented_experience') Object-oriented experience
+                                          select#object_oriented_experience.form-control(name='object_oriented_experience')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='lead_analyst_capability') Lead analyst capability
+                                          select#lead_analyst_capability.form-control(name='lead_analyst_capability')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='motivation') Motivation
+                                          select#motivation.form-control(name='motivation')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='stable_requirements') Stable requirements
+                                          select#stable_requirements.form-control(name='stable_requirements')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='part_time_staff') Part-time staff
+                                          select#part_time_staff.form-control(name='part_time_staff')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                                      .form-group
+                                          label.control-label(for='difficult_programming_language') Difficult programming language
+                                          select#difficult_programming_language.form-control(name='difficult_programming_language')
+                                              option(selected) 1
+                                              option 2
+                                              option 3
+                                              option 4
+                                              option 5
+                  .modal-footer
+                    button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
+            // Submit button
+            div
+                button.btn.btn-dark.btn-submit.btn-lg(type='submit' style = "padding: 16px 31px") Submit
+        #sec-5
+          #collapse0.panel-collapse
+            div(id="estimation-result-panel-body" style = "text-align : center; font-size: 14px") Upload UML diagrams, KDM models, APKs to get effort estimates of your project
+        #loadingScreen.hidden
+                div.full-page-model
+                div.full-page-model-content
+                    div(style='padding: 30px')
+                        img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                        p Processing...
+      //div.tab-pane.fade(id="repo_estimation")
+        include estimationPanel
+      div.tab-pane.fade(id="repo_trending")
+       if repoInfo
+          div.col-sm-12.scatter-plot-row(class="card" id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+          div.break-line.col-sm-12.status-row
+            h3 Cilk cards to see trending lines!
+          div.col-sm-12.status-row
+            div.col-sm-2
+              div#project-card.analytics-card(class = "card mb-3 red-card")
+                div(class="card-header") 
+                  span Projects
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-folder-open.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{totalRec}
+            div.col-sm-2
+              div#usecase-card.analytics-card(class = "card mb-3 green-card")
+                div(class="card-header") 
+                  span User Cases
+                  label.switch
+                    input(type="checkbox")
+                    span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-user.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.UseCaseNum}
+            div.col-sm-2
+              div#transaction-card.analytics-card(class = "card mb-3 purple-card")
+                div(class="card-header") 
+                  span TXNS
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-transfer.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.NT}
+            div.col-sm-2 
+              div#class-card.analytics-card(class = "card mb-3 yellow-card ")
+                div(class="card-header") 
+                  span Classes
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-sort-by-order.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EntityNum}
+            div.col-sm-2
+              div#sloc-card.analytics-card(class = "card mb-3 blue-card")
+                div(class="card-header") 
+                  span SLOC
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-tasks.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.SLOC}
+            div.col-sm-2
+              div#schedule-card.analytics-card(class = "card mb-3 brown-card")
+                div(class="card-header") 
+                  span Schedule
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-calendar.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.schedule}
+          div.col-sm-12.status-row  
+            div.col-sm-2
+              div#personnel-card.analytics-card(class = "card mb-3 gray-card")
+                div(class="card-header") 
+                  span Personnel
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-briefcase.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.personnel}
+            div.col-sm-2 
+              div#eucp-card.analytics-card(class = "card mb-3 red-card cyan-card")
+                div(class="card-header") 
+                  span EUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EUCP}
+            div.col-sm-2
+              div#exucp-card.analytics-card(class = "card mb-3 orange2-card ")
+                div(class="card-header") 
+                  span EXUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.EXUCP}
+            div.col-sm-2
+              div#ducp-card.analytics-card(class = "card mb-3 purple-card purple2-card")
+                div(class="card-header") 
+                  sapn DUCP
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-stats.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.DUCP}
+            div.col-sm-2
+              div#effort-card.analytics-card(class = "card mb-3 yellow-card orange-card")
+                div(class="card-header") 
+                  span Effort
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-leaf.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.effort}
+            div.col-sm-2
+              div#estimate-card.analytics-card(class = "card mb-3 blue-card gray2-card")
+                div(class="card-header") 
+                  span Est Effort
+                  label.switch
+                      input(type="checkbox")
+                      span.slider.round 
+                div(class="card-body")
+                  div.col-sm-4
+                    span.glyphicon.glyphicon-tree-conifer.card-icon 
+                  div.col-sm-8.text-right
+                    h2(class="card-title") #{repoInfo.estimatedEffort}
+      div.tab-pane.fade(id="project_list")
+        .container
+          h3.row
+            .col-sm-2 Index
+            .col-sm-8 Project Name
+            .col-sm-2 Date
+          .list-group
+            - var pageIndex = (currentPage - 1)*(pageSize) + 1
+            div(id='page-panel')
+              each item in repoInfo.Models
+                a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
+                  .col-sm-2 #{pageIndex++}
+                  .col-sm-8 #{item.Name}
+                  .col-sm-2 #{item.creationTime}
+              include pagination.jade
+      div.tab-pane.fade(id="repo_archive")
+          p #{repoInfo.OutputDir}
+        div#displayRepoArchive
+      div.tab-pane.fade(id="profile")
+        include profile.jade
+       
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522

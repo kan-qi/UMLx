@@ -1,0 +1,88 @@
+<<<<<<< HEAD
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous")
+    link(href='css/style.css', rel='stylesheet')
+    title UMLx SignUp
+    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js" defer)
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" defer)
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" defer)
+    script(type='text/javascript', src="js/scripts.js" defer)
+    script(type='text/javascript', src="js/charts.js" defer)
+    
+  body.signUp
+    form(id='sign-up')
+      img.mb-4(src="img/UMLxlogo.png" width="92" height="92")
+      h1.h2.mb-3.font-weight-normal Create account
+      label.sr-only(for="email") Email
+      input.form-control(type="email" id="email" name="email" placeholder="E-mail" required="" autofocus="" style="border-radius: 13px; margin-top: 30px")
+      label.sr-only(for="username") Username
+      input.form-control(type="text" id="username" name="username" placeholder="Username" required="" style="border-radius: 13px; margin-top: 30px")
+      label.sr-only(for="password") Password
+      input.form-control(type="password" id="password" name="password" placeholder="Password" required="" style="border-radius: 13px; margin-top: 30px")
+      if !tk
+        div.checkbox.mb-3(style="margin-top: 20px; font-size: 16px")
+          label
+            input(type="checkbox", name='enterpriseUser', value="enterpriseUser", style="margin-right: 5px")
+            span  Enterprise user  
+      else 
+        input(type='hidden', name='token', id='token', value=tk)
+      button.btn.btn-lg.btn-info.btn-block(type="submit", style="border-radius: 13px; font-size: 16px") Create your UMLx account
+      if !tk
+        br
+        br
+        hr
+        p.toggleLoginSignUp Already have an account? 
+         a(href='/login') Login.
+        p.mt-5.mb-3.text-muted © 2017-2019
+
+
+      
+       
+=======
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous")
+    link(href='css/style.css', rel='stylesheet')
+    title UMLx SignUp
+    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js" defer)
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" defer)
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" defer)
+    script(type='text/javascript', src="js/scripts.js" defer)
+    script(type='text/javascript', src="js/charts.js" defer)
+    
+  body.signUp
+    form(id='sign-up')
+      img.mb-4(src="img/UMLxlogo.png" width="92" height="92")
+      h1.h2.mb-3.font-weight-normal Create account
+      label.sr-only(for="email") Email
+      input.form-control(type="email" id="email" name="email" placeholder="E-mail" required="" autofocus="" style="border-radius: 13px; margin-top: 30px")
+      label.sr-only(for="username") Username
+      input.form-control(type="text" id="username" name="username" placeholder="Username" required="" style="border-radius: 13px; margin-top: 30px")
+      label.sr-only(for="password") Password
+      input.form-control(type="password" id="password" name="password" placeholder="Password" required="" style="border-radius: 13px; margin-top: 30px")
+      if !tk
+        div.checkbox.mb-3(style="margin-top: 20px; font-size: 16px")
+          label
+            input(type="checkbox", name='enterpriseUser', value="enterpriseUser", style="margin-right: 5px")
+            span  Enterprise user  
+      else 
+        input(type='hidden', name='token', id='token', value=tk)
+      button.btn.btn-lg.btn-info.btn-block(type="submit", style="border-radius: 13px; font-size: 16px") Create your UMLx account
+      if !tk
+        br
+        br
+        hr
+        p.toggleLoginSignUp Already have an account? 
+         a(href='/login') Login.
+        p.mt-5.mb-3.text-muted © 2017-2019
+
+
+      
+       
+>>>>>>> 8b08cd56893f5b7556a384bf2d315f21164c7522
+       

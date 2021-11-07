@@ -4,11 +4,47 @@ html
         link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
         link(href='css/style.css', rel='stylesheet')
     body
+<<<<<<< HEAD
+=======
+        //- div.banner
+        //-     div.content-flex
+        //-         div.col-md-10.banner-title
+        //-             a.home-button(href='/') UMLx
+        //-         a(href="/login")
+        //-             button.no-border.login-button Login
+        nav.navbar.navbar-default
+            div.container-fluid
+                <!-- Brand and toggle get grouped for better mobile display -->
+                div.navbar-header
+                    button.navbar-toggle.collapse(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/") UMLx
+
+                div.collapse.navbar-collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li
+                            a(href='/login' aria-expanded="true", onclick='overviewClicked()') Login
+                    //- li.dropdown
+                    //-     a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Menu
+                    //-         span.caret
+                    //-     ul.dropdown-menu
+                    //-         li
+                    //-             a(role="tab", data-toggle="tab", href='/' aria-expanded="true", onclick='overviewClicked()') login
+
+>>>>>>> be15fa552126f768ab2cbb3ef9554aebf962d5d2
         div.banner
             div.content-flex
                 div.col-md-10.banner-title
                     a.home-button(href='/') UMLx
+<<<<<<< HEAD
                 button.no-border.login-button Login
+=======
+                a(href="/login")
+                    button.no-border.login-button Login
+>>>>>>> be15fa552126f768ab2cbb3ef9554aebf962d5d2
         if message
             div.message-box
             p.message-text message:#{message}

@@ -467,7 +467,11 @@
 	
 	}
 	
+<<<<<<< HEAD
 	function predictEffort(modelInfo, key, callbackfunc, config){
+=======
+	function predictEffort(modelInfo, key, callbackfunc, transactionWeightingSchema, config){
+>>>>>>> be15fa552126f768ab2cbb3ef9554aebf962d5d2
 		
 		var modelConfig = {
                                sizeMetric : "EUCP",
@@ -495,6 +499,7 @@
 ////
 //		process.exit();
 		
+<<<<<<< HEAD
 		RScriptExec.runRScript(command,function(result){
 			if (!result) {
 //				console.log('exec error: ' + error);
@@ -514,6 +519,27 @@
 					    var projectEffort = Number(JSON.parse(str).result);
 					   // calculate the estimation results directly. For UI development and other development, use this option.
                        //var projectEffort = Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].effortAdj[0]);
+=======
+//		RScriptExec.runRScript(command,function(result){
+//			if (!result) {
+////				console.log('exec error: ' + error);
+//				console.log("project effort estimation error");
+//				if(callbackfunc){
+//					// error because of the R script
+//					callbackfunc(false);
+//				}
+//			} else {
+//				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
+//					   if (err) throw err;
+//					   console.log("R results:");
+//					   console.log(str);
+
+
+                       // using R calculation results. parse the prediction result from the file. For model integration use this option.
+//					    var projectEffort = Number(JSON.parse(str).result);
+					   // calculate the estimation results directly. For UI development and other development, use this option.
+                       var projectEffort = Number(modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric])*Number(transactionWeightingSchema[modelConfig.sizeMetric].effortAdj[0]);
+>>>>>>> be15fa552126f768ab2cbb3ef9554aebf962d5d2
 					   
 					   var estimationResults = {
 							   	EstimationModel: key,
@@ -550,9 +576,15 @@
 						   }
 						});
 
+<<<<<<< HEAD
 				});
 			}
 		});
+=======
+//				});
+//			}
+//		});
+>>>>>>> be15fa552126f768ab2cbb3ef9554aebf962d5d2
 	}
 	
 	module.exports = {

@@ -19,6 +19,7 @@
 	var jp = require('jsonpath');
 	var uuidV1 = require('uuid/v1');
 	var kdmModelUtils = require("./KDMModelUtils.js");
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
 	var FileManagerUtils = require("../../utils/FileManagerUtils.js");
 
 	function analyseCode(jsonString, outputDir) {
@@ -43,8 +44,13 @@
 			//process the name
 			var packageName = referencedClassUnit.name.substring(0, referencedClassUnit.name.lastIndexOf('.'));
 			var className = referencedClassUnit.name.substring(referencedClassUnit.name.lastIndexOf('.')+1, referencedClassUnit.name.length);
+<<<<<<< HEAD
+			
+			
+=======
             var type = referencedClassUnit.type;
 
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 			var classUnit = {
 					UUID: referencedClassUnit.UUID,
 					name: className,
@@ -169,6 +175,25 @@
 			cfg: androidAnalysisResults.cfg
 		};
 
+<<<<<<< HEAD
+		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
+		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+
+
+		dependencyGraphDrawer.drawClassDependencyGraph(result, outputDir);
+
+        dependencyGraphDrawer.drawClassDependencyGraphGroupedByCompositeClass(result, outputDir);
+
+        dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(result, outputDir);
+
+        dependencyGraphDrawer.drawCompositeClassDependencyGraph(result, outputDir);
+		
+=======
 //		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
 //	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
 //		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
@@ -177,6 +202,7 @@
 //		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
 //		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
 //
+>>>>>>> 51347c4a2e1047226912f8b6a7b254614e344ef8
 		return result;
 	}
 	
@@ -392,7 +418,10 @@
 					name: attrUnit.name +":attrDependency",
 					UUID: attrUnit.UUID,
 					attr: attrUnit,
-					component: classUnit,
+					component: {
+						name: classUnit.name,
+						classUnit: classUnit.UUID
+					},
 				}
 				nodesAttrByID[startNode.UUID] = startNode;
 			}
@@ -402,7 +431,10 @@
 			if(!endNode){
 			endNode = {
 					name: targetClassUnit.name,
-					component: targetClassUnit,
+					component: {
+						name: targetClassUnit.name,
+						classUnit: targetClassUnit.UUID
+					},
 					UUID: targetClassUnit.UUID
 			}
 			nodesAttrByID[endNode.UUID] = endNode;
@@ -416,7 +448,10 @@
 					name: attrUnit.name +":attrDependency",
 					UUID: attrUnit.UUID,
 					attr: attrUnit,
-					component: compositeClassUnit
+					component: {
+						name: compositeClassUnit.name,
+						compositeClassUnit: compositeClassUnit.UUID
+					}
 				}
 				nodesAttrCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 			}
@@ -426,7 +461,10 @@
 				endNodeComposite = {
 					name: targetCompositeClassUnit.UUID,
 					UUID: targetCompositeClassUnit.name,
-					component: targetCompositeClassUnit
+					component: {
+						name: targetCompositeClassUnit.name,
+						compositeClassUnit: targetCompositeClassUnit.UUID
+					}
 				}
 				nodesAttrCompositeByID[targetCompositeClassUnit.UUID] = endNodeComposite;
 			}
@@ -437,6 +475,79 @@
 			}
 		}
 		
+//		for(var i in androidAnalysisResults.compositionGraph){
+//			var edge = androidAnalysisResults.compositionGraph[i];
+//			var fromClass = dicClassUnits[edge.from.UUID];
+//			var toClass = dicClassUnits[edge.to.UUID];
+//
+//			if(!fromClass || !toClass){
+//				continue;
+//			}
+//
+//			var fromNode = {
+//					name: fromClass.name,
+//					UUID: fromClass.UUID,
+//					component: fromClass
+//			}
+//
+//			var toNode = {
+//					name: toClass.name,
+//					UUID: toClass.UUID,
+//					component: toClass
+//			}
+//
+//
+//			if(!dicNodes[fromNode.UUID]){
+//				compositionGraph.nodes.push(fromNode);
+//				dicNodes[fromNode.UUID] = 1;
+//			}
+//
+//			if(!dicNodes[toNode.UUID]){
+//				compositionGraph.nodes.push(toNode);
+//				dicNodes[toNode.UUID] = 1;
+//			}
+//
+//			if(!dicEdges[fromNode.UUID+"->"+toNode.UUID]){
+//			compositionGraph.edges.push({start: fromNode, end: toNode});
+//			dicEdges[fromNode.UUID+"->"+toNode.UUID] = 1;
+//			}
+//
+//			var fromCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[fromNode.UUID]];
+//			var toCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[toNode.UUID]];
+//
+//			if(!fromCompositeClass || !toCompositeClass){
+//				continue;
+//			}
+//
+//			var fromNodeComposite = {
+//					name: fromCompositeClassUnit.name,
+//					UUID: fromCompositeClassUnit.UUID,
+//					component: fromCompositeClassUnit
+//			}
+//
+//			var toNodeComposite = {
+//					name: toCompositeClassUnit.name,
+//					UUID: toCompositeClassUnit.UUID,
+//					component: toCompositeClassUnit
+//			}
+//
+//			if(!dicNodes[fromNodeComposite.UUID]){
+//				compositionGraph.nodesComposite.push(fromNodeComposite);
+//				dicNodesComposite[fromNodeComposite.UUID] = 1;
+//			}
+//
+//			if(!dicNodes[toNodeComposite.UUID]){
+//				compositionGraph.nodesComposite.push(toNodeComposite);
+//				dicNodesComposite[toNodeComposite.UUID] = 1;
+//			}
+//
+//			if(!dicEdgesComposite[fromNode.UUID+"->"+toNode.UUID]){
+//			compositionGraph.edgesComposite.push({start: fromNodeComposite, end: toNodeComposite});
+//			dicEdgesComposite[fromNode.UUID+"->"+toNode.UUID] = 1;
+//			}
+//
+//		}
+
 		return compositionGraph;
 	}
 	
@@ -599,7 +710,10 @@
 							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: classUnit
+							component: {
+								name: classUnit.name,
+								classUnit: classUnit.UUID
+							}
 						}
 						nodeReturnByID[startNode.UUID] = startNode;
 					}
@@ -609,7 +723,10 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: targetClassUnit,
+							component: {
+								name: targetClassUnit.name,
+								classUnit: targetClassUnit.UUID
+							},
 							UUID: targetClassUnit.UUID
 					}
 					nodeReturnByID[endNode.UUID] = endNode;
@@ -623,7 +740,10 @@
 							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: compositeClassUnit
+							component: {
+								name: compositeClassUnit.name,
+								compositeClassUnit: compositeClassUnit.UUID
+							}
 						}
 						nodesReturnCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -633,7 +753,10 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.UUID,
 							UUID: targetCompositeClassUnit.name,
-							component: targetCompositeClassUnit
+							component: {
+								name: targetCompositeClassUnit.name,
+								compositeClassUnit: targetCompositeClassUnit.UUID
+							}
 						}
 						nodesReturnCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}
@@ -656,7 +779,10 @@
 							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: classUnit
+							component: {
+								name: classUnit.name,
+								classUnit: classUnit.UUID
+							}
 						}
 						nodesParamByID[startNode.UUID] = startNode;
 					}
@@ -665,7 +791,10 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: targetClassUnit,
+							component: {
+								name: targetClassUnit.name,
+								classUnit: targetClassUnit.UUID
+							},
 							UUID: targetClassUnit.UUID
 					}
 					nodesParamByID[endNode.UUID] = endNode;
@@ -680,7 +809,10 @@
 							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: compositeClassUnit
+							component: {
+								name: compositeClassUnit.name,
+								compositeClassUnit: compositeClassUnit.UUID
+							}
 						}
 						nodesParamCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -690,7 +822,10 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.UUID,
 							UUID: targetCompositeClassUnit.name,
-							component: targetCompositeClassUnit
+							component: {
+								name: targetCompositeClassUnit.name,
+								compositeClassUnit: targetCompositeClassUnit.UUID
+							}
 						}
 						nodesParamCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}
@@ -713,7 +848,10 @@
 							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: classUnit
+							component: {
+								name: classUnit.name,
+								classUnit: classUnit.UUID
+							}
 						}
 						nodesLocalByID[startNode.UUID] = startNode;
 					}
@@ -724,7 +862,10 @@
 					if(!endNode){
 					endNode = {
 							name: targetClassUnit.name,
-							component: targetClassUnit,
+							component: {
+								name: targetClassUnit.name,
+								classUnit: targetClassUnit.UUID
+							},
 							UUID: targetClassUnit.UUID
 					}
 					nodesLocalByID[endNode.UUID] = endNode;
@@ -739,7 +880,10 @@
 							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
-							component: compositeClassUnit
+							component: {
+								name: compositeClassUnit.name,
+								compositeClassUnit: compositeClassUnit.UUID
+							}
 						}
 						nodesLocalCompositeByID[startNodeComposite.UUID] = startNodeComposite;
 					}
@@ -749,7 +893,10 @@
 						endNodeComposite = {
 							name: targetCompositeClassUnit.name,
 							UUID: targetCompositeClassUnit.UUID,
-							component: targetClassUnit
+							component: {
+								name: targetCompositeClassUnit.name,
+								compositeClassUnit: targetCompositeClassUnit.UUID
+							}
 						}
 						nodesLocalCompositeByID[endNodeComposite.UUID] = endNodeComposite;
 					}

@@ -77,9 +77,9 @@ modelData <- selectData(dataset)
 #                    yName='Effort',
 #                    groupName="Organization")
 
-#ggplot(modelData,aes(SLOC, Effort, color=Organization)) + 
-#  geom_point() + 
-#  scale_color_manual(values = c('#999999','#E69F00')) + 
+#ggplot(modelData,aes(SLOC, Effort, color=Organization)) +
+#  geom_point() +
+#  scale_color_manual(values = c('#999999','#E69F00')) +
 #  theme(legend.position=c(0,1), legend.justification=c(0,1))
 
 #datasetUCP <- read.csv("./dsets/parallel_agile_10_27.csv")
@@ -223,7 +223,7 @@ summary(log_sloc.lm)$r.squared
 print(summary(log_sloc.lm))
 
 sloc.lm = lm(Effort ~ SLOC, data=outputData)
-summary(sloc.lm)$r.squared 
+summary(sloc.lm)$r.squared
 print(summary(sloc.lm))
 
 cosmic.lm = lm(Effort ~ COSMIC, data=outputData)
@@ -235,7 +235,7 @@ summary(swtii.lm)$r.squared
 print(summary(swtii.lm))
 
 swtiii.lm = lm(Effort ~ SWTIII, data=outputData)
-summary(swtiii.lm)$r.squared 
+summary(swtiii.lm)$r.squared
 print(summary(swtiii.lm))
 
 swti.lm = lm(Effort ~ SWTI, data=outputData)
@@ -243,11 +243,11 @@ summary(swti.lm)$r.squared
 print(summary(swti.lm))
 
 ifpug.lm = lm(Effort ~ AFP, data=outputData)
-summary(ifpug.lm)$r.squared 
+summary(ifpug.lm)$r.squared
 print(summary(ifpug.lm))
 
 uucp.lm = lm(Effort ~ UUCP, data=outputData)
-summary(uucp.lm)$r.squared 
+summary(uucp.lm)$r.squared
 print(summary(uucp.lm))
 
 #evaluate the models for their size metrics
@@ -466,8 +466,20 @@ print(outputDir)
 #colnames(avgPreds) <- c("Pred", "NEURAL_NET", "LASSO", "REG_TREE", "TRAN", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC", "STEP_REG")
 meltAvgPreds = melt(avgPreds, id.vars="Pred")
 colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info")
+ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+print("melt avg preds info as lines and smooth function")
+ggplot(meltAvgPreds) + theme_bw() +
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
+
+
 print("melt avg preds info as dots and smooth function")
-avg_pred_plot = ggplot(meltAvgPreds) + theme_bw() + 
+avg_pred_plot = ggplot(meltAvgPreds) + theme_bw() +
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=seq(from=1, to = length(model_names), by =1))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
@@ -498,7 +510,7 @@ for (i in 1:length(accuracy_metrics)){
   }else{
     selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
   }
-  
+
   cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
 }
 
@@ -539,12 +551,12 @@ for(i in 1:length(accuracy_metrics)){
   selectedData <- cvRankResults[names(cvRankResults) == g]
   names(selectedData) <- c("rank");
   p[[i]] <- ggplot(selectedData, aes(x=rownames(cvRankResults), y=rank, fill=rownames(cvRankResults))) +
-    geom_bar(stat="identity", colour = "black") + 
-    #scale_y_discrete(expand = c(0, 0)) + 
+    geom_bar(stat="identity", colour = "black") +
+    #scale_y_discrete(expand = c(0, 0)) +
     guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
     geom_text(aes(label = rank, vjust = -0.3, hjust = 0.5)) +
     #ggtitle(accuracy_metrics[i]) +
-    labs(caption=toupper(accuracy_metrics[i])) + 
+    labs(caption=toupper(accuracy_metrics[i])) +
     theme(plot.caption = element_text(hjust=0.5, vjust = 2.5, size=rel(1)),
           #axis.line=element_blank(),
           axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(), panel.background = element_blank())
@@ -567,23 +579,26 @@ p_cvRank
 selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
 names(selectedData) <- c("rank");
 p_cvAllRank <- ggplot(selectedData, aes(x=rownames(selectedData), y=rank, fill=rownames(selectedData))) +
-  geom_bar(stat="identity", colour = "black", width = 0.7) + 
-  #scale_y_discrete(expand = c(0, 0)) + 
+  geom_bar(stat="identity", colour = "black", width = 0.7) +
+  #scale_y_discrete(expand = c(0, 0)) +
   guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
   geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle("Overall Ranking Result for Cross Validation") +
-  #labs(caption=toupper("Total Rank")) + 
-  theme(plot.caption = element_text(hjust=0.5, size=rel(0.5)), legend.position = "bottom",legend.text=element_text(size=10), 
-        plot.title = element_text(hjust = 0.5), 
+  #labs(caption=toupper("Total Rank")) +
+  theme(plot.caption = element_text(hjust=0.5, size=rel(0.5)), legend.position = "bottom",legend.text=element_text(size=10),
+        plot.title = element_text(hjust = 0.5),
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 p_cvAllRank
-
 ```
 
 ```{r evaluate overlapping of 84% confidence intervals}
 #evaluate bootstrap results
+###plot for the bootstrapping results
+bsRet <- benchmarkResults$bsResults
 #bootstrappingSE(SWTIIIModelData, otherSizeMetricsData, model3, 10000, 0.83)
+bsEstimations <- bsRet[['bsEstimations']]
+iterResults <- bsRet[['iterResults']]
 
 #save as csv
 #write.csv(bsEstimations, file='bsEstimations.csv', quote=F, row.names = F)
@@ -595,6 +610,20 @@ p_cvAllRank
 #iterResults <- read.csv('iterResults.csv')
 
 # plot bootstrapping results
+
+model_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    model_labels = c(model_labels, names(models)[i])
+  }
+}
+
+metric_labels <- c()
+for(i in 1:length(models)){
+  for(j in 1:length(accuracy_metrics)){
+    metric_labels = c(metric_labels, accuracy_metrics[j])
+  }
+}
 
 df <- data.frame(t(bsEstimations))
 df$label <- rownames(df)
@@ -623,7 +652,7 @@ for (i in 1:length(accuracy_metrics)){
           else if(selectedData[j,]$mean < selectedData[k,]$mean){
             direction = "-"
           }
-          
+
           if(selectedData[j,]$metric %in% c("mae", "mdmre", "mmre")){
             if(direction == "+"){
               direction = "-"
@@ -667,7 +696,7 @@ for (i in 1:length(accuracy_metrics)){
     g = accuracy_metrics[i]
     g_label <- toupper(g)
     selectedData <- df[df$metric_labels == g,]
-    confidence_interval_graph_plots[[i]] <- ggplot(selectedData, aes(x = label, y = mean)) + 
+    confidence_interval_graph_plots[[i]] <- ggplot(selectedData, aes(x = label, y = mean)) +
     geom_errorbar(aes(ymin=lower, ymax=upper), colour="black", width=.1) +
     geom_point(size=2, shape=21, fill="black") + # 21 is filled circle
     xlab('') +
@@ -734,13 +763,13 @@ for(metric_i in 1:length(accuracy_metrics)){
     }
   }
   }
-  
-  edge_val <- c() 
+
+  edge_val <- c()
   # if A -> B -> C, remove edge A -> C
   for(i in 1:length(model_names)){
     for(j in 1:length(model_names)){
       if(m[i,j] != 0){
-        edge_val <- c(edge_val, m[i,j]) 
+        edge_val <- c(edge_val, m[i,j])
         for(k in 1:length(model_names)){
           if(m[j,k] != 0)
             m[i,k] = 0
@@ -748,7 +777,7 @@ for(metric_i in 1:length(accuracy_metrics)){
       }
     }
   }
-  
+
   #plot the directed graph
   model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
   rownames(model_mean) <- model_names
@@ -761,14 +790,14 @@ for(metric_i in 1:length(accuracy_metrics)){
   }
 
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
-  
+
 lo <- layout.fruchterman.reingold(net, niter = 1000)
-plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
-    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL,
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black",
               edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label.cex=0.7)
-  
+
 #plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
-  
+
   title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
 }
 ```
@@ -865,13 +894,13 @@ for(metric_i in 1:length(accuracy_metrics)){
     }
     }
   }
-  
-  edge_val <- c() 
+
+  edge_val <- c()
   # if A -> B -> C, remove edge A -> C
   for(i in 1:length(model_names)){
     for(j in 1:length(model_names)){
       if(m[i,j] != 0){
-        edge_val <- c(edge_val, m[i,j]) 
+        edge_val <- c(edge_val, m[i,j])
         for(k in 1:length(model_names)){
           if(m[j,k] != 0)
             m[i,k] = 0
@@ -879,7 +908,7 @@ for(metric_i in 1:length(accuracy_metrics)){
       }
     }
   }
-  
+
   #plot the directed graph
   model_mean <- matrix(0, nrow = length(model_names), byrow = FALSE)
   rownames(model_mean) <- model_names
@@ -890,13 +919,13 @@ for(metric_i in 1:length(accuracy_metrics)){
   }
 
   net=graph.adjacency(m,mode="directed",weighted=TRUE,diag=FALSE)
-  
+
 lo <- layout.fruchterman.reingold(net, niter = 1000)
 print(metric_i)
 sig_rank_graph_plot = as.ggplot(
 function() {
-plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL, 
-    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black", 
+plot(net, vertex.label=paste(model_mapping$model_texts[match(V(net)$name, model_mapping$model_names)], model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout = lo, vertex.size = 5, vertex.frame.color = NULL,
+    vertex.label.dist = 1, vertex.label.cex = 0.7,  vertex.label.color="black",
               edge.color="black", edge.arrow.size=0.5, edge.width = 0.5, edge.label = edge_val, edge.label.cex=0.7)
 title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels[metric_i], "accuracy_metric_texts"])
 }
@@ -904,7 +933,7 @@ title(main = accuracy_mapping[accuracy_mapping$accuracy_metrics == metric_labels
 print(sig_rank_graph_plot)
 sig_rank_graph_plots[[metric_i]] = sig_rank_graph_plot
 #plot.igraph(net,vertex.label=paste(V(net)$name, model_mean[which(rownames(model_mean) == V(net)$name)], sep = " : "), layout=layout.fruchterman.reingold(net)*30.0, vertex.color="white", vertex.label.color="black", vertex.size=3, edge.color="black", vertex.label.dist = 0.5, edge.label = edge_val, edge.width=3, edge.arrow.size=0.5, edge.arrow.width=1.2)
-  
+
 }
 
 prow <- plot_grid( sig_rank_graph_plots[[1]] + theme(legend.position="none"),
@@ -921,7 +950,7 @@ print(sig_rank_graphs)
 ggsave(paste(outputDir, "sig_rank_graphs.png", sep="/"), width=6, height=10)
 
 
-# filter for 
+# filter for
 
 ```
 
@@ -946,15 +975,15 @@ for(i in 1:6){
   #print(rownames(categorizedDataset))
 
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("initialDate","early"))
-  
+
   #categorizedDataset <- selectData("../android_analysis_datasets/android_dataset_6_29.csv", selector=c("type","Productivity"))
-  
+
   #print(categorizedDataset)
   benchmarkResults <- modelBenchmark(models, categorizedDataset)
   categorizedBenchmarkResults[[benchmarkLabels[i]]] <- benchmarkResults
-  
+
   # calculate the rank information
-  
+
 }
 #projectCategoryLabels <- as.data.frame(as.matrix(read.csv("./project_categorization1.csv")))
 #projectCategoryLabels <- paste(projectCategoryLabels$Selection, projectCategoryLabels$Type, sep=": ")
@@ -963,7 +992,7 @@ p_cvAllRank_plots = list()
 #print the categorized benchmark results
 for(i in 1: nCategories){
 benchmarkResults = categorizedBenchmarkResults[[names(categorizedBenchmarkResults)[i]]]
-  
+
 cvResults <- benchmarkResults$cvResults
 
 cvAccuracyResults <- data.frame(cvResults$accuracyResults)
@@ -987,7 +1016,7 @@ for (j in 1:length(accuracy_metrics)){
   }else{
     selectedData[paste("rank", i, sep = "")] <- rank(-selectedData[,1], ties.method = "min")
   }
-  
+
   cvRankResults <- merge(cvRankResults, selectedData, by = "model_labels", all=FALSE)
 }
 
@@ -1021,14 +1050,14 @@ selectedData <- cvRankResults[names(cvRankResults) == "rank*"]
 names(selectedData) <- c("rank");
 modelsName <- rownames(selectedData)
 p_cvAllRank <- ggplot(selectedData, aes(x=modelsName, y=rank, fill=modelsName)) +
-  geom_bar(stat="identity", colour = "black", width = 0.8, height=0.5) + 
-  #scale_y_discrete(expand = c(0, 0)) + 
+  geom_bar(stat="identity", colour = "black", width = 0.8, height=0.5) +
+  #scale_y_discrete(expand = c(0, 0)) +
   guides(fill = guide_legend(title = "MODEL", nrow = 2)) +
   geom_text(aes(label = rank, vjust = -0.4, hjust = 0.5)) +
   ggtitle(projectCategoryLabels[i]) +
-  #labs(caption=toupper("Total Rank")) + 
+  #labs(caption=toupper("Total Rank")) +
   theme(plot.caption = element_text(hjust=0.5, vjust=4, size=rel(0.2)), legend.position = "bottom", legend.text=element_text(size=8), legend.title=element_text(size=8),
-        plot.title = element_text(hjust = 0.5, vjust=4, size=rel(0.8)), 
+        plot.title = element_text(hjust = 0.5, vjust=4, size=rel(0.8)),
         #axis.line=element_blank(),
         axis.title=element_blank(), axis.text=element_blank(),axis.ticks=element_blank(),  panel.background = element_blank())
 print(p_cvAllRank)

@@ -1,0 +1,47 @@
+java -jar soot-infoflow-cmd/target/soot-infoflow-cmd-jar-with-dependencies.jar \
+    -a <APK File> \
+    -p <Android JAR folder> \
+    -s <SourcesSinks file>
+
+java -jar soot-infoflow-cmd/target/soot-infoflow-cmd-jar-with-dependencies.jar \
+    -a ./app-noApp-noDestory.apk \
+    -p H:/ResearchSpace/Android_Workspace/Android_SDK/platforms \
+    -s SourcesAndSinks.txt
+
+
+java -jar soot-infoflow-cmd/target/soot-infoflow-cmd-jar-with-dependencies.jar \
+    -a ./soot-infoflow-android/testAPKs/FlowDroidAliasActivity.apk \
+    -p H:/ResearchSpace/Android_Workspace/Android_SDK/platforms \
+    -s SourcesAndSinks.txt
+
+java -jar static-cfg.jar ./app-noApp-noDestory.apk H:/ResearchSpace/Android_Workspace/Android_SDK/platforms
+
+FlowDroid
+EXPORT ANDROID_JARS=<Android JAR folder>
+EXPORT DROIDBENCH=<DroidBench folder>
+mvn install
+
+EXPORT ANDROID_JARS=H:/ResearchSpace/Android_Workspace/Android_SDK/platforms
+EXPORT DROIDBENCH=H:/ResearchSpace/AndroidAnalysis/DroidBench
+mvn install
+
+export ANDROID_JARS=H:/ResearchSpace/Android_Workspace/Android_SDK/platforms
+export DROIDBENCH=H:/ResearchSpace/AndroidAnalysis/DroidBench
+mvn -DskipTests install
+mvn install
+
+export ANDROID_JARS=G:/ResearchSpace/AndroidWorkspace/AndroidSDK/platforms
+export DROIDBENCH=H:/ResearchSpace/AndroidAnalysis/DroidBench
+mvn -DskipTests install
+mvn install
+
+export ANDROID_JARS=D:/Android_SDK/platforms
+export DROIDBENCH=D:/ResearchSpace/ResearchProjects/UMLx/facility-tools/FlowDroid/DroidBench
+mvn -DskipTests install
+mvn install
+
+export ANDROID_JARS=D:/Android_SDK/platforms
+export DROIDBENCH=D:/ResearchSpace/ResearchProjects/UMLx/facility-tools/FlowDroid/DroidBench
+mvn -DskipTests install
+mvn install
+

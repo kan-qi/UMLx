@@ -24,20 +24,21 @@ if estimationResults
   div(id='#{estimationResults.EstimationModel}-estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{estimationResults.EstimationResultsFile}" data-myURL='url_id')
     div(id='estimation-charts')
   div.use-case-predictions.table-responsive
-    table.table.table-bordered
+    table.table.table-bordered.ui.green.table
       thead
         tr
-          th#number_column Number
-          th#Use_Case Use Case
-          th#EffortPH Effort (PH)
-          th#SizeMeasurement #{estimationResults.SizeMetric}
-          th#Duration Schedule (Months)
-          th#Personnel Personnel (Developers)
+          th.center.aligned#number_column Number
+          th.center.aligned#Use_Case Use Case
+          th.center.aligned#EffortPH Effort (PH)
+          th.center.aligned#SizeMeasurement #{estimationResults.SizeMetric}
+          th.center.aligned#Duration Schedule (Months)
+          th.center.aligned#Personnel Personnel (Developers)
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
-              td #{i}
-              td #{estimationResults.UseCases[i].Name}
+              td #{i+1}
+              td
+               a(href='/displayjsondata') #{estimationResults.UseCases[i].Name}
               td #{estimationResults.UseCases[i].Effort}
               td #{estimationResults.UseCases[i].SizeMeasurement}
               td #{estimationResults.UseCases[i].Duration}

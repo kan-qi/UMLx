@@ -252,7 +252,7 @@ function model_survey_file_upload_fnc() {
         success: function (response) {
             console.log(response);
         },
-        error: function () {
+        error: function (err) {
             console.log("fail");
             console.log(err);
             alert("There was an error submitting survey data");
@@ -321,7 +321,7 @@ function predict_project_effort_func() {
             console.log('#'+estimationModel+'-estimation-results-charts');
             showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
-        error: function () {
+        error: function (err) {
             // hide loading
             document.getElementById("loadingScreen").classList.add("hidden");
 
@@ -2507,7 +2507,7 @@ function buildTable(data) {
                 //console.log("pathbefore: " + path);
                 path = path.substring(7);
                 //console.log("path: " + path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
+                out += "<tr><td><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
                     newKeys[i] +
                     "</a></td><td>folder</td>";
                 out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
@@ -2528,27 +2528,27 @@ function buildTable(data) {
                 var path = parentUrl + "/" + newKeys[i];
                 // console.log("path: " + path);
                 if (newKeys[i].endsWith(".csv")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".txt")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".svg")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".json")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
@@ -2683,7 +2683,7 @@ function buildTable2(data) {
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
             documentUrl = newKeys[i];
-            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
+            out += "<tr><td><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
@@ -2696,27 +2696,27 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
