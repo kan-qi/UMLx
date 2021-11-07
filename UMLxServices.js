@@ -33,6 +33,7 @@ var endpoints = {};
 
 global.__basedir = __dirname;
 
+var saveEstimationModel=require('./saveEstimationModel.js');
 /* output/ and uploads/ folders auto-creation */
 var checkDirExist = (folderpath) => {
 	const pathArr = folderpath.split('/');
@@ -968,7 +969,7 @@ app.get('/profile',function(req,res){
         		res.render('profile', {profileInfo:profileInfo, profileRep:result.Repos[0]});
 	   	});
     	});
-});
+})
 
 app.get('/inviteUser',function(req,res){
 	res.render('invite');
@@ -2214,4 +2215,19 @@ app.get('/getZipPackage', function (req, res){
  			});
 	    }
 	});		
+});
+app.get('/sem/:model_name',(req,res)=>{
+	//console.log(req.params)
+	saveEstimationModel.queryEstimationModelNames(req.params.model_name).then(function(result){
+         //searchResult=result
+        // console.log(result)
+         res.send({express:result})
+	})
+});
+app.get('/qem/:model_id',(req,res)=>{
+	saveEstimationModel.searchEstimationModelDetail(req.params.model_id).then(function(result){
+         //searchResult=result
+         //console.log(result)
+         res.send({express:result})
+	})
 });
