@@ -101,6 +101,7 @@
 		+ modelInfo["FPAnalytics"].RET + ","
 		+ modelInfo["FPAnalytics"].ILF + ","
 		+ modelInfo["FPAnalytics"].EIF + ","
+		+ modelInfo["FPAnalytics"].FTR + ","
 		+ modelInfo["FPAnalytics"].EI + ","
 		+ modelInfo["FPAnalytics"].EO + ","
 		+ modelInfo["FPAnalytics"].EQ + ","
@@ -156,6 +157,7 @@
 		RET :0,
 		ILF :0,
 		EIF :0,
+		FTR: 0,
 		//MKII
 		OBJ: 0,
 		}

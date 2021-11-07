@@ -32,7 +32,7 @@
 		if(contents){
 		var lines = contents.split(/\r?\n/g);
 		 
-	    for(var i = 0;i < lines.length;i++){
+	    for(var i = 0; i < lines.length; i++){
 	        //code here using lines[i] which will give you each line
 	    	var line = lines[i];
 	    	
@@ -154,7 +154,7 @@
 		}
 		
 		var dicResponseMethodUnits = {};
-
+		
 		if(contents && methodSigns.length > 0){
 		var lines = contents.split(/\r?\n/g);
 		

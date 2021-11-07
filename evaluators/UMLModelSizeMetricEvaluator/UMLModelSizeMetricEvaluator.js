@@ -97,7 +97,7 @@
 				+ modelInfo["SizeMetricAnalytics"].NSR + "," //Number of Services Requested
 				+ modelInfo["SizeMetricAnalytics"].NATTR + "," //Number of Attributes //duplicate
 		// Minkiewicz [17]
-				+ modelInfo["SizeMetricAnalytics"].NOS + "," //Number of use cases/scenario scripts 
+				+ modelInfo["SizeMetricAnalytics"].NOS + "," //Number of use cases/scenario scripts
 				+ modelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
 				+ modelInfo["SizeMetricAnalytics"].MPC + "," //Methods per class
 //				+ modelInfo["SizeMetricAnalytics"].NOCH + "," //Number of children
@@ -112,21 +112,21 @@
 		        + modelInfo["SizeMetricAnalytics"].ANWMC + "," //Average number of weighted methods per classes
 		        + modelInfo["SizeMetricAnalytics"].ADIT + "," //Average depth of inheritance tree 
 		        + modelInfo["SizeMetricAnalytics"].NOCPBC + "," //Average number of children per base class
-//	   // Albrecht [3]
-//		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
-//		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
-//		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types
-//		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
+	   // Albrecht [3]
+		        + modelInfo["SizeMetricAnalytics"].EIF + "," //External interface files
+		        + modelInfo["SizeMetricAnalytics"].ILF + "," //Internal logic files
+		        + modelInfo["SizeMetricAnalytics"].DET + "," //Data element types 
+		        + modelInfo["SizeMetricAnalytics"].FTR + "," //File type referenced
 	  // Karner [4]
 		        + modelInfo["SizeMetricAnalytics"].NT + "," //Number of Transactions
 		        + modelInfo["SizeMetricAnalytics"].NOC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOA + "," //Number of actors
 	 // Kim [9]
-//	            + modelInfo["SizeMetricAnalytics"].NOA + "," //Number of actors //duplicate
 				+ modelInfo["SizeMetricAnalytics"].NOUC + "," //Number of use cases
 				+ modelInfo["SizeMetricAnalytics"].NOR + "," //Number of roles
 				+ modelInfo["SizeMetricAnalytics"].ANAPUC + "," //Average number of actors per use case
 				+ modelInfo["SizeMetricAnalytics"].ANRPUC + "," //Average number of roles per use case
+				+ modelInfo["SizeMetricAnalytics"].UCP + "," //Use Case Points
 				+ modelInfo["SizeMetricAnalytics"].NOC + "," //Number of classes
 				+ modelInfo["SizeMetricAnalytics"].NOIR + ","  //Number of Inheritance Relationships
 				+ modelInfo["SizeMetricAnalytics"].NOUR + "," //Number of use relationships
@@ -148,7 +148,7 @@
 				+ modelInfo["SizeMetricAnalytics"].NOMPC + "," //Number of methods per class
 				+ modelInfo["SizeMetricAnalytics"].NPPM + "," //Number of parameters per method
 				+ modelInfo["SizeMetricAnalytics"].NMT; //Number of method types
-
+	
 	console.log("testing row");
 	console.log(row);
 		
@@ -300,7 +300,8 @@
 				element.NOCH = element.numberOfChildren; //Number of children
 				element.DIT = element.depthInheritanceTree; //Depth in inheritance tree
 				element.CBO = element.couplingBetweenObjects; //Coupling between objects
-
+				
+				element.NUMS = 0; //Number of unique messages sent
 				element.NCI = element.numberOfClassesInherited; //Number of classes inherited
 				element.NCIF = element.numberOfClassesInheritedFrom; //Number of classes inherited from
 				// should be applied to individual classes
@@ -313,7 +314,7 @@
 			}
 
 //			process.exit(0);
-			
+
 //			domainModelInfo["SizeMetricAnalytics"].EIF = 0; //External interface files
 //	        domainModelInfo["SizeMetricAnalytics"].ILF = 0; //Internal logic files
 //	        domainModelInfo["SizeMetricAnalytics"].DET = 0; //Data element types 
@@ -405,11 +406,11 @@
 		        ANWMC:0, //Average number of weighted methods per classes
 		        ADIT:0, //Average depth of inheritance tree 
 		        NOCPBC:0, //Average number of children per base class
-//	   // Albrecht [3]
-//		        EIF:0, //External interface files
-//		        ILF:0, //Internal logic files
-//		        DET:0, //Data element types
-//		        FTR:0, //File type referenced
+	   // Albrecht [3]
+		        EIF:0, //External interface files
+		        ILF:0, //Internal logic files
+		        DET:0, //Data element types 
+		        FTR:0, //File type referenced
 	  // Karner [4]
 		        NT:0, //Number of Transactions
 		        NOC:0, //Number of use cases
@@ -420,6 +421,7 @@
 				NOR:0, //Number of roles
 				ANAPUC:0, //Average number of actors per use case
 				ANRPUC:0, //Average number of roles per use case
+				UCP:0, //Use Case Points
 				NOC:0, //Number of classes
 				NOIR:0,  //Number of Inheritance Relationships
 				NOUR:0, //Number of use relationships

@@ -342,6 +342,7 @@
                             var externalOperNum_cls = 0;
                             var parameterNum_cls = 0;
                             var weightedOperNum_cls = 0;
+                            var numberOfCalls = 0;
                             
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
@@ -364,6 +365,7 @@
 							
 					               var w = 0.3;
 					               weightedOperNum_cls += w*1;
+					               numberOfCalls += operation.numberOfCalls;
                             }
                             
                             
@@ -390,6 +392,7 @@
                 element.externalOperNum = externalOperNum_cls;
                 element.parameterNum = parameterNum_cls;
                 element.weightedOperNum = weightedOperNum_cls;
+                element.numberOfCalls = numberOfCalls;
                             
                // determine the inheritance relationships
                var derivedClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
