@@ -1,0 +1,22 @@
+id,element,useCase,type,component
+1,Supervisor:"add individual" button,Add individuals to the list of allowed users,control,ValidatesInput
+2,Supervisor:View Individual's page,Add individuals to the list of allowed users,boundary,EMTformpage
+3,Supervisor:invalidate error message,Add individuals to the list of allowed users,control,ValidatesInput
+4,Supervisor:OTP empty error message,Add individuals to the list of allowed users,boundary,EMTformpage
+5,Supervisor:Add invidual form page,Add individuals to the list of allowed users,boundary,EMTformpage
+6,"add individual" button:redirects to the add individual form page,Add individuals to the list of allowed users,boundary,EMTformpage
+7,Add invidual form page:validates input,Add individuals to the list of allowed users,control,ValidatesInput
+8,redirects to the add individual form page:Add invidual form page,Add individuals to the list of allowed users,boundary,EMTformpage
+9,Insert the new individual's record into db:Redirect View Individual's Page,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+10,Insert the new individual's record into db:individuals record db,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+11,validates input:Insert the new individual's record into db,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+12,Redirect View Individual's Page:send ot device,Add individuals to the list of allowed users,control,sendotdevice
+13,Redirect View Individual's Page:View Individual's page,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+14,receive and storate device id at local storage:individuals record db,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+15,validates input:invalidate error message,Add individuals to the list of allowed users,control,ValidatesInput
+16,send ot device:receive and storate device id at local storage,Add individuals to the list of allowed users,boundary,RedirectViewIndividualsPage
+17,stl#Supervisor:"add individual" button,Add individuals to the list of allowed users,Stimulus,undefined
+18,stl#Supervisor:View Individual's page,Add individuals to the list of allowed users,Stimulus,undefined
+19,stl#Supervisor:invalidate error message,Add individuals to the list of allowed users,Stimulus,undefined
+20,stl#Supervisor:OTP empty error message,Add individuals to the list of allowed users,Stimulus,undefined
+21,stl#Supervisor:Add invidual form page,Add individuals to the list of allowed users,Stimulus,undefined

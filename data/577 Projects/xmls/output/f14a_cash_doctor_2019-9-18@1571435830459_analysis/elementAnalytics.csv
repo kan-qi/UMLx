@@ -1,0 +1,134 @@
+id,element,useCase,type,component
+1,User:Add provider button,Add New Provider,actor,Addproviderbutton
+2,User:provider information input page,Add New Provider,actor,Addproviderbutton
+3,User:Provider created success message,Add New Provider,actor,Addproviderbutton
+4,Add provider button:Display provider add page,Add New Provider,actor,Addproviderbutton
+5,Display provider add page:provider information input page,Add New Provider,actor,Addproviderbutton
+6,create a new provider:Provider,Add New Provider,actor,Addproviderbutton
+7,Provider created success message:Update provider rating information,Add New Provider,actor,Addproviderbutton
+8,create a new provider:Provider created success message,Add New Provider,actor,Addproviderbutton
+9,Update provider rating information:Rating,Add New Provider,entity,Rating
+10,provider information input page:create a new provider,Add New Provider,actor,Addproviderbutton
+11,stl#User:Add provider button,Add New Provider,Stimulus,undefined
+12,stl#User:provider information input page,Add New Provider,Stimulus,undefined
+13,stl#User:Provider created success message,Add New Provider,Stimulus,undefined
+14,User:Error message for update failure,Edit Consumer Profile,boundary,Errormessageforupdatefailure
+15,User:User profile page,Edit Consumer Profile,control,profile
+16,verify input message:Error message for update failure,Edit Consumer Profile,boundary,Errormessageforupdatefailure
+17,User profile page:verify input message,Edit Consumer Profile,boundary,Errormessageforupdatefailure
+18,save udpated profile:profile,Edit Consumer Profile,control,profile
+19,verify input message:save udpated profile,Edit Consumer Profile,control,profile
+20,stl#User:Error message for update failure,Edit Consumer Profile,Stimulus,undefined
+21,stl#User:User profile page,Edit Consumer Profile,Stimulus,undefined
+22,User:follow/unfollow button,Follow/unfollow a provider,actor,Addproviderbutton
+23,User:Confirm dialog,Follow/unfollow a provider,control,Confirmdialog
+24,User:Search provide page,Follow/unfollow a provider,actor,Addproviderbutton
+25,Confirm dialog:Update subscription information,Follow/unfollow a provider,entity,Subscription
+26,Popup confirm diagram:Confirm dialog,Follow/unfollow a provider,control,Confirmdialog
+27,Display all provider based on criteria:follow/unfollow button,Follow/unfollow a provider,actor,Addproviderbutton
+28,Display all provider based on criteria:Provider,Follow/unfollow a provider,actor,Addproviderbutton
+29,Search provide page:Display all provider based on criteria,Follow/unfollow a provider,actor,Addproviderbutton
+30,Popup confirm diagram:Redirect to search page,Follow/unfollow a provider,control,Redirecttosearchpage
+31,follow/unfollow button:Popup confirm diagram,Follow/unfollow a provider,control,Confirmdialog
+32,Redirect to search page:Search provide page,Follow/unfollow a provider,control,Redirecttosearchpage
+33,Update subscription information:Subscription,Follow/unfollow a provider,entity,Subscription
+34,stl#User:follow/unfollow button,Follow/unfollow a provider,Stimulus,undefined
+35,stl#User:Confirm dialog,Follow/unfollow a provider,Stimulus,undefined
+36,stl#User:Search provide page,Follow/unfollow a provider,Stimulus,undefined
+37,send email including credential:Email Protocol,Login,actor,Addproviderbutton
+38,User:Forgotten username or password link,Login,boundary,Errormessageforupdatefailure
+39,User:Invalid information error message,Login,boundary,Errormessageforupdatefailure
+40,User:My account page,Login,control,Redirecttosearchpage
+41,User:Login page,Login,control,Redirecttosearchpage
+42,Forgotten username or password link:send email including credential,Login,control,sendemailincludingcredential
+43,Invalid information error message:redirect to login page,Login,control,Redirecttosearchpage
+44,verify user information:Invalid information error message,Login,boundary,Errormessageforupdatefailure
+45,Login page:verify user information,Login,entity,User
+46,redirect to login page:Login page,Login,control,Redirecttosearchpage
+47,verify user information:My account page,Login,control,Redirecttosearchpage
+48,verify user information:user info,Login,entity,User
+49,stl#User:Forgotten username or password link,Login,Stimulus,undefined
+50,stl#User:Invalid information error message,Login,Stimulus,undefined
+51,stl#User:My account page,Login,Stimulus,undefined
+52,stl#User:Login page,Login,Stimulus,undefined
+53,User:check requests button,Maintain the system,boundary,requestlist
+54,User:request list,Maintain the system,boundary,requestlist
+55,User:request status is successfully updated.,Maintain the system,boundary,requestlist
+56,update status of requests:Request,Maintain the system,boundary,requestlist
+57,load requests:Request,Maintain the system,boundary,requestlist
+58,check requests button:load requests,Maintain the system,boundary,requestlist
+59,load requests:request list,Maintain the system,boundary,requestlist
+60,request list:update status of requests,Maintain the system,boundary,requestlist
+61,update status of requests:request status is successfully updated.,Maintain the system,boundary,requestlist
+62,stl#User:check requests button,Maintain the system,Stimulus,undefined
+63,stl#User:request list,Maintain the system,Stimulus,undefined
+64,stl#User:request status is successfully updated.,Maintain the system,Stimulus,undefined
+65,User:Rating input page,Rate a provider,entity,Rating
+66,User:rate button,Rate a provider,actor,Addproviderbutton
+67,User:Search provider page,Rate a provider,control,Redirecttosearchpage
+68,Display all provider based on criteria:Provider,Rate a provider,actor,Addproviderbutton
+69,Display all provider based on criteria:rate button,Rate a provider,actor,Addproviderbutton
+70,Search provider page:Display all provider based on criteria,Rate a provider,actor,Addproviderbutton
+71,Display rating input page:Redirect to search page,Rate a provider,control,Redirecttosearchpage
+72,Display rating input page:Rating input page,Rate a provider,entity,Rating
+73,rate button:Display rating input page,Rate a provider,entity,Rating
+74,Update provider rating information:Rating,Rate a provider,entity,Rating
+75,Rating input page:Update provider rating information,Rate a provider,actor,Addproviderbutton
+76,Redirect to search page:Search provider page,Rate a provider,control,Redirecttosearchpage
+77,stl#User:Rating input page,Rate a provider,Stimulus,undefined
+78,stl#User:rate button,Rate a provider,Stimulus,undefined
+79,stl#User:Search provider page,Rate a provider,Stimulus,undefined
+80,User:Invalid input message,Search Provider,boundary,Errormessageforupdatefailure
+81,User:Search crieteria input page,Search Provider,control,Redirecttosearchpage
+82,User:non matched doctor,Search Provider,boundary,Doctor
+83,update the recognized information into database.:Doctor,Search Provider,boundary,Doctor
+84,retrieve matched doctors from db:Doctor,Search Provider,boundary,Doctor
+85,Invalid input message:OCR read the medical information,Search Provider,control,sendemailincludingcredential
+86,retrieve matched doctors from db:Invalid input message,Search Provider,boundary,Errormessageforupdatefailure
+87,OCR read the medical information:non matched doctor,Search Provider,boundary,Doctor
+88,OCR read the medical information:update the recognized information into database.,Search Provider,boundary,Errormessageforupdatefailure
+89,Search crieteria input page:retrieve matched doctors from db,Search Provider,boundary,Doctor
+90,retrieve matched doctors from db:non matched doctor,Search Provider,boundary,Doctor
+91,stl#User:Invalid input message,Search Provider,Stimulus,undefined
+92,stl#User:Search crieteria input page,Search Provider,Stimulus,undefined
+93,stl#User:non matched doctor,Search Provider,Stimulus,undefined
+94,User:Share price through picture capture button,Share Price through OCR capture,actor,Addproviderbutton
+95,User:photo list,Share Price through OCR capture,boundary,loadphotofromlibrary
+96,User:unable to recoginize information from photo,Share Price through OCR capture,boundary,loadphotofromlibrary
+97,OCR read the medical information:update the recognized information into database.,Share Price through OCR capture,boundary,Errormessageforupdatefailure
+98,OCR read the medical information:unable to recoginize information from photo,Share Price through OCR capture,boundary,loadphotofromlibrary
+99,photo list:OCR read the medical information,Share Price through OCR capture,control,sendemailincludingcredential
+100,update the recognized information into database.:Price,Share Price through OCR capture,control,Price
+101,Share price through picture capture button:load photo from library,Share Price through OCR capture,boundary,loadphotofromlibrary
+102,load photo from library:photo list,Share Price through OCR capture,boundary,loadphotofromlibrary
+103,stl#User:Share price through picture capture button,Share Price through OCR capture,Stimulus,undefined
+104,stl#User:photo list,Share Price through OCR capture,Stimulus,undefined
+105,stl#User:unable to recoginize information from photo,Share Price through OCR capture,Stimulus,undefined
+106,User:input information invalid error message,Share Prices,boundary,Errormessageforupdatefailure
+107,User:Share price button,Share Prices,control,Price
+108,User:price detail input page,Share Prices,control,Price
+109,Share price button:diplay price input page,Share Prices,control,Price
+110,diplay price input page:price detail input page,Share Prices,control,Price
+111,verify input price information:input information invalid error message,Share Prices,boundary,Errormessageforupdatefailure
+112,price detail input page:verify input price information,Share Prices,control,Price
+113,save input price information:profile,Share Prices,entity,profile
+114,verify input price information:save input price information,Share Prices,control,Price
+115,stl#User:input information invalid error message,Share Prices,Stimulus,undefined
+116,stl#User:Share price button,Share Prices,Stimulus,undefined
+117,stl#User:price detail input page,Share Prices,Stimulus,undefined
+118,send email including credential:Email Protocol,View Dashboard Page,actor,Addproviderbutton
+119,User:Feature List,View Dashboard Page,boundary,FeatureList
+120,User:Invalid information error message,View Dashboard Page,boundary,Errormessageforupdatefailure
+121,User:Forgotten username or password link,View Dashboard Page,boundary,Errormessageforupdatefailure
+122,User:feature detail,View Dashboard Page,boundary,FeatureList
+123,Feature List:redirect to feature page,View Dashboard Page,control,Redirecttosearchpage
+124,Forgotten username or password link:send email including credential,View Dashboard Page,control,sendemailincludingcredential
+125,Invalid information error message:update feature detail,View Dashboard Page,boundary,FeatureList
+126,redirect to feature page:Invalid information error message,View Dashboard Page,boundary,Errormessageforupdatefailure
+127,update feature detail:feature,View Dashboard Page,boundary,FeatureList
+128,feature detail:update feature detail,View Dashboard Page,boundary,FeatureList
+129,redirect to feature page:feature detail,View Dashboard Page,boundary,FeatureList
+130,stl#User:Feature List,View Dashboard Page,Stimulus,undefined
+131,stl#User:Invalid information error message,View Dashboard Page,Stimulus,undefined
+132,stl#User:Forgotten username or password link,View Dashboard Page,Stimulus,undefined
+133,stl#User:feature detail,View Dashboard Page,Stimulus,undefined

@@ -1,0 +1,55 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class displaystheviewpendingtasksscreen {
+~ displaystheviewpendingtasksscreen()
+~ Choosestheoptiontoviewpendingtasksfromtheadministrator��sdashboard()
+~ invalidinformationisdisplayedtotheuser()
+~ Displaystasksdetailsandassignee()
+}
+
+class User 
+
+class Object1 {
+~ Choosesproject()
+~ Selectssubmit()
+}
+
+class Hompage {
+~ Hompage()
+~ Logininpage()
+~ showconfirmationpage()
+~ opensuptothesignuppage()
+}
+
+class attemptstoverifytheinputs {
+~ attemptstoverifytheinputs()
+~ Inputsdesiredinformationandselectstheupdateoption()
+~ invalidinformationisdisplayedtotheuser()
+~ selectstheexportbutton()
+~ receiveaninappnotification()
+~ Addscommenttotheminute()
+~ Displaysmessagetotheusertonotifythem()
+~ submitstheinformationtobeapprovedbyanadministrator()
+~ openstextboxforusertoinputcomment()
+}
+
+class Choosesameeting {
+~ Choosesameeting()
+~ Meetingissavedontheadministrator��sandroiddeviceinPDFformat()
+~ displaysthegeneratemeetingscreen()
+~ Choosesacreatedmeetingforwhichtopublishandthenselectsthepublishbutton()
+~ Publishesameeting()
+~ OpenstheConstructionMeetingMinutesAndroidapplication()
+~ Choosestheoptiontoviewstatusofcomment()
+}
+
+class Selectsassignedtask {
+~ Selectsassignedtask()
+~ Inputscommentforselectedtask()
+~ Choosestheoptiontoviewassigntask()
+~ displaystheviewassigntasksscreen()
+~ Displaysmeetingdetailsandassignee()
+}
+
+@enduml

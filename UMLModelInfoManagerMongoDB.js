@@ -513,6 +513,7 @@
     }
 
     function saveEstimation (estimationInfo, callbackfunc) {
+<<<<<<< HEAD
         MongoClient.connect(url, function(err, db)
         {
             if (err) throw err;
@@ -590,6 +591,26 @@
         });
     }
 
+=======
+   	 MongoClient.connect(url, function(err, db)
+   	            {
+   	                if (err) throw err;
+   	                db.collection("estimates").insertOne(estimationInfo, function(err, res) 
+   	                		{
+   			                  if (err) throw err;
+   			                      console.log("estimates record inserted");
+   			
+   			                      db.close();
+   			                      if(callbackfunc !== null)
+   			                      {
+   			                              callbackfunc(estimationInfo);
+   			                      }
+     
+   	                		});
+   	            });
+   }
+    
+>>>>>>> 8e22dd3a45f4d9f3b5be12098ac584490ea37c6e
     function queryModelInfo(modelId, repoId, callbackfunc){
         MongoClient.connect(url, function (err, db) {
 

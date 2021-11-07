@@ -1,0 +1,82 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor supervisor
+participant "RedirectViewIndividualsPage" as 09
+participant "EMTformpage" as 19
+participant "Insertrecordintodb" as 59
+participant "VlunteerDiasterHomepage" as 149
+
+supervisor -> 09: Manageindividualsbutton()
+activate 09
+
+09 -> 09: Redirectstothemanageindividualspage()
+09 -> 09: listofindividualdetailspage()
+09 -> 09: RedirectstotheindividualresendOTPpage()
+09 -> 19: ResendOTPpage()
+activate 19
+
+19 -> 09: redirecttothemanageindividualspage()
+09 -> 09: listofindividualdetailspage()
+09 -> 09: RedirectstotheindividualresendOTPpage()
+09 -> 09: redirectstothemanageindividualspage()
+deactivate 09
+
+19 -> 149: clearsdeviceidofvolunteer()
+activate 149
+
+149 -> 59: Transportcoordinatepage()
+activate 59
+
+deactivate 59
+
+149 -> 149: sendsOTPtovolunteersemailID()
+149 -> 09: Redirecttomanagementindivisualspage()
+activate 09
+
+09 -> 59: Transportcoordinatepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+149 -> 59: trackingrecorddatabase()
+activate 59
+
+deactivate 59
+
+deactivate 149
+
+deactivate 19
+
+supervisor -> 19: ResendOTPpage()
+activate 19
+
+19 -> 09: redirecttothemanageindividualspage()
+activate 09
+
+deactivate 09
+
+19 -> 149: clearsdeviceidofvolunteer()
+activate 149
+
+deactivate 149
+
+deactivate 19
+
+supervisor -> 09: listofindividualdetailspage()
+activate 09
+
+09 -> 09: RedirectstotheindividualresendOTPpage()
+deactivate 09
+
+supervisor -> 59: Transportcoordinatepage()
+activate 59
+
+deactivate 59
+
+@enduml

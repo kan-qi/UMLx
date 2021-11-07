@@ -1,0 +1,51 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Attendeeisnotavailable" as 09
+participant "Selectingsettingsbutton" as 19
+participant "pdf" as 69
+
+Administrator -> 09: generatemeetinglog()
+activate 09
+
+09 -> 19: querymeetingsbyproject()
+activate 19
+
+19 -> 19: Meetinglist()
+19 -> 19: exportmeeting()
+19 -> 19: meetings()
+deactivate 19
+
+19 -> 69: pdf()
+activate 69
+
+deactivate 69
+
+19 -> 19: meetings()
+activate 19
+
+deactivate 19
+
+19 -> 19: nomeetingerrorpage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+Administrator -> 19: Meetinglist()
+activate 19
+
+19 -> 19: exportmeeting()
+deactivate 19
+
+Administrator -> 19: nomeetingerrorpage()
+activate 19
+
+deactivate 19
+
+@enduml

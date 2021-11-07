@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Admininterface" as 09
+participant "Googleplus" as 19
+participant "articleinfo" as 39
+participant "sharetosocialnetwork" as 89
+
+User -> 39: articleinfo()
+activate 39
+
+39 -> 89: sharetosocialnetwork()
+activate 89
+
+89 -> 09: Facebook()
+activate 09
+
+deactivate 09
+
+89 -> 19: Googleplus()
+activate 19
+
+deactivate 19
+
+89 -> 09: Twitter()
+activate 09
+
+deactivate 09
+
+89 -> 09: Twitter()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+deactivate 39
+
+User -> 39: Articlelist()
+activate 39
+
+39 -> 39: queryarticleinfo()
+39 -> 39: article()
+deactivate 39
+
+39 -> 39: articleinfo()
+activate 39
+
+39 -> 89: sharetosocialnetwork()
+activate 89
+
+deactivate 89
+
+deactivate 39
+
+@enduml

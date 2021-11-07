@@ -1,0 +1,189 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "redirecttheusertocreatgoalpage" as 09
+participant "Homepage" as 29
+participant "exceedthetimelimite" as 39
+participant "invlidpattern" as 59
+participant "emailprototocol" as 89
+participant "errorinaccessfacebookinformation" as 199
+participant "goal" as 269
+participant "invokeaddcharityusecase" as 309
+participant "generateaurlwithrandomtoken" as 329
+
+Weight loser -> 09: redirecttologinpage()
+activate 09
+
+deactivate 09
+
+Weight loser -> 09: credentialalreadyexist()
+activate 09
+
+deactivate 09
+
+Weight loser -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+Weight loser -> 39: exceedthetimelimite()
+activate 39
+
+deactivate 39
+
+Weight loser -> 29: URLexpiredmessage()
+activate 29
+
+deactivate 29
+
+Weight loser -> 59: invlidpattern()
+activate 59
+
+deactivate 59
+
+Weight loser -> 29: loginpage()
+activate 29
+
+29 -> 89: checkemailandpasswordvalid()
+activate 89
+
+89 -> 59: invlidpattern()
+activate 59
+
+deactivate 59
+
+89 -> 39: checktimelimit()
+activate 39
+
+39 -> 39: checkifsuppliedcredentialsexist()
+39 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+39 -> 09: redirecttheusertohomepage()
+activate 09
+
+09 -> 29: Homepage()
+deactivate 29
+
+deactivate 09
+
+39 -> 09: credentialalreadyexist()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+39 -> 39: exceedthetimelimite()
+activate 39
+
+deactivate 39
+
+39 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+39 -> 269: goal()
+activate 269
+
+deactivate 269
+
+89 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+deactivate 89
+
+29 -> 09: redirecttoforgotpasswordpage()
+activate 09
+
+09 -> 329: generateaurlwithrandomtoken()
+activate 329
+
+329 -> 29: forgotpasswordpage()
+activate 29
+
+29 -> 309: checkurlvalidity()
+activate 309
+
+309 -> 29: URLexpiredmessage()
+deactivate 29
+
+309 -> 89: emaildoesntexist()
+activate 89
+
+deactivate 89
+
+309 -> 09: redirecttonewpasswordpage()
+09 -> 29: newpasswordpage()
+activate 29
+
+29 -> 199: checkifpasswordmatches()
+activate 199
+
+199 -> 09: updatetheuserspassword()
+09 -> 09: redirecttologinpage()
+deactivate 09
+
+09 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+199 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+199 -> 09: redirecttologinpage()
+activate 09
+
+deactivate 09
+
+deactivate 199
+
+deactivate 29
+
+309 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+deactivate 309
+
+deactivate 329
+
+Weight loser -> 29: newpasswordpage()
+activate 29
+
+29 -> 199: checkifpasswordmatches()
+activate 199
+
+deactivate 199
+
+deactivate 29
+
+Weight loser -> 89: emaildoesntexist()
+activate 89
+
+deactivate 89
+
+Weight loser -> 29: forgotpasswordpage()
+activate 29
+
+29 -> 309: checkurlvalidity()
+activate 309
+
+deactivate 309
+
+deactivate 29
+
+@enduml

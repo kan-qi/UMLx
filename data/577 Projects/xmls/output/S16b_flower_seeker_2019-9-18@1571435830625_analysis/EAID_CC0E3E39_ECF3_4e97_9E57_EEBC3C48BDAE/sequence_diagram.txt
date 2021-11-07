@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Useractor thirdpart payment system
+participant "queryauthenticationinfo" as 09
+participant "notavailableerrormessage" as 29
+participant "thirdpartpaymentsystem" as 49
+participant "precheckifinputisempty" as 109
+
+User -> 09: paymentinformationpage()
+activate 09
+
+09 -> 109: precheckifrequiredinformationisempty()
+activate 109
+
+109 -> 09: missinginformationforpaymentmessage()
+deactivate 09
+
+109 -> 09: verifypaymentinformation()
+activate 09
+
+09 -> 49: thirdpartpaymentsystem()
+activate 49
+
+49 -> 29: senderrormessageforinvalidpaymentinformation()
+activate 29
+
+29 -> 09: invalidpaymentinforrmation()
+09 -> 49: redirecttopaymentpage()
+49 -> 09: missinginformationforpaymentmessage()
+deactivate 09
+
+deactivate 49
+
+deactivate 29
+
+49 -> 29: approvetransactionanddisplaysuccessfulmessage()
+activate 29
+
+29 -> 49: paymentsuccessfulmessage()
+activate 49
+
+49 -> 49: redirecttopaymentpage()
+49 -> 09: missinginformationforpaymentmessage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 29
+
+deactivate 109
+
+User -> 09: missinginformationforpaymentmessage()
+activate 09
+
+deactivate 09
+
+thirdpart payment system -> 29: senderrormessageforinvalidpaymentinformation()
+activate 29
+
+deactivate 29
+
+thirdpart payment system -> 29: approvetransactionanddisplaysuccessfulmessage()
+activate 29
+
+deactivate 29
+
+@enduml

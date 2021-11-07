@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "uploadrelevantdocuments" as 19
+participant "clicksubmitbutton" as 29
+participant "selecttheappropriatepostings" as 39
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: fillsoutrelevantinformation()
+activate 19
+
+19 -> 39: generatespostingidentificationdata()
+activate 39
+
+39 -> 39: Postingiscreatedinthesystem()
+39 -> 39: generatesamessagetoinformtheUser()
+39 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+39 -> 39: Postingdb()
+deactivate 39
+
+39 -> 09: Showconfirmationpage()
+activate 09
+
+09 -> 09: Homepage()
+deactivate 09
+
+09 -> 39: Postingdb()
+activate 39
+
+deactivate 39
+
+09 -> 19: fillsoutrelevantinformation()
+19 -> 39: generatespostingidentificationdata()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+User -> 29: ClicksCreatebutton()
+activate 29
+
+29 -> 39: generatespostingidentificationdata()
+activate 39
+
+39 -> 39: Postingiscreatedinthesystem()
+deactivate 39
+
+39 -> 09: Showconfirmationpage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

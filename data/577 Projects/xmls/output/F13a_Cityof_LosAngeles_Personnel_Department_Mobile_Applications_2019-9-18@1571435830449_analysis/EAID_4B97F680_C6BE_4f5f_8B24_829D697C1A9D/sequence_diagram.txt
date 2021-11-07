@@ -1,0 +1,54 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor RSS Parser timeractor RSS feed retriver
+participant "triggerdownloadthelistofjobstoasubscriber" as 09
+participant "UserProfilebutton" as 19
+participant "Notification" as 29
+participant "job" as 39
+
+RSS Parser timer -> 19: searchthroughtheuserprofiledatabase()
+activate 19
+
+19 -> 29: checkmethodofnotification()
+activate 29
+
+29 -> 09: triggerdownloadthelistofjobstoasubscriber()
+activate 09
+
+09 -> 39: job()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+29 -> 19: userprofiledatabase()
+deactivate 19
+
+deactivate 29
+
+19 -> 19: userprofiledatabase()
+activate 19
+
+deactivate 19
+
+RSS feed retriver -> 19: subscribebutton()
+activate 19
+
+19 -> 09: subscribetoajob()
+activate 09
+
+09 -> 39: job()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 19
+
+@enduml

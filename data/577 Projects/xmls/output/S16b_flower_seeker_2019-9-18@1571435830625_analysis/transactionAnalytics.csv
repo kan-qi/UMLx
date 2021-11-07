@@ -1,0 +1,85 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,User:not available error message,Add to cart,1,1,0,0,0
+2,User:add to cart button-->add to cart button:check db if available-->check db if available:add to cart-->add to cart:cart,Add to cart,4,4,0,0,0
+3,User:add to cart button-->add to cart button:check db if available-->check db if available:product,Add to cart,3,2,0,1,0
+4,User:add to cart button-->add to cart button:check db if available-->check db if available:not available error message,Add to cart,3,3,0,0,0
+5,User:error message for empty input,Create profile,1,1,0,0,0
+6,User:successful information for creation,Create profile,1,0,0,1,0
+7,User:existing profile error message,Create profile,1,1,0,0,0
+8,User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:error message for empty input,Create profile,3,2,1,0,0
+9,User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:existing profile error message,Create profile,3,2,1,0,0
+10,User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:send information in db-->send information in db:user info,Create profile,4,1,1,2,0
+11,User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:successful information for creation,Create profile,3,1,1,1,0
+12,User:login page-->login page:pre-check if input is empty-->pre-check if input is empty:error message for empty input,Login,3,2,1,0,0
+13,User:login page-->login page:pre-check if input is empty-->pre-check if input is empty:invalid input error message,Login,3,2,1,0,0
+14,User:login page-->login page:pre-check if input is empty-->pre-check if input is empty:query authentication info-->query authentication info:user info,Login,4,1,1,2,0
+15,User:invalid input error message,Login,1,1,0,0,0
+16,User:error message for empty input,Login,1,1,0,0,0
+17,User:logout button-->logout button:clear session-->clear session:Session,Logout,3,1,2,0,0
+18,User:logout button-->logout button:clear session-->clear session:error message for empty input,Logout,3,2,1,0,0
+19,User:logout button-->logout button:clear session-->clear session:invalid input error message,Logout,3,2,1,0,0
+20,User:logout button-->logout button:clear session-->clear session:query authentication info-->query authentication info:Session,Logout,4,1,3,0,0
+21,User:invalid input error message,Logout,1,1,0,0,0
+22,User:error message for empty input,Logout,1,1,0,0,0
+23,florist:exceeded limit error message,Manage Catalog,1,1,0,0,0
+24,florist:catalog manage page-->catalog manage page:pre-check if required information valid-->pre-check if required information valid:exceeded limit error message,Manage Catalog,3,2,1,0,0
+25,florist:catalog manage page-->catalog manage page:pre-check if required information valid-->pre-check if required information valid:information is invalid,Manage Catalog,3,1,2,0,0
+26,florist:catalog manage page-->catalog manage page:pre-check if required information valid-->pre-check if required information valid:save uploaded information to db-->save uploaded information to db:category,Manage Catalog,4,1,3,0,0
+27,florist:information is invalid,Manage Catalog,1,0,1,0,0
+28,User:Edit profile button-->Edit profile button:display profile edit page,Manage Profile,2,2,0,0,0
+29,User:existing profile error message,Manage Profile,1,1,0,0,0
+30,User:successful change message,Manage Profile,1,1,0,0,0
+31,User:profile edit page-->profile edit page:pre-check required fields-->pre-check required fields:invalid information error message,Manage Profile,3,2,1,0,0
+32,User:profile edit page-->profile edit page:pre-check required fields-->pre-check required fields:update profile entry-->update profile entry:successful change message,Manage Profile,4,2,2,0,0
+33,User:profile edit page-->profile edit page:pre-check required fields-->pre-check required fields:update profile entry-->update profile entry:user info,Manage Profile,4,1,2,1,0
+34,User:invalid information error message,Manage Profile,1,1,0,0,0
+35,User:payment information page-->payment information page:pre-check if required information is empty-->pre-check if required information is empty:missing information for payment message,Place Order,3,0,3,0,0
+36,User:payment information page-->payment information page:pre-check if required information is empty-->pre-check if required information is empty:verify payment information-->verify payment information:thirdpart payment system,Place Order,4,0,4,0,0
+37,User:missing information for payment message,Place Order,1,0,1,0,0
+38,thirdpart payment system:send error message for invalid payment information-->send error message for invalid payment information:invalid payment inforrmation-->invalid payment inforrmation:redirect to payment page-->redirect to payment page:missing information for payment message,Place Order,4,1,3,0,0
+39,thirdpart payment system:approve transaction and display successful message-->approve transaction and display successful message:payment successful message-->payment successful message:redirect to payment page-->redirect to payment page:missing information for payment message,Place Order,4,1,3,0,0
+40,customer:unread message-->unread message:display comment input panel-->display comment input panel:message,Private Message - Florist,3,2,1,0,0
+41,customer:unread message-->unread message:display comment input panel-->display comment input panel:reply input panel-->reply input panel:save replied message-->save replied message:message,Private Message - Florist,5,3,2,0,0
+42,customer:reply input panel-->reply input panel:save replied message-->save replied message:message,Private Message - Florist,3,2,1,0,0
+43,customer:dashboard page-->dashboard page:display unread message-->display unread message:message,Private Message - Florist,3,3,0,0,0
+44,customer:dashboard page-->dashboard page:display unread message-->display unread message:unread message-->unread message:display comment input panel-->display comment input panel:message,Private Message - Florist,5,4,1,0,0
+45,customer:dashboard page-->dashboard page:display unread message-->display unread message:unread message-->unread message:display comment input panel-->display comment input panel:reply input panel-->reply input panel:save replied message-->save replied message:message,Private Message - Florist,7,5,2,0,0
+46,customer:chat button-->chat button:display chat panel-->display chat panel:comment and concerns panel-->comment and concerns panel:save comments/concerns-->save comments/concerns:message,Private message,5,4,1,0,0
+47,customer:chat button-->chat button:display chat panel-->display chat panel:comment and concerns panel-->comment and concerns panel:save comments/concerns-->save comments/concerns:successful communication message,Private message,5,4,1,0,0
+48,customer:successful communication message,Private message,1,1,0,0,0
+49,customer:exceeded limit error message,Private message,1,1,0,0,0
+50,customer:comment and concerns panel-->comment and concerns panel:save comments/concerns-->save comments/concerns:message,Private message,3,3,0,0,0
+51,customer:comment and concerns panel-->comment and concerns panel:save comments/concerns-->save comments/concerns:successful communication message,Private message,3,3,0,0,0
+52,florist:update successful page,Provide tracking information,1,1,0,0,0
+53,florist:Order page-->Order page:update order status information-->update order status information:order,Provide tracking information,3,0,1,2,0
+54,florist:Order page-->Order page:update order status information-->update order status information:update successful page,Provide tracking information,3,1,1,1,0
+55,customer:review panel-->review panel:pre-check if length of review is legal-->pre-check if length of review is legal:store review and rating information-->store review and rating information:review,Review and Rating,4,0,2,2,0
+56,customer:review panel-->review panel:pre-check if length of review is legal-->pre-check if length of review is legal:too short review error message,Review and Rating,3,1,1,1,0
+57,customer:review button-->review button:display review penal-->display review penal:review panel-->review panel:pre-check if length of review is legal-->pre-check if length of review is legal:store review and rating information-->store review and rating information:review,Review and Rating,6,0,2,4,0
+58,customer:review button-->review button:display review penal-->display review penal:review panel-->review panel:pre-check if length of review is legal-->pre-check if length of review is legal:too short review error message,Review and Rating,5,1,1,3,0
+59,customer:too short review error message,Review and Rating,1,1,0,0,0
+60,User:product search page-->product search page:query product by criteria-->query product by criteria:No product error message,Search Product,3,1,2,0,0
+61,User:product search page-->product search page:query product by criteria-->query product by criteria:product,Search Product,3,0,3,0,0
+62,User:product search page-->product search page:query product by criteria-->query product by criteria:product page,Search Product,3,0,3,0,0
+63,User:product page,Search Product,1,0,1,0,0
+64,User:No product error message,Search Product,1,1,0,0,0
+65,user:no order history page,Track Order,1,1,0,0,0
+66,user:order status,Track Order,1,1,0,0,0
+67,user:Track order button-->Track order button:retrieve order status-->retrieve order status:no order history page,Track Order,3,3,0,0,0
+68,user:Track order button-->Track order button:retrieve order status-->retrieve order status:order,Track Order,3,3,0,0,0
+69,user:Track order button-->Track order button:retrieve order status-->retrieve order status:order status,Track Order,3,3,0,0,0
+70,florist:exceeded limit error message,Upload catalog,1,1,0,0,0
+71,florist:information is invalid,Upload catalog,1,0,1,0,0
+72,florist:Upload page-->Upload page:pre-check if required information valid-->pre-check if required information valid:exceeded limit error message,Upload catalog,3,2,1,0,0
+73,florist:Upload page-->Upload page:pre-check if required information valid-->pre-check if required information valid:information is invalid,Upload catalog,3,1,2,0,0
+74,florist:Upload page-->Upload page:pre-check if required information valid-->pre-check if required information valid:save uploaded information to db-->save uploaded information to db:category,Upload catalog,4,1,3,0,0
+75,florist:order history list,View Past Transactions,1,1,0,0,0
+76,florist:no order history page,View Past Transactions,1,1,0,0,0
+77,florist:Order history button-->Order history button:retrieve order history for a florist-->retrieve order history for a florist:no order history page,View Past Transactions,3,3,0,0,0
+78,florist:Order history button-->Order history button:retrieve order history for a florist-->retrieve order history for a florist:order,View Past Transactions,3,3,0,0,0
+79,florist:Order history button-->Order history button:retrieve order history for a florist-->retrieve order history for a florist:order history list,View Past Transactions,3,3,0,0,0
+80,User:Order history button-->Order history button:retrieve order history-->retrieve order history:no order history page,View order history,3,3,0,0,0
+81,User:Order history button-->Order history button:retrieve order history-->retrieve order history:order,View order history,3,3,0,0,0
+82,User:Order history button-->Order history button:retrieve order history-->retrieve order history:order history list,View order history,3,3,0,0,0
+83,User:no order history page,View order history,1,1,0,0,0
+84,User:order history list,View order history,1,1,0,0,0

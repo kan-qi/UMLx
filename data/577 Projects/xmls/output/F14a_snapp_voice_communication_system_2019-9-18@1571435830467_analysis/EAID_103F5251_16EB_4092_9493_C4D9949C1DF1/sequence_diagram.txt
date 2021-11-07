@@ -1,0 +1,103 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Manageractor Twilio API
+participant "queryagentactivies" as 09
+participant "leaddetail" as 29
+participant "callrecorddownloadedmessage" as 39
+participant "TwilioAPI" as 69
+
+Manager -> 09: listofagentswithstatus()
+activate 09
+
+09 -> 69: connecttoTwilioAPIforagentscallrecords()
+activate 69
+
+69 -> 69: TwilioAPI()
+69 -> 39: downloadcallrecords()
+activate 39
+
+39 -> 39: callrecorddownloadedmessage()
+deactivate 39
+
+39 -> 39: callrecords()
+activate 39
+
+deactivate 39
+
+69 -> 39: receivecallinformation()
+activate 39
+
+39 -> 29: calldetailedinformation()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+deactivate 69
+
+09 -> 69: connecttoTwilioAPIforcallsinfo()
+activate 69
+
+69 -> 69: TwilioAPI()
+69 -> 39: downloadcallrecords()
+activate 39
+
+deactivate 39
+
+69 -> 39: receivecallinformation()
+activate 39
+
+deactivate 39
+
+deactivate 69
+
+deactivate 09
+
+Manager -> 09: viewagentactivitieslink()
+activate 09
+
+09 -> 09: queryagentactivies()
+09 -> 09: agent()
+deactivate 09
+
+09 -> 09: listofagentswithstatus()
+activate 09
+
+09 -> 69: connecttoTwilioAPIforagentscallrecords()
+activate 69
+
+deactivate 69
+
+09 -> 69: connecttoTwilioAPIforcallsinfo()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+Manager -> 29: calldetailedinformation()
+activate 29
+
+deactivate 29
+
+Manager -> 39: callrecorddownloadedmessage()
+activate 39
+
+deactivate 39
+
+Twilio API -> 39: downloadcallrecords()
+activate 39
+
+deactivate 39
+
+Twilio API -> 39: receivecallinformation()
+activate 39
+
+deactivate 39
+
+@enduml

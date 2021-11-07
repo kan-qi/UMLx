@@ -1,0 +1,113 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Volunteers" as 09
+participant "Removesession" as 29
+participant "LoginInfo" as 49
+participant "Teams" as 59
+participant "Girl" as 69
+
+User -> 09: GirlsTeamsVolunteersmanagepage()
+activate 09
+
+09 -> 09: Deletegirlsvolunteersteams()
+09 -> 59: Teams()
+activate 59
+
+deactivate 59
+
+09 -> 69: Girl()
+activate 69
+
+deactivate 69
+
+09 -> 09: Volunteers()
+deactivate 09
+
+09 -> 29: Deleteinformationsuccessfully()
+activate 29
+
+deactivate 29
+
+09 -> 09: processinputinformationforgirsteamsvolunteers()
+activate 09
+
+09 -> 49: Invalidmodifiedinformation()
+activate 49
+
+deactivate 49
+
+09 -> 29: Requiredinformationmissingerrormessage()
+activate 29
+
+deactivate 29
+
+09 -> 29: Savemodifiedinformation()
+activate 29
+
+29 -> 69: Girl()
+activate 69
+
+deactivate 69
+
+29 -> 29: Savemodifiedinformationsuccessmessage()
+deactivate 29
+
+29 -> 59: Teams()
+activate 59
+
+deactivate 59
+
+29 -> 09: Volunteers()
+deactivate 09
+
+User -> 09: managegirlsteamsvolunteerspage()
+activate 09
+
+09 -> 69: querygirlinfo()
+activate 69
+
+69 -> 69: Girl()
+deactivate 69
+
+69 -> 59: queryteamsinfo()
+activate 59
+
+59 -> 59: Teams()
+deactivate 59
+
+59 -> 09: queryvolunteersinfo()
+09 -> 09: GirlsTeamsVolunteersmanagepage()
+09 -> 09: Deletegirlsvolunteersteams()
+deactivate 09
+
+09 -> 09: processinputinformationforgirsteamsvolunteers()
+activate 09
+
+deactivate 09
+
+09 -> 09: Volunteers()
+activate 09
+
+deactivate 09
+
+User -> 29: Deleteinformationsuccessfully()
+activate 29
+
+deactivate 29
+
+User -> 29: Savemodifiedinformationsuccessmessage()
+activate 29
+
+deactivate 29
+
+User -> 49: Invalidmodifiedinformation()
+activate 49
+
+deactivate 49
+
+@enduml

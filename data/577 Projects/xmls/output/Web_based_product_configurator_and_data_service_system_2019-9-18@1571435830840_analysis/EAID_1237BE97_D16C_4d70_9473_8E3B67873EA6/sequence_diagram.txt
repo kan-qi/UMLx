@@ -1,0 +1,41 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Checkoutdata" as 59
+participant "User" as 69
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Receivenotificationpage()
+activate 09
+
+09 -> 59: storesthedataintothedatabase()
+activate 59
+
+59 -> 59: validatedataservices()
+59 -> 09: Confirmationpage()
+09 -> 09: Receivenotificationpage()
+09 -> 59: storesthedataintothedatabase()
+deactivate 59
+
+deactivate 09
+
+09 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+59 -> 69: dataservicesdb()
+activate 69
+
+deactivate 69
+
+@enduml

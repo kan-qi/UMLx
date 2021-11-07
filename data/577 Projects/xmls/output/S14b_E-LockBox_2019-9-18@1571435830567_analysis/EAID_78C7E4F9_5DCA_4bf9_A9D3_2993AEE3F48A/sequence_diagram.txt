@@ -1,0 +1,100 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "validationfailedmessage" as 09
+participant "addvewbutton" as 19
+participant "loginpage" as 29
+participant "insertthenewusernameandpasswordintotheuserdb" as 49
+participant "User" as 79
+
+User -> 09: validatefailmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: resetpasswordbutton()
+activate 19
+
+19 -> 09: validatetheroleofuser()
+activate 09
+
+09 -> 79: Userinformation()
+activate 79
+
+deactivate 79
+
+09 -> 49: returnpasswordresetpage()
+activate 49
+
+49 -> 49: passwordresetpage()
+49 -> 09: Validatetheinformationfrompasswordresetpage()
+09 -> 09: validatefailmessage()
+deactivate 09
+
+09 -> 49: updatethepasswordtodatebase()
+49 -> 79: Userinformation()
+activate 79
+
+deactivate 79
+
+49 -> 29: casemanagepage()
+activate 29
+
+deactivate 29
+
+49 -> 09: resetsuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+09 -> 09: unauthorizedactioninformation()
+activate 09
+
+deactivate 09
+
+19 -> 09: validatetheroleofuser()
+activate 09
+
+09 -> 79: Userinformation()
+activate 79
+
+deactivate 79
+
+09 -> 49: returnpasswordresetpage()
+activate 49
+
+49 -> 49: passwordresetpage()
+deactivate 49
+
+09 -> 09: unauthorizedactioninformation()
+deactivate 09
+
+deactivate 19
+
+User -> 29: casemanagepage()
+activate 29
+
+deactivate 29
+
+User -> 09: unauthorizedactioninformation()
+activate 09
+
+deactivate 09
+
+User -> 49: passwordresetpage()
+activate 49
+
+49 -> 09: Validatetheinformationfrompasswordresetpage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,111 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Accessallstudentinformation" as 09
+participant "Manageresourcesbutton" as 19
+participant "Homepage" as 59
+participant "Database" as 89
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 09: showupdateinforamtionresource()
+09 -> 89: Database()
+activate 89
+
+deactivate 89
+
+09 -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: Manageresourcebutton()
+activate 19
+
+19 -> 19: Showlistsofresources()
+19 -> 09: showupdateinforamtionresource()
+activate 09
+
+09 -> 89: Database()
+activate 89
+
+deactivate 89
+
+09 -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+deactivate 19
+
+User -> 19: Chooseoneofresourcesandupdate()
+activate 19
+
+19 -> 09: showupdateinforamtionresource()
+activate 09
+
+09 -> 89: Database()
+activate 89
+
+deactivate 89
+
+09 -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+deactivate 19
+
+User -> 19: Chooseoneofresourcesandupdate()
+activate 19
+
+19 -> 09: showupdateinforamtionresource()
+activate 09
+
+09 -> 89: Database()
+activate 89
+
+deactivate 89
+
+09 -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 09: showupdateinforamtionresource()
+09 -> 89: Database()
+activate 89
+
+deactivate 89
+
+09 -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+User -> 59: Homepage()
+activate 59
+
+deactivate 59
+
+@enduml

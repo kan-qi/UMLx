@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Visitor
+participant "projectdatabase" as 09
+participant "NewPostButton" as 19
+participant "Gallery" as 29
+
+Visitor -> 19: addnewprojectbutton()
+activate 19
+
+19 -> 09: displayanewsectionondashboard()
+activate 09
+
+09 -> 09: dashboardforaddingimagegallerydescriptionofproject()
+09 -> 29: readgalleryfromplugin()
+activate 29
+
+29 -> 09: createnewprojectpage()
+09 -> 29: nogallerymessage()
+deactivate 29
+
+09 -> 09: projectdatabase()
+deactivate 09
+
+deactivate 19
+
+Visitor -> 09: dashboardforaddingimagegallerydescriptionofproject()
+activate 09
+
+09 -> 29: readgalleryfromplugin()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+Visitor -> 29: nogallerymessage()
+activate 29
+
+deactivate 29
+
+@enduml

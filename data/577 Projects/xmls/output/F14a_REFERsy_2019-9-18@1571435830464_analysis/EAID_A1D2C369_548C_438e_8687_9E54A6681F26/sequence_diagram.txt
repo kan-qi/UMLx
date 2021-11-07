@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "saveuseraccount" as 09
+participant "invalidinputinformation" as 19
+
+User -> 09: savedunsuccessfullymessage()
+activate 09
+
+deactivate 09
+
+User -> 19: subscribefornotificationbutton()
+activate 19
+
+19 -> 19: savepreferencesforsubscription()
+19 -> 09: account()
+activate 09
+
+deactivate 09
+
+19 -> 19: invalidemailaddressmessage()
+deactivate 19
+
+19 -> 09: savedunsuccessfullymessage()
+activate 09
+
+deactivate 09
+
+User -> 19: invalidemailaddressmessage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:specific index page-->User:specific index page,Login,CTRL;EXTCLL;DM;EI,2,0,3,1,6
+2,stl#User:failure login information-->User:failure login information,Login,CTRL,2,0,2,1,4
+3,stl#User:login page-->User:login page-->login page:verify input username and password combination-->verify input username and password combination:failure login information,Login,TRAN_NA,4,1,2,3,8
+4,stl#User:login page-->User:login page-->login page:verify input username and password combination-->verify input username and password combination:checkuser's role in db-->checkuser's role in db:redirect to specific index page-->redirect to specific index page:specific index page,Login,TRAN_NA,6,1,2.4,5,14.399999999999999
+5,stl#User:login page-->User:login page-->login page:verify input username and password combination-->verify input username and password combination:checkuser's role in db-->checkuser's role in db:user session,Login,TRAN_NA,5,2,2.5,4,12.5
+6,stl#User:login page-->User:login page-->login page:link to dornife registration system forget password-->link to dornife registration system forget password:dornsife registration system,Login,TRAN_NA,4,0,2,3,8

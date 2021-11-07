@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "microwebsiteform" as 09
+participant "pdfformatisnotvalidmessage" as 29
+participant "Checkfileformatandrequiredfield" as 39
+
+User -> 09: microwebsiteform()
+activate 09
+
+09 -> 39: Redirecttoemailingpage()
+activate 39
+
+39 -> 29: emailingpage()
+activate 29
+
+29 -> 09: Redirecttoanemptymicrowebsiteform()
+09 -> 09: Microwebsiteform()
+09 -> 39: ViewMarketDirectorAccountsPage()
+deactivate 39
+
+09 -> 39: Checkfileformatandrequiredfield()
+activate 39
+
+39 -> 29: failuremessage()
+deactivate 29
+
+deactivate 39
+
+deactivate 09
+
+User -> 09: CreateMicroWebsiteButton()
+activate 09
+
+09 -> 09: Redirecttoanemptymicrowebsiteform()
+09 -> 09: CreateMicroWebsiteButton()
+09 -> 09: Redirecttoanemptymicrowebsiteform()
+09 -> 09: microwebsiteform()
+09 -> 39: Redirecttoemailingpage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+User -> 29: failuremessage()
+activate 29
+
+deactivate 29
+
+User -> 39: ViewMarketDirectorAccountsPage()
+activate 39
+
+deactivate 39
+
+User -> 29: emailingpage()
+activate 29
+
+29 -> 09: Redirecttoanemptymicrowebsiteform()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

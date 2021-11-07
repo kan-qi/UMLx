@@ -1,0 +1,106 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Usermanagementbutton" as 09
+participant "unauthorizedrequest" as 19
+participant "insertuserinfo" as 39
+participant "emailpassword" as 69
+participant "case" as 79
+participant "role" as 109
+
+Administrator -> 09: usermanagementpage()
+activate 09
+
+09 -> 39: queryuserinformation()
+activate 39
+
+39 -> 69: Emailprotocol()
+activate 69
+
+deactivate 69
+
+39 -> 39: User()
+deactivate 39
+
+39 -> 09: userinformationpage()
+09 -> 09: displayusereditpage()
+09 -> 09: usereditpage()
+09 -> 39: validateinputuserinformation()
+activate 39
+
+39 -> 39: invalidinputinformationerror()
+deactivate 39
+
+39 -> 39: saveinputuserinformation()
+activate 39
+
+39 -> 79: Case()
+activate 79
+
+deactivate 79
+
+39 -> 39: User()
+deactivate 39
+
+39 -> 39: displayuserinformation()
+activate 39
+
+39 -> 09: userinformationpage()
+09 -> 09: displayusereditpage()
+deactivate 09
+
+deactivate 39
+
+Administrator -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 09: userinformationpage()
+activate 09
+
+09 -> 09: displayusereditpage()
+deactivate 09
+
+Administrator -> 39: invalidinputinformationerror()
+activate 39
+
+deactivate 39
+
+Administrator -> 09: UserManagementButton()
+activate 09
+
+09 -> 109: validateroleofuser()
+activate 109
+
+109 -> 109: role()
+deactivate 109
+
+109 -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+109 -> 09: usermanagementpage()
+09 -> 39: queryuserinformation()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+Administrator -> 09: usereditpage()
+activate 09
+
+09 -> 39: validateinputuserinformation()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+@enduml

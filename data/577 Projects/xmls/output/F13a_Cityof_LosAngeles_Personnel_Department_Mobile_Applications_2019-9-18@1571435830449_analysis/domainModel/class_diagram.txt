@@ -1,0 +1,80 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class parseRSSfeed {
+~ parseRSSfeed()
+~ RSS()
+}
+
+class Invaliddetailinputmessage {
+~ Invaliddetailinputmessage()
+~ inputthedetailintouserdatabase()
+~ displaysuccessmessageandredirecttohomepage()
+~ savingsuccessmessage()
+~ timeouterrormessage()
+~ jobdescriptiondetail()
+}
+
+class Localstorage {
+~ Localstorage()
+~ redirecttoprofilepage()
+~ homepage()
+~ redicttosearchpage()
+}
+
+class UserProfilebutton {
+~ UserProfilebutton()
+~ userdatabase()
+~ XMLfile()
+~ storeRSSfeedinXMLfile()
+~ searchthroughtheuserprofiledatabase()
+~ subscribebutton()
+~ searchforjobsbutton()
+~ redirecttoprofiledetailspage()
+~ formforinputtinguserinformation()
+~ viewopenjobsbutton()
+}
+
+class checkifemailidandmodelnumberareexisting {
+~ checkifemailidandmodelnumberareexisting()
+~ senddetailsinanencryptedfashiontosearch()
+~ joblistingdatabase()
+~ validateifsearchtermisnonempty()
+}
+
+class Notification {
+~ Notification()
+~ descriptionpage()
+~ readexistinginformation()
+}
+
+class retryrequest {
+~ retryrequest()
+~ retriveRSSfeed()
+~ searchjobdetailrequest()
+~ sendrequesttotheserver()
+}
+
+class triggerdownloadthelistofjobstoasubscriber {
+~ triggerdownloadthelistofjobstoasubscriber()
+~ subscribetoajob()
+~ displaythejobsearchresultinthejobpage()
+~ redirecttojobdescriptionpage()
+}
+
+class job {
+~ job()
+~ joblistpage()
+~ displayunopenjobs()
+~ jobssearchlist()
+}
+
+class redirecttowebsite {
+~ redirecttowebsite()
+}
+
+class Applynoewlink {
+~ Applynoewlink()
+}
+
+@enduml

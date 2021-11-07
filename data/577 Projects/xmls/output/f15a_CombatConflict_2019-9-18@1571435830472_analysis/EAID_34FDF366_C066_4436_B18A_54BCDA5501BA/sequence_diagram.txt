@@ -1,0 +1,82 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Answersfrompagestoredascookie" as 09
+participant "clicksnext" as 19
+participant "readsscenariomemo" as 39
+participant "displaysthankyoumessage" as 129
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: clickscontinuebutton()
+activate 19
+
+19 -> 39: Systemloadsanddisplaysfirstscenario()
+activate 39
+
+39 -> 09: Answersfrompagestoredascookie()
+activate 09
+
+09 -> 39: loadsnextscenario()
+39 -> 09: storesanswersindatabase()
+09 -> 129: displaysthankyoumessage()
+activate 129
+
+129 -> 09: Homepage()
+deactivate 09
+
+deactivate 129
+
+deactivate 39
+
+deactivate 19
+
+User -> 19: ClickContinuebutton()
+activate 19
+
+19 -> 09: Answersfrompagestoredascookie()
+activate 09
+
+09 -> 39: loadsnextscenario()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 19
+
+User -> 39: Userreadsscenariodescription()
+activate 39
+
+39 -> 39: Systemloadsanddisplaysfirstscenario()
+39 -> 09: Answersfrompagestoredascookie()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+User -> 19: clicksonradiobuttonsofanswers()
+activate 19
+
+19 -> 39: Systemloadsanddisplaysfirstscenario()
+activate 39
+
+39 -> 09: Answersfrompagestoredascookie()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 19
+
+@enduml

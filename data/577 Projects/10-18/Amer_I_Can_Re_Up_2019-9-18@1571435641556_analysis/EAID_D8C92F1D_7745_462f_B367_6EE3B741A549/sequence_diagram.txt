@@ -1,0 +1,33 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Editsettings" as 09
+participant "Homepage" as 19
+participant "Showconfirmation" as 39
+
+User -> 09: Editsettingpage()
+activate 09
+
+09 -> 09: Editsettings()
+09 -> 39: Showconfirmation()
+activate 39
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

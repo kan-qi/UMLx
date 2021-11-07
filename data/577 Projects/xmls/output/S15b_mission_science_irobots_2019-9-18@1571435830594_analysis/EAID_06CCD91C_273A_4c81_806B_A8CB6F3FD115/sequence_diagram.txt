@@ -1,0 +1,58 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Buildbutton" as 09
+participant "Fileselector" as 19
+participant "demoinstructioncreatepanel" as 59
+participant "parametersetdialog" as 79
+
+User -> 09: Newfilebutton()
+activate 09
+
+09 -> 59: createnewfile()
+activate 59
+
+59 -> 19: file()
+activate 19
+
+deactivate 19
+
+59 -> 79: popupparameterchangedialog()
+activate 79
+
+79 -> 09: openfilebutton()
+09 -> 19: displayfileselector()
+activate 19
+
+19 -> 19: Fileselector()
+19 -> 19: openfile()
+19 -> 19: file()
+deactivate 19
+
+deactivate 09
+
+deactivate 79
+
+deactivate 59
+
+User -> 19: Fileselector()
+activate 19
+
+19 -> 19: openfile()
+deactivate 19
+
+User -> 09: openfilebutton()
+activate 09
+
+09 -> 19: displayfileselector()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+@enduml

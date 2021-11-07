@@ -1,0 +1,88 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Attendeeactor EventBrite
+participant "Homepage" as 09
+participant "Invalidenteredinformation" as 29
+participant "course" as 39
+participant "Emailprotocol" as 49
+participant "receivepaymentresult" as 59
+
+Attendee -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+Attendee -> 09: Paymentpage()
+activate 09
+
+09 -> 59: makepayment()
+activate 59
+
+59 -> 59: EventBrite()
+59 -> 59: receivepaymentresult()
+59 -> 29: Sendoutconfirmationemail()
+activate 29
+
+29 -> 49: Emailprotocol()
+activate 49
+
+deactivate 49
+
+29 -> 59: registrationsuccess()
+deactivate 59
+
+deactivate 29
+
+59 -> 09: bringuppaymentpage()
+09 -> 09: Paymentpage()
+09 -> 59: makepayment()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+Attendee -> 29: registrationsuccess()
+activate 29
+
+deactivate 29
+
+Attendee -> 39: Coursedetailpage()
+activate 39
+
+39 -> 59: setupPayment()
+activate 59
+
+59 -> 59: EventBrite()
+59 -> 59: receivepaymentresult()
+deactivate 59
+
+59 -> 09: bringuppaymentpage()
+activate 09
+
+deactivate 09
+
+59 -> 39: course()
+deactivate 39
+
+39 -> 09: Redirecttohomepage()
+activate 09
+
+09 -> 09: Homepage()
+deactivate 09
+
+EventBrite -> 59: receivepaymentresult()
+activate 59
+
+deactivate 59
+
+EventBrite -> 09: bringuppaymentpage()
+activate 09
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "clicksubmitbutton" as 09
+participant "Homepage" as 19
+participant "Showconfirmation" as 59
+participant "markstheuseraseitherqualifiedunqualifiedorprocessing" as 69
+
+User -> 09: clicksEditUserProfilebutton()
+activate 09
+
+09 -> 69: returnstheUserProfilefortheUser()
+activate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+69 -> 59: Showconfirmationpage()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+59 -> 09: clicksEditUserProfilebutton()
+09 -> 69: returnstheUserProfilefortheUser()
+deactivate 69
+
+deactivate 09
+
+deactivate 59
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

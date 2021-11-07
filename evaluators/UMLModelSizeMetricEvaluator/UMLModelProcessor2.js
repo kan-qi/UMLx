@@ -181,21 +181,25 @@
 		    },
 		    identifyInheritanceGraph: function(extendsGraph){
                 var inheritanceEdges = [];
+                if(extendsGraph){
                 for(var i in extendsGraph.edges){
                     var edge = extendsGraph.edges[i];
                     if(edge.start.component.type !== "interface"){
                         inheritanceEdges.push(edge);
                     }
                 }
+                }
                 return {edges: inheritanceEdges};
 		    },
 		    identifyImplementationGraph: function(extendsGraph){
                 var implementationEdges = [];
+                                if(extendsGraph){
                                 for(var i in extendsGraph.edges){
                                     var edge = extendsGraph.edges[i];
                                     if(edge.start.component.type === "interface" || edge.start.component.type === "abstract"){
                                         implementationEdges.push(edge);
                                     }
+                                }
                                 }
                  return {edges: implementationEdges};
 		    },

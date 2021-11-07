@@ -1,4 +1,5 @@
 Setup Application...
+<<<<<<< HEAD
 platforms: /mnt/c/Users/roops/AppData/Local/Android/Sdk project: ./data/Test/AFHDownloader.apk
 running: java -Xmx512M -jar ./tools/apktool.jar d --no-src -o /mnt/c/DirectedResearchProject/UMLx/./data/Test/output2/Resources -f ./data/Test/AFHDownloader.apk
 running: java -Xmx16G -cp /mnt/c/DirectedResearchProject/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/c/DirectedResearchProject/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/c/Users/roops/AppData/Local/Android/Sdk -listenerSpecFile /mnt/c/DirectedResearchProject/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/c/DirectedResearchProject/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /mnt/c/DirectedResearchProject/UMLx/./data/Test/output2/Resources/res -manifestFile /mnt/c/DirectedResearchProject/UMLx/./data/Test/output2/Resources/AndroidManifest.xml -project ./data/Test/AFHDownloader.apk -apiLevel android-25 -guiAnalysis -benchmarkName AFHDownloader.apk -android /mnt/c/Users/roops/AppData/Local/Android/Sdk/platforms/android-25/android.jar -client GUIHierarchyPrinterClient -outputDir ./data/Test/output2
@@ -10,6 +11,30 @@ component: org.afhdownloader.DirectoryPicker
 component: org.afhdownloader.SetPreferenceActivity
 component: org.afhdownloader.BootReceiver
 component: org.afhdownloader.Download
+=======
+platforms: /mnt/i/ResearchSpace/AndroidWorkspace/AndroidSDK project: ./data/Test/AFHDownloader.apk
+running: java -Xmx512M -jar ./tools/apktool.jar d --no-src -o /mnt/i/ResearchSpace/ResearchProjects/UMLx/./data/Test/output2/Resources -f ./data/Test/AFHDownloader.apk
+running: java -Xmx16G -cp /mnt/i/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/i/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/i/ResearchSpace/AndroidWorkspace/AndroidSDK -listenerSpecFile /mnt/i/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/i/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /mnt/i/ResearchSpace/ResearchProjects/UMLx/./data/Test/output2/Resources/res -manifestFile /mnt/i/ResearchSpace/ResearchProjects/UMLx/./data/Test/output2/Resources/AndroidManifest.xml -project ./data/Test/AFHDownloader.apk -apiLevel android-25 -guiAnalysis -benchmarkName AFHDownloader.apk -android /mnt/i/ResearchSpace/AndroidWorkspace/AndroidSDK/platforms/android-25/android.jar -client GUIHierarchyPrinterClient -outputDir ./data/Test/output2
+running: java -cp ./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/* org.umlx.utils.FlowDroidConnector ./data/Test/AFHDownloader.apk /mnt/i/ResearchSpace/AndroidWorkspace/AndroidSDK/platforms ./data/Test/output2
+compoents and callbacks: start
+component: org.afhdownloader.DirectoryPicker$2
+method: onItemClick
+component: org.afhdownloader.DirectoryPicker$1
+method: onClick
+component: org.afhdownloader.DirectoryPicker
+component: FakeName_5
+component: org.afhdownloader.Download
+component: FakeName_9
+component: org.afhdownloader.BootReceiver
+component: org.afhdownloader.SetPreferenceActivity
+component: org.afhdownloader.AlarmReceiver
+component: org.afhdownloader.MainActivity$3
+method: onItemClick
+component: org.afhdownloader.MainActivity
+method: onOptionsItemSelected
+component: org.afhdownloader.SwipeDismissListViewTouchListener
+method: onTouch
+>>>>>>> 8e22dd3a45f4d9f3b5be12098ac584490ea37c6e
 compoents and callbacks: end
 classes and methods1:
 package: org.afhdownloader
@@ -7657,10 +7682,18 @@ classes: org.jsoup.select.StructuralEvaluator$PreviousSibling
 library classes: org.jsoup.select.StructuralEvaluator$PreviousSibling
 classes: org.jsoup.select.StructuralEvaluator$Root
 library classes: org.jsoup.select.StructuralEvaluator$Root
+<<<<<<< HEAD
+=======
+classes: FakeName_9
+library classes: FakeName_9
+classes: FakeName_5
+library classes: FakeName_5
+>>>>>>> 8e22dd3a45f4d9f3b5be12098ac584490ea37c6e
 classes: com.google.android.gcm.GCMBaseIntentService
 classes: com.google.android.gms.gcm.GcmListenerService
 classes: dummyMainClass
 library classes: dummyMainClass
+<<<<<<< HEAD
 class id: 4c6be78d-29de-43d2-8291-b5b750958d2a; composite id: 11d588c3-1a63-4fdd-9fc4-e6f6c2c6ebcd
 class id: 955b70ab-da90-4a0e-95e5-c29ebedd7565; composite id: 9c0aa027-e93e-4a23-99ec-a9d53dc9c5b2
 class id: c17e7567-c550-438d-be37-c2e28cde2385; composite id: c90bfdb5-7a58-4762-9554-a431f4e71261
@@ -7722,4 +7755,67 @@ class id: 14ab9da5-f6bb-446f-be94-ec27559c65dc; composite id: 9c0aa027-e93e-4a23
 class id: cd005608-9f69-4c57-8508-e9eab6ab9bad; composite id: c4f273b9-f682-44e4-9953-c9b5836ff785
 class id: 9c11f97d-1074-4e48-b4b0-b92f46eac1c6; composite id: 11d588c3-1a63-4fdd-9fc4-e6f6c2c6ebcd
 class id: e49940c4-4a8c-4363-bd63-0ae50b2ca2f1; composite id: c4f273b9-f682-44e4-9953-c9b5836ff785
+=======
+class id: 1aa7f5c7-f95e-4b13-9e51-d914342f4b1b; composite id: 9f6422e3-f163-40b9-b9b1-e8bc85cd1cd7
+class id: ad21e047-29de-46b5-b840-1f2cfeff8f79; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: 09db1dc0-78a5-4846-a879-889307b7873a; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 15e4ba01-7c64-4a9c-9ced-faf48c6987b5; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: aa1fe001-aa34-4d24-9ebf-115e6920b22a; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: b2de6cdf-eb1d-4827-bb4b-5a1717f24e23; composite id: 4c0c4ca9-27b4-4748-a6a5-9e632da73be4
+class id: c0b44453-13bf-41b7-9c67-e5eab100e841; composite id: ec933b63-249c-41e3-bcd8-a6806a8ca503
+class id: f9c63805-709b-4be3-8556-65f0a0f3597f; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: aa2e0ce4-e2e6-4603-9072-0c225f3da243; composite id: e7a9f29f-a78b-4e4b-b4a2-09c6a2211891
+class id: 3aed2596-6b92-4764-a18d-d9186b815e44; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: b2021acf-7aba-4775-b626-0e26886f7401; composite id: 98f675a2-4a61-497d-98f7-ba9dbe8c700f
+class id: d1964105-dac4-4353-8329-957430959cc2; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 941ad38a-2576-47de-9093-e22ca1077f24; composite id: 6da733f1-ada9-49c2-bafe-1ee216c5f0de
+class id: 7d32b658-f1e7-4346-9893-ff0908042372; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 7f4cbf2c-f5eb-408a-8459-ed64a81f5c58; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: d74e3711-625d-4d8c-a183-09e3cf921fe6; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: 47f05769-3b8f-4865-ac6c-9316b7b7f361; composite id: e7a9f29f-a78b-4e4b-b4a2-09c6a2211891
+class id: 76f7a084-9f3c-494e-a27e-88a96a78a33b; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: 732b5e9d-435a-45b2-8556-c141a320d521; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: f722bbc6-42e4-41e2-8e61-2e1a6c10b5cb; composite id: 952ddd97-1399-4f9b-8efd-001ddbec4006
+class id: c0361703-7f85-4bc0-9a6f-e1aea1662051; composite id: 2da002cc-915e-49b3-8991-39f616e9afe0
+class id: 1a7931d8-14d3-4978-ac46-0f7966ffe21a; composite id: 59eaa734-d59b-4dcb-8ed5-9c621ad4e285
+class id: 004dd404-84ef-48a4-9a44-5b2ed75f731a; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 7083dc39-98fb-4c03-af55-f5be4a93c22b; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: 51294eac-442b-4dad-a3dd-510086b69e4d; composite id: e7a9f29f-a78b-4e4b-b4a2-09c6a2211891
+class id: f6be9f1e-db8c-47e8-921e-f45a9b3346c1; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: 4727ccad-57e1-45af-ba7f-33635770a8e4; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 24b3a71d-c7bf-4aa8-ad52-f1f263834b9d; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: e3b28888-98a8-4bda-a940-5f4e7dfe5097; composite id: 6da733f1-ada9-49c2-bafe-1ee216c5f0de
+class id: 05e0efbd-c917-483f-b784-e9430db20aa3; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: b4cc9c04-e34b-4f30-b596-3a5260455e56; composite id: fea7274b-891e-476a-9d1a-b86973b4b734
+class id: 9ec98578-3916-4c72-80a4-76df49b77463; composite id: 98f675a2-4a61-497d-98f7-ba9dbe8c700f
+class id: 7437b099-d2af-400f-946c-1ba88572822b; composite id: 9f6422e3-f163-40b9-b9b1-e8bc85cd1cd7
+class id: 5938c85d-d0ab-4a3d-be79-6e37f14d1016; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 44f2369a-1e9c-4b0c-81a2-b9e51e72c790; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: 3b15de4f-8bdc-491a-bd6d-827a9e109250; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 69f8214a-3fb3-45d8-9606-3f0fcfeb12b8; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: 2a2f88f4-f1b0-41e7-b153-b62e29c1ed15; composite id: d4330130-5790-47f9-96f0-762e13451c48
+class id: 593ac1ab-70a5-4de4-af44-57d613de8906; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: 6a51f94f-6818-49b9-b000-5cc4cbc83a6f; composite id: e7a9f29f-a78b-4e4b-b4a2-09c6a2211891
+class id: bbcea170-8011-457f-b461-153a15896eef; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: e1926a10-87c7-4ccc-90cb-61b74982a6cc; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: f63f3a43-5e52-4f00-9914-1306be11d11c; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: 711b8268-e081-47ec-87ec-de1062ba6960; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: d2aa395e-a3f0-4ffa-940c-28dcee3f9666; composite id: e7a9f29f-a78b-4e4b-b4a2-09c6a2211891
+class id: 0a1cd23c-ef4a-4c7e-aa9d-852631475963; composite id: fcb4945c-3df1-42fa-b53a-14bf88cdb13c
+class id: e013ba63-c89d-41b7-bef9-524f09a928f7; composite id: 98f675a2-4a61-497d-98f7-ba9dbe8c700f
+class id: 3f0bedc6-24d2-45a3-8e21-b90673eece9e; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 23a74f30-3c74-4c5d-9190-d61f8db998e6; composite id: 2f6e8bec-6597-4bba-8e94-5d9e42dc392b
+class id: 8ed8844a-1474-4bf2-9dc6-574cdf813016; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: a2ab4802-7463-4765-a010-4c42c48a4437; composite id: 6da733f1-ada9-49c2-bafe-1ee216c5f0de
+class id: 32b7e4ca-2428-4c23-8bd0-d16a3e59d458; composite id: d3520182-b83f-4db4-a0ce-2992db11b469
+class id: 47ce39d8-d675-4f8f-a8a1-72bd85884745; composite id: 380fb438-9ba8-4c82-9700-d680747f888f
+class id: f9b381bc-b4e3-451b-9514-ed9787a912c2; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 1a044899-eb8f-4eb4-bad7-5db2ae41324c; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 76c31843-a560-4aec-8e5f-3818c077d6b7; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 5b0da21b-d9d3-4d35-a86d-741a62ef82bc; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+class id: 40974be2-3c9a-4309-8b28-f46cdb563f5f; composite id: 6da733f1-ada9-49c2-bafe-1ee216c5f0de
+class id: 6df39b73-7d87-407f-9921-5a383aed0dbf; composite id: 2da002cc-915e-49b3-8991-39f616e9afe0
+class id: d16830a0-f87d-4e49-bcfb-08611a2558e4; composite id: f2ba7182-e614-416b-9e1c-fc1cb00ac29a
+class id: 41968ff8-c09f-48b4-9e79-5d6088ddd9f0; composite id: d9371407-ae9f-46b1-8abf-cf0ae735826f
+>>>>>>> 8e22dd3a45f4d9f3b5be12098ac584490ea37c6e
 method:valuemethod:<clinit>active body:<clinit>method:<init>active body:<init>method:buildPathactive body:buildPathmethod:onReceiveactive body:onReceivemethod:<init>active body:<init>method:onReceiveactive body:onReceivemethod:setRecurringAlarmactive body:setRecurringAlarmmethod:<clinit>active body:<clinit>method:<init>active body:<init>method:<init>active body:<init>method:onClickactive body:onClickmethod:<init>active body:<init>method:access$000active body:access$000method:access$100active body:access$100method:access$200active body:access$200method:access$300active body:access$300method:returnDiractive body:returnDirmethod:filteractive body:filtermethod:namesactive body:namesmethod:onActivityResultactive body:onActivityResultmethod:onCreateactive body:onCreatemethod:getIntentactive body:getIntentmethod:setIntentactive body:setIntentmethod:setResultactive body:setResultmethod:<init>active body:<init>method:onItemClickactive body:onItemClickmethod:<clinit>active body:<clinit>method:<init>active body:<init>method:access$400active body:access$400method:downloadactive body:downloadmethod:getBaseUrlactive body:getBaseUrlmethod:getDLUrlactive body:getDLUrlmethod:getFirstUrlactive body:getFirstUrlmethod:getMD5active body:getMD5method:onBindactive body:onBindmethod:onStartCommandactive body:onStartCommandmethod:parseUrlactive body:parseUrlmethod:<init>active body:<init>method:<init>active body:<init>method:doInBackgroundactive body:doInBackgroundmethod:doInBackgroundactive body:doInBackgroundmethod:onPostExecuteactive body:onPostExecutemethod:onPostExecuteactive body:onPostExecutemethod:<init>active body:<init>method:<init>active body:<init>method:doInBackgroundactive body:doInBackgroundmethod:doInBackgroundactive body:doInBackgroundmethod:onPostExecuteactive body:onPostExecutemethod:onPostExecuteactive body:onPostExecutemethod:<init>active body:<init>method:<init>active body:<init>method:doInBackgroundactive body:doInBackgroundmethod:doInBackgroundactive body:doInBackgroundmethod:<init>active body:<init>method:<init>active body:<init>method:doInBackgroundactive body:doInBackgroundmethod:doInBackgroundactive body:doInBackgroundmethod:onPostExecuteactive body:onPostExecutemethod:onPostExecuteactive body:onPostExecutemethod:<init>active body:<init>method:onClickactive body:onClickmethod:<init>active body:<init>method:access$000active body:access$000method:checkCallingObjectSuitabilityactive body:checkCallingObjectSuitabilitymethod:executePermissionsRequestactive body:executePermissionsRequestmethod:getActivityactive body:getActivitymethod:hasPermissionsactive body:hasPermissionsmethod:onRequestPermissionsResultactive body:onRequestPermissionsResultmethod:requestPermissionsactive body:requestPermissionsmethod:requestPermissionsactive body:requestPermissionsmethod:runAnnotatedMethodsactive body:runAnnotatedMethodsmethod:shouldShowRequestPermissionRationaleactive body:shouldShowRequestPermissionRationalemethod:onPermissionsDeniedmethod:onPermissionsGrantedmethod:<init>active body:<init>method:onClickactive body:onClickmethod:<init>active body:<init>method:makeLogTagactive body:makeLogTagmethod:<init>active body:<init>method:calculateMD5active body:calculateMD5method:checkMD5active body:checkMD5method:<init>active body:<init>method:getCommandsToExecuteactive body:getCommandsToExecutemethod:<init>active body:<init>method:executeactive body:executemethod:getCommandsToExecutemethod:<clinit>active body:<clinit>method:<init>active body:<init>method:access$000active body:access$000method:CancelAlarmactive body:CancelAlarmmethod:buildPathactive body:buildPathmethod:getBaseUrlactive body:getBaseUrlmethod:getPrefactive body:getPrefmethod:message_dialog_yes_noactive body:message_dialog_yes_nomethod:onActivityResultactive body:onActivityResultmethod:onCreateactive body:onCreatemethod:onCreateOptionsMenuactive body:onCreateOptionsMenumethod:onOptionsItemSelectedactive body:onOptionsItemSelectedmethod:onPauseactive body:onPausemethod:onPermissionsDeniedactive body:onPermissionsDeniedmethod:onPermissionsGrantedactive body:onPermissionsGrantedmethod:onRequestPermissionsResultactive body:onRequestPermissionsResultmethod:onResumeactive body:onResumemethod:readFileactive body:readFilemethod:runactive body:runmethod:setAlarmactive body:setAlarmmethod:setListactive body:setListmethod:setRecurringAlarmactive body:setRecurringAlarmmethod:writeFileactive body:writeFilemethod:getIntentactive body:getIntentmethod:setIntentactive body:setIntentmethod:setResultactive body:setResultmethod:<init>active body:<init>method:onClickactive body:onClickmethod:<init>active body:<init>method:canDismissactive body:canDismissmethod:onDismissactive body:onDismissmethod:canDismissmethod:onDismissmethod:<init>active body:<init>method:access$000active body:access$000method:access$100active body:access$100method:access$106active body:access$106method:access$200active body:access$200method:access$300active body:access$300method:access$400active body:access$400method:access$502active body:access$502method:performDismissactive body:performDismissmethod:makeScrollListeneractive body:makeScrollListenermethod:onTouchactive body:onTouchmethod:setEnabledactive body:setEnabledmethod:<init>active body:<init>method:onItemClickactive body:onItemClickmethod:<init>active body:<init>method:onClickactive body:onClickmethod:<init>active body:<init>method:onCreateViewactive body:onCreateViewmethod:<init>active body:<init>method:<clinit>active body:<clinit>method:<init>active body:<init>method:getViewactive body:getViewmethod:<init>active body:<init>method:onPreferenceClickactive body:onPreferenceClickmethod:<init>active body:<init>method:onCreateactive body:onCreatemethod:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:<clinit>active body:<clinit>method:<init>active body:<init>method:<init>active body:<init>method:<init>active body:<init>method:onCreateactive body:onCreatemethod:getIntentactive body:getIntentmethod:setIntentactive body:setIntentmethod:setResultactive body:setResultmethod:<init>active body:<init>method:onScrollactive body:onScrollmethod:onScrollStateChangedactive body:onScrollStateChangedmethod:<init>active body:<init>method:onAnimationEndactive body:onAnimationEndmethod:<init>active body:<init>method:onAnimationEndactive body:onAnimationEndmethod:<init>active body:<init>method:onAnimationUpdateactive body:onAnimationUpdatemethod:<init>active body:<init>method:compareToactive body:compareTomethod:compareToactive body:compareTomethod:<init>active body:<init>method:onAnimationEndactive body:onAnimationEndmethod:<init>active body:<init>method:access$000active body:access$000method:access$100active body:access$100method:access$200active body:access$200method:access$300active body:access$300method:performDismissactive body:performDismissmethod:onTouchactive body:onTouchmethod:canDismissmethod:onDismissmethod:<init>active body:<init>method:onAnimationEndactive body:onAnimationEndmethod:<init>active body:<init>method:onAnimationUpdateactive body:onAnimationUpdate

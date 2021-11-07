@@ -1,0 +1,114 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet company representative
+participant "matchedresultsforlocations" as 09
+participant "systemerrorwhenconnectingserver" as 19
+participant "registerbutton" as 29
+participant "manageemployeescreen" as 79
+
+Valet company representative -> 09: registrationinformationinvalidmessage()
+activate 09
+
+deactivate 09
+
+Valet company representative -> 19: systemerrorwhensavingregistrationinformation()
+activate 19
+
+deactivate 19
+
+Valet company representative -> 29: registerbutton()
+activate 29
+
+29 -> 29: displaysregistrationpage()
+29 -> 29: registrationpage()
+29 -> 29: validateregistrationinformation()
+29 -> 19: displayspinnerwhilesavinginformation()
+activate 19
+
+deactivate 19
+
+29 -> 09: duplicateregistrationinformation()
+activate 09
+
+deactivate 09
+
+29 -> 79: employee()
+activate 79
+
+deactivate 79
+
+29 -> 09: registrationinformationinvalidmessage()
+activate 09
+
+deactivate 09
+
+29 -> 09: savevaletinformation()
+activate 09
+
+09 -> 79: employee()
+activate 79
+
+deactivate 79
+
+09 -> 09: successfullysaveregistrationinformation()
+09 -> 79: navigatetomanageemployeepage()
+activate 79
+
+79 -> 79: managementempolyeepage()
+deactivate 79
+
+deactivate 09
+
+09 -> 19: systemerrormessage()
+activate 19
+
+deactivate 19
+
+09 -> 19: systemerrorwhensavingregistrationinformation()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+Valet company representative -> 09: duplicateregistrationinformation()
+activate 09
+
+deactivate 09
+
+Valet company representative -> 29: registrationpage()
+activate 29
+
+29 -> 29: validateregistrationinformation()
+deactivate 29
+
+Valet company representative -> 09: successfullysaveregistrationinformation()
+activate 09
+
+09 -> 79: navigatetomanageemployeepage()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+Valet company representative -> 19: displayspinnerwhilesavinginformation()
+activate 19
+
+deactivate 19
+
+Valet company representative -> 79: managementempolyeepage()
+activate 79
+
+deactivate 79
+
+Valet company representative -> 19: systemerrormessage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "addsiteinformationdb" as 09
+participant "successmessage" as 49
+participant "redirecttoapagewiththecurerntsiteslist" as 59
+
+User -> 09: addsitepage()
+activate 09
+
+09 -> 09: checkexistingsituationforthenewsite()
+09 -> 09: addsiteinformationdb()
+09 -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+09 -> 09: siteinformation()
+deactivate 09
+
+09 -> 49: existingsiteerrormessage()
+activate 49
+
+deactivate 49
+
+User -> 09: sitelist()
+activate 09
+
+09 -> 09: displaytheaddsiteinfopage()
+09 -> 09: addsitepage()
+09 -> 09: checkexistingsituationforthenewsite()
+deactivate 09
+
+09 -> 09: siteinformation()
+activate 09
+
+deactivate 09
+
+User -> 09: existingsiteerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 09: siteslink()
+activate 09
+
+09 -> 59: redirecttoapagewiththecurerntsiteslist()
+activate 59
+
+59 -> 09: siteinformation()
+deactivate 09
+
+59 -> 59: sitelist()
+59 -> 09: displaytheaddsiteinfopage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+User -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+@enduml

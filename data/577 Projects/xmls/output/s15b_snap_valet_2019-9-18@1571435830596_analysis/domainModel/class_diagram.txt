@@ -1,0 +1,70 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class displaydropdown {
+~ displaydropdown()
+~ dropdownforretrieveandinvalid()
+}
+
+class systemerrorwhenconnectingserver {
+~ systemerrorwhenconnectingserver()
+~ servererror()
+~ checkifactive()
+~ displayspinnerwhilesavinginformation()
+~ systemerrormessage()
+~ errorwhensubmitting()
+~ sendoutemailwiththetransactionrecord()
+}
+
+class manageemployeescreen {
+~ manageemployeescreen()
+~ updateemployeeinformation()
+~ generaterandomempolyeeid()
+~ inactiveemployee()
+~ Vehiclerequestscreen()
+~ navigatetoqueuescreen()
+~ mainpage()
+~ paymentpage()
+~ requestqueuepage()
+~ Emailsendconfirmationmessage()
+}
+
+class GooglePlacesAPI {
+~ GooglePlacesAPI()
+~ Saveacceptance()
+}
+
+class matchedresultsforlocations {
+~ matchedresultsforlocations()
+~ validatetheaddressform()
+~ searchforbestmatch()
+~ confirmationprompt()
+~ duplicateregistrationinformation()
+~ registrationpage()
+~ savevaletinformation()
+~ notificationofinvalidtransaction()
+}
+
+class venuelist {
+~ venuelist()
+~ checkifvenueischeckedin()
+~ Advertisementforrandomvenue()
+~ requestqueue()
+~ removerequestbutton()
+~ retriveandinvalidrequest()
+}
+
+class successfulpaymentalert {
+~ successfulpaymentalert()
+~ Thirdpartypayment()
+~ makepayment()
+~ statusofthepayment()
+~ checkpaymentexists()
+~ redirecttopaymentscreen()
+}
+
+class Emailprotocol {
+~ Emailprotocol()
+}
+
+@enduml

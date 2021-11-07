@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "successmessage" as 09
+participant "mapofselectedpaths" as 29
+participant "comment" as 39
+participant "questionlist" as 69
+
+administrator -> 09: insertsuccess()
+activate 09
+
+deactivate 09
+
+administrator -> 09: errormessageforover500characters()
+activate 09
+
+deactivate 09
+
+administrator -> 29: mapofselectedpaths()
+activate 29
+
+29 -> 39: displaycommentboxovermap()
+activate 39
+
+39 -> 39: commenttextovermap()
+39 -> 39: insertthecomment()
+39 -> 39: comment()
+deactivate 39
+
+39 -> 69: displayquestion()
+activate 69
+
+69 -> 69: questionlist()
+deactivate 69
+
+69 -> 09: insertsuccess()
+activate 09
+
+deactivate 09
+
+39 -> 09: errormessageforover500characters()
+activate 09
+
+deactivate 09
+
+39 -> 09: insertsuccess()
+activate 09
+
+deactivate 09
+
+39 -> 69: questionlist()
+activate 69
+
+deactivate 69
+
+deactivate 29
+
+@enduml

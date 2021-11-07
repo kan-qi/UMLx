@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Homepage" as 09
+participant "Displayatextfiledforinput" as 19
+participant "Clicksubmit" as 29
+participant "Approvalmanager��srequest" as 39
+participant "checkstaff��sauthority" as 49
+participant "contactdb" as 79
+
+User  -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User  -> 19: inputfilterconditions()
+activate 19
+
+19 -> 49: Checkmanager��sauthority()
+activate 49
+
+49 -> 39: Manager��sauthorityapproved()
+activate 39
+
+39 -> 19: Displayprojectswhichmeetfilterconditions()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+19 -> 79: projectsdb()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+deactivate 39
+
+deactivate 49
+
+User  -> 29: clickfilterbutton()
+activate 29
+
+29 -> 49: Checkmanager��sauthority()
+activate 49
+
+49 -> 39: Manager��sauthorityapproved()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#administrator:school list page-->administrator:school list page-->school list page:retrieve school information from db-->retrieve school information from db:school informaiton,add a school by name or address,CTRL,4,0,5,3,20
+2,stl#administrator:school list page-->administrator:school list page-->school list page:retrieve school information from db-->retrieve school information from db:insert the school and address-->insert the school and address:success message,add a school by name or address,CTRL;EXTCLL;INT,5,0,5,4,25
+3,stl#administrator:school list page-->administrator:school list page-->school list page:retrieve school information from db-->retrieve school information from db:insert the school and address-->insert the school and address:school informaiton,add a school by name or address,CTRL,5,0,5,4,25
+4,stl#administrator:school list page-->administrator:school list page-->school list page:retrieve school information from db-->retrieve school information from db:display error message for same name and address-->display error message for same name and address:same school and name message,add a school by name or address,TRAN_NA,5,0,5,4,25
+5,stl#administrator:same school and name message-->administrator:same school and name message,add a school by name or address,CTRL;EXTCLL;INT,2,0,5,1,10
+6,stl#administrator:success message-->administrator:success message,add a school by name or address,CTRL;EXTCLL;INT,2,0,5,1,10

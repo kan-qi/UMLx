@@ -1,0 +1,54 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "selecttheappropriatepostings" as 19
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: markstheuserasapproved()
+activate 19
+
+19 -> 19: modifiestheApplicantprofiletoreflectUserschange()
+19 -> 19: ApproveHiredb()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 19: ApproveHire()
+activate 19
+
+19 -> 19: returnsthecorrectapplicant()
+19 -> 09: Showconfirmationpage()
+activate 09
+
+09 -> 19: ApproveHire()
+19 -> 19: returnsthecorrectapplicant()
+19 -> 19: modifiestheApplicantprofiletoreflectUserschange()
+19 -> 19: ApproveHiredb()
+deactivate 19
+
+09 -> 19: ApproveHiredb()
+activate 19
+
+19 -> 09: Homepage()
+deactivate 09
+
+deactivate 19
+
+09 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

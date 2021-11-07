@@ -1,0 +1,59 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Studentcourselist" as 19
+participant "Displaycomfirminformation" as 59
+participant "Database" as 79
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Coursedetailpage()
+activate 19
+
+19 -> 19: courseprofiepage()
+19 -> 59: Displaycomfirmationpage()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+19 -> 79: database()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+User -> 09: Makesomechanges()
+activate 09
+
+09 -> 19: courseprofiepage()
+activate 19
+
+19 -> 59: Displaycomfirmationpage()
+activate 59
+
+deactivate 59
+
+19 -> 79: database()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+deactivate 09
+
+@enduml

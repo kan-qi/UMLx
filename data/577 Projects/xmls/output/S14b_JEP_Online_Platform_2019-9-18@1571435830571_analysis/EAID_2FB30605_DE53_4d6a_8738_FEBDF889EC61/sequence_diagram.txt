@@ -1,0 +1,86 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "errorlertaboutconfliect" as 09
+participant "redirecttoapagewiththecurerntsiteslist" as 19
+participant "logoutbutton" as 29
+participant "deactivateusersession" as 49
+participant "displayinvalidemailformat" as 99
+
+User -> 09: mapwithselectionformfortransportation()
+activate 09
+
+09 -> 19: displaymapwithdirectionstospecificlocation()
+activate 19
+
+19 -> 49: directions()
+activate 49
+
+deactivate 49
+
+19 -> 19: mapwithdirectionstosite()
+deactivate 19
+
+deactivate 09
+
+User -> 19: mapwithdirections()
+activate 19
+
+deactivate 19
+
+User -> 29: directionbutton()
+activate 29
+
+29 -> 19: Displaythemapwithdirections()
+activate 19
+
+19 -> 99: Displayamapwithwithselectionformfortransportation()
+activate 99
+
+99 -> 49: directions()
+activate 49
+
+deactivate 49
+
+99 -> 19: mapwithdirections()
+deactivate 19
+
+99 -> 09: mapwithselectionformfortransportation()
+activate 09
+
+09 -> 19: displaymapwithdirectionstospecificlocation()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 99
+
+19 -> 49: nositeinformation()
+activate 49
+
+deactivate 49
+
+19 -> 49: directions()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+User -> 19: mapwithdirectionstosite()
+activate 19
+
+deactivate 19
+
+User -> 49: nositeinformation()
+activate 49
+
+deactivate 49
+
+@enduml

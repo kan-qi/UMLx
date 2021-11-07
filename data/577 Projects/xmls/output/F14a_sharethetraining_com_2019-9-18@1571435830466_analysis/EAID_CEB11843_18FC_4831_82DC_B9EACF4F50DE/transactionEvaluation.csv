@@ -1,0 +1,10 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#EventBrite:bring up payment page-->EventBrite:bring up payment page-->bring up payment page:Payment page-->Payment page:make payment-->make payment:EventBrite,Register course,TRAN_NA,5,1,8.5,4,42.5
+2,stl#EventBrite:receive payment result-->EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:Email protocol,Register course,TRAN_NA,4,2,4,3,16
+3,stl#EventBrite:receive payment result-->EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:registration success,Register course,TRAN_NA,4,1,6.666666666666667,3,26.666666666666668
+4,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:Redirect to home page-->Redirect to home page:Home page,Register course,TRAN_NA,4,2,6,3,24
+5,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:EventBrite,Register course,TRAN_NA,4,1,6.666666666666667,3,26.666666666666668
+6,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:course,Register course,TRAN_NA,4,2,4.333333333333333,3,17.333333333333332
+7,stl#Attendee:registration success-->Attendee:registration success,Register course,CTRL;EXTCLL;INT,2,0,2,1,4
+8,stl#Attendee:Payment page-->Attendee:Payment page-->Payment page:make payment-->make payment:EventBrite,Register course,TRAN_NA,4,1,8.666666666666666,3,34.666666666666664
+9,stl#Attendee:Home page-->Attendee:Home page,Register course,CTRL;EXTCLL;INT,2,0,8,1,16

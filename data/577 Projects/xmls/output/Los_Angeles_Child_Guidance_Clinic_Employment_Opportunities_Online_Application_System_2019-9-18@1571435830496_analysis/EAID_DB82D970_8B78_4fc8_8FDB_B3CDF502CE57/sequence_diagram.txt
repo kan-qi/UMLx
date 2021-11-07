@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "selecttheappropriatepostings" as 19
+participant "Showconfirmation" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: selectstheappropriatepostings()
+activate 19
+
+19 -> 59: returnsinformationaboutthatspecificposting()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+59 -> 59: Showconfirmationpage()
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+59 -> 19: selectstheappropriatepostings()
+19 -> 59: returnsinformationaboutthatspecificposting()
+deactivate 59
+
+deactivate 19
+
+@enduml

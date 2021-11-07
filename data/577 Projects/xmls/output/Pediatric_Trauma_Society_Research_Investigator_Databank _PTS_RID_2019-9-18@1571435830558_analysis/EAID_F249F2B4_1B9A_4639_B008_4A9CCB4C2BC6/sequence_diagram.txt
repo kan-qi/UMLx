@@ -1,0 +1,34 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Composethecommentandclickpostbutton" as 29
+
+User -> 09: Commentpage()
+activate 09
+
+09 -> 29: Composethecommentandclickpostbutton()
+activate 29
+
+29 -> 09: Confirmationpage()
+09 -> 09: Commentpage()
+09 -> 29: Composethecommentandclickpostbutton()
+deactivate 29
+
+deactivate 09
+
+09 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

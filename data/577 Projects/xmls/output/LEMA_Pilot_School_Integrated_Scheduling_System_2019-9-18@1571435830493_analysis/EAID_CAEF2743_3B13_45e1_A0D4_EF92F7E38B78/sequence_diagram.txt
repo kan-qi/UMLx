@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Exportbutton" as 09
+participant "Homepage" as 19
+participant "Studentcourselist" as 29
+participant "Database" as 49
+
+User -> 09: Clickbutton()
+activate 09
+
+09 -> 29: Displaycourselist()
+activate 29
+
+29 -> 49: Database()
+activate 49
+
+deactivate 49
+
+29 -> 19: Displayconfirmationpage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Courselistmenu()
+activate 29
+
+29 -> 49: Calcuatecoursedata()
+activate 49
+
+49 -> 29: Displaycourselist()
+29 -> 49: Database()
+deactivate 49
+
+29 -> 19: Displayconfirmationpage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+@enduml

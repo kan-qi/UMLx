@@ -1,0 +1,58 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Volunteers {
+~ Volunteers()
+~ GirlsTeamsVolunteersmanagepage()
+~ processinputinformationforgirsteamsvolunteers()
+~ Viewgirlsvolunteersattendancebutton()
+}
+
+class EmailProtocol {
+~ EmailProtocol()
+~ sendresetlinkbyemail()
+}
+
+class Useraddbutton {
+~ Useraddbutton()
+~ displayuseraddpage()
+~ Userinfo()
+~ UserList()
+~ LogoutButton()
+~ Dateimportbutton()
+~ Invalidinputuserinformation()
+}
+
+class Typesofattendance {
+~ Typesofattendance()
+~ Dataexportsuccessmessage()
+~ Processdata()
+~ Attendanceinformationpage()
+}
+
+class LoginInfo {
+~ LoginInfo()
+~ Userinfo()
+~ Loginsuccessmessage()
+~ Invalidmodifiedinformation()
+}
+
+class Removesession {
+~ Removesession()
+~ Logfailturemessage()
+~ Deleteinformationsuccessfully()
+~ Requiredinformationmissingerrormessage()
+~ Savemodifiedinformation()
+~ Saveuserinfosuccessmessage()
+}
+
+class Teams {
+~ Teams()
+}
+
+class Girl {
+~ Girl()
+~ querygirlinfo()
+}
+
+@enduml

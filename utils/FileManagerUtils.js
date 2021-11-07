@@ -106,6 +106,10 @@
 					});
 				});
 		}
+
+		function appendFileSync(filePath, message){
+        		 fs.appendFileSync(filePath, message);
+        }
 	 
 
 		function parseCSVData(csvData, header){
@@ -325,6 +329,7 @@
 			writeFileSync: writeFileSync,
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
+			appendFileSync: appendFileSync,
 			existsSync: existsSync,
 			mkDirSync: mkDirSync,
 			readJSONFilesSync: readJSONFilesSync,

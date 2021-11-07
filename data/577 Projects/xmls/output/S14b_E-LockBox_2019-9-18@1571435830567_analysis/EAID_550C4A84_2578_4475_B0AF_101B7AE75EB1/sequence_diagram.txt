@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "validationfailedmessage" as 09
+participant "loginpage" as 19
+participant "addvewbutton" as 29
+participant "filedownloadinterface" as 49
+participant "specificdocumentrecord" as 79
+participant "User" as 129
+
+User -> 09: validationfailedmessage()
+activate 09
+
+deactivate 09
+
+User -> 19: reportpage()
+activate 19
+
+19 -> 79: printthedocument()
+activate 79
+
+79 -> 49: printer()
+activate 49
+
+deactivate 49
+
+deactivate 79
+
+deactivate 19
+
+User -> 29: reportbutton()
+activate 29
+
+29 -> 09: validatetheroleofusers()
+activate 09
+
+09 -> 19: choosefilepage()
+activate 19
+
+19 -> 09: validatefilechoise()
+09 -> 79: documentdatabase()
+activate 79
+
+deactivate 79
+
+09 -> 19: generatereportpage()
+19 -> 19: reportpage()
+19 -> 79: printthedocument()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+09 -> 09: validationfailedmessage()
+deactivate 09
+
+09 -> 129: user()
+activate 129
+
+deactivate 129
+
+09 -> 09: validationfailedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+User -> 09: validationfailedmessage()
+activate 09
+
+deactivate 09
+
+@enduml

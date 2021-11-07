@@ -1,0 +1,34 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Catagorypage" as 09
+participant "Validatevalues" as 39
+participant "Logoutandterminatethesession" as 49
+
+User -> 09: logoutpage()
+activate 09
+
+09 -> 49: Logoutandterminatethesession()
+activate 49
+
+49 -> 39: Validateusernameandpassword()
+activate 39
+
+39 -> 49: Notifytheuserhasloggedout()
+49 -> 09: Homepage()
+deactivate 09
+
+deactivate 49
+
+deactivate 39
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

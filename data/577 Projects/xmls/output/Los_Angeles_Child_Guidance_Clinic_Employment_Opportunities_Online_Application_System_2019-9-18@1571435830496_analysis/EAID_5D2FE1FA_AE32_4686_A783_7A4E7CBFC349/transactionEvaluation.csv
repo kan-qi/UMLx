@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:modifies the Applicant profile to reflect User's change-->modifies the Applicant profile to reflect User's change:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,TRAN_NA,6,0,9,5,54
+2,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Homepage,Approve Hire,TRAN_NA,5,0,7.5,4,37.5
+3,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,TRAN_NA,6,1,8,5,48
+4,stl#User:Approve Hire-->User:Approve Hire-->Approve Hire:returns the correct applicant-->returns the correct applicant:Show confirmation page-->Show confirmation page:Approve Hire-->Approve Hire:returns the correct applicant,Approve Hire,TRAN_NA,6,1,9,5,54
+5,stl#User:marks the user as approved-->User:marks the user as approved-->marks the user as approved:modifies the Applicant profile to reflect User's change-->modifies the Applicant profile to reflect User's change:Approve Hire db-->Approve Hire db:Homepage,Approve Hire,TRAN_NA,5,0,8.75,4,43.75
+6,stl#User:Homepage-->User:Homepage,Approve Hire,CTRL;EXTCLL;INT,2,0,5,1,10

@@ -1,0 +1,39 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Displayconfirmation" as 39
+participant "Deletecustormer" as 49
+participant "Logoutandendthesession" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Logoutpage()
+activate 09
+
+09 -> 59: Logoutandendthesession()
+activate 59
+
+59 -> 49: Validateusernameandpassword()
+activate 49
+
+49 -> 39: Displayloggedout()
+activate 39
+
+39 -> 09: Homepage()
+deactivate 09
+
+deactivate 39
+
+deactivate 49
+
+deactivate 59
+
+@enduml

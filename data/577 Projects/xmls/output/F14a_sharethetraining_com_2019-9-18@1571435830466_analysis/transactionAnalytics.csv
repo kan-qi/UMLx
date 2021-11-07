@@ -1,0 +1,100 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,Admin:Invalid entered information,Add course,1,1,0,0,0
+2,Admin:Manage course page-->Manage course page:Process course information-->Process course information:Invalid entered information,Add course,3,3,0,0,0
+3,Admin:Manage course page-->Manage course page:Process course information-->Process course information:save course information into database-->save course information into database:course,Add course,4,4,0,0,0
+4,Admin:Manage course page-->Manage course page:redirect to home page-->redirect to home page:home page,Add course,3,3,0,0,0
+5,Admin:home page,Add course,1,1,0,0,0
+6,Admin:delete course button-->delete course button:show delete confirmation box-->show delete confirmation box:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:course,Delete course,5,5,0,0,0
+7,Admin:delete course button-->delete course button:show delete confirmation box-->show delete confirmation box:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:send email to attendees-->send email to attendees:delete success message,Delete course,6,5,1,0,0
+8,Admin:delete course button-->delete course button:show delete confirmation box-->show delete confirmation box:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:send email to attendees-->send email to attendees:Email protocol,Delete course,6,4,2,0,0
+9,Admin:delete success message,Delete course,1,1,0,0,0
+10,Admin:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:course,Delete course,3,3,0,0,0
+11,Admin:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:send email to attendees-->send email to attendees:delete success message,Delete course,4,3,1,0,0
+12,Admin:Delete confirmation dialog-->Delete confirmation dialog:delete course-->delete course:send email to attendees-->send email to attendees:Email protocol,Delete course,4,2,2,0,0
+13,User:Home page,Login,1,1,0,0,0
+14,User:course detail page,Login,1,1,0,0,0
+15,User:Login success information,Login,1,1,0,0,0
+16,User:Login invalid message,Login,1,1,0,0,0
+17,User:Login page-->Login page:verify login information-->verify login information:Login invalid message,Login,3,3,0,0,0
+18,User:Login page-->Login page:verify login information-->verify login information:update role-->update role:Login success information,Login,4,3,1,0,0
+19,User:Login page-->Login page:verify login information-->verify login information:update role-->update role:cache,Login,4,2,1,1,0
+20,User:Login page-->Login page:verify login information-->verify login information:user,Login,3,2,0,1,0
+21,User:Login page-->Login page:Redirect to home page-->Redirect to home page:Home page,Login,3,3,0,0,0
+22,Admin:Invalid course information-->Invalid course information:delete course-->delete course:Redirect to home page-->Redirect to home page:home page,Modify course,4,3,1,0,0
+23,Admin:Invalid course information-->Invalid course information:delete course-->delete course:Redirect to home page-->Redirect to home page:Email protocol,Modify course,4,2,2,0,0
+24,Admin:Invalid course information-->Invalid course information:delete course-->delete course:course,Modify course,3,1,2,0,0
+25,Admin:home page,Modify course,1,1,0,0,0
+26,Admin:Course management page-->Course management page:Redirect to home page-->Redirect to home page:home page,Modify course,3,2,1,0,0
+27,Admin:Course management page-->Course management page:Redirect to home page-->Redirect to home page:Email protocol,Modify course,3,1,2,0,0
+28,Admin:Course management page-->Course management page:verify course information-->verify course information:Invalid course information-->Invalid course information:delete course-->delete course:Redirect to home page-->Redirect to home page:home page,Modify course,6,4,2,0,0
+29,Admin:Course management page-->Course management page:verify course information-->verify course information:Invalid course information-->Invalid course information:delete course-->delete course:Redirect to home page-->Redirect to home page:Email protocol,Modify course,6,3,3,0,0
+30,Admin:Course management page-->Course management page:verify course information-->verify course information:Invalid course information-->Invalid course information:delete course-->delete course:course,Modify course,5,2,3,0,0
+31,Admin:Course management page-->Course management page:verify course information-->verify course information:save course info-->save course info:course,Modify course,4,1,3,0,0
+32,Attendee:Home page,Register course,1,1,0,0,0
+33,Attendee:Payment page-->Payment page:make payment-->make payment:EventBrite,Register course,3,3,0,0,0
+34,Attendee:registration success,Register course,1,1,0,0,0
+35,Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:course,Register course,3,1,0,2,0
+36,Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:EventBrite,Register course,3,2,0,1,0
+37,Attendee:Course detail page-->Course detail page:Redirect to home page-->Redirect to home page:Home page,Register course,3,2,0,1,0
+38,EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:registration success,Register course,3,3,0,0,0
+39,EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:Email protocol,Register course,3,2,1,0,0
+40,EventBrite:bring up payment page-->bring up payment page:Payment page-->Payment page:make payment-->make payment:EventBrite,Register course,4,4,0,0,0
+41,User:home page-->home page:save course information for review-->save course information for review:course information is no t valid message,Request new course,3,3,0,0,0
+42,User:home page-->home page:save course information for review-->save course information for review:send email to trianer-->send email to trianer:Email protocol,Request new course,4,2,2,0,0
+43,User:Log out button-->Log out button:clear local cache-->clear local cache:cache,Request new course,3,1,0,2,0
+44,User:Log out button-->Log out button:clear local cache-->clear local cache:home page-->home page:save course information for review-->save course information for review:course information is no t valid message,Request new course,5,4,0,1,0
+45,User:Log out button-->Log out button:clear local cache-->clear local cache:home page-->home page:save course information for review-->save course information for review:send email to trianer-->send email to trianer:Email protocol,Request new course,6,3,2,1,0
+46,User:course information is no t valid message,Request new course,1,1,0,0,0
+47,Attendee:Review page-->Review page:Redirect to home page-->Redirect to home page:Home page,Review course,3,3,0,0,0
+48,Attendee:Review page-->Review page:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,5,5,0,0,0
+49,Attendee:Review page-->Review page:Update cours information in db-->Update cours information in db:Course,Review course,3,2,0,1,0
+50,Attendee:Home page,Review course,1,1,0,0,0
+51,Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:EventBrite,Review course,3,2,0,1,0
+52,Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Redirect to home page-->Redirect to home page:Home page,Review course,5,4,0,1,0
+53,Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,7,6,0,1,0
+54,Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Update cours information in db-->Update cours information in db:Course,Review course,5,3,0,2,0
+55,Attendee:registration success,Review course,1,1,0,0,0
+56,Attendee:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,3,3,0,0,0
+57,EventBrite:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,4,4,0,0,0
+58,EventBrite:Update cours information in db-->Update cours information in db:Course,Review course,2,1,0,1,0
+59,EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:registration success,Review course,3,3,0,0,0
+60,EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:Email protocol,Review course,3,2,1,0,0
+61,User:No matched results,Search course,1,1,0,0,0
+62,User:Search page-->Search page:Search course by keywords-->Search course by keywords:No matched results,Search course,3,2,0,1,0
+63,User:Search page-->Search page:Search course by keywords-->Search course by keywords:Save sign up information-->Save sign up information:course,Search course,4,2,0,2,0
+64,User:Search page-->Search page:Search course by keywords-->Search course by keywords:Save sign up information-->Save sign up information:home page,Search course,4,3,0,1,0
+65,User:Search page-->Search page:Search course by keywords-->Search course by keywords:course list,Search course,3,1,0,2,0
+66,User:Search page-->Search page:Search course by keywords-->Search course by keywords:course,Search course,3,1,0,2,0
+67,User:Search page-->Search page:redirect to home page-->redirect to home page:home page,Search course,3,3,0,0,0
+68,User:home page,Search course,1,1,0,0,0
+69,User:course list,Search course,1,0,0,1,0
+70,User:invalid sign up informatin,Setup account,1,1,0,0,0
+71,User:Sign up page-->Sign up page:verify sign up information-->verify sign up information:Save sign up information-->Save sign up information:home page,Setup account,4,4,0,0,0
+72,User:Sign up page-->Sign up page:verify sign up information-->verify sign up information:Save sign up information-->Save sign up information:user,Setup account,4,3,0,1,0
+73,User:Sign up page-->Sign up page:verify sign up information-->verify sign up information:invalid sign up informatin,Setup account,3,3,0,0,0
+74,User:home page,Setup account,1,1,0,0,0
+75,User:Login page,Share course,1,1,0,0,0
+76,User:Course list-->Course list:Open course share menu-->Open course share menu:Share menu-->Share menu:Redirect to login page-->Redirect to login page:Login page,Share course,5,3,0,2,0
+77,User:Course list-->Course list:Open course share menu-->Open course share menu:Share menu-->Share menu:send course information to users-->send course information to users:Notification,Share course,5,3,0,2,0
+78,User:Share menu-->Share menu:Redirect to login page-->Redirect to login page:Login page,Share course,3,3,0,0,0
+79,User:Share menu-->Share menu:send course information to users-->send course information to users:Notification,Share course,3,3,0,0,0
+80,User:course list button-->course list button:load course list-->load course list:Course list-->Course list:Open course share menu-->Open course share menu:Share menu-->Share menu:Redirect to login page-->Redirect to login page:Login page,Share course,7,3,0,4,0
+81,User:course list button-->course list button:load course list-->load course list:Course list-->Course list:Open course share menu-->Open course share menu:Share menu-->Share menu:send course information to users-->send course information to users:Notification,Share course,7,3,0,4,0
+82,User:course list button-->course list button:load course list-->load course list:user,Share course,3,0,0,3,0
+83,Trainer:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:Invalid input schedule info,Update schedule,3,2,1,0,0
+84,Trainer:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:save updated schedule-->save updated schedule:schedule,Update schedule,4,1,2,1,0
+85,Trainer:schedule info page-->schedule info page:display update schedule page-->display update schedule page:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:Invalid input schedule info,Update schedule,5,3,2,0,0
+86,Trainer:schedule info page-->schedule info page:display update schedule page-->display update schedule page:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:save updated schedule-->save updated schedule:schedule,Update schedule,6,2,3,1,0
+87,Trainer:Invalid input schedule info,Update schedule,1,1,0,0,0
+88,Trainer:load schedule button-->load schedule button:query schedule info-->query schedule info:schedule info page-->schedule info page:display update schedule page-->display update schedule page:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:Invalid input schedule info,Update schedule,7,4,2,1,0
+89,Trainer:load schedule button-->load schedule button:query schedule info-->query schedule info:schedule info page-->schedule info page:display update schedule page-->display update schedule page:schedule update page-->schedule update page:validate updated schedule info-->validate updated schedule info:save updated schedule-->save updated schedule:schedule,Update schedule,8,3,3,2,0
+90,Trainer:load schedule button-->load schedule button:query schedule info-->query schedule info:schedule,Update schedule,3,1,0,2,0
+91,Admin:course information is no t valid message,Verify new course,1,1,0,0,0
+92,Admin:course list-->course list:load course information-->load course information:course,Verify new course,3,0,3,0,0
+93,Admin:course list-->course list:load course information-->load course information:course informaton-->course informaton:save the acceptance information-->save the acceptance information:acceptance,Verify new course,5,0,5,0,0
+94,Admin:course list-->course list:load course information-->load course information:course informaton-->course informaton:save the acceptance information-->save the acceptance information:course information is no t valid message,Verify new course,5,1,4,0,0
+95,Admin:course list-->course list:load course information-->load course information:course informaton-->course informaton:save the acceptance information-->save the acceptance information:send email to trianer-->send email to trianer:Email protocol,Verify new course,6,0,6,0,0
+96,Admin:course list-->course list:load course information-->load course information:save course info-->save course info:course,Verify new course,4,0,4,0,0
+97,Admin:course informaton-->course informaton:save the acceptance information-->save the acceptance information:acceptance,Verify new course,3,0,3,0,0
+98,Admin:course informaton-->course informaton:save the acceptance information-->save the acceptance information:course information is no t valid message,Verify new course,3,1,2,0,0
+99,Admin:course informaton-->course informaton:save the acceptance information-->save the acceptance information:send email to trianer-->send email to trianer:Email protocol,Verify new course,4,0,4,0,0

@@ -1,0 +1,112 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "saveapprovalstatusofcomment" as 09
+participant "tipcalculatorbutton" as 19
+participant "Homepage" as 59
+participant "businesslist" as 79
+participant "RegistrationDetail" as 169
+
+Admin -> 09: commentlist()
+activate 09
+
+09 -> 169: displaycommentdetail()
+activate 169
+
+169 -> 09: comment()
+deactivate 09
+
+169 -> 09: commentdetail()
+activate 09
+
+09 -> 09: saveapprovalstatusofcomment()
+09 -> 09: comment()
+deactivate 09
+
+09 -> 09: removecomment()
+activate 09
+
+09 -> 09: comment()
+deactivate 09
+
+deactivate 169
+
+Admin -> 19: loadcommentbutton()
+activate 19
+
+19 -> 09: loadcomments()
+activate 09
+
+09 -> 09: comment()
+deactivate 09
+
+09 -> 09: commentlist()
+activate 09
+
+09 -> 169: displaycommentdetail()
+activate 169
+
+deactivate 169
+
+deactivate 09
+
+deactivate 19
+
+Admin -> 09: commentdetail()
+activate 09
+
+09 -> 09: saveapprovalstatusofcomment()
+deactivate 09
+
+User -> 19: tipcalculatorpage()
+activate 19
+
+19 -> 19: calculatetipsbasedoninputinfo()
+deactivate 19
+
+User -> 19: tipcalculatorbutton()
+activate 19
+
+19 -> 19: displaytipcalculatorpage()
+19 -> 19: tipcalculatorpage()
+19 -> 19: calculatetipsbasedoninputinfo()
+deactivate 19
+
+User -> 59: commentpanel()
+activate 59
+
+59 -> 09: savecommenttodb()
+activate 09
+
+09 -> 09: comment()
+deactivate 09
+
+deactivate 59
+
+User -> 19: commentsectionbutton()
+activate 19
+
+19 -> 09: displaycommentsection()
+activate 09
+
+09 -> 79: querybusinessinformation()
+activate 79
+
+79 -> 79: businessinformation()
+deactivate 79
+
+79 -> 59: commentpanel()
+activate 59
+
+59 -> 09: savecommenttodb()
+deactivate 09
+
+deactivate 59
+
+deactivate 19
+
+@enduml

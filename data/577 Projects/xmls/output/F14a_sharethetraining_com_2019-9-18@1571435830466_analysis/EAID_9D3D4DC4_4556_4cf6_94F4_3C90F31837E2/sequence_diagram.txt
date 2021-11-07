@@ -1,0 +1,116 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Attendeeactor EventBrite
+participant "Homepage" as 09
+participant "Course" as 29
+participant "receivepaymentresult" as 39
+participant "Invalidenteredinformation" as 49
+participant "Emailprotocol" as 59
+
+Attendee -> 09: Reviewpage()
+activate 09
+
+09 -> 09: Redirecttohomepage()
+09 -> 09: Homepage()
+deactivate 09
+
+09 -> 49: Updatecoursinformationindb()
+activate 49
+
+49 -> 49: Coursinformationupdatesuccessmessage()
+49 -> 39: makepayment()
+activate 39
+
+39 -> 39: EventBrite()
+39 -> 49: Updatecoursinformationindb()
+49 -> 49: Coursinformationupdatesuccessmessage()
+deactivate 49
+
+49 -> 29: Course()
+activate 29
+
+deactivate 29
+
+39 -> 39: receivepaymentresult()
+39 -> 49: Sendoutconfirmationemail()
+activate 49
+
+49 -> 59: Emailprotocol()
+activate 59
+
+deactivate 59
+
+49 -> 39: registrationsuccess()
+deactivate 39
+
+deactivate 49
+
+49 -> 29: Course()
+activate 29
+
+deactivate 29
+
+Attendee -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+Attendee -> 29: Coursedetailpage()
+activate 29
+
+29 -> 39: setupPayment()
+activate 39
+
+39 -> 39: EventBrite()
+39 -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+39 -> 39: receivepaymentresult()
+deactivate 39
+
+29 -> 09: Displayreviewpage()
+activate 09
+
+09 -> 09: Reviewpage()
+09 -> 09: Redirecttohomepage()
+deactivate 09
+
+09 -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+deactivate 29
+
+Attendee -> 39: registrationsuccess()
+activate 39
+
+deactivate 39
+
+Attendee -> 49: Coursinformationupdatesuccessmessage()
+activate 49
+
+49 -> 39: makepayment()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+EventBrite -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+EventBrite -> 39: receivepaymentresult()
+activate 39
+
+deactivate 39
+
+@enduml

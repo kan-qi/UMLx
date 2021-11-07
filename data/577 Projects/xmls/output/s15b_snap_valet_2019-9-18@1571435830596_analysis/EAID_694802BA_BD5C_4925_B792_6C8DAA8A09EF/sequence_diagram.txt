@@ -1,0 +1,114 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "systemerrorwhenconnectingserver" as 09
+participant "matchedresultsforlocations" as 29
+participant "manageemployeescreen" as 39
+participant "registerbutton" as 49
+
+Valet -> 09: displayspinnerwhilesavinginformation()
+activate 09
+
+deactivate 09
+
+Valet -> 09: systemerrorwhensavingregistrationinformation()
+activate 09
+
+deactivate 09
+
+Valet -> 29: registrationinformationinvalidmessage()
+activate 29
+
+deactivate 29
+
+Valet -> 39: managementempolyeepage()
+activate 39
+
+deactivate 39
+
+Valet -> 49: registrationpage()
+activate 49
+
+49 -> 49: validateregistrationinformation()
+49 -> 09: displayspinnerwhilesavinginformation()
+activate 09
+
+deactivate 09
+
+49 -> 29: duplicateregistrationinformation()
+activate 29
+
+deactivate 29
+
+49 -> 39: employee()
+activate 39
+
+deactivate 39
+
+49 -> 29: registrationinformationinvalidmessage()
+activate 29
+
+deactivate 29
+
+49 -> 29: savevaletinformation()
+activate 29
+
+29 -> 39: employee()
+activate 39
+
+deactivate 39
+
+29 -> 09: systemerrormessage()
+activate 09
+
+deactivate 09
+
+29 -> 29: successfullysaveregistrationinformation()
+29 -> 39: navigatetomanageemployeepage()
+activate 39
+
+39 -> 39: managementempolyeepage()
+deactivate 39
+
+deactivate 29
+
+29 -> 09: systemerrorwhensavingregistrationinformation()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+Valet -> 29: duplicateregistrationinformation()
+activate 29
+
+deactivate 29
+
+Valet -> 29: successfullysaveregistrationinformation()
+activate 29
+
+29 -> 39: navigatetomanageemployeepage()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+Valet -> 09: systemerrormessage()
+activate 09
+
+deactivate 09
+
+Valet -> 49: registerbutton()
+activate 49
+
+49 -> 49: displaysregistrationpage()
+49 -> 49: registrationpage()
+49 -> 49: validateregistrationinformation()
+deactivate 49
+
+@enduml

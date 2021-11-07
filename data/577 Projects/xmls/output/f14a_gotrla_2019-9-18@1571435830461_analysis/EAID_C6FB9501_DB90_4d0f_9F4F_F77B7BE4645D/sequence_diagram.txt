@@ -1,0 +1,52 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EmailProtocol" as 09
+participant "saveuserinformationsuccessmessage" as 19
+participant "Useraddbutton" as 29
+
+User -> 19: Useraddpage()
+activate 19
+
+19 -> 19: saveuserinformation()
+19 -> 29: Userinfo()
+activate 29
+
+deactivate 29
+
+19 -> 19: saveuserinformationsuccessmessage()
+deactivate 19
+
+19 -> 09: sendresetlinkbyemail()
+activate 09
+
+09 -> 09: EmailProtocol()
+deactivate 09
+
+User -> 29: Useraddbutton()
+activate 29
+
+29 -> 29: displayuseraddpage()
+29 -> 29: Useraddpage()
+29 -> 19: saveuserinformation()
+activate 19
+
+deactivate 19
+
+29 -> 09: sendresetlinkbyemail()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+User -> 19: saveuserinformationsuccessmessage()
+activate 19
+
+deactivate 19
+
+@enduml

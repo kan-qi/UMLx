@@ -1,0 +1,15 @@
+id,element,useCase,type,component
+1,User:Invalid input message,Search Provider,boundary,Errormessageforupdatefailure
+2,User:Search crieteria input page,Search Provider,control,Redirecttosearchpage
+3,User:non matched doctor,Search Provider,boundary,Doctor
+4,update the recognized information into database.:Doctor,Search Provider,boundary,Doctor
+5,retrieve matched doctors from db:Doctor,Search Provider,boundary,Doctor
+6,Invalid input message:OCR read the medical information,Search Provider,control,sendemailincludingcredential
+7,retrieve matched doctors from db:Invalid input message,Search Provider,boundary,Errormessageforupdatefailure
+8,OCR read the medical information:non matched doctor,Search Provider,boundary,Doctor
+9,OCR read the medical information:update the recognized information into database.,Search Provider,boundary,Errormessageforupdatefailure
+10,Search crieteria input page:retrieve matched doctors from db,Search Provider,boundary,Doctor
+11,retrieve matched doctors from db:non matched doctor,Search Provider,boundary,Doctor
+12,stl#User:Invalid input message,Search Provider,Stimulus,undefined
+13,stl#User:Search crieteria input page,Search Provider,Stimulus,undefined
+14,stl#User:non matched doctor,Search Provider,Stimulus,undefined

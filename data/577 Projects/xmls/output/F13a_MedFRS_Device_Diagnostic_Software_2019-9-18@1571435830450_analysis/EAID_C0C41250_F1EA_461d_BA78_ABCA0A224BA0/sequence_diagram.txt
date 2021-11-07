@@ -1,0 +1,122 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "VlunteerDiasterHomepage" as 09
+participant "EMTformpage" as 19
+participant "Printsoutthelistofvictims" as 39
+participant "ValidatesInput" as 49
+participant "RedirectViewIndividualsPage" as 89
+participant "assignmentdetaildatabase" as 179
+participant "db" as 229
+
+Transport Coordinator -> 09: VlunteerDiasterHomepage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 19: categoryspage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 09: managementassigmentsdetailspage()
+activate 09
+
+09 -> 89: Redirectstoupdatevictimassignmentformpage()
+activate 89
+
+89 -> 19: Hospitalinformation()
+activate 19
+
+deactivate 19
+
+89 -> 19: UpdateVictimsAssignmentsFormPage()
+activate 19
+
+19 -> 49: Validatesinputasbeingcorrect()
+activate 49
+
+49 -> 179: Systemupdatesrecordinthedatabase()
+activate 179
+
+179 -> 89: RedirectstothemanagevictimsEMTassignmetnspage()
+89 -> 39: ManagementvictimsEMTasignmentspage()
+activate 39
+
+deactivate 39
+
+89 -> 39: addnewvictimrecordtodb()
+activate 39
+
+39 -> 09: VlunteerDiasterHomepage()
+deactivate 09
+
+39 -> 229: db()
+activate 229
+
+deactivate 229
+
+39 -> 09: volunteerhomepage()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 89
+
+179 -> 19: categoryspage()
+deactivate 19
+
+179 -> 179: assignmentdetaildatabase()
+deactivate 179
+
+49 -> 49: nullinputinformaitonerror()
+deactivate 49
+
+Transport Coordinator -> 39: ManagementvictimsEMTasignmentspage()
+activate 39
+
+deactivate 39
+
+Transport Coordinator -> 49: nullinputinformaitonerror()
+activate 49
+
+deactivate 49
+
+Transport Coordinator -> 39: ManagevictimsEMTassignmentsbutton()
+activate 39
+
+39 -> 89: RedirecttomanagementEMTassignmentspage()
+activate 89
+
+89 -> 09: managementassigmentsdetailspage()
+activate 09
+
+09 -> 89: Redirectstoupdatevictimassignmentformpage()
+deactivate 89
+
+deactivate 09
+
+deactivate 39
+
+Transport Coordinator -> 19: UpdateVictimsAssignmentsFormPage()
+activate 19
+
+19 -> 49: Validatesinputasbeingcorrect()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+Transport Coordinator -> 09: volunteerhomepage()
+activate 09
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Showconfirmation" as 09
+participant "Homepage" as 19
+participant "Clicksubmit" as 29
+participant "selectaproject" as 39
+participant "checkstaff��sauthority" as 49
+participant "Displayatextfiledforinput" as 59
+
+User  -> 09: typeinprojectinformation()
+activate 09
+
+09 -> 49: checkstaff��sauthority()
+activate 49
+
+49 -> 49: worker��sauthorityapproved()
+49 -> 09: updateprojectinformation()
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+09 -> 39: projectdb()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 49
+
+User  -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User  -> 29: clickeditbutton()
+activate 29
+
+29 -> 59: Displayatextfieldforinput()
+activate 59
+
+59 -> 49: checkstaff��sauthority()
+activate 49
+
+49 -> 49: worker��sauthorityapproved()
+deactivate 49
+
+deactivate 59
+
+deactivate 29
+
+User  -> 39: selectaproject()
+activate 39
+
+39 -> 59: Displayatextfieldforinput()
+activate 59
+
+59 -> 49: checkstaff��sauthority()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+deactivate 39
+
+@enduml

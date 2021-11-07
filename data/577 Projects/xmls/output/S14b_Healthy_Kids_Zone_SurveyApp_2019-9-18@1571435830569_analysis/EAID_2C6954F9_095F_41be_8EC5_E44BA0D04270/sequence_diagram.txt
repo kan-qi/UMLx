@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "successmessage" as 09
+participant "questionlist" as 19
+participant "administrator" as 49
+participant "executefeaturenaanddisplaycategories" as 59
+participant "mapofselectedpaths" as 109
+
+administrator -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+administrator -> 19: schoollistpage()
+activate 19
+
+19 -> 49: retrieveschoolinformationfromdb()
+activate 49
+
+49 -> 59: deletetheschoolandaddress()
+activate 59
+
+59 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+59 -> 49: schoolinformaiton()
+deactivate 49
+
+deactivate 59
+
+49 -> 59: displayerrormessageforsamenameandaddress()
+activate 59
+
+59 -> 09: sameschoolandnamemessage()
+activate 09
+
+09 -> 109: redirectsurveydeletionpage()
+activate 109
+
+109 -> 19: schoollistpage()
+19 -> 49: retrieveschoolinformationfromdb()
+activate 49
+
+49 -> 49: schoolinformaiton()
+deactivate 49
+
+deactivate 19
+
+deactivate 109
+
+deactivate 09
+
+deactivate 59
+
+administrator -> 09: sameschoolandnamemessage()
+activate 09
+
+09 -> 109: redirectsurveydeletionpage()
+activate 109
+
+deactivate 109
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Usermanagementbutton" as 09
+participant "unauthorizedrequest" as 19
+participant "Administrator" as 29
+participant "activationsuccessmessage" as 39
+participant "insertuserinfo" as 59
+participant "role" as 69
+participant "checkthestatusofuser" as 89
+
+Administrator -> 09: Usermanagementbutton()
+activate 09
+
+09 -> 69: validateroleofuser()
+activate 69
+
+69 -> 69: role()
+deactivate 69
+
+69 -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+69 -> 09: usermanagementpage()
+09 -> 89: checkthestatusofuser()
+activate 89
+
+89 -> 89: inactivtatetheuser()
+89 -> 59: User()
+activate 59
+
+deactivate 59
+
+89 -> 39: activationsuccessmessage()
+activate 39
+
+deactivate 39
+
+deactivate 89
+
+89 -> 29: userisalreadyinactivatederror()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+Administrator -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 29: userisalreadyinactivatederror()
+activate 29
+
+deactivate 29
+
+Administrator -> 39: activationsuccessmessage()
+activate 39
+
+deactivate 39
+
+Administrator -> 09: usermanagementpage()
+activate 09
+
+09 -> 89: checkthestatusofuser()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+@enduml

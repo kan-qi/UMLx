@@ -1,0 +1,109 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "questionlist" as 09
+participant "promptconfirmationpage" as 19
+participant "successmessage" as 39
+participant "mapofselectedpaths" as 89
+participant "executefeaturenaanddisplaycategories" as 159
+
+administrator -> 09: schoollistpage()
+activate 09
+
+09 -> 09: loadpathlistformdb()
+09 -> 159: displayerrormessageforsamenameandaddress()
+activate 159
+
+159 -> 09: pathlist()
+09 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+89 -> 19: promptconfirmationpage()
+activate 19
+
+19 -> 19: confirmationpage()
+19 -> 89: deletethepathandanswers()
+89 -> 19: pathandlocationinformation()
+deactivate 19
+
+89 -> 39: noanswerunderpathmessage()
+activate 39
+
+deactivate 39
+
+89 -> 39: successmessage()
+activate 39
+
+deactivate 39
+
+deactivate 89
+
+89 -> 19: schoolinformaiton()
+activate 19
+
+deactivate 19
+
+89 -> 19: pathandlocationinformation()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 159
+
+09 -> 19: schoolinformaiton()
+activate 19
+
+deactivate 19
+
+09 -> 89: pathdb()
+activate 89
+
+deactivate 89
+
+09 -> 09: pathlist()
+activate 09
+
+09 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+administrator -> 19: confirmationpage()
+activate 19
+
+19 -> 89: deletethepathandanswers()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+administrator -> 09: pathlist()
+activate 09
+
+09 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+administrator -> 39: noanswerunderpathmessage()
+activate 39
+
+deactivate 39
+
+administrator -> 39: successmessage()
+activate 39
+
+deactivate 39
+
+@enduml

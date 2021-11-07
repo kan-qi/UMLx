@@ -1,0 +1,28 @@
+id, function, functional, DET, FTR, boundaries, controls, entities, typeStr
+1,User:list of switch-->list of switch:add switch to favoriate-->add switch to favoriate:Favoriate,EI,2,3,1,2,0,boundary->control->control
+2,User:list of switch-->list of switch:add switch to favoriate-->add switch to favoriate:Display error message when adding to favorite-->Display error message when adding to favorite:Error message when updating,EI,2,4,1,3,0,boundary->control->control->control
+3,User:Error message when updating,EQ,0,1,0,1,0,control
+4,User:Add favorite screen-->Add favorite screen:query list of switchs-->query list of switchs:list of switch-->list of switch:add switch to favoriate-->add switch to favoriate:Favoriate,EQ,4,5,2,3,0,control->boundary->boundary->control->control
+5,User:Add favorite screen-->Add favorite screen:query list of switchs-->query list of switchs:list of switch-->list of switch:add switch to favoriate-->add switch to favoriate:Display error message when adding to favorite-->Display error message when adding to favorite:Error message when updating,EQ,4,6,2,4,0,control->boundary->boundary->control->control->control
+6,User:Add favorite screen-->Add favorite screen:query list of switchs-->query list of switchs:Switch,EO,2,3,2,1,0,control->boundary->boundary
+7,User:add image for switch page-->add image for switch page:save image in db-->save image in db:Image,EQ,1,3,0,3,0,control->control->control
+8,User:add image for switch page-->add image for switch page:save image in db-->save image in db:Error message when saving image,EQ,0,3,0,3,0,control->control->control
+9,User:Error message when saving image,EQ,0,1,0,1,0,control
+10,User:list of gateway-->list of gateway:popup gateway name edit page-->popup gateway name edit page:gateway name edit page-->gateway name edit page:save gateway name to DB-->save gateway name to DB:gateway,EQ,1,5,0,5,0,control->control->control->control->control
+11,User:list of gateway-->list of gateway:popup gateway name edit page-->popup gateway name edit page:gateway name edit page-->gateway name edit page:save gateway name to DB-->save gateway name to DB:display error message-->display error message:Error message when saving name,EQ,2,6,0,6,0,control->control->control->control->control->control
+12,User:list of gateway-->list of gateway:popup gateway name edit page-->popup gateway name edit page:gateway,EQ,0,3,0,3,0,control->control->control
+13,User:Error message when saving name,EQ,0,1,0,1,0,control
+14,User:gateway name edit page-->gateway name edit page:save gateway name to DB-->save gateway name to DB:gateway,EQ,1,3,0,3,0,control->control->control
+15,User:gateway name edit page-->gateway name edit page:save gateway name to DB-->save gateway name to DB:display error message-->display error message:Error message when saving name,EQ,2,4,0,4,0,control->control->control->control
+16,User:delete gateway confirm dialog-->delete gateway confirm dialog:delete gateway from db-->delete gateway from db:gateways,EQ,1,3,0,0,3,entity->entity->entity
+17,User:delete gateway confirm dialog-->delete gateway confirm dialog:delete gateway from db-->delete gateway from db:Display error message when deleting,EO,0,3,0,1,2,entity->entity->control
+18,User:Error when deleting gateway-->Error when deleting gateway:Display error message when deleting,EQ,1,2,0,2,0,control->control
+19,User:List of gateways-->List of gateways:delete confirm dialog-->delete confirm dialog:delete gateway confirm dialog-->delete gateway confirm dialog:delete gateway from db-->delete gateway from db:gateways,EQ,1,5,2,0,3,entity->boundary->boundary->entity->entity
+20,User:List of gateways-->List of gateways:delete confirm dialog-->delete confirm dialog:delete gateway confirm dialog-->delete gateway confirm dialog:delete gateway from db-->delete gateway from db:Display error message when deleting,EQ,0,5,2,1,2,entity->boundary->boundary->entity->control
+21,User:List of gateways-->List of gateways:delete confirm dialog-->delete confirm dialog:gateways,EQ,0,3,1,0,2,entity->boundary->entity
+22,User:switch detail page-->switch detail page:update switch status-->update switch status:Switch,EQ,0,3,3,0,0,boundary->boundary->boundary
+23,User:switch detail page-->switch detail page:update switch status-->update switch status:Error message when updating switchs-->Error message when updating switchs:Error message of updating,EI,0,4,2,2,0,boundary->boundary->control->control
+24,User:Error message of updating,EQ,0,1,0,1,0,control
+25,User:List of switches-->List of switches:update list of switch-->update list of switch:switch detail page-->switch detail page:update switch status-->update switch status:Switch,EQ,0,5,5,0,0,boundary->boundary->boundary->boundary->boundary
+26,User:List of switches-->List of switches:update list of switch-->update list of switch:switch detail page-->switch detail page:update switch status-->update switch status:Error message when updating switchs-->Error message when updating switchs:Error message of updating,EI,0,6,4,2,0,boundary->boundary->boundary->boundary->control->control
+27,User:List of switches-->List of switches:update list of switch-->update list of switch:Switch,EQ,0,3,3,0,0,boundary->boundary->boundary

@@ -1,0 +1,229 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Accessallstudentinformation" as 09
+participant "Object1" as 29
+participant "Homepage" as 49
+participant "Database" as 99
+participant "Showuser" as 219
+
+User -> 09: Inputusersinformation()
+activate 09
+
+09 -> 09: Displayuserinformation()
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+99 -> 99: Database()
+deactivate 99
+
+99 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+99 -> 99: Database()
+deactivate 99
+
+99 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+User -> 09: inputuserimformation()
+activate 09
+
+09 -> 09: Displayuserinformation()
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+99 -> 99: Database()
+deactivate 99
+
+99 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+User -> 29: selectclass()
+activate 29
+
+29 -> 09: Displayuserinformation()
+activate 09
+
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+deactivate 29
+
+User -> 09: Selectattendanceandsemester()
+activate 09
+
+09 -> 219: Showuser()
+activate 219
+
+219 -> 09: Displayuserinformation()
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+deactivate 219
+
+User -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+User -> 29: Selectclass()
+activate 29
+
+29 -> 09: Displayuserinformation()
+activate 09
+
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+deactivate 29
+
+User -> 09: Inputuserinformationpage()
+activate 09
+
+09 -> 09: Displayuserinformation()
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+09 -> 219: Showoptions()
+activate 219
+
+219 -> 219: Showuser()
+219 -> 09: Displayuserinformation()
+activate 09
+
+deactivate 09
+
+deactivate 219
+
+User -> 09: inputuserimformation()
+activate 09
+
+09 -> 09: Displayuserinformation()
+09 -> 99: Database()
+activate 99
+
+deactivate 99
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+09 -> 99: Savechangesindatabase()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+User -> 09: Selectattendanceandsemester()
+activate 09
+
+09 -> 219: Showuser()
+activate 219
+
+219 -> 09: Displayuserinformation()
+deactivate 09
+
+deactivate 219
+
+@enduml

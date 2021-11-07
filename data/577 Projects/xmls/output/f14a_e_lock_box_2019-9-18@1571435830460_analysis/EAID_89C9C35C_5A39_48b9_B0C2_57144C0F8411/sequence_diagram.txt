@@ -1,0 +1,114 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manager
+participant "Usermanagementbutton" as 09
+participant "unauthorizedrequest" as 29
+participant "download" as 39
+participant "activationsuccessmessage" as 49
+participant "role" as 109
+participant "blankdescriptionerror" as 139
+
+Administrator -> 09: Addnewbutton()
+activate 09
+
+09 -> 109: validateroleofuser()
+activate 109
+
+109 -> 39: documentuploadpage()
+activate 39
+
+39 -> 139: Validatetheinformationofdescription()
+activate 139
+
+139 -> 49: invaliddescriptionmessage()
+activate 49
+
+deactivate 49
+
+139 -> 39: saveuploadeddocument()
+39 -> 09: document()
+deactivate 09
+
+39 -> 09: updatecaseinformationpage()
+activate 09
+
+09 -> 09: caseinformationpage()
+deactivate 09
+
+deactivate 39
+
+deactivate 139
+
+109 -> 109: role()
+deactivate 109
+
+109 -> 29: unauthorizedinformationmessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 09: caseinformationpage()
+activate 09
+
+deactivate 09
+
+Administrator -> 29: unauthorizedinformationmessage()
+activate 29
+
+deactivate 29
+
+Administrator -> 39: documentuploadpage()
+activate 39
+
+39 -> 139: Validatetheinformationofdescription()
+activate 139
+
+deactivate 139
+
+deactivate 39
+
+Administrator -> 49: invaliddescriptionmessage()
+activate 49
+
+deactivate 49
+
+Case Manager -> 09: Addnewbutton()
+activate 09
+
+09 -> 109: validateroleofuser()
+activate 109
+
+deactivate 109
+
+deactivate 09
+
+Case Manager -> 49: invaliddescriptionmessage()
+activate 49
+
+deactivate 49
+
+Case Manager -> 39: documentuploadpage()
+activate 39
+
+39 -> 139: Validatetheinformationofdescription()
+activate 139
+
+deactivate 139
+
+deactivate 39
+
+Case Manager -> 09: caseinformationpage()
+activate 09
+
+deactivate 09
+
+Case Manager -> 29: unauthorizedinformationmessage()
+activate 29
+
+deactivate 29
+
+@enduml

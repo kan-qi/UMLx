@@ -1,0 +1,60 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class queryagentactivies {
+~ queryagentactivies()
+~ listofagentswithstatus()
+~ agent()
+}
+
+class leaddetail {
+~ leaddetail()
+~ leadslist()
+~ callfinishsanddisplaycalldetails()
+~ queryleadinformation()
+}
+
+class loginpage {
+~ loginpage()
+~ thirdpartycallagency()
+~ checklogininformation()
+~ agent()
+~ calllog()
+}
+
+class softphonescreen {
+~ softphonescreen()
+~ answerphonecall()
+~ sendconferencerequest()
+}
+
+class 1800dialbutton {
+~ 1800dialbutton()
+~ autodialinglist()
+}
+
+class voicemailpanel {
+~ voicemailpanel()
+~ redirecttovoidmail()
+~ conferencecancelnotification()
+~ notifycancelrequest()
+}
+
+class TwilioAPI {
+~ TwilioAPI()
+~ connecttoTwilioAPIforagentscall()
+}
+
+class callernumber {
+~ callernumber()
+~ incomecallpopup()
+~ connecttoongoingcall()
+}
+
+class callrecorddownloadedmessage {
+~ callrecorddownloadedmessage()
+~ receivecallinformation()
+~ callrecords()
+}
+
+@enduml

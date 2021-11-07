@@ -1,0 +1,59 @@
+id, function, functional, DET, FTR, boundaries, controls, entities, typeStr
+1,User:user profile page,EQ,0,1,1,0,0,boundary
+2,User:invalid input information,EQ,0,1,0,1,0,control
+3,User:Account create page-->Account create page:validate input information-->validate input information:save user account-->save user account:user profile page,EQ,1,4,3,1,0,boundary->control->boundary->boundary
+4,User:Account create page-->Account create page:validate input information-->validate input information:save user account-->save user account:account,EQ,1,4,3,1,0,boundary->control->boundary->boundary
+5,User:Account create page-->Account create page:validate input information-->validate input information:invalid input information,EI,0,3,1,2,0,boundary->control->control
+6,User:invalid email address message,EQ,0,1,0,1,0,control
+7,User:subscribe for notification button-->subscribe for notification button:save preferences for subscription-->save preferences for subscription:saved unsuccessfully message,EO,0,3,1,2,0,control->control->boundary
+8,User:subscribe for notification button-->subscribe for notification button:save preferences for subscription-->save preferences for subscription:invalid email address message,EQ,0,3,0,3,0,control->control->control
+9,User:subscribe for notification button-->subscribe for notification button:save preferences for subscription-->save preferences for subscription:account,EO,1,3,1,2,0,control->control->boundary
+10,User:saved unsuccessfully message,EQ,0,1,1,0,0,boundary
+11,User:incorrect user information,EQ,1,1,0,1,0,control
+12,User:Login page-->Login page:validate user information-->validate user information:user profile and search page,EQ,0,3,0,3,0,control->control->control
+13,User:Login page-->Login page:validate user information-->validate user information:save user account-->save user account:incorrect user information,EQ,2,4,0,4,0,control->control->control->control
+14,User:Login page-->Login page:validate user information-->validate user information:save user account-->save user account:account,EQ,2,4,0,4,0,control->control->control->control
+15,User:Login page-->Login page:validate user information-->validate user information:incorrect user information,EQ,0,3,0,3,0,control->control->control
+16,User:Login page-->Login page:validate user information-->validate user information:account,EQ,1,3,0,3,0,control->control->control
+17,User:user profile and search page,EQ,0,1,0,1,0,control
+18,User:Invalid input data,EQ,0,1,0,1,0,control
+19,User:Edit profile button-->Edit profile button:display edit profile page-->display edit profile page:incorrect user information,EQ,1,3,0,3,0,control->control->control
+20,User:Edit profile button-->Edit profile button:display edit profile page-->display edit profile page:Profile Edit Page-->Profile Edit Page:validate input data-->validate input data:save updated profile-->save updated profile:Profile,EQ,1,6,0,6,0,control->control->control->control->control->control
+21,User:Edit profile button-->Edit profile button:display edit profile page-->display edit profile page:Profile,EQ,1,3,0,3,0,control->control->control
+22,User:Profile Edit Page-->Profile Edit Page:validate input data-->validate input data:save updated profile-->save updated profile:Profile,EQ,0,4,0,4,0,control->control->control->control
+23,User:search saved unsuccessfully error message,EQ,0,1,1,0,0,boundary
+24,User:saved successfully message,EQ,0,1,1,0,0,boundary
+25,User:Save Favorite Job Button-->Save Favorite Job Button:Save favorite jobs-->Save favorite jobs:saved successfully message,EO,0,3,1,2,0,control->control->boundary
+26,User:Save Favorite Job Button-->Save Favorite Job Button:Save favorite jobs-->Save favorite jobs:search saved unsuccessfully error message,EO,0,3,1,2,0,control->control->boundary
+27,User:Save Favorite Job Button-->Save Favorite Job Button:Save favorite jobs-->Save favorite jobs:saved unsuccessfully message,EO,0,3,1,2,0,control->control->boundary
+28,User:Save Favorite Job Button-->Save Favorite Job Button:Save favorite jobs-->Save favorite jobs:Favorite Jobs,EQ,0,3,0,3,0,control->control->control
+29,User:Save search button-->Save search button:save filters and criteria-->save filters and criteria:search saved unsuccessfully error message,EO,0,3,1,2,0,control->control->boundary
+30,User:Save search button-->Save search button:save filters and criteria-->save filters and criteria:search result,EQ,1,3,0,3,0,control->control->control
+31,User:Save search button-->Save search button:save filters and criteria-->save filters and criteria:search saved successfully message-->search saved successfully message:validate input data-->validate input data:save updated profile-->save updated profile:search result,EQ,1,6,1,5,0,control->control->boundary->control->control->control
+32,User:Save search button-->Save search button:save filters and criteria-->save filters and criteria:search saved successfully message-->search saved successfully message:validate input data-->validate input data:Invalid input data,EQ,1,5,1,4,0,control->control->boundary->control->control
+33,User:search saved successfully message-->search saved successfully message:validate input data-->validate input data:save updated profile-->save updated profile:search result,EI,1,4,1,3,0,boundary->control->control->control
+34,User:search saved successfully message-->search saved successfully message:validate input data-->validate input data:Invalid input data,EI,1,3,1,2,0,boundary->control->control
+35,User:Job list page-->Job list page:validate input data-->validate input data:Invalid input data,EQ,0,3,0,3,0,control->control->control
+36,User:Job search page-->Job search page:verify input information-->verify input information:invalid input information,EQ,0,3,0,3,0,control->control->control
+37,User:Job search page-->Job search page:verify input information-->verify input information:Search by input keywords from Indeed.com-->Search by input keywords from Indeed.com:Indeed.com,EQ,0,4,0,4,0,control->control->control->control
+38,User:Job search page-->Job search page:verify input information-->verify input information:Search by input keywords from Indeed.com-->Search by input keywords from Indeed.com:Profile,EQ,1,4,0,4,0,control->control->control->control
+39,User:Job search page-->Job search page:verify input information-->verify input information:Profile,EQ,1,3,0,3,0,control->control->control
+40,Indeed.com:Sort search results-->Sort search results:Job list page-->Job list page:validate input data-->validate input data:Invalid input data,EQ,1,4,0,4,0,control->control->control->control
+41,User:Request Referral Button-->Request Referral Button:display friends by organization-->display friends by organization:No fried found message,EI,0,3,1,2,0,boundary->control->control
+42,User:Request Referral Button-->Request Referral Button:display friends by organization-->display friends by organization:Friends,EI,0,3,1,2,0,boundary->control->control
+43,User:Request Referral Button-->Request Referral Button:display friends by organization-->display friends by organization:Friend selection page-->Friend selection page:display message edit page-->display message edit page:message edit page-->message edit page:send email message-->send email message:Email Protocol,EQ,1,7,4,2,1,boundary->control->control->boundary->boundary->boundary->actor
+44,User:No fried found message,EQ,0,1,0,1,0,control
+45,User:Friend selection page-->Friend selection page:display message edit page-->display message edit page:message edit page-->message edit page:send email message-->send email message:Email Protocol,EQ,1,5,3,1,1,control->boundary->boundary->boundary->actor
+46,User:message edit page-->message edit page:send email message-->send email message:Email Protocol,EQ,0,3,2,0,1,boundary->boundary->actor
+47,User:sign in error message,EQ,0,1,1,0,0,boundary
+48,User:credential input page-->credential input page:query linkedin-->query linkedin:LinkedIn,EQ,0,3,0,3,0,control->control->control
+49,User:credential input page-->credential input page:query facebook info-->query facebook info:Facebook,EQ,0,3,0,3,0,control->control->control
+50,User:credential input page-->credential input page:query facebook info-->query facebook info:session,EI,1,3,0,2,1,control->control->entity
+51,User:credential input page-->credential input page:query google plus info-->query google plus info:Google plus,EQ,2,3,0,3,0,control->control->control
+52,User:social media login buttons-->social media login buttons:display crendential input page-->display crendential input page:credential input page-->credential input page:query linkedin-->query linkedin:LinkedIn,EI,0,5,1,4,0,boundary->control->control->control->control
+53,User:social media login buttons-->social media login buttons:display crendential input page-->display crendential input page:credential input page-->credential input page:query facebook info-->query facebook info:Facebook,EI,0,5,1,4,0,boundary->control->control->control->control
+54,User:social media login buttons-->social media login buttons:display crendential input page-->display crendential input page:credential input page-->credential input page:query facebook info-->query facebook info:session,EI,1,5,1,3,1,boundary->control->control->control->entity
+55,User:social media login buttons-->social media login buttons:display crendential input page-->display crendential input page:credential input page-->credential input page:query google plus info-->query google plus info:Google plus,EI,2,5,1,4,0,boundary->control->control->control->control
+56,LinkedIn:query linkedin-->query linkedin:sign in error message,EO,0,2,1,1,0,control->boundary
+57,Google plus:query google plus info-->query google plus info:sign in error message,EO,1,2,1,1,0,control->boundary
+58,Facebook:query facebook info-->query facebook info:sign in error message,EO,0,2,1,1,0,control->boundary

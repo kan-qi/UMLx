@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Applyfilters" as 09
+participant "PressSearchButton" as 19
+participant "Homepage" as 29
+participant "ClickonAdd" as 39
+participant "Notificationdisplayed��Adduserprofile��" as 79
+participant "jobdb" as 89
+
+User -> 09: Applyfilters()
+activate 09
+
+09 -> 09: MatchfilterstoJobseekerprofile()
+09 -> 19: Displaysearchresult()
+activate 19
+
+19 -> 89: jobdb()
+activate 89
+
+deactivate 89
+
+19 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Goonsearch()
+activate 19
+
+19 -> 79: Displaysearchpagewithfilteringoption()
+activate 79
+
+79 -> 09: MatchfilterstoJobseekerprofile()
+activate 09
+
+09 -> 19: Displaysearchresult()
+deactivate 19
+
+deactivate 09
+
+deactivate 79
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 39: Click��search��()
+activate 39
+
+39 -> 09: MatchfilterstoJobseekerprofile()
+activate 09
+
+09 -> 19: Displaysearchresult()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 39
+
+@enduml

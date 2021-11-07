@@ -1,0 +1,52 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "surveyimportpage" as 09
+
+administrator -> 09: surveyimportpage()
+activate 09
+
+09 -> 09: retrievesurveydetail()
+09 -> 09: surveymonkey()
+deactivate 09
+
+09 -> 09: prompterrormessage()
+activate 09
+
+09 -> 09: errormessage()
+deactivate 09
+
+administrator -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+administrator -> 09: surveylistpage()
+activate 09
+
+09 -> 09: retrievethesurveydetail()
+09 -> 09: checksurveyandinserttodatatodatabase()
+09 -> 09: surveymonkey()
+deactivate 09
+
+09 -> 09: surveyimportpage()
+activate 09
+
+09 -> 09: retrievesurveydetail()
+deactivate 09
+
+09 -> 09: surveydatabase()
+activate 09
+
+deactivate 09
+
+09 -> 09: surveydetail()
+activate 09
+
+deactivate 09
+
+@enduml

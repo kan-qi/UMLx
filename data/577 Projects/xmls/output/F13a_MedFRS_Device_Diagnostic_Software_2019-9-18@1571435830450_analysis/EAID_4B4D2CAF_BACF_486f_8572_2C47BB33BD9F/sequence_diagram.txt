@@ -1,0 +1,131 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "EMTformpage" as 09
+participant "RedirectViewIndividualsPage" as 29
+participant "VlunteerDiasterHomepage" as 49
+participant "Printsoutthelistofvictims" as 59
+participant "ValidatesInput" as 169
+participant "db" as 239
+
+Transport Coordinator -> 09: categoryspage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 09: volunteerhomepage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 29: ishebreathingpage()
+activate 29
+
+29 -> 29: Redirectstorespirationperfusionmetalstatuspage()
+29 -> 09: Hospitalinformation()
+activate 09
+
+deactivate 09
+
+29 -> 29: Respirationperfusionmetalstatuspage()
+29 -> 59: Categorizesthevictim()
+activate 59
+
+59 -> 09: Categorypage()
+activate 09
+
+deactivate 09
+
+59 -> 29: Redirectstocategoryspage()
+29 -> 169: Vaidatestheinput()
+activate 169
+
+169 -> 09: Errormessage()
+activate 09
+
+deactivate 09
+
+169 -> 59: addnewvictimrecordtodb()
+59 -> 49: VlunteerDiasterHomepage()
+activate 49
+
+deactivate 49
+
+59 -> 49: volunteerhomepage()
+activate 49
+
+deactivate 49
+
+59 -> 239: db()
+activate 239
+
+deactivate 239
+
+deactivate 59
+
+deactivate 169
+
+29 -> 09: categoryspage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+29 -> 169: Updatesthedatabaseforbuildinginformation()
+activate 169
+
+169 -> 59: Categorizesthevictim()
+activate 59
+
+59 -> 09: Categorypage()
+activate 09
+
+deactivate 09
+
+59 -> 29: Redirectstocategoryspage()
+activate 29
+
+deactivate 29
+
+deactivate 59
+
+deactivate 169
+
+Transport Coordinator -> 09: Errormessage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 49: VlunteerDiasterHomepage()
+activate 49
+
+deactivate 49
+
+Transport Coordinator -> 59: addvictimbutton()
+activate 59
+
+59 -> 29: Redirectstotheishebreathingpage()
+activate 29
+
+29 -> 29: ishebreathingpage()
+29 -> 29: Redirectstorespirationperfusionmetalstatuspage()
+deactivate 29
+
+deactivate 59
+
+Transport Coordinator -> 29: Respirationperfusionmetalstatuspage()
+activate 29
+
+29 -> 59: Categorizesthevictim()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+@enduml

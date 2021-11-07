@@ -1,0 +1,120 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Jobseeker
+participant "Notification" as 09
+participant "triggerdownloadthelistofjobstoasubscriber" as 29
+participant "Invaliddetailinputmessage" as 39
+participant "UserProfilebutton" as 59
+participant "checkifemailidandmodelnumberareexisting" as 99
+
+Jobseeker -> 09: descriptionpage()
+activate 09
+
+deactivate 09
+
+Jobseeker -> 39: displaysuccessmessage()
+activate 39
+
+39 -> 29: redirecttojobdescriptionpage()
+activate 29
+
+29 -> 09: descriptionpage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 39
+
+Jobseeker -> 09: emailortextmessagenotificationchoice()
+activate 09
+
+09 -> 59: redirecttoprofiledetailspage()
+activate 59
+
+59 -> 59: profiledetailspage()
+59 -> 99: sendjobidsubscriptionmethodanduserdetailstosearchinencryptedfashion()
+activate 99
+
+99 -> 39: displaysuccessmessage()
+activate 39
+
+39 -> 29: redirecttojobdescriptionpage()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+99 -> 59: savedetailintouserprofiledatabase()
+59 -> 59: userprofiledatabase()
+deactivate 59
+
+99 -> 39: timeouterrormessage()
+activate 39
+
+deactivate 39
+
+deactivate 99
+
+deactivate 09
+
+Jobseeker -> 59: profiledetailspage()
+activate 59
+
+59 -> 99: sendjobidsubscriptionmethodanduserdetailstosearchinencryptedfashion()
+activate 99
+
+deactivate 99
+
+deactivate 59
+
+Jobseeker -> 59: subscribebutton()
+activate 59
+
+59 -> 29: redirecttothesubscriptionpage()
+activate 29
+
+29 -> 29: subscriptionpage()
+29 -> 09: readexistinginformation()
+activate 09
+
+09 -> 09: emailortextmessagenotificationchoice()
+09 -> 59: redirecttoprofiledetailspage()
+deactivate 59
+
+deactivate 09
+
+09 -> 59: formforinputtinguserinformation()
+activate 59
+
+deactivate 59
+
+09 -> 59: userprofiledatabase()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+Jobseeker -> 29: subscriptionpage()
+activate 29
+
+29 -> 09: readexistinginformation()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+Jobseeker -> 39: timeouterrormessage()
+activate 39
+
+deactivate 39
+
+@enduml

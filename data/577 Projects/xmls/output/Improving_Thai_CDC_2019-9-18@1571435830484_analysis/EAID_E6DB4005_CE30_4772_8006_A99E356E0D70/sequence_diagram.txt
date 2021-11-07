@@ -1,0 +1,68 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Clicksubmit" as 09
+participant "addnewprojectintoSalesforce" as 19
+participant "Homepage" as 39
+participant "Showconfirmation" as 69
+participant "Approvalmanager��srequest" as 79
+participant "Displayatextfiledforinput" as 119
+
+User -> 09: clicksubmitbutton()
+activate 09
+
+09 -> 79: Checktheauthorityofmanager()
+activate 79
+
+79 -> 79: Managerauthorityapproval()
+79 -> 19: addnewprojectintoSalesforce()
+activate 19
+
+19 -> 39: Homepage()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+deactivate 79
+
+deactivate 09
+
+User -> 19: typeinprojectinformation()
+activate 19
+
+19 -> 79: Checktheauthorityofmanager()
+activate 79
+
+79 -> 79: Managerauthorityapproval()
+deactivate 79
+
+deactivate 19
+
+User -> 19: clickaddprojectbutton()
+activate 19
+
+19 -> 119: Displayatextfield()
+activate 119
+
+119 -> 79: Checktheauthorityofmanager()
+activate 79
+
+79 -> 79: Managerauthorityapproval()
+deactivate 79
+
+deactivate 119
+
+deactivate 19
+
+User -> 39: Homepage()
+activate 39
+
+deactivate 39
+
+@enduml

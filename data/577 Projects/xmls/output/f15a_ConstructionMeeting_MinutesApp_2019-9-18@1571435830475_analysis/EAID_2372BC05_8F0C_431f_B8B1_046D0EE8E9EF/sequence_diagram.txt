@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Selectsassignedtask" as 09
+participant "Hompage" as 19
+participant "attemptstoverifytheinputs" as 39
+participant "Sendsnotificationtoadministrator" as 59
+
+User -> 09: Selectsassignedtask()
+activate 09
+
+09 -> 39: openstextboxforusertoinputcomment()
+activate 39
+
+39 -> 59: Sendsnotificationtoadministrator()
+activate 59
+
+59 -> 09: submittedacommentforatask()
+09 -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 59
+
+deactivate 39
+
+User -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+User -> 09: Inputscommentforselectedtask()
+activate 09
+
+09 -> 59: Sendsnotificationtoadministrator()
+activate 59
+
+59 -> 09: submittedacommentforatask()
+deactivate 09
+
+deactivate 59
+
+@enduml

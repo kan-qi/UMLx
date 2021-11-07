@@ -1,0 +1,57 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "selecttheappropriatepostings" as 09
+participant "Homepage" as 19
+participant "clicksubmitbutton" as 29
+
+User -> 09: selectstheappropriateposting()
+activate 09
+
+09 -> 09: archivestheposting()
+09 -> 09: removesthepostingfromonlineview()
+09 -> 09: informsUserofthesuccessfulpostdeletion()
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+09 -> 09: postingdb()
+activate 09
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: clickdeletebutton()
+activate 29
+
+29 -> 09: archivestheposting()
+activate 09
+
+09 -> 09: removesthepostingfromonlineview()
+deactivate 09
+
+29 -> 09: removesthepostingfromonlineview()
+activate 09
+
+09 -> 09: informsUserofthesuccessfulpostdeletion()
+deactivate 09
+
+09 -> 09: postingdb()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

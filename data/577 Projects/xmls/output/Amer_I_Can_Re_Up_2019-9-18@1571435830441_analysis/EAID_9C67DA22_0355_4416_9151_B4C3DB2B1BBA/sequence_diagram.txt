@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "clickson��Addeditstatus��button" as 09
+participant "Homepage" as 19
+participant "ThemeSongdb" as 49
+participant "Showconfirmation" as 59
+
+User -> 09: clickson��UploadThemesong��button()
+activate 09
+
+09 -> 49: prompttheusertoenterthethemesong()
+activate 49
+
+49 -> 59: Showconfirmation()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+59 -> 09: clickson��UploadThemesong��button()
+09 -> 49: prompttheusertoenterthethemesong()
+deactivate 49
+
+deactivate 09
+
+59 -> 49: ThemeSongdb()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,116 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 09
+participant "invokeaddcharityusecase" as 19
+participant "weight" as 29
+participant "invlidpattern" as 39
+participant "updatethebenchmark" as 139
+participant "goal" as 159
+
+Weight loser -> 09: displaysuccessmessage()
+activate 09
+
+deactivate 09
+
+Weight loser -> 19: charitylist()
+activate 19
+
+deactivate 19
+
+Weight loser -> 29: updateweightlink()
+activate 29
+
+29 -> 29: Thesystemopenweightpage()
+29 -> 29: checktheweightlessthanbenchmark()
+29 -> 29: updategoalwithnewweight()
+29 -> 09: displaysuccessmessage()
+activate 09
+
+deactivate 09
+
+29 -> 159: goal()
+activate 159
+
+deactivate 159
+
+deactivate 29
+
+29 -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+29 -> 139: updatethebenchmark()
+activate 139
+
+139 -> 29: updategoalwithnewweight()
+activate 29
+
+29 -> 09: displaysuccessmessage()
+activate 09
+
+deactivate 09
+
+29 -> 159: goal()
+activate 159
+
+deactivate 159
+
+deactivate 29
+
+139 -> 29: weight()
+activate 29
+
+deactivate 29
+
+deactivate 139
+
+29 -> 19: charitylist()
+activate 19
+
+deactivate 19
+
+29 -> 29: addnewweightpage()
+activate 29
+
+29 -> 19: charitylist()
+activate 19
+
+deactivate 19
+
+29 -> 29: checktheweightlessthanbenchmark()
+29 -> 29: updategoalwithnewweight()
+deactivate 29
+
+29 -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+29 -> 139: updatethebenchmark()
+activate 139
+
+deactivate 139
+
+Weight loser -> 39: invaliderrormessage()
+activate 39
+
+deactivate 39
+
+Weight loser -> 29: addnewweightpage()
+activate 29
+
+29 -> 19: charitylist()
+activate 19
+
+deactivate 19
+
+29 -> 29: checktheweightlessthanbenchmark()
+deactivate 29
+
+@enduml

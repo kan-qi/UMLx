@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:requirements lists-->User:requirements lists,Add new courses,CTRL;EXTCLL;INT,2,0,2,1,4
+2,stl#User:deletion success message-->User:deletion success message,Add new courses,CTRL;EXTCLL;INT,2,0,2,1,4
+3,stl#User:addition fails-->User:addition fails,Add new courses,CTRL;EXTCLL;INT,2,0,2,1,4
+4,stl#User:add new course page-->User:add new course page-->add new course page:check correctness of the input-->check correctness of the input:course,Add new courses,TRAN_NA,4,1,3.6666666666666665,3,14.666666666666666
+5,stl#User:add new course page-->User:add new course page-->add new course page:check correctness of the input-->check correctness of the input:requirements lists,Add new courses,TRAN_NA,4,0,2.6666666666666665,3,10.666666666666666
+6,stl#User:add new course page-->User:add new course page-->add new course page:check correctness of the input-->check correctness of the input:add courses to db-->add courses to db:addition fails,Add new courses,TRAN_NA,5,1,3.25,4,16.25
+7,stl#User:add new course page-->User:add new course page-->add new course page:check correctness of the input-->check correctness of the input:add courses to db-->add courses to db:course,Add new courses,TRAN_NA,5,2,4,4,20
+8,stl#User:add new course page-->User:add new course page-->add new course page:check correctness of the input-->check correctness of the input:add courses to db-->add courses to db:show confirmation course is added-->show confirmation course is added:deletion success message,Add new courses,TRAN_NA,6,1,3.6,5,21.6

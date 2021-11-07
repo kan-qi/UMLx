@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 09
+participant "errorinaccessfacebookinformation" as 19
+participant "findcurrentweightdetail" as 29
+participant "emailprototocol" as 39
+
+Weight loser -> 09: congradulationmessage()
+activate 09
+
+09 -> 19: accessuserinfo()
+activate 19
+
+19 -> 19: facebook()
+deactivate 19
+
+19 -> 19: accessinformationonfacebookerror()
+activate 19
+
+deactivate 19
+
+19 -> 19: postonfacebook()
+activate 19
+
+19 -> 19: facebook()
+deactivate 19
+
+19 -> 09: sendoutemailstocharitiesandsponsors()
+09 -> 39: emailprotocol()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+Weight loser -> 19: accessinformationonfacebookerror()
+activate 19
+
+deactivate 19
+
+Weight loser -> 29: wieghtdetailpage()
+activate 29
+
+29 -> 29: findcurrentweightdetail()
+29 -> 19: displaysacongradulatorymessageonfacebook()
+activate 19
+
+19 -> 19: facebook()
+deactivate 19
+
+19 -> 09: congradulationmessage()
+activate 09
+
+09 -> 19: accessuserinfo()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+29 -> 19: weightinformation()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+@enduml

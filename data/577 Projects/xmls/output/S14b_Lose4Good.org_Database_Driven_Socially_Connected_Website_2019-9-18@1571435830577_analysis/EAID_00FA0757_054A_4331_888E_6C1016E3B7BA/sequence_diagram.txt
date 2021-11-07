@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "emailprototocol" as 09
+participant "Homepage" as 19
+participant "redirecttheusertocreatgoalpage" as 39
+participant "errorinaccessfacebookinformation" as 49
+participant "user" as 139
+
+Weight loser -> 19: loginpage()
+activate 19
+
+19 -> 39: redirecttotheaccountcreationpage()
+activate 39
+
+39 -> 49: facebook()
+activate 49
+
+deactivate 49
+
+39 -> 39: accountcreationpage()
+39 -> 49: validatetheenteredinformationforredundancy()
+activate 49
+
+49 -> 19: errormessage()
+deactivate 19
+
+49 -> 49: redundantregistrationerror()
+deactivate 49
+
+49 -> 49: sendanactivationlinktousersemail()
+activate 49
+
+49 -> 09: Emailprotocol()
+activate 09
+
+deactivate 09
+
+49 -> 139: user()
+activate 139
+
+deactivate 139
+
+49 -> 49: showconfirmationmessage()
+49 -> 49: Confirmationmessage()
+deactivate 49
+
+deactivate 39
+
+Weight loser -> 19: errormessage()
+activate 19
+
+deactivate 19
+
+Weight loser -> 39: accountcreationpage()
+activate 39
+
+39 -> 49: validatetheenteredinformationforredundancy()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+Weight loser -> 49: Confirmationmessage()
+activate 49
+
+deactivate 49
+
+Weight loser -> 49: redundantregistrationerror()
+activate 49
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,164 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Showconfirmation" as 09
+participant "Clicksubmit" as 19
+participant "Homepage" as 29
+participant "checkstaff��sauthority" as 69
+participant "userdb" as 79
+participant "addcontactsintoSalesforce" as 89
+participant "Approvalmanager��srequest" as 99
+participant "Displayatextfiledforinput" as 149
+
+User  -> 09: typeinnewinformationofdonation()
+activate 09
+
+09 -> 09: typeinnewinformationofdonation()
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 79: userdb()
+activate 79
+
+deactivate 79
+
+69 -> 89: addcontactsintoSalesforce()
+activate 89
+
+89 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+69 -> 99: Manager��sauthorityapproved()
+activate 99
+
+deactivate 99
+
+deactivate 69
+
+deactivate 09
+
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 79: userdb()
+activate 79
+
+deactivate 79
+
+69 -> 89: addcontactsintoSalesforce()
+activate 89
+
+deactivate 89
+
+69 -> 99: Manager��sauthorityapproved()
+activate 99
+
+deactivate 99
+
+deactivate 69
+
+User  -> 19: clickeditbutton()
+activate 19
+
+19 -> 149: Displayatextfieldforinput()
+activate 149
+
+149 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 79: userdb()
+activate 79
+
+deactivate 79
+
+69 -> 89: addcontactsintoSalesforce()
+activate 89
+
+deactivate 89
+
+69 -> 99: Manager��sauthorityapproved()
+activate 99
+
+deactivate 99
+
+deactivate 69
+
+149 -> 09: typeinnewinformationofdonation()
+activate 09
+
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+deactivate 149
+
+19 -> 09: typeinnewinformationofdonation()
+activate 09
+
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+deactivate 19
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 09: clickdonationid()
+activate 09
+
+09 -> 149: Displayatextfieldforinput()
+activate 149
+
+149 -> 69: Checkmanager��sauthority()
+activate 69
+
+deactivate 69
+
+149 -> 09: typeinnewinformationofdonation()
+deactivate 09
+
+deactivate 149
+
+User  -> 19: clickonsubmit()
+activate 19
+
+19 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 79: userdb()
+activate 79
+
+deactivate 79
+
+69 -> 89: addcontactsintoSalesforce()
+activate 89
+
+deactivate 89
+
+69 -> 99: Manager��sauthorityapproved()
+activate 99
+
+deactivate 99
+
+deactivate 69
+
+deactivate 19
+
+@enduml

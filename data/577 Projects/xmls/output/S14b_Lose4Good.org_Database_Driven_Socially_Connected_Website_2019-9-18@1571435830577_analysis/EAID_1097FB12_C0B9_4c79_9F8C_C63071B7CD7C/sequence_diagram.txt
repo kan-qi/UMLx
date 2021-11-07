@@ -1,0 +1,143 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor The weight loser
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 09
+participant "errorinaccessfacebookinformation" as 29
+participant "updatethetransactionstatuscompleted" as 49
+participant "emailprototocol" as 79
+participant "redirecttheusertocreatgoalpage" as 199
+
+The weight loser -> 09: confirmationmessage()
+activate 09
+
+deactivate 09
+
+The weight loser -> 09: invitesponsorpage()
+activate 09
+
+09 -> 09: addsponsortotemparilyselectedsponsorslist()
+09 -> 49: updatethetransactionstatuscompleted()
+activate 49
+
+49 -> 49: systemgeneratestheinvitationlinks()
+49 -> 29: facebook()
+activate 29
+
+deactivate 29
+
+49 -> 29: errorinaccessfacebookinformation()
+activate 29
+
+deactivate 29
+
+49 -> 79: sendemails()
+activate 79
+
+79 -> 79: emailprototocol()
+deactivate 79
+
+79 -> 49: Invalidtransactionmessage()
+deactivate 49
+
+79 -> 29: showconfirmationmessage()
+activate 29
+
+29 -> 09: sponsors()
+deactivate 09
+
+29 -> 29: confirmationmessage()
+deactivate 29
+
+79 -> 49: transaction()
+activate 49
+
+deactivate 49
+
+49 -> 49: temporarilyselectedsponsorslist()
+activate 49
+
+deactivate 49
+
+49 -> 49: transaction()
+activate 49
+
+deactivate 49
+
+09 -> 09: detaulmessagesentottheemail()
+activate 09
+
+09 -> 49: systemgeneratestheinvitationlinks()
+activate 49
+
+49 -> 29: facebook()
+activate 29
+
+deactivate 29
+
+49 -> 29: errorinaccessfacebookinformation()
+activate 29
+
+deactivate 29
+
+49 -> 79: sendemails()
+activate 79
+
+deactivate 79
+
+49 -> 49: temporarilyselectedsponsorslist()
+deactivate 49
+
+deactivate 09
+
+09 -> 29: errormessageforinvlidemailid()
+activate 29
+
+deactivate 29
+
+09 -> 49: temporarilyselectedsponsorslist()
+activate 49
+
+deactivate 49
+
+The weight loser -> 29: errorinaccessfacebookinformation()
+activate 29
+
+deactivate 29
+
+The weight loser -> 29: errormessageforinvlidemailid()
+activate 29
+
+deactivate 29
+
+The weight loser -> 49: Invalidtransactionmessage()
+activate 49
+
+deactivate 49
+
+The weight loser -> 09: invitesponsorlink()
+activate 09
+
+09 -> 199: redirecttheusertoinvitesponsorpage()
+activate 199
+
+199 -> 09: invitesponsorpage()
+09 -> 09: addsponsortotemparilyselectedsponsorslist()
+deactivate 09
+
+deactivate 199
+
+The weight loser -> 09: detaulmessagesentottheemail()
+activate 09
+
+09 -> 49: systemgeneratestheinvitationlinks()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+@enduml

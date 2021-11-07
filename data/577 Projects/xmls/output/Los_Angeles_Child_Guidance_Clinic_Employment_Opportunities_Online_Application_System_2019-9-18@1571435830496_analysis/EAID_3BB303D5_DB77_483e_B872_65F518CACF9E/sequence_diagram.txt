@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "fillsoutalloftherequireddatacorrectly" as 09
+participant "Homepage" as 19
+participant "selecttheappropriatepostings" as 29
+participant "Accountdb" as 39
+participant "returnsastandardinformationform" as 119
+
+User -> 09: fillsoutalloftherequireddatacorrectly()
+activate 09
+
+09 -> 39: createsanaccountfortheUser()
+activate 39
+
+39 -> 39: Accountdb()
+deactivate 39
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: selectsCreateanAccount()
+activate 29
+
+29 -> 119: returnsastandardinformationform()
+activate 119
+
+119 -> 19: Showconfirmationpage()
+activate 19
+
+19 -> 39: Accountdb()
+activate 39
+
+deactivate 39
+
+19 -> 19: Homepage()
+deactivate 19
+
+19 -> 39: selectsCreateanAccount()
+activate 39
+
+39 -> 119: returnsastandardinformationform()
+119 -> 39: createsanaccountfortheUser()
+39 -> 39: Accountdb()
+deactivate 39
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 119
+
+deactivate 29
+
+@enduml

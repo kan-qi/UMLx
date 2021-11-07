@@ -1,0 +1,8 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Create Profile Page-->User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:successful information for creation,Create profile,TRAN_NA,4,0,3.3333333333333335,3,13.333333333333334
+2,stl#User:Create Profile Page-->User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:send information in db-->send information in db:user info,Create profile,TRAN_NA,5,0,3.5,4,17.5
+3,stl#User:Create Profile Page-->User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:existing profile error message,Create profile,TRAN_NA,4,0,3.6666666666666665,3,14.666666666666666
+4,stl#User:Create Profile Page-->User:Create Profile Page-->Create Profile Page:pre-check if input is empty-->pre-check if input is empty:error message for empty input,Create profile,TRAN_NA,4,0,3.6666666666666665,3,14.666666666666666
+5,stl#User:existing profile error message-->User:existing profile error message,Create profile,CTRL;EXTCLL;INT,2,1,5,1,10
+6,stl#User:successful information for creation-->User:successful information for creation,Create profile,CTRL;EXTCLL;DM;EI,2,0,4,1,8
+7,stl#User:error message for empty input-->User:error message for empty input,Create profile,CTRL;EXTCLL;INT,2,0,5,1,10

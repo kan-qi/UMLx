@@ -1,0 +1,84 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "deletesitefromdb" as 09
+participant "successmessage" as 29
+participant "redirecttoapagewiththecurerntsiteslist" as 59
+participant "displayinvalidemailformat" as 69
+participant "checkuscidexistornot" as 109
+
+User -> 09: siteslink()
+activate 09
+
+09 -> 59: redirecttoapagewiththecurerntsiteslist()
+activate 59
+
+59 -> 69: siteinformation()
+activate 69
+
+deactivate 69
+
+59 -> 09: sitelist()
+09 -> 09: deletesitefromdb()
+09 -> 69: siteinformation()
+activate 69
+
+deactivate 69
+
+09 -> 29: successmesssage()
+activate 29
+
+29 -> 109: checkexistingsituationforthenewsite()
+activate 109
+
+109 -> 69: addsiteinformationdb()
+activate 69
+
+69 -> 69: siteinformation()
+deactivate 69
+
+69 -> 29: successmessage()
+deactivate 29
+
+109 -> 29: existingsiteerrormessage()
+activate 29
+
+deactivate 29
+
+deactivate 109
+
+deactivate 09
+
+deactivate 59
+
+User -> 09: sitelist()
+activate 09
+
+09 -> 09: deletesitefromdb()
+deactivate 09
+
+User -> 29: existingsiteerrormessage()
+activate 29
+
+deactivate 29
+
+User -> 29: successmesssage()
+activate 29
+
+29 -> 109: checkexistingsituationforthenewsite()
+activate 109
+
+deactivate 109
+
+deactivate 29
+
+User -> 29: successmessage()
+activate 29
+
+deactivate 29
+
+@enduml

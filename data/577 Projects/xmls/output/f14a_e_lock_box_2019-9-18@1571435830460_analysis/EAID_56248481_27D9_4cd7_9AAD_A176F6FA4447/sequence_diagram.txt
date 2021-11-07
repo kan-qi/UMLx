@@ -1,0 +1,118 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manager
+participant "blankdescriptionerror" as 09
+participant "Usermanagementbutton" as 19
+participant "emailpassword" as 39
+participant "unauthorizedrequest" as 49
+participant "role" as 109
+participant "insertuserinfo" as 119
+participant "checkthestatusofuser" as 159
+
+Administrator -> 09: invalidanswerforsecurityquestion()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: casemanagementpage()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: resetpage()
+activate 19
+
+19 -> 159: validateanswerofsecurityquestion()
+activate 159
+
+159 -> 09: invalidanswerforsecurityquestion()
+activate 09
+
+deactivate 09
+
+159 -> 39: resetnewpassword()
+activate 39
+
+39 -> 119: User()
+activate 119
+
+deactivate 119
+
+39 -> 19: casemanagementpage()
+deactivate 19
+
+deactivate 39
+
+deactivate 159
+
+Administrator -> 39: Resetpasswordbutton()
+activate 39
+
+39 -> 109: validateroleofuser()
+activate 109
+
+109 -> 19: resetpage()
+activate 19
+
+19 -> 159: validateanswerofsecurityquestion()
+activate 159
+
+deactivate 159
+
+deactivate 19
+
+109 -> 109: role()
+deactivate 109
+
+109 -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+Administrator -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+Case Manager -> 19: resetpage()
+activate 19
+
+19 -> 159: validateanswerofsecurityquestion()
+activate 159
+
+deactivate 159
+
+deactivate 19
+
+Case Manager -> 39: Resetpasswordbutton()
+activate 39
+
+39 -> 109: validateroleofuser()
+activate 109
+
+deactivate 109
+
+deactivate 39
+
+Case Manager -> 09: invalidanswerforsecurityquestion()
+activate 09
+
+deactivate 09
+
+Case Manager -> 19: casemanagementpage()
+activate 19
+
+deactivate 19
+
+Case Manager -> 49: unauthorizederrormessage()
+activate 49
+
+deactivate 49
+
+@enduml

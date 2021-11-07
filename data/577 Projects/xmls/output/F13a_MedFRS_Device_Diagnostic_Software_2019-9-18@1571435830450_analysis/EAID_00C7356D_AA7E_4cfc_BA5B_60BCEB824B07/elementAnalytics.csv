@@ -1,0 +1,26 @@
+id,element,useCase,type,component
+1,supervisor:Manage individuals button,resend one time pass email,boundary,RedirectViewIndividualsPage
+2,supervisor:Resend OTP page,resend one time pass email,boundary,EMTformpage
+3,supervisor:list of individual details page,resend one time pass email,boundary,RedirectViewIndividualsPage
+4,supervisor:list of individual details page,resend one time pass email,boundary,RedirectViewIndividualsPage
+5,supervisor:Manage individuals button,resend one time pass email,boundary,RedirectViewIndividualsPage
+6,supervisor:Transport coordinate page,resend one time pass email,entity,Insertrecordintodb
+7,Manage individuals button:Redirects to the manage individuals page,resend one time pass email,boundary,RedirectViewIndividualsPage
+8,Redirect to management indivisuals page:Transport coordinate page,resend one time pass email,entity,Insertrecordintodb
+9,sends OTP to volunteer's email ID:Redirect to management indivisuals page,resend one time pass email,boundary,RedirectViewIndividualsPage
+10,Redirects to the individual resend OTP page:Resend OTP page,resend one time pass email,boundary,EMTformpage
+11,Redirects to the individual resend OTP page:redirects to the manage individuals page,resend one time pass email,boundary,RedirectViewIndividualsPage
+12,list of individual details page:Redirects to the individual resend OTP page,resend one time pass email,boundary,RedirectViewIndividualsPage
+13,Redirects to the manage individuals page:list of individual details page,resend one time pass email,boundary,RedirectViewIndividualsPage
+14,Resend OTP page:redirect to the manage individuals page,resend one time pass email,boundary,RedirectViewIndividualsPage
+15,Resend OTP page:clears device id of volunteer ,resend one time pass email,control,VlunteerDiasterHomepage
+16,clears device id of volunteer :Transport coordinate page,resend one time pass email,entity,Insertrecordintodb
+17,clears device id of volunteer :sends OTP to volunteer's email ID,resend one time pass email,control,VlunteerDiasterHomepage
+18,redirect to the manage individuals page:list of individual details page,resend one time pass email,boundary,RedirectViewIndividualsPage
+19,sends OTP to volunteer's email ID:tracking record database,resend one time pass email,entity,Insertrecordintodb
+20,stl#supervisor:Manage individuals button,resend one time pass email,Stimulus,undefined
+21,stl#supervisor:Resend OTP page,resend one time pass email,Stimulus,undefined
+22,stl#supervisor:list of individual details page,resend one time pass email,Stimulus,undefined
+23,stl#supervisor:list of individual details page,resend one time pass email,Stimulus,undefined
+24,stl#supervisor:Manage individuals button,resend one time pass email,Stimulus,undefined
+25,stl#supervisor:Transport coordinate page,resend one time pass email,Stimulus,undefined

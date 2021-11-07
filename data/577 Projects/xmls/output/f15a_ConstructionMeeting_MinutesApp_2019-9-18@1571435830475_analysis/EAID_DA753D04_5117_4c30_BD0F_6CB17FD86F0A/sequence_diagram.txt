@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Choosesameeting" as 09
+participant "Hompage" as 19
+participant "validateusenameandpassword" as 29
+participant "attemptstoverifytheinputs" as 49
+
+User -> 09: Publishesameeting()
+activate 09
+
+09 -> 09: PublishesmeetingandsendsaParsePushnotification()
+09 -> 49: Addscommenttotheminute()
+activate 49
+
+49 -> 29: sendsaParsePushnotification()
+activate 29
+
+29 -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+User -> 29: Submitsacommenttoanassignedtask()
+activate 29
+
+29 -> 49: Addscommenttotheminute()
+activate 49
+
+49 -> 29: sendsaParsePushnotification()
+deactivate 29
+
+deactivate 49
+
+@enduml

@@ -1,0 +1,10 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Home page-->User:Home page,Login,2,1,0,0,0
+2,stl#User:course detail page-->User:course detail page,Login,2,1,0,0,0
+3,stl#User:Login success information-->User:Login success information,Login,2,1,0,0,0
+4,stl#User:Login invalid message-->User:Login invalid message,Login,2,1,0,0,0
+5,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:Login invalid message,Login,4,3,0,0,0
+6,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:update role-->update role:Login success information,Login,5,3,1,0,0
+7,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:update role-->update role:cache,Login,5,2,1,1,0
+8,stl#User:Login page-->User:Login page-->Login page:verify login information-->verify login information:user,Login,4,2,0,1,0
+9,stl#User:Login page-->User:Login page-->Login page:Redirect to home page-->Redirect to home page:Home page,Login,4,3,0,0,0

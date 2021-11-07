@@ -1,0 +1,73 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "validatetheform" as 09
+participant "systemerrorwhenconnectingserver" as 29
+participant "manageemployeescreen" as 39
+
+Valet -> 09: inputinformationinvalid()
+activate 09
+
+09 -> 09: removevaletfromdb()
+09 -> 39: employee()
+activate 39
+
+deactivate 39
+
+09 -> 39: manageemployeescreen()
+activate 39
+
+deactivate 39
+
+09 -> 29: systemerrorwhenconnectingserver()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+Valet -> 09: valetinformationinputpage()
+activate 09
+
+09 -> 09: validatetheform()
+09 -> 39: generaterandomempolyeeid()
+activate 39
+
+39 -> 39: Employee()
+deactivate 39
+
+39 -> 39: updateemployeeinformation()
+activate 39
+
+39 -> 39: employee()
+deactivate 39
+
+39 -> 29: systemerrorwhenconnectingserver()
+activate 29
+
+deactivate 29
+
+39 -> 39: manageemployeescreen()
+activate 39
+
+deactivate 39
+
+09 -> 09: inputinformationinvalid()
+09 -> 09: removevaletfromdb()
+deactivate 09
+
+Valet -> 29: systemerrorwhenconnectingserver()
+activate 29
+
+deactivate 29
+
+Valet -> 39: manageemployeescreen()
+activate 39
+
+deactivate 39
+
+@enduml

@@ -1,0 +1,17 @@
+id,element,useCase,type,component
+1,send email including credential:Email Protocol,Login,actor,Addproviderbutton
+2,User:Forgotten username or password link,Login,boundary,Errormessageforupdatefailure
+3,User:Invalid information error message,Login,boundary,Errormessageforupdatefailure
+4,User:My account page,Login,control,Redirecttosearchpage
+5,User:Login page,Login,control,Redirecttosearchpage
+6,Forgotten username or password link:send email including credential,Login,control,sendemailincludingcredential
+7,Invalid information error message:redirect to login page,Login,control,Redirecttosearchpage
+8,verify user information:Invalid information error message,Login,boundary,Errormessageforupdatefailure
+9,Login page:verify user information,Login,entity,User
+10,redirect to login page:Login page,Login,control,Redirecttosearchpage
+11,verify user information:My account page,Login,control,Redirecttosearchpage
+12,verify user information:user info,Login,entity,User
+13,stl#User:Forgotten username or password link,Login,Stimulus,undefined
+14,stl#User:Invalid information error message,Login,Stimulus,undefined
+15,stl#User:My account page,Login,Stimulus,undefined
+16,stl#User:Login page,Login,Stimulus,undefined

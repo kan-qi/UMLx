@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Exportbutton" as 19
+participant "Database" as 39
+participant "GenerateCsvfile" as 79
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Exportbutton()
+activate 19
+
+deactivate 19
+
+User -> 19: Exportbutton()
+activate 19
+
+19 -> 79: GenerateCsvfile()
+activate 79
+
+79 -> 09: Displayconfirmationpage()
+activate 09
+
+09 -> 39: Database()
+activate 39
+
+deactivate 39
+
+09 -> 09: Homepage()
+deactivate 09
+
+09 -> 19: Exportbutton()
+19 -> 79: GenerateCsvfile()
+deactivate 79
+
+deactivate 19
+
+@enduml

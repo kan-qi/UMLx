@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "VlunteerDiasterHomepage" as 09
+participant "EMTformpage" as 19
+participant "RedirectViewIndividualsPage" as 49
+participant "User" as 59
+
+User -> 09: MedFPShomepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Loginerrormessage()
+activate 19
+
+deactivate 19
+
+User -> 19: Loginpage()
+activate 19
+
+19 -> 09: Checkuserandpasswordentered()
+activate 09
+
+09 -> 09: Authenticatetheusernameandpassword()
+09 -> 49: RedirecttoMedFPSSupervisorcoordinatehomepage()
+activate 49
+
+49 -> 09: MedFPShomepage()
+deactivate 09
+
+deactivate 49
+
+09 -> 59: Usernameandpassworddb()
+activate 59
+
+deactivate 59
+
+09 -> 19: Loginerrormessage()
+deactivate 19
+
+09 -> 09: Emptyusernameandpassworderrormessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Emptyusernameandpassworderrormessage()
+activate 09
+
+deactivate 09
+
+@enduml

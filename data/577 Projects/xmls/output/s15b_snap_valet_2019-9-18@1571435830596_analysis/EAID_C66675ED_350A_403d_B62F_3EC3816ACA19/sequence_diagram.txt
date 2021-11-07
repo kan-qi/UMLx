@@ -1,0 +1,67 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "GooglePlacesAPI" as 09
+participant "redirecttoaddresssinputpage" as 19
+participant "matchedresultsforlocations" as 49
+participant "systemerrorwhenconnectingserver" as 59
+
+Valet -> 19: addressinputdialog()
+activate 19
+
+19 -> 49: validatetheaddressform()
+activate 49
+
+49 -> 19: Invalidinputaddress()
+19 -> 19: redirecttoaddresssinputpage()
+19 -> 19: addressinputdialog()
+19 -> 49: validatetheaddressform()
+49 -> 49: searchforbestmatch()
+49 -> 09: GooglePlacesAPI()
+activate 09
+
+deactivate 09
+
+49 -> 59: Errormessagewhenconnecting()
+activate 59
+
+deactivate 59
+
+49 -> 49: matchedresultsforlocations()
+deactivate 49
+
+deactivate 19
+
+Valet -> 19: Addlocationbutton()
+activate 19
+
+19 -> 19: displaysapromptforinputingaddress()
+19 -> 19: addressinputdialog()
+19 -> 49: validatetheaddressform()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+Valet -> 19: Invalidinputaddress()
+activate 19
+
+19 -> 19: redirecttoaddresssinputpage()
+deactivate 19
+
+Valet -> 49: matchedresultsforlocations()
+activate 49
+
+deactivate 49
+
+Valet -> 59: Errormessagewhenconnecting()
+activate 59
+
+deactivate 59
+
+@enduml

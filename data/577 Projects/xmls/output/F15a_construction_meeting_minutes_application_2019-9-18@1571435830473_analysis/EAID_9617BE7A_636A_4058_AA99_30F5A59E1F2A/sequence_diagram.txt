@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Selectingsettingsbutton" as 09
+participant "submittedcommentsscreen" as 19
+participant "Administratorsdashboard" as 29
+participant "Attendeeisnotavailable" as 39
+participant "Tasks" as 69
+
+Administrator -> 09: createmeetingoption()
+activate 09
+
+09 -> 19: displaythecreatemeetingscreen()
+activate 19
+
+19 -> 39: AttendeeInfo()
+activate 39
+
+deactivate 39
+
+19 -> 19: Createmeetingscreen()
+19 -> 39: Verifiesattendeelist()
+activate 39
+
+39 -> 19: createameeting()
+19 -> 09: meeting()
+deactivate 09
+
+deactivate 19
+
+39 -> 29: useralreadyexiststoasts()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+19 -> 69: Tasks()
+activate 69
+
+deactivate 69
+
+Administrator -> 19: Createmeetingscreen()
+activate 19
+
+19 -> 39: Verifiesattendeelist()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+Administrator -> 29: useralreadyexiststoasts()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,94 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "Emergencybutton" as 09
+participant "VlunteerDiasterHomepage" as 19
+participant "ValidatesInput" as 39
+participant "RedirectViewIndividualsPage" as 59
+participant "assignmentdetaildatabase" as 79
+
+Transport Coordinator -> 09: Managebuildingshubsdisastersbutton()
+activate 09
+
+09 -> 59: Redirectstothemanagementbuildingshubsdisasterspage()
+activate 59
+
+59 -> 19: Managementbuildingshubdisasterspage()
+activate 19
+
+19 -> 79: Deleterecordsfromthedatabase()
+activate 79
+
+79 -> 19: buildshubsdiastersdb()
+deactivate 19
+
+deactivate 79
+
+19 -> 59: Redirectstoupdatebuildinghubdisasterformpage()
+59 -> 19: updatebuildinghubdisasterformpage()
+activate 19
+
+19 -> 39: Validatesinputasbeingcorrect()
+activate 39
+
+39 -> 79: Systemupdatesrecordinthedatabase()
+activate 79
+
+79 -> 59: Redirectstothemanagementbuildingshubsdisasterspage()
+59 -> 19: Managebildingshubsdisasterspage()
+deactivate 19
+
+deactivate 59
+
+79 -> 19: buildshubsdiastersdb()
+activate 19
+
+deactivate 19
+
+deactivate 79
+
+39 -> 39: nullinputinformaitonerror()
+deactivate 39
+
+deactivate 09
+
+Transport Coordinator -> 19: Managementbuildingshubdisasterspage()
+activate 19
+
+19 -> 79: Deleterecordsfromthedatabase()
+activate 79
+
+deactivate 79
+
+19 -> 59: Redirectstoupdatebuildinghubdisasterformpage()
+activate 59
+
+deactivate 59
+
+deactivate 19
+
+Transport Coordinator -> 19: Managebildingshubsdisasterspage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 39: nullinputinformaitonerror()
+activate 39
+
+deactivate 39
+
+Transport Coordinator -> 19: updatebuildinghubdisasterformpage()
+activate 19
+
+19 -> 39: Validatesinputasbeingcorrect()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,129 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "systemerrorwhenconnectingserver" as 09
+participant "venuelist" as 19
+participant "manageemployeescreen" as 39
+participant "matchedresultsforlocations" as 49
+participant "GooglePlacesAPI" as 159
+
+Valet -> 09: servererror()
+activate 09
+
+deactivate 09
+
+Valet -> 19: venuelist()
+activate 19
+
+19 -> 49: displayconfirmationprompt()
+activate 49
+
+49 -> 49: confirmationprompt()
+49 -> 39: Redirecttovehiclerequestscreen()
+activate 39
+
+39 -> 39: Vehiclerequestscreen()
+39 -> 159: Saveacceptance()
+activate 159
+
+159 -> 19: venue()
+deactivate 19
+
+159 -> 09: displayservererrormessage()
+activate 09
+
+09 -> 09: Servererrormessage()
+deactivate 09
+
+deactivate 159
+
+39 -> 19: pulladvertisementforrandomvenue()
+activate 19
+
+19 -> 19: Advertisementforrandomvenue()
+deactivate 19
+
+19 -> 19: venue()
+activate 19
+
+deactivate 19
+
+39 -> 39: navigatetoqueuescreen()
+39 -> 19: Advertisementforrandomvenue()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+49 -> 19: Redirecttovenuelist()
+activate 19
+
+19 -> 19: venuelist()
+19 -> 49: displayconfirmationprompt()
+49 -> 39: inactiveemployee()
+activate 39
+
+deactivate 39
+
+49 -> 09: servererror()
+activate 09
+
+deactivate 09
+
+49 -> 19: venue()
+deactivate 19
+
+deactivate 49
+
+Valet -> 09: Servererrormessage()
+activate 09
+
+deactivate 09
+
+Valet -> 39: inactiveemployee()
+activate 39
+
+deactivate 39
+
+Valet -> 49: confirmationprompt()
+activate 49
+
+49 -> 39: Redirecttovehiclerequestscreen()
+activate 39
+
+deactivate 39
+
+49 -> 19: Redirecttovenuelist()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+Valet -> 19: Advertisementforrandomvenue()
+activate 19
+
+deactivate 19
+
+Valet -> 39: Vehiclerequestscreen()
+activate 39
+
+39 -> 159: Saveacceptance()
+activate 159
+
+deactivate 159
+
+39 -> 19: pulladvertisementforrandomvenue()
+activate 19
+
+deactivate 19
+
+39 -> 39: navigatetoqueuescreen()
+deactivate 39
+
+@enduml

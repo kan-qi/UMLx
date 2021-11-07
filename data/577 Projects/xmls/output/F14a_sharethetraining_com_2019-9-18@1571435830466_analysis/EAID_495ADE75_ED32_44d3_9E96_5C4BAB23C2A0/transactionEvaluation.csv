@@ -1,0 +1,10 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:course list-->User:course list,Search course,CTRL;EXTCLL;DM;EI,2,0,5,1,10
+2,stl#User:home page-->User:home page,Search course,CTRL;EXTCLL;INT,2,0,5,1,10
+3,stl#User:Search page-->User:Search page-->Search page:redirect to home page-->redirect to home page:home page,Search course,TRAN_NA,4,2,5,3,20
+4,stl#User:Search page-->User:Search page-->Search page:Search course by keywords-->Search course by keywords:course,Search course,TRAN_NA,4,0,5,3,20
+5,stl#User:Search page-->User:Search page-->Search page:Search course by keywords-->Search course by keywords:course list,Search course,TRAN_NA,4,0,5,3,20
+6,stl#User:Search page-->User:Search page-->Search page:Search course by keywords-->Search course by keywords:Save sign up information-->Save sign up information:home page,Search course,TRAN_NA,5,1,4,4,20
+7,stl#User:Search page-->User:Search page-->Search page:Search course by keywords-->Search course by keywords:Save sign up information-->Save sign up information:course,Search course,TRAN_NA,5,1,4,4,20
+8,stl#User:Search page-->User:Search page-->Search page:Search course by keywords-->Search course by keywords:No matched results,Search course,TRAN_NA,4,0,4,3,16
+9,stl#User:No matched results-->User:No matched results,Search course,CTRL;EXTCLL;INT,2,0,2,1,4

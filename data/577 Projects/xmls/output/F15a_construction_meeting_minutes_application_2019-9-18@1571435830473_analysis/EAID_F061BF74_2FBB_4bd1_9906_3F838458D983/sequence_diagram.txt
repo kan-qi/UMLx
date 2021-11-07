@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "submittedcommentsscreen" as 09
+participant "asignedtasklist" as 29
+participant "notification" as 89
+
+User -> 09: errorfortoolongcomment()
+activate 09
+
+deactivate 09
+
+User -> 09: commentinputpage()
+activate 09
+
+09 -> 09: submitcomment()
+09 -> 09: comment()
+deactivate 09
+
+09 -> 09: errorfortoolongcomment()
+activate 09
+
+deactivate 09
+
+09 -> 89: notification()
+activate 89
+
+deactivate 89
+
+User -> 29: asignedtasklist()
+activate 29
+
+29 -> 09: opencommentinputpage()
+activate 09
+
+09 -> 09: commentinputpage()
+09 -> 09: submitcomment()
+deactivate 09
+
+deactivate 29
+
+@enduml

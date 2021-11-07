@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EmailProtocol" as 09
+participant "displayforgotpasswordpage" as 19
+participant "Useraddbutton" as 29
+participant "LoginInfo" as 59
+participant "Removesession" as 69
+
+User -> 19: passwordresetsuccessmessage()
+activate 19
+
+deactivate 19
+
+User -> 29: LogoutButton()
+activate 29
+
+29 -> 69: Removesession()
+activate 69
+
+69 -> 69: session()
+deactivate 69
+
+deactivate 29
+
+User -> 19: forgotpasswordpage()
+activate 19
+
+19 -> 19: resetpassword()
+19 -> 59: LoginInfo()
+activate 59
+
+deactivate 59
+
+19 -> 19: passwordresetsuccessmessage()
+deactivate 19
+
+19 -> 09: sendresetlinkbyemail()
+activate 09
+
+09 -> 09: EmailProtocol()
+deactivate 09
+
+User -> 19: forgetpasswordbutton()
+activate 19
+
+19 -> 19: displayforgotpasswordpage()
+19 -> 19: forgotpasswordpage()
+19 -> 19: resetpassword()
+deactivate 19
+
+19 -> 09: sendresetlinkbyemail()
+activate 09
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,87 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Showconfirmation" as 09
+participant "Clicksubmit" as 19
+participant "Homepage" as 29
+participant "Approvalmanager��srequest" as 59
+participant "checkstaff��sauthority" as 69
+
+User  -> 09: confirm()
+activate 09
+
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 59: Manager��sauthorityapproved()
+activate 59
+
+59 -> 09: updatedonationinformationinSalesforce()
+09 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+09 -> 09: donationdb()
+deactivate 09
+
+deactivate 59
+
+deactivate 69
+
+User  -> 19: clickonsubmit()
+activate 19
+
+19 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 59: Manager��sauthorityapproved()
+activate 59
+
+deactivate 59
+
+deactivate 69
+
+deactivate 19
+
+User  -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User  -> 19: clickdeletebutton()
+activate 19
+
+19 -> 09: Popaconfirminformation()
+activate 09
+
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+69 -> 59: Manager��sauthorityapproved()
+activate 59
+
+deactivate 59
+
+deactivate 69
+
+deactivate 09
+
+deactivate 19
+
+User  -> 09: clickdonationid()
+activate 09
+
+09 -> 09: Popaconfirminformation()
+09 -> 69: Checkmanager��sauthority()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+@enduml

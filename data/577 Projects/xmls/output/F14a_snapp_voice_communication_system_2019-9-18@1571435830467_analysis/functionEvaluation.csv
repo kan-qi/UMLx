@@ -1,0 +1,67 @@
+id, function, functional, DET, FTR, boundaries, controls, entities, typeStr
+1,thirdparty call agency:call finishs and display call details-->call finishs and display call details:call details,EQ,0,2,2,0,0,boundary->boundary
+2,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,EQ,2,11,8,0,3,entity->entity->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->entity
+3,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,EO,2,12,10,0,2,entity->entity->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary
+4,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead,EO,2,7,5,0,2,entity->entity->boundary->boundary->boundary->boundary->boundary
+5,User Agent:login page-->login page:check login information-->check login information:show leads list-->show leads list:query leads list-->query leads list:lead,EO,1,5,3,0,2,entity->entity->boundary->boundary->boundary
+6,User Agent:login page-->login page:check login information-->check login information:login info,EQ,0,3,0,0,3,entity->entity->entity
+7,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,EI,2,9,8,0,1,boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->entity
+8,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,EQ,2,10,10,0,0,boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary
+9,User Agent:show leads list-->show leads list:query leads list-->query leads list:leads list-->leads list:query lead information-->query lead information:lead,EQ,2,5,5,0,0,boundary->boundary->boundary->boundary->boundary
+10,User Agent:show leads list-->show leads list:query leads list-->query leads list:lead,EQ,1,3,3,0,0,boundary->boundary->boundary
+11,User Agent:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,EI,0,7,6,0,1,boundary->boundary->boundary->boundary->boundary->boundary->entity
+12,User Agent:leads list-->leads list:query lead information-->query lead information:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,EQ,0,8,8,0,0,boundary->boundary->boundary->boundary->boundary->boundary->boundary->boundary
+13,User Agent:leads list-->leads list:query lead information-->query lead information:lead,EQ,0,3,3,0,0,boundary->boundary->boundary
+14,User Agent:call details,EQ,1,1,1,0,0,boundary
+15,User Agent:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,EI,0,5,4,0,1,boundary->boundary->boundary->boundary->entity
+16,User Agent:lead detail-->lead detail:pop softphone screen-->pop softphone screen:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,EQ,0,6,6,0,0,boundary->boundary->boundary->boundary->boundary->boundary
+17,User Agent:softphone screen-->softphone screen:make a phone call-->make a phone call:thirdparty call agency,EI,0,3,2,0,1,boundary->boundary->entity
+18,User Agent:softphone screen-->softphone screen:make a phone call-->make a phone call:softphone screen-->softphone screen:make a phone call,EQ,0,4,4,0,0,boundary->boundary->boundary->boundary
+19,Manager:softphone screen,EQ,0,1,0,1,0,control
+20,Manager:view agent activites button-->view agent activites button:query agent-->query agent:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:Twilio API,EQ,1,5,4,0,1,boundary->entity->boundary->boundary->boundary
+21,Manager:view agent activites button-->view agent activites button:query agent-->query agent:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,EQ,2,5,3,1,1,boundary->entity->boundary->boundary->control
+22,Manager:view agent activites button-->view agent activites button:query agent-->query agent:agent,EI,2,3,1,0,2,boundary->entity->entity
+23,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:Twilio API,EQ,0,3,3,0,0,boundary->boundary->boundary
+24,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,EI,1,3,2,1,0,boundary->boundary->control
+25,Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,EI,1,4,2,2,0,boundary->boundary->control->control
+26,Twilio API:redirect to void mail-->redirect to void mail:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,EI,1,4,2,1,1,boundary->boundary->control->entity
+27,Twilio API:popup income call dialog-->popup income call dialog:income call dialog-->income call dialog:Agent,EQ,1,3,0,0,3,entity->entity->entity
+28,Twilio API:save call log-->save call log:call log,EQ,0,2,0,0,2,entity->entity
+29,Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:softphone screen,EI,1,3,1,2,0,boundary->control->control
+30,Lead:voice mail panel-->voice mail panel:connect to Twilio API for agent's call-->connect to Twilio API for agent's call:agent,EI,1,3,1,1,1,boundary->control->entity
+31,Lead:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,EO,0,3,0,1,2,entity->entity->control
+32,Lead:softphone screen,EQ,0,1,0,1,0,control
+33,Customer:1-800 dial button-->1-800 dial button:assign call to agent-->assign call to agent:Twilio API,EO,0,3,0,1,2,entity->entity->control
+34,User Agent:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,EQ,1,3,0,2,1,actor->control->control
+35,User Agent:income call popup-->income call popup:answer phone call-->answer phone call:call log,EQ,1,3,0,1,2,actor->control->entity
+36,User Agent:call/auto dialer button-->call/auto dialer button:dial with Twilio API-->dial with Twilio API:Twilio API,EO,3,3,0,2,1,entity->control->control
+37,Twilio API:popup income call and user agent number-->popup income call and user agent number:caller number-->caller number:customer,EQ,2,3,0,1,2,actor->control->actor
+38,Twilio API:popup income call and user agent number-->popup income call and user agent number:caller number-->caller number:answer phone call-->answer phone call:Twilio API,EQ,3,4,0,3,1,actor->control->control->control
+39,Twilio API:popup income call and customer's number-->popup income call and customer's number:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,EQ,3,4,0,3,1,actor->control->control->control
+40,Twilio API:popup income call and customer's number-->popup income call and customer's number:income call popup-->income call popup:answer phone call-->answer phone call:call log,EQ,3,4,0,2,2,actor->control->control->entity
+41,Lead:income call popup-->income call popup:answer phone call-->answer phone call:Twilio API,EQ,1,3,0,2,1,actor->control->control
+42,Lead:income call popup-->income call popup:answer phone call-->answer phone call:call log,EQ,1,3,0,1,2,actor->control->entity
+43,Sales Agent:success message for removing lead,EQ,0,1,1,0,0,boundary
+44,Sales Agent:dropdown list for removing lead-->dropdown list for removing lead:remove lead from autodialing list-->remove lead from autodialing list:success message for removing lead,EQ,0,3,3,0,0,boundary->boundary->boundary
+45,Sales Agent:dropdown list for removing lead-->dropdown list for removing lead:remove lead from autodialing list-->remove lead from autodialing list:autodialing list,EI,1,3,2,0,1,boundary->boundary->entity
+46,Twilio API:notify acceptance from manager-->notify acceptance from manager:Popup of manager's acceptance-->Popup of manager's acceptance:autodialing list,EI,0,3,2,0,1,boundary->boundary->entity
+47,Twilio API:notify cancel request-->notify cancel request:conference cancel notification,EQ,0,2,2,0,0,boundary->boundary
+48,Twilio API:Notify Manager-->Notify Manager:popup with request detail of the agent,EQ,0,2,2,0,0,boundary->boundary
+49,Manager:popup with request detail of the agent,EQ,0,1,1,0,0,boundary
+50,Manager:connect to ongoing call-->connect to ongoing call:Twilio API,EQ,0,2,0,2,0,control->control
+51,Customer:conference cancel notification,EQ,0,1,1,0,0,boundary
+52,Customer:Popup of manager's acceptance-->Popup of manager's acceptance:autodialing list,EI,0,2,1,0,1,boundary->entity
+53,Customer:request manager conference button-->request manager conference button:send conference request-->send conference request:Twilio API,EI,1,3,1,2,0,boundary->control->control
+54,User Agent:changed status,EQ,0,1,0,1,0,control
+55,User Agent:status selector dropdown list-->status selector dropdown list:save status for lead-->save status for lead:changed status,EQ,0,3,0,3,0,control->control->control
+56,User Agent:status selector dropdown list-->status selector dropdown list:save status for lead-->save status for lead:Lead,EO,1,3,1,2,0,control->control->boundary
+57,Twilio API:receive call information-->receive call information:call detailed information,EO,1,2,1,0,1,entity->boundary
+58,Twilio API:download call records-->download call records:call records,EQ,0,2,0,0,2,entity->entity
+59,Twilio API:download call records-->download call records:call record downloaded message,EQ,0,2,0,0,2,entity->entity
+60,Manager:call record downloaded message,EQ,0,1,0,0,1,entity
+61,Manager:call detailed information,EQ,0,1,1,0,0,boundary
+62,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,EQ,0,5,0,5,0,control->control->control->control->control
+63,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,EQ,0,5,0,5,0,control->control->control->control->control
+64,Manager:view agent activities link-->view agent activities link:query agent activies-->query agent activies:agent,EQ,0,3,0,3,0,control->control->control
+65,Manager:list of agents with status-->list of agents with status:connect to Twilio API for call's info-->connect to Twilio API for call's info:Twilio API,EQ,0,3,0,3,0,control->control->control
+66,Manager:list of agents with status-->list of agents with status:connect to Twilio API for agent's call records-->connect to Twilio API for agent's call records:Twilio API,EQ,0,3,0,3,0,control->control->control

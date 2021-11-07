@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Invalidenteredinformation" as 09
+participant "Homepage" as 19
+participant "course" as 29
+participant "Emailprotocol" as 39
+
+Admin -> 09: Invalidcourseinformation()
+activate 09
+
+09 -> 29: deletecourse()
+activate 29
+
+29 -> 19: Redirecttohomepage()
+activate 19
+
+19 -> 39: Emailprotocol()
+activate 39
+
+deactivate 39
+
+19 -> 19: homepage()
+deactivate 19
+
+29 -> 29: course()
+deactivate 29
+
+deactivate 09
+
+Admin -> 19: homepage()
+activate 19
+
+deactivate 19
+
+Admin -> 29: Coursemanagementpage()
+activate 29
+
+29 -> 19: Redirecttohomepage()
+activate 19
+
+19 -> 39: Emailprotocol()
+activate 39
+
+deactivate 39
+
+19 -> 19: homepage()
+deactivate 19
+
+29 -> 09: verifycourseinformation()
+activate 09
+
+09 -> 09: Invalidcourseinformation()
+09 -> 29: deletecourse()
+deactivate 29
+
+deactivate 09
+
+09 -> 29: savecourseinfo()
+activate 29
+
+29 -> 29: course()
+deactivate 29
+
+@enduml

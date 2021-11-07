@@ -1,0 +1,15 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Attendee:Review page-->Attendee:Review page-->Review page:Redirect to home page-->Redirect to home page:Home page,Review course,4,3,0,0,0
+2,stl#Attendee:Review page-->Attendee:Review page-->Review page:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,6,5,0,0,0
+3,stl#Attendee:Review page-->Attendee:Review page-->Review page:Update cours information in db-->Update cours information in db:Course,Review course,4,2,0,1,0
+4,stl#Attendee:Home page-->Attendee:Home page,Review course,2,1,0,0,0
+5,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:setupPayment-->setupPayment:EventBrite,Review course,4,2,0,1,0
+6,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Redirect to home page-->Redirect to home page:Home page,Review course,6,4,0,1,0
+7,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,8,6,0,1,0
+8,stl#Attendee:Course detail page-->Attendee:Course detail page-->Course detail page:Display review page-->Display review page:Review page-->Review page:Update cours information in db-->Update cours information in db:Course,Review course,6,3,0,2,0
+9,stl#Attendee:registration success-->Attendee:registration success,Review course,2,1,0,0,0
+10,stl#Attendee:Cours information update success message-->Attendee:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,4,3,0,0,0
+11,stl#EventBrite:Update cours information in db-->EventBrite:Update cours information in db-->Update cours information in db:Cours information update success message-->Cours information update success message:make payment-->make payment:EventBrite,Review course,5,4,0,0,0
+12,stl#EventBrite:Update cours information in db-->EventBrite:Update cours information in db-->Update cours information in db:Course,Review course,3,1,0,1,0
+13,stl#EventBrite:receive payment result-->EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:registration success,Review course,4,3,0,0,0
+14,stl#EventBrite:receive payment result-->EventBrite:receive payment result-->receive payment result:Send out confirmation email-->Send out confirmation email:Email protocol,Review course,4,2,1,0,0

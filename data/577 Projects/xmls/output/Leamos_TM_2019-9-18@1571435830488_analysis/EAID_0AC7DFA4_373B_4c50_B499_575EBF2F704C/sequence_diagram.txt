@@ -1,0 +1,37 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Displaycustomersinformation" as 09
+participant "Homepage" as 19
+participant "Database" as 29
+
+User -> 09: Createcustomers()
+activate 09
+
+09 -> 09: Validatecustomersinformation()
+09 -> 09: Addcustomers()
+09 -> 29: Database()
+activate 29
+
+deactivate 29
+
+09 -> 09: Displaycustomersinformation()
+09 -> 09: Createcustomers()
+09 -> 09: Validatecustomersinformation()
+deactivate 09
+
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

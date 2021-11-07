@@ -1,0 +1,202 @@
+id,element,useCase,type,component
+1,Admin:Invalid entered information,Add course,boundary,Invalidenteredinformation
+2,Admin:Manage course page,Add course,boundary,Managecoursepage
+3,Admin:home page,Add course,boundary,Managecoursepage
+4,Process course information:Invalid entered information,Add course,boundary,Invalidenteredinformation
+5,Manage course page:Process course information,Add course,boundary,Invalidenteredinformation
+6,Manage course page:redirect to home page,Add course,boundary,Managecoursepage
+7,Process course information:save course information into database,Add course,boundary,Invalidenteredinformation
+8,save course information into database:course,Add course,boundary,Managecoursepage
+9,redirect to home page:home page,Add course,boundary,Managecoursepage
+10,stl#Admin:Invalid entered information,Add course,Stimulus,undefined
+11,stl#Admin:Manage course page,Add course,Stimulus,undefined
+12,stl#Admin:home page,Add course,Stimulus,undefined
+13,Admin:delete course button,Delete course,boundary,deletecourse
+14,Admin:delete success message,Delete course,boundary,deletecourse
+15,Admin:Delete confirmation dialog,Delete course,boundary,Invalidenteredinformation
+16,send email to attendees:Email protocol,Delete course,control,Emailprotocol
+17,Delete confirmation dialog:delete course,Delete course,boundary,deletecourse
+18,show delete confirmation box:Delete confirmation dialog,Delete course,boundary,Invalidenteredinformation
+19,delete course:course,Delete course,boundary,deletecourse
+20,delete course:send email to attendees,Delete course,control,Emailprotocol
+21,delete course button:show delete confirmation box,Delete course,boundary,Invalidenteredinformation
+22,send email to attendees:delete success message,Delete course,boundary,deletecourse
+23,stl#Admin:delete course button,Delete course,Stimulus,undefined
+24,stl#Admin:delete success message,Delete course,Stimulus,undefined
+25,stl#Admin:Delete confirmation dialog,Delete course,Stimulus,undefined
+26,User:Home page,Login,boundary,Homepage
+27,User:course detail page,Login,boundary,Homepage
+28,User:Login success information,Login,boundary,Invalidenteredinformation
+29,User:Login invalid message,Login,boundary,Invalidenteredinformation
+30,User:Login page,Login,boundary,Homepage
+31,Redirect to home page:Home page,Login,boundary,Homepage
+32,verify login information:Login invalid message,Login,boundary,Invalidenteredinformation
+33,Login page:verify login information,Login,boundary,Invalidenteredinformation
+34,Login page:Redirect to home page,Login,boundary,Homepage
+35,update role:Login success information,Login,boundary,Invalidenteredinformation
+36,update role:cache,Login,entity,cache
+37,verify login information:update role,Login,control,updaterole
+38,verify login information:user,Login,entity,user
+39,stl#User:Home page,Login,Stimulus,undefined
+40,stl#User:course detail page,Login,Stimulus,undefined
+41,stl#User:Login success information,Login,Stimulus,undefined
+42,stl#User:Login invalid message,Login,Stimulus,undefined
+43,stl#User:Login page,Login,Stimulus,undefined
+44,Admin:Invalid course information,Modify course,boundary,Invalidenteredinformation
+45,Admin:home page,Modify course,boundary,Homepage
+46,Admin:Course management page,Modify course,control,course
+47,Redirect to home page:Email protocol,Modify course,control,Emailprotocol
+48,Course management page:Redirect to home page,Modify course,boundary,Homepage
+49,Course management page:verify course information,Modify course,boundary,Invalidenteredinformation
+50,Invalid course information:delete course,Modify course,control,course
+51,verify course information:Invalid course information,Modify course,boundary,Invalidenteredinformation
+52,Redirect to home page:home page,Modify course,boundary,Homepage
+53,delete course:Redirect to home page,Modify course,boundary,Homepage
+54,delete course:course,Modify course,control,course
+55,save course info:course,Modify course,control,course
+56,verify course information:save course info,Modify course,control,course
+57,stl#Admin:Invalid course information,Modify course,Stimulus,undefined
+58,stl#Admin:home page,Modify course,Stimulus,undefined
+59,stl#Admin:Course management page,Modify course,Stimulus,undefined
+60,Attendee:Home page,Register course,boundary,Homepage
+61,Attendee:Payment page,Register course,boundary,Homepage
+62,Attendee:registration success,Register course,boundary,Invalidenteredinformation
+63,Attendee:Course detail page,Register course,entity,course
+64,Send out confirmation email:Email protocol,Register course,control,Emailprotocol
+65,EventBrite:receive payment result,Register course,boundary,receivepaymentresult
+66,EventBrite:bring up payment page,Register course,boundary,Homepage
+67,setupPayment:EventBrite,Register course,boundary,receivepaymentresult
+68,make payment:EventBrite,Register course,boundary,receivepaymentresult
+69,Course detail page:setupPayment,Register course,boundary,receivepaymentresult
+70,Course detail page:Redirect to home page,Register course,boundary,Homepage
+71,Redirect to home page:Home page,Register course,boundary,Homepage
+72,Payment page:make payment,Register course,boundary,receivepaymentresult
+73,bring up payment page:Payment page,Register course,boundary,Homepage
+74,Send out confirmation email:registration success,Register course,boundary,receivepaymentresult
+75,receive payment result:Send out confirmation email,Register course,boundary,Invalidenteredinformation
+76,setupPayment:course,Register course,entity,course
+77,stl#Attendee:Home page,Register course,Stimulus,undefined
+78,stl#Attendee:Payment page,Register course,Stimulus,undefined
+79,stl#Attendee:registration success,Register course,Stimulus,undefined
+80,stl#Attendee:Course detail page,Register course,Stimulus,undefined
+81,stl#EventBrite:receive payment result,Register course,Stimulus,undefined
+82,stl#EventBrite:bring up payment page,Register course,Stimulus,undefined
+83,send email to trianer:Email protocol,Request new course,control,Emailprotocol
+84,User:home page,Request new course,boundary,Homepage
+85,User:Log out button,Request new course,boundary,Logoutbutton
+86,User:course information is no t valid message,Request new course,boundary,Invalidenteredinformation
+87,Log out button:clear local cache,Request new course,entity,cache
+88,clear local cache:cache,Request new course,entity,cache
+89,clear local cache:home page,Request new course,boundary,Homepage
+90,save course information for review:course information is no t valid message,Request new course,boundary,Invalidenteredinformation
+91,home page:save course information for review,Request new course,boundary,Invalidenteredinformation
+92,save course information for review:send email to trianer,Request new course,control,Emailprotocol
+93,stl#User:home page,Request new course,Stimulus,undefined
+94,stl#User:Log out button,Request new course,Stimulus,undefined
+95,stl#User:course information is no t valid message,Request new course,Stimulus,undefined
+96,Attendee:Review page,Review course,boundary,Homepage
+97,Attendee:Home page,Review course,boundary,Homepage
+98,Attendee:Course detail page,Review course,entity,Course
+99,Attendee:registration success,Review course,boundary,receivepaymentresult
+100,Attendee:Cours information update success message,Review course,boundary,Invalidenteredinformation
+101,Send out confirmation email:Email protocol,Review course,control,Emailprotocol
+102,EventBrite:Update cours information in db,Review course,boundary,Invalidenteredinformation
+103,EventBrite:receive payment result,Review course,boundary,receivepaymentresult
+104,make payment:EventBrite,Review course,boundary,receivepaymentresult
+105,setupPayment:EventBrite,Review course,boundary,receivepaymentresult
+106,Cours information update success message:make payment,Review course,boundary,receivepaymentresult
+107,Update cours information in db:Cours information update success message,Review course,boundary,Invalidenteredinformation
+108,Update cours information in db:Course,Review course,entity,Course
+109,Course detail page:setupPayment,Review course,boundary,receivepaymentresult
+110,Course detail page:Display review page,Review course,boundary,Homepage
+111,Display review page:Review page,Review course,boundary,Homepage
+112,Redirect to home page:Home page,Review course,boundary,Homepage
+113,Review page:Redirect to home page,Review course,boundary,Homepage
+114,Review page:Update cours information in db,Review course,boundary,Invalidenteredinformation
+115,Send out confirmation email:registration success,Review course,boundary,receivepaymentresult
+116,receive payment result:Send out confirmation email,Review course,boundary,Invalidenteredinformation
+117,stl#Attendee:Review page,Review course,Stimulus,undefined
+118,stl#Attendee:Home page,Review course,Stimulus,undefined
+119,stl#Attendee:Course detail page,Review course,Stimulus,undefined
+120,stl#Attendee:registration success,Review course,Stimulus,undefined
+121,stl#Attendee:Cours information update success message,Review course,Stimulus,undefined
+122,stl#EventBrite:Update cours information in db,Review course,Stimulus,undefined
+123,stl#EventBrite:receive payment result,Review course,Stimulus,undefined
+124,User:No matched results,Search course,boundary,receivepaymentresult
+125,User:Search page,Search course,boundary,Homepage
+126,User:home page,Search course,boundary,Homepage
+127,User:course list,Search course,entity,Course
+128,Search course by keywords:No matched results,Search course,boundary,receivepaymentresult
+129,Save sign up information:course,Search course,entity,Course
+130,Save sign up information:home page,Search course,boundary,Homepage
+131,Search course by keywords:Save sign up information,Search course,boundary,Invalidenteredinformation
+132,Search course by keywords:course list,Search course,entity,Course
+133,Search course by keywords:course,Search course,entity,Course
+134,Search page:Search course by keywords,Search course,entity,Course
+135,Search page:redirect to home page,Search course,boundary,Homepage
+136,redirect to home page:home page,Search course,boundary,Homepage
+137,stl#User:No matched results,Search course,Stimulus,undefined
+138,stl#User:Search page,Search course,Stimulus,undefined
+139,stl#User:home page,Search course,Stimulus,undefined
+140,stl#User:course list,Search course,Stimulus,undefined
+141,User:invalid sign up informatin,Setup account,boundary,Invalidenteredinformation
+142,User:Sign up page,Setup account,boundary,Homepage
+143,User:home page,Setup account,boundary,Homepage
+144,Save sign up information:home page,Setup account,boundary,Homepage
+145,Save sign up information:user,Setup account,entity,Course
+146,verify sign up information:Save sign up information,Setup account,boundary,Invalidenteredinformation
+147,Sign up page:verify sign up information,Setup account,boundary,Invalidenteredinformation
+148,verify sign up information:invalid sign up informatin,Setup account,boundary,Invalidenteredinformation
+149,stl#User:invalid sign up informatin,Setup account,Stimulus,undefined
+150,stl#User:Sign up page,Setup account,Stimulus,undefined
+151,stl#User:home page,Setup account,Stimulus,undefined
+152,User:Login page,Share course,boundary,Homepage
+153,User:Course list,Share course,entity,Course
+154,User:Share menu,Share course,boundary,receivepaymentresult
+155,User:course list button,Share course,entity,Course
+156,Course list:Open course share menu,Share course,entity,Course
+157,load course list:Course list,Share course,entity,Course
+158,Redirect to login page:Login page,Share course,boundary,Homepage
+159,send course information to users:Notification,Share course,boundary,Invalidenteredinformation
+160,Open course share menu:Share menu,Share course,boundary,receivepaymentresult
+161,Share menu:Redirect to login page,Share course,boundary,Homepage
+162,Share menu:send course information to users,Share course,boundary,Invalidenteredinformation
+163,course list button:load course list,Share course,entity,Course
+164,load course list:user,Share course,entity,Course
+165,stl#User:Login page,Share course,Stimulus,undefined
+166,stl#User:Course list,Share course,Stimulus,undefined
+167,stl#User:Share menu,Share course,Stimulus,undefined
+168,stl#User:course list button,Share course,Stimulus,undefined
+169,Trainer:schedule update page,Update schedule,control,updaterole
+170,Trainer:schedule info page,Update schedule,boundary,Homepage
+171,Trainer:Invalid input schedule info,Update schedule,boundary,Invalidenteredinformation
+172,Trainer:load schedule button,Update schedule,entity,cache
+173,validate updated schedule info:Invalid input schedule info,Update schedule,boundary,Invalidenteredinformation
+174,display update schedule page:schedule update page,Update schedule,control,updaterole
+175,schedule info page:display update schedule page,Update schedule,control,updaterole
+176,load schedule button:query schedule info,Update schedule,boundary,Invalidenteredinformation
+177,query schedule info:schedule info page,Update schedule,boundary,Homepage
+178,query schedule info:schedule,Update schedule,entity,cache
+179,save updated schedule:schedule,Update schedule,entity,cache
+180,validate updated schedule info:save updated schedule,Update schedule,control,updaterole
+181,schedule update page:validate updated schedule info,Update schedule,boundary,Invalidenteredinformation
+182,stl#Trainer:schedule update page,Update schedule,Stimulus,undefined
+183,stl#Trainer:schedule info page,Update schedule,Stimulus,undefined
+184,stl#Trainer:Invalid input schedule info,Update schedule,Stimulus,undefined
+185,stl#Trainer:load schedule button,Update schedule,Stimulus,undefined
+186,Admin:course information is no t valid message,Verify new course,boundary,Invalidenteredinformation
+187,Admin:course list,Verify new course,control,savecourseinfo
+188,Admin:course informaton,Verify new course,control,savecourseinfo
+189,send email to trianer:Email protocol,Verify new course,control,Emailprotocol
+190,save the acceptance information:acceptance,Verify new course,control,acceptance
+191,save course info:course,Verify new course,control,savecourseinfo
+192,load course information:course,Verify new course,control,savecourseinfo
+193,save the acceptance information:course information is no t valid message,Verify new course,boundary,Invalidenteredinformation
+194,course informaton:save the acceptance information,Verify new course,control,acceptance
+195,load course information:course informaton,Verify new course,control,savecourseinfo
+196,course list:load course information,Verify new course,control,savecourseinfo
+197,load course information:save course info,Verify new course,control,savecourseinfo
+198,save the acceptance information:send email to trianer,Verify new course,control,Emailprotocol
+199,stl#Admin:course information is no t valid message,Verify new course,Stimulus,undefined
+200,stl#Admin:course list,Verify new course,Stimulus,undefined
+201,stl#Admin:course informaton,Verify new course,Stimulus,undefined

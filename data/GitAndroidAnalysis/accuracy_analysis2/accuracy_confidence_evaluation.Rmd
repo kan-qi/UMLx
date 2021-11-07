@@ -41,24 +41,28 @@ Combined Data Effort Values
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_20_1.csv", selector=c("size", "large"))
 
 #modelData <- selectData("../android_analysis_datasets/android_dataset_7_21.csv")
-outputDir = "."
-outputDir = "./res/9-5-6-models-34-data-points"
-outputDir = "./res/8-28-6-models-34-data-points"
-outputDir = "./res/8-28-6-models-bootstrap-100-34-data-points"
+#outputDir = "."
+#outputDir = "./res/9-5-6-models-34-data-points"
+#outputDir = "./res/8-28-6-models-34-data-points"
+#outputDir = "./res/8-28-6-models-bootstrap-100-34-data-points"
 outputDir = "./res/9-1-6-models-577-61-data-points"
-outputDir = "./res/9-5-8-models"
-outputDir = "./res/9-15-8-models"
+#outputDir = "./res/9-5-8-models"
+#outputDir = "./res/9-15-8-models"
+#outputDir = "./res/10-1-8-models"
+#outputDir = "./res/10-1-8-models"
 print(outputDir)
 #outputDir = "./res/8-27-8-models"
 #outputDir = "./res/8-27-6-models"
-dataset <- read.csv("dsets/combined_data_set_4.csv")
-dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
-dataset <- read.csv("dsets/combined_data_set_8_22.csv")
-dataset <- read.csv("dsets/combined_data_set_8_23.csv")
-dataset <- read.csv("dsets/combined_data_set_8_26.csv")
-dataset <- read.csv("dsets/combined_data_set_8_28.csv") #current
-dataset <- read.csv("dsets/combined_data_set_4_1.csv")
-dataset <- read.csv("dsets/modelEvaluations-5-4.csv")
+#dataset <- read.csv("dsets/combined_data_set_4.csv")
+#dataset <- read.csv("dsets/combined_data_set_4_rufus.csv")
+#dataset <- read.csv("dsets/combined_data_set_8_22.csv")
+#dataset <- read.csv("dsets/combined_data_set_8_23.csv")
+#dataset <- read.csv("dsets/combined_data_set_8_26.csv")
+#dataset <- read.csv("dsets/combined_data_set_8_28.csv") #current
+#dataset <- read.csv("dsets/combined_data_set_4_1.csv")
+#dataset <- read.csv("dsets/modelEvaluations-5-4.csv")
+#dataset <- read.csv("res/10-1-8-models/combined_data_set_10_1.csv")
+dataset <- read.csv("./res/9-1-6-models-577-61-data-points/modelEvaluations-5-4.csv")
 modelData <- selectData(dataset)
 #modelData <- selectData("../android_analysis_datasets/android_dataset_6_29.csv")
 #dataset <- modelData
@@ -78,7 +82,31 @@ modelData <- selectData(dataset)
 #  scale_color_manual(values = c('#999999','#E69F00')) +
 #  theme(legend.position=c(0,1), legend.justification=c(0,1))
 
+#datasetUCP <- read.csv("./dsets/parallel_agile_10_27.csv")
+datasetUCP <- read.csv("./res/9-1-6-models-577-61-data-points/parallel_agile_10_27.csv")
+cor(datasetUCP$EUCP_Size, datasetUCP$Actual_PH)
+cor(datasetUCP$EXUCP_Size, datasetUCP$Actual_PH)
+cor(datasetUCP$DUCP_Size, datasetUCP$Actual_PH)
 
+cor.test(datasetUCP$EUCP_Size, datasetUCP$Actual_PH) 
+cor.test(datasetUCP$EXUCP_Size, datasetUCP$Actual_PH)
+cor.test(datasetUCP$DUCP_Size, datasetUCP$Actual_PH)
+
+lm1 = lm(Actual_PH ~ EUCP_Size, data=datasetUCP)
+summary(lm1)$r.squared 
+print(summary(lm1))
+
+lm2 = lm(Actual_PH ~ EXUCP_Size, data=datasetUCP)
+summary(lm2)$r.squared 
+print(summary(lm2))
+
+lm3 = lm(Actual_PH ~ DUCP_Size, data=datasetUCP)
+summary(lm3)$r.squared
+print(summary(lm3))
+
+hist(transactionData1$combined$TL)
+hist(transactionData1$combined$DETs)
+hist(transactionData1$combined$TD)
 ```
 
 #load the comparative models. Each model for comparison should include two functions for evaluateion:
@@ -338,7 +366,7 @@ model_estimator <- c("LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
 
 #test 5
 model_names <- c("tm1","tm2","tm3", "ucp", "fp", "cosmic", "sloc", "ln_sloc")
-model_texts <- c("SWTIII","SWTII","SWTI", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
+model_texts <- c("SWTII","SWTIII","SWTI", "UCP", "IFPUG", "COSMIC", "SLOC", "LOG_SLOC")
 model_estimator <- c("LSR","LSR","LSR", "LSR", "LSR", "LSR", "LSR", "LSR")
 
 #test 6

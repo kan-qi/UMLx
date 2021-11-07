@@ -1,0 +1,24 @@
+id,element,useCase,type,component
+1,income call dialog:Agent,Receeive Calls,entity,assigncalltoagent
+2,Customer:1-800 dial button,Receeive Calls,entity,1800dialbutton
+3,Lead:softphone screen,Receeive Calls,control,softphonescreen
+4,Lead:1-800 dial button,Receeive Calls,entity,1800dialbutton
+5,Lead:voice mail panel,Receeive Calls,boundary,voicemailpanel
+6,Twilio API:save call log,Receeive Calls,entity,assigncalltoagent
+7,Twilio API:popup income call dialog,Receeive Calls,entity,assigncalltoagent
+8,Twilio API:redirect to void mail,Receeive Calls,boundary,voicemailpanel
+9,assign call to agent:Twilio API,Receeive Calls,control,TwilioAPI
+10,1-800 dial button:assign call to agent,Receeive Calls,entity,assigncalltoagent
+11,connect to Twilio API for agent's call:agent,Receeive Calls,entity,assigncalltoagent
+12,save call log:call log,Receeive Calls,entity,loginpage
+13,connect to Twilio API for agent's call:softphone screen,Receeive Calls,control,softphonescreen
+14,voice mail panel:connect to Twilio API for agent's call,Receeive Calls,control,TwilioAPI
+15,popup income call dialog:income call dialog,Receeive Calls,entity,loginpage
+16,redirect to void mail:voice mail panel,Receeive Calls,boundary,voicemailpanel
+17,stl#Customer:1-800 dial button,Receeive Calls,Stimulus,undefined
+18,stl#Lead:softphone screen,Receeive Calls,Stimulus,undefined
+19,stl#Lead:1-800 dial button,Receeive Calls,Stimulus,undefined
+20,stl#Lead:voice mail panel,Receeive Calls,Stimulus,undefined
+21,stl#Twilio API:save call log,Receeive Calls,Stimulus,undefined
+22,stl#Twilio API:popup income call dialog,Receeive Calls,Stimulus,undefined
+23,stl#Twilio API:redirect to void mail,Receeive Calls,Stimulus,undefined

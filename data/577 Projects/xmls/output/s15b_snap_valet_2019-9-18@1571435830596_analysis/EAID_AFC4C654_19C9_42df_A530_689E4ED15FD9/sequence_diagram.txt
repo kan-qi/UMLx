@@ -1,0 +1,95 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Customeractor Thirdparty payment
+participant "manageemployeescreen" as 09
+participant "successfulpaymentalert" as 19
+participant "vidateticket" as 29
+participant "systemerrorwhenconnectingserver" as 39
+participant "venuelist" as 149
+
+Customer -> 09: paymentpage()
+activate 09
+
+09 -> 19: makepayment()
+activate 19
+
+19 -> 19: Thirdpartypayment()
+19 -> 29: updaterequestqueue()
+activate 29
+
+29 -> 19: alertsuccessfulinsubmission()
+19 -> 19: successfulpaymentalert()
+19 -> 149: pulladvertisementforrandomvenue()
+activate 149
+
+149 -> 39: errorwhensubmitting()
+activate 39
+
+deactivate 39
+
+deactivate 149
+
+deactivate 19
+
+29 -> 149: requestqueue()
+activate 149
+
+deactivate 149
+
+deactivate 29
+
+deactivate 09
+
+Customer -> 19: successfulpaymentalert()
+activate 19
+
+19 -> 149: pulladvertisementforrandomvenue()
+activate 149
+
+deactivate 149
+
+deactivate 19
+
+Customer -> 29: invalidticketnumber()
+activate 29
+
+deactivate 29
+
+Customer -> 39: errorwhensubmitting()
+activate 39
+
+deactivate 39
+
+Customer -> 29: ticketinputpage()
+activate 29
+
+29 -> 29: vidateticket()
+29 -> 39: errorwhensubmitting()
+activate 39
+
+deactivate 39
+
+29 -> 29: invalidticketnumber()
+deactivate 29
+
+29 -> 19: paymentpage()
+activate 19
+
+19 -> 19: makepayment()
+deactivate 19
+
+29 -> 29: ticket()
+activate 29
+
+deactivate 29
+
+Thirdparty payment -> 29: updaterequestqueue()
+activate 29
+
+deactivate 29
+
+@enduml

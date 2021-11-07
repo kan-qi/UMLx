@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Addproviderbutton" as 09
+participant "FeatureList" as 19
+participant "Errormessageforupdatefailure" as 29
+participant "Redirecttosearchpage" as 59
+participant "sendemailincludingcredential" as 69
+
+User -> 19: FeatureList()
+activate 19
+
+19 -> 59: redirecttofeaturepage()
+activate 59
+
+59 -> 29: Invalidinformationerrormessage()
+activate 29
+
+29 -> 19: updatefeaturedetail()
+19 -> 19: feature()
+deactivate 19
+
+deactivate 29
+
+59 -> 19: featuredetail()
+activate 19
+
+19 -> 19: updatefeaturedetail()
+19 -> 19: feature()
+deactivate 19
+
+deactivate 59
+
+User -> 29: Invalidinformationerrormessage()
+activate 29
+
+29 -> 19: updatefeaturedetail()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+User -> 29: Forgottenusernameorpasswordlink()
+activate 29
+
+29 -> 69: sendemailincludingcredential()
+activate 69
+
+69 -> 09: EmailProtocol()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+deactivate 29
+
+User -> 19: featuredetail()
+activate 19
+
+19 -> 19: updatefeaturedetail()
+deactivate 19
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "logoutbutton" as 09
+participant "User" as 29
+
+administrator -> 09: logoutbutton()
+activate 09
+
+09 -> 29: logoutuser()
+activate 29
+
+29 -> 09: redirecttoHKZloginpage()
+deactivate 09
+
+deactivate 29
+
+administrator -> 09: redirecttoHKZloginpage()
+activate 09
+
+deactivate 09
+
+@enduml

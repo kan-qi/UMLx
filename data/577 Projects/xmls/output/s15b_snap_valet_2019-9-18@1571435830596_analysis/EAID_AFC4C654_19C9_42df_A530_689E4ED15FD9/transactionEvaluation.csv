@@ -1,0 +1,11 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#Thirdparty payment:update request queue-->Thirdparty payment:update request queue-->update request queue:request queue,Request and Pay,CTRL;EXTCLL;DM;EI,3,0,5,2,15
+2,stl#Thirdparty payment:update request queue-->Thirdparty payment:update request queue-->update request queue:alert successful in submission-->alert successful in submission:successful payment alert-->successful payment alert:pull advertisement for random venue-->pull advertisement for random venue:error when submitting,Request and Pay,TRAN_NA,6,1,5.4,5,32.400000000000006
+3,stl#Customer:ticket input page-->Customer:ticket input page-->ticket input page:vidate ticket-->vidate ticket:ticket,Request and Pay,CTRL,4,0,7,3,28
+4,stl#Customer:ticket input page-->Customer:ticket input page-->ticket input page:vidate ticket-->vidate ticket:payment page-->payment page:make payment-->make payment:Thirdparty payment,Request and Pay,TRAN_NA,6,1,7,5,42
+5,stl#Customer:ticket input page-->Customer:ticket input page-->ticket input page:vidate ticket-->vidate ticket:invalid ticket number,Request and Pay,CTRL,4,0,7,3,28
+6,stl#Customer:ticket input page-->Customer:ticket input page-->ticket input page:vidate ticket-->vidate ticket:error when submitting,Request and Pay,CTRL,4,0,5.666666666666667,3,22.666666666666668
+7,stl#Customer:error when submitting-->Customer:error when submitting,Request and Pay,CTRL,2,0,3,1,6
+8,stl#Customer:invalid ticket number-->Customer:invalid ticket number,Request and Pay,CTRL,2,0,7,1,14
+9,stl#Customer:successful payment alert-->Customer:successful payment alert-->successful payment alert:pull advertisement for random venue-->pull advertisement for random venue:error when submitting,Request and Pay,TRAN_NA,4,0,4.333333333333333,3,17.333333333333332
+10,stl#Customer:payment page-->Customer:payment page-->payment page:make payment-->make payment:Thirdparty payment,Request and Pay,TRAN_NA,4,0,5,3,20

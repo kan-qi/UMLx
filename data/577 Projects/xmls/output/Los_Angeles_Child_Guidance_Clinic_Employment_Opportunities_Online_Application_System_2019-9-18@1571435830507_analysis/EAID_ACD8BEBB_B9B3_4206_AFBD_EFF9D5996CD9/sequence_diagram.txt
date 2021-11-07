@@ -1,0 +1,65 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "fillsoutalloftherequireddatacorrectly" as 09
+participant "Homepage" as 19
+participant "entersinauniqueloginnameforthenewuser" as 29
+participant "Accountdb" as 39
+
+User -> 09: fillsintherestofthedetailsforthenewuser()
+activate 09
+
+09 -> 09: checkstoensurethatthenewuserhascorrectcredentials()
+09 -> 29: createsanaccountfortheuserandsendsanemail()
+activate 29
+
+29 -> 39: EmployeeAccountdb()
+activate 39
+
+deactivate 39
+
+29 -> 09: showconfirmationaboutthattheaccountcreatedandtheemailsent()
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+deactivate 29
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: entersinauniqueloginnameforthenewuser()
+activate 29
+
+29 -> 29: checktheloginnameisavailable()
+29 -> 19: Showconfirmationpage()
+activate 19
+
+19 -> 39: EmployeeAccountdb()
+activate 39
+
+deactivate 39
+
+19 -> 19: Homepage()
+deactivate 19
+
+19 -> 29: entersinauniqueloginnameforthenewuser()
+29 -> 29: checktheloginnameisavailable()
+29 -> 09: checkstoensurethatthenewuserhascorrectcredentials()
+activate 09
+
+09 -> 29: createsanaccountfortheuserandsendsanemail()
+deactivate 29
+
+deactivate 09
+
+@enduml

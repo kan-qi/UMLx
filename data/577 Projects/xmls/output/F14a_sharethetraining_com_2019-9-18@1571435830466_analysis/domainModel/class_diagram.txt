@@ -1,0 +1,61 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class savecourseinfo {
+~ savecourseinfo()
+~ courselist()
+}
+
+class Invalidenteredinformation {
+~ Invalidenteredinformation()
+~ Processcourseinformation()
+~ Deleteconfirmationdialog()
+~ Logininvalidmessage()
+~ registrationsuccess()
+~ Savesignupinformation()
+~ Notification()
+~ Invalidinputscheduleinfo()
+}
+
+class Emailprotocol {
+~ Emailprotocol()
+~ sendemailtoattendees()
+~ sendemailtotrianer()
+}
+
+class Homepage {
+~ Homepage()
+~ coursedetailpage()
+~ Loginpage()
+~ Paymentpage()
+~ Reviewpage()
+~ Searchpage()
+~ Signuppage()
+~ scheduleinfopage()
+}
+
+class cache {
+~ cache()
+~ clearlocalcache()
+~ loadschedulebutton()
+}
+
+class updaterole {
+~ updaterole()
+~ scheduleupdatepage()
+}
+
+class receivepaymentresult {
+~ receivepaymentresult()
+~ EventBrite()
+~ setupPayment()
+~ registrationsuccess()
+~ Nomatchedresults()
+~ Sharemenu()
+}
+
+class acceptance {
+~ acceptance()
+}
+
+@enduml

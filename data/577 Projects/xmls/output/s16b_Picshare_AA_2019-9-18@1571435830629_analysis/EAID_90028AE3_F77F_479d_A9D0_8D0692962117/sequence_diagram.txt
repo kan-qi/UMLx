@@ -1,0 +1,25 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "SystemSettingPage" as 09
+
+Admin -> 09: SystemSettingPage()
+activate 09
+
+09 -> 09: StoreSystemSettings()
+09 -> 09: SystemSettings()
+deactivate 09
+
+Admin -> 09: Clicksystemsettingbutton()
+activate 09
+
+09 -> 09: Loadsystemsettingpage()
+09 -> 09: SystemSettingPage()
+09 -> 09: StoreSystemSettings()
+deactivate 09
+
+@enduml

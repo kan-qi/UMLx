@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Catagorypage" as 09
+participant "Validatevalues" as 29
+participant "Displayapprovalconfirmation" as 49
+participant "Checkthedatabaseformatchingrecords" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Catagorypage()
+activate 09
+
+09 -> 29: Validatecriteria()
+activate 29
+
+29 -> 59: Checkthedatabaseformatchingrecords()
+activate 59
+
+59 -> 49: Displaythegeneratedreport()
+activate 49
+
+49 -> 09: Catagorypage()
+09 -> 29: Validatecriteria()
+deactivate 29
+
+deactivate 09
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+@enduml

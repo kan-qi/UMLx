@@ -1,0 +1,91 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Savegirlsdata" as 09
+participant "Useraddbutton" as 19
+participant "Typesofattendance" as 59
+participant "LoginInfo" as 149
+
+User -> 09: Dataformaterrormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Dateimportbutton()
+activate 19
+
+19 -> 09: Displaydataimportpage()
+activate 09
+
+09 -> 09: Dataimportpage()
+09 -> 59: Processdata()
+activate 59
+
+59 -> 09: Dataformaterrormessage()
+deactivate 09
+
+59 -> 09: Saveteamsdata()
+activate 09
+
+09 -> 19: Invalidinputuserinformation()
+deactivate 19
+
+09 -> 149: Userinfo()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+59 -> 09: SaveVolunteersdata()
+activate 09
+
+09 -> 19: Invalidinputuserinformation()
+activate 19
+
+deactivate 19
+
+09 -> 149: Userinfo()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+59 -> 09: Savegirlsdata()
+activate 09
+
+09 -> 19: Invalidinputuserinformation()
+activate 19
+
+deactivate 19
+
+09 -> 149: Userinfo()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+deactivate 59
+
+User -> 19: Invalidinputuserinformation()
+activate 19
+
+deactivate 19
+
+User -> 09: Dataimportpage()
+activate 09
+
+09 -> 59: Processdata()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+@enduml

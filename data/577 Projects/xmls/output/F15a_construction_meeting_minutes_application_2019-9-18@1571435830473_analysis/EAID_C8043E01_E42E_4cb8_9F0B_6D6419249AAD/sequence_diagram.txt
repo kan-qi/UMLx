@@ -1,0 +1,47 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "project" as 09
+participant "UserInfo" as 29
+participant "Selectingsettingsbutton" as 89
+
+Administrator -> 09: Editprojectoption()
+activate 09
+
+09 -> 09: displayeditprojectscreen()
+09 -> 09: Editprojectscreen()
+09 -> 29: Verifydefaultuserlist()
+activate 29
+
+29 -> 09: saveprojectinfo()
+09 -> 09: project()
+deactivate 09
+
+29 -> 29: invaliduserinfotoast()
+deactivate 29
+
+09 -> 89: meeting()
+activate 89
+
+deactivate 89
+
+Administrator -> 09: Editprojectscreen()
+activate 09
+
+09 -> 29: Verifydefaultuserlist()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+Administrator -> 29: invaliduserinfotoast()
+activate 29
+
+deactivate 29
+
+@enduml

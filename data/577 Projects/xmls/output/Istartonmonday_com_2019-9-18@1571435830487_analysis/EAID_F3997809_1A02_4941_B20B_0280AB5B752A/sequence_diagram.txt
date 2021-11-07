@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ClickonAdd" as 09
+participant "fillinfieldasrequired" as 19
+participant "Homepage" as 29
+participant "User" as 79
+participant "Notificationdisplayed��Adduserprofile��" as 89
+
+User -> 09: Click��Sponsors��()
+activate 09
+
+09 -> 29: Opensponsorpage()
+activate 29
+
+29 -> 19: Validatesfield()
+activate 19
+
+19 -> 89: Notificationdisplayed��addsponserprofile��()
+activate 89
+
+89 -> 29: Homepage()
+deactivate 29
+
+89 -> 79: sponserdb()
+activate 79
+
+deactivate 79
+
+deactivate 89
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: fillinfieldasrequired()
+activate 19
+
+19 -> 19: Validatesfield()
+19 -> 89: Notificationdisplayed��addsponserprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 09: Clickonadd()
+activate 09
+
+09 -> 19: Validatesfield()
+activate 19
+
+19 -> 89: Notificationdisplayed��addsponserprofile��()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,139 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "thread" as 09
+participant "likepostbutton" as 19
+participant "Invalidsearchinput" as 49
+participant "point" as 99
+
+User -> 09: likethreadbutton()
+activate 09
+
+09 -> 19: savethelikestatus()
+activate 19
+
+19 -> 19: Likeinformation()
+deactivate 19
+
+19 -> 19: updatelikenumberofthepost()
+activate 19
+
+19 -> 99: calculatepointsoftheowner()
+activate 99
+
+99 -> 99: point()
+deactivate 99
+
+99 -> 09: threadislikedmessage()
+09 -> 49: validatesearchinput()
+activate 49
+
+49 -> 49: Invalidsearchinput()
+deactivate 49
+
+49 -> 99: calculatepointsoftheowner()
+activate 99
+
+99 -> 99: point()
+deactivate 99
+
+99 -> 09: threadislikedmessage()
+deactivate 09
+
+99 -> 19: postislikedmessage()
+deactivate 19
+
+99 -> 19: postislikedmessage()
+activate 19
+
+deactivate 19
+
+19 -> 19: grayedoutpostlikebutton()
+activate 19
+
+deactivate 19
+
+19 -> 19: post()
+activate 19
+
+deactivate 19
+
+19 -> 09: updatelikenumberofthread()
+activate 09
+
+09 -> 99: calculatepointsoftheowner()
+activate 99
+
+99 -> 99: point()
+deactivate 99
+
+99 -> 09: threadislikedmessage()
+deactivate 09
+
+99 -> 19: postislikedmessage()
+activate 19
+
+deactivate 19
+
+09 -> 19: grayedoutthreadlikebutton()
+activate 19
+
+deactivate 19
+
+09 -> 09: thread()
+activate 09
+
+deactivate 09
+
+User -> 19: likepostbutton()
+activate 19
+
+19 -> 19: savethelikestatus()
+19 -> 19: Likeinformation()
+deactivate 19
+
+19 -> 19: updatelikenumberofthepost()
+activate 19
+
+deactivate 19
+
+19 -> 09: updatelikenumberofthread()
+activate 09
+
+deactivate 09
+
+User -> 19: grayedoutpostlikebutton()
+activate 19
+
+deactivate 19
+
+User -> 09: threadislikedmessage()
+activate 09
+
+09 -> 49: validatesearchinput()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 49: Invalidsearchinput()
+activate 49
+
+deactivate 49
+
+User -> 19: postislikedmessage()
+activate 19
+
+deactivate 19
+
+User -> 19: grayedoutthreadlikebutton()
+activate 19
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,20 @@
+id,element,useCase,type,component
+1,User:start a thread button,start a thread,boundary,likepostbutton
+2,User:Invalid input thread information,start a thread,boundary,Invalidsearchinput
+3,User:thread information input page,start a thread,control,Forumpage
+4,User:Thread is posted successfully,start a thread,boundary,commentispostedsuccessfullymessage
+5,User:Potential security error,start a thread,boundary,decreasetheitmenuminstore
+6,Check SQL injections:save thread,start a thread,entity,savethread
+7,Check SQL injections:Potential security error,start a thread,boundary,decreasetheitmenuminstore
+8,Check the input thread information:Check SQL injections,start a thread,control,CheckSQLinjections
+9,Check the input thread information:Invalid input thread information,start a thread,boundary,Invalidsearchinput
+10,thread information input page:Check the input thread information,start a thread,control,CheckSQLinjections
+11,save thread:Thread is posted successfully,start a thread,boundary,commentispostedsuccessfullymessage
+12,load thread information input page:thread information input page,start a thread,control,Forumpage
+13,start a thread button:load thread information input page,start a thread,control,Forumpage
+14,save thread:thread,start a thread,entity,savethread
+15,stl#User:start a thread button,start a thread,Stimulus,undefined
+16,stl#User:Invalid input thread information,start a thread,Stimulus,undefined
+17,stl#User:thread information input page,start a thread,Stimulus,undefined
+18,stl#User:Thread is posted successfully,start a thread,Stimulus,undefined
+19,stl#User:Potential security error,start a thread,Stimulus,undefined

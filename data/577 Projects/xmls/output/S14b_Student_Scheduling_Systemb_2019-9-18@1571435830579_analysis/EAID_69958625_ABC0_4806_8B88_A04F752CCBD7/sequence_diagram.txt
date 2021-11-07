@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "addnewcoursepage" as 09
+participant "deletionsuccessmessage" as 19
+participant "incorrectinput" as 39
+participant "User" as 59
+
+User -> 09: updatepage()
+activate 09
+
+09 -> 39: checkthecorrectnessofthedata()
+activate 39
+
+39 -> 39: incorrectinputmessage()
+deactivate 39
+
+39 -> 59: updateusertodatabase()
+activate 59
+
+59 -> 39: redirecttoinitialpage()
+activate 39
+
+39 -> 09: initialpage()
+deactivate 09
+
+39 -> 59: userinfo()
+deactivate 59
+
+deactivate 39
+
+59 -> 19: updaesuccessmessage()
+activate 19
+
+deactivate 19
+
+59 -> 59: userinfo()
+activate 59
+
+deactivate 59
+
+User -> 19: updaesuccessmessage()
+activate 19
+
+deactivate 19
+
+User -> 09: initialpage()
+activate 09
+
+deactivate 09
+
+User -> 39: incorrectinputmessage()
+activate 39
+
+deactivate 39
+
+@enduml

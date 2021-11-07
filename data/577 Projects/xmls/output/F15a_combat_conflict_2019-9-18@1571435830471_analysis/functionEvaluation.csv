@@ -1,0 +1,36 @@
+id, function, functional, DET, FTR, boundaries, controls, entities, typeStr
+1,Admin:Database button-->Database button:show database info-->show database info:List of tables with drop button-->List of tables with drop button:drop tabl-->drop tabl:Empty complete message,EQ,0,5,5,0,0,boundary->boundary->boundary->boundary->boundary
+2,Admin:Empty complete message,EQ,0,1,1,0,0,boundary
+3,Admin:List of tables with drop button-->List of tables with drop button:drop tabl-->drop tabl:Empty complete message,EQ,0,3,3,0,0,boundary->boundary->boundary
+4,User:Update message,EQ,0,1,1,0,0,boundary
+5,User:Page Selector-->Page Selector:Load page to edit-->Load page to edit:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Update message,EO,0,5,1,4,0,control->control->control->control->boundary
+6,User:Page Selector-->Page Selector:Load page to edit-->Load page to edit:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Update error message,EO,0,5,1,4,0,control->control->control->control->boundary
+7,User:Page Selector-->Page Selector:Load page to edit-->Load page to edit:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Page,EQ,1,5,0,5,0,control->control->control->control->control
+8,User:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Update message,EO,0,3,1,2,0,control->control->boundary
+9,User:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Update error message,EO,0,3,1,2,0,control->control->boundary
+10,User:page edit text field and update button-->page edit text field and update button:Update page-->Update page:Page,EQ,1,3,0,3,0,control->control->control
+11,User:Update error message,EQ,0,1,1,0,0,boundary
+12,User:username and password interface-->username and password interface:check login information-->check login information:user interface,EQ,0,3,2,1,0,boundary->control->boundary
+13,User:username and password interface-->username and password interface:check login information-->check login information:admin interface,EQ,1,3,2,1,0,boundary->control->boundary
+14,User:username and password interface-->username and password interface:check login information-->check login information:User Info,EQ,1,3,2,1,0,boundary->control->boundary
+15,User:username and password interface-->username and password interface:check login information-->check login information:Error Message,EQ,0,3,2,1,0,boundary->control->boundary
+16,User:admin interface,EQ,0,1,1,0,0,boundary
+17,User:user interface,EQ,0,1,1,0,0,boundary
+18,User:Error Message,EQ,0,1,1,0,0,boundary
+19,User:front page,EQ,0,1,1,0,0,boundary
+20,User:Logout Button-->Logout Button:clear local cache-->clear local cache:front page,EQ,1,3,2,1,0,boundary->control->boundary
+21,User:Logout Button-->Logout Button:clear local cache-->clear local cache:Cookie,EI,1,3,1,1,1,boundary->control->entity
+22,User:Civilian or veteran radio button-->Civilian or veteran radio button:load first scenario-->load first scenario:display scenario-->display scenario:Scenario display,EI,0,4,1,3,0,boundary->control->control->control
+23,User:Civilian or veteran radio button-->Civilian or veteran radio button:load first scenario-->load first scenario:Scenario,EI,0,3,1,2,0,boundary->control->control
+24,User:Scenario display,EQ,0,1,0,1,0,control
+25,User:Thank you page,EQ,0,1,1,0,0,boundary
+26,User:Cookie Expiration Error,EQ,0,1,0,1,0,control
+27,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Thank you page,EO,1,3,1,2,0,control->control->boundary
+28,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Scenario,EQ,0,3,0,3,0,control->control->control
+29,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Load next senario-->Load next senario:Scenario,EQ,0,4,0,4,0,control->control->control->control
+30,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Load next senario-->Load next senario:Scenario Page-->Scenario Page:Store the answer for the scenario,EQ,0,5,0,5,0,control->control->control->control->control
+31,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Check cookie expiration-->Check cookie expiration:Cookie,EQ,0,4,0,4,0,control->control->control->control
+32,User:Scenario Page-->Scenario Page:Store the answer for the scenario-->Store the answer for the scenario:Check cookie expiration-->Check cookie expiration:Cookie Expiration Error,EQ,0,4,0,4,0,control->control->control->control
+33,User:Scenario Page-->Scenario Page:store answers as cookie-->store answers as cookie:calculate response statistics-->calculate response statistics:answer statistics page-->answer statistics page:Load communication technique-->Load communication technique:communication,EI,1,6,1,5,0,boundary->control->control->control->control->control
+34,User:Scenario Page-->Scenario Page:store answers as cookie-->store answers as cookie:calculate response statistics-->calculate response statistics:answer statistics page-->answer statistics page:Load communication technique-->Load communication technique:Scenario Page-->Scenario Page:store answers as cookie,EQ,1,7,2,5,0,boundary->control->control->control->control->boundary->control
+35,User:Scenario Page-->Scenario Page:store answers as cookie-->store answers as cookie:Cookie,EI,0,3,1,2,0,boundary->control->control

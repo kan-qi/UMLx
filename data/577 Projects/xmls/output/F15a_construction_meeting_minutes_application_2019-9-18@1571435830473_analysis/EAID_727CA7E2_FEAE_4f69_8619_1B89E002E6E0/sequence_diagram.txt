@@ -1,0 +1,59 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "submittedcommentsscreen" as 09
+participant "Selectingsettingsbutton" as 29
+participant "asignedtasklist" as 39
+
+Administrator -> 09: pendingtasksscreen()
+activate 09
+
+09 -> 39: querydetailoftaskandassignee()
+activate 39
+
+39 -> 39: Assignee()
+deactivate 39
+
+39 -> 39: Task()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+Administrator -> 09: Emptytaskscreen()
+activate 09
+
+deactivate 09
+
+Administrator -> 29: Displaypendingtasksbutton()
+activate 29
+
+29 -> 39: Querytasklist()
+activate 39
+
+39 -> 09: Emptytaskscreen()
+activate 09
+
+deactivate 09
+
+39 -> 09: pendingtasksscreen()
+activate 09
+
+09 -> 39: querydetailoftaskandassignee()
+deactivate 39
+
+deactivate 09
+
+39 -> 39: Task()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+@enduml

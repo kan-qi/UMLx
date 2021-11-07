@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class weight {
+~ weight()
+~ checktheweightlessthanbenchmark()
+~ Thesystemopenweightpage()
+~ updategoalwithnewweight()
+}
+
+class Theweightloseraddonesponsorsuccessfullymessage {
+~ Theweightloseraddonesponsorsuccessfullymessage()
+~ errormessageinaddingcharityandsponsor()
+~ Invoketheinviitesponsorusecase()
+~ confirmationmessage()
+~ detaulmessagesentottheemail()
+~ sponsors()
+~ addsponsortotemparilyselectedsponsorslist()
+~ addnewweightpage()
+~ displaysuccessmessage()
+~ sendoutemailstocharitiesandsponsors()
+}
+
+class redirecttheusertocreatgoalpage {
+~ redirecttheusertocreatgoalpage()
+~ creategoalpage()
+~ redirecttologinpage()
+~ credentialalreadyexist()
+~ updatetheuserspassword()
+~ adduserintothesystemifnotregistered()
+~ accountcreationpage()
+~ deletegoalbuttonongoaltrackpage()
+~ checkthatgoalhasnosponsor()
+~ checkedachivedandfailedgoals()
+~ openthepledgemoneypage()
+~ redirectstothesponsorstoPaypal()
+~ udpatethegoalwithdonation()
+}
+
+class invokeaddcharityusecase {
+~ invokeaddcharityusecase()
+~ checkurlvalidity()
+~ addcharityorganizationbutton()
+~ suggestedcharitylist()
+~ showalistofavailablecharity()
+~ addcharitytogoal()
+~ externalcharity()
+~ showmessagethemoneyhasbeensenttocharity()
+~ invoketheregisterusecase()
+}
+
+class errorinaccessfacebookinformation {
+~ errorinaccessfacebookinformation()
+~ errormessageforinvlidemailid()
+~ facebook()
+~ confirmationmessage()
+~ checkifpasswordmatches()
+~ checkifresponsecontainsuserinform()
+~ redundantregistrationerror()
+~ validatetheenteredinformationforredundancy()
+~ sendanactivationlinktousersemail()
+~ accessuserinfo()
+~ displaysacongradulatorymessageonfacebook()
+~ weightinformation()
+~ sponsorinfo()
+~ errorintheamountofmoneytodonate()
+~ thelinkforinvitation()
+}
+
+class emailprototocol {
+~ emailprototocol()
+~ sendemails()
+~ emaildoesntexist()
+~ checkemailandpasswordvalid()
+}
+
+class Homepage {
+~ Homepage()
+~ URLexpiredmessage()
+~ loginpage()
+~ newpasswordpage()
+~ errormessage()
+~ Paypalpage()
+~ pledgemoneypage()
+}
+
+class exceedthetimelimite {
+~ exceedthetimelimite()
+~ checkifsuppliedcredentialsexist()
+~ validatesthedetails()
+}
+
+class invlidpattern {
+~ invlidpattern()
+~ userinfo()
+~ invaliderrormessage()
+~ validatethelink()
+}
+
+class goal {
+~ goal()
+~ goalhassomesponsors()
+~ Paypal()
+~ goaldetaildisplay()
+~ trackgoalbutton()
+~ retrievegoaldetails()
+}
+
+class updatethebenchmark {
+~ updatethebenchmark()
+}
+
+@enduml

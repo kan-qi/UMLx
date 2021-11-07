@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "logoutbutton" as 09
+participant "displayinvalidemailformat" as 19
+participant "checkuscidexistornot" as 29
+participant "deactivateusersession" as 39
+participant "redirecttoapagewiththecurerntsiteslist" as 59
+
+User -> 09: loginpage()
+activate 09
+
+09 -> 59: linktodorniferegistrationsystemforgetpassword()
+activate 59
+
+59 -> 39: dornsiferegistrationsystem()
+activate 39
+
+deactivate 39
+
+deactivate 59
+
+09 -> 39: verifyinputusernameandpasswordcombination()
+activate 39
+
+39 -> 29: checkusersroleindb()
+activate 29
+
+29 -> 39: usersession()
+deactivate 39
+
+29 -> 59: redirecttospecificindexpage()
+activate 59
+
+59 -> 29: specificindexpage()
+deactivate 29
+
+deactivate 59
+
+39 -> 19: failurelogininformation()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: failurelogininformation()
+activate 19
+
+deactivate 19
+
+User -> 29: specificindexpage()
+activate 29
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Supervisor
+participant "RedirectViewIndividualsPage" as 09
+participant "VlunteerDiasterHomepage" as 69
+participant "assignmentdetaildatabase" as 149
+
+Supervisor -> 09: managementpagewithlistofindividualdetails()
+activate 09
+
+09 -> 09: Redirectstotheindividualresentotppage()
+09 -> 09: IndividualresendOTPpage()
+09 -> 69: clearsdeviceIDofvolunteerindb()
+activate 69
+
+69 -> 69: sendsOTPtovolunteeremailID()
+69 -> 09: Redirecttothemanageindividualspage()
+09 -> 09: ManageIndividualsPage()
+deactivate 09
+
+69 -> 149: volunteerdatabase()
+activate 149
+
+deactivate 149
+
+deactivate 69
+
+69 -> 149: volunteerdatabase()
+activate 149
+
+deactivate 149
+
+09 -> 09: ManageIndividualsPage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 09: Manageindividualsbutton()
+activate 09
+
+09 -> 09: Redirecttothemanageindividualspagewithlistofindividualdetails()
+09 -> 09: managementpagewithlistofindividualdetails()
+09 -> 09: Redirectstotheindividualresentotppage()
+deactivate 09
+
+Supervisor -> 09: ManageIndividualsPage()
+activate 09
+
+deactivate 09
+
+Supervisor -> 09: IndividualresendOTPpage()
+activate 09
+
+09 -> 69: clearsdeviceIDofvolunteerindb()
+activate 69
+
+deactivate 69
+
+09 -> 09: ManageIndividualsPage()
+deactivate 09
+
+@enduml

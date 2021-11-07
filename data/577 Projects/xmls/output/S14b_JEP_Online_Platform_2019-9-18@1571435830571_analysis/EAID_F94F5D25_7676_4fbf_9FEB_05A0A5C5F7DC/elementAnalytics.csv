@@ -1,0 +1,15 @@
+id,element,useCase,type,component
+1,User:login page,Login,boundary,logoutbutton
+2,User:failure login information,Login,control,displayinvalidemailformat
+3,User:specific index page,Login,entity,checkuscidexistornot
+4,link to dornife registration system forget password:dornsife registration system,Login,control,deactivateusersession
+5,checkuser's role in db:user session,Login,control,deactivateusersession
+6,checkuser's role in db:redirect to specific index page,Login,boundary,redirecttoapagewiththecurerntsiteslist
+7,verify input username and password combination:checkuser's role in db,Login,entity,checkuscidexistornot
+8,verify input username and password combination:failure login information,Login,control,displayinvalidemailformat
+9,login page:link to dornife registration system forget password,Login,boundary,redirecttoapagewiththecurerntsiteslist
+10,login page:verify input username and password combination,Login,control,deactivateusersession
+11,redirect to specific index page:specific index page,Login,entity,checkuscidexistornot
+12,stl#User:login page,Login,Stimulus,undefined
+13,stl#User:failure login information,Login,Stimulus,undefined
+14,stl#User:specific index page,Login,Stimulus,undefined

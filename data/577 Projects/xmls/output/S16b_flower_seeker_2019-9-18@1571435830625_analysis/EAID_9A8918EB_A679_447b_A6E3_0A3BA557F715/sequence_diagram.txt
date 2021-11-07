@@ -1,0 +1,54 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "notavailableerrormessage" as 09
+participant "sendinformationindb" as 19
+participant "precheckifinputisempty" as 49
+
+User -> 09: errormessageforemptyinput()
+activate 09
+
+deactivate 09
+
+User -> 19: successfulinformationforcreation()
+activate 19
+
+deactivate 19
+
+User -> 09: existingprofileerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 09: CreateProfilePage()
+activate 09
+
+09 -> 49: precheckifinputisempty()
+activate 49
+
+49 -> 09: errormessageforemptyinput()
+deactivate 09
+
+49 -> 09: existingprofileerrormessage()
+activate 09
+
+deactivate 09
+
+49 -> 19: sendinformationindb()
+activate 19
+
+19 -> 19: userinfo()
+deactivate 19
+
+49 -> 19: successfulinformationforcreation()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+@enduml

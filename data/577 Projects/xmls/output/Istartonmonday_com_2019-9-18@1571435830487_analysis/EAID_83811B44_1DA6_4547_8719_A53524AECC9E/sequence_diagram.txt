@@ -1,0 +1,63 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Validatekeyword" as 19
+participant "PressSearchButton" as 29
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: TypeKeyword()
+activate 19
+
+19 -> 19: Validatekeyword()
+19 -> 19: Validatekeyword()
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+19 -> 19: TypeKeyword()
+19 -> 19: Validatekeyword()
+deactivate 19
+
+19 -> 19: Validatekeyword()
+activate 19
+
+19 -> 29: Sortsearchresultincategoriesaspergivenbyemployer()
+activate 29
+
+29 -> 29: DisplaySearchResult()
+29 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+deactivate 19
+
+19 -> 19: Validatekeyword()
+activate 19
+
+deactivate 19
+
+User -> 29: PressSearchButton()
+activate 29
+
+29 -> 19: Validatekeyword()
+activate 19
+
+19 -> 29: Sortsearchresultincategoriesaspergivenbyemployer()
+deactivate 29
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,104 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Weight loser
+participant "goalinfo" as 09
+participant "Theweightloseraddonesponsorsuccessfullymessage" as 19
+participant "redirecttheusertocreatgoalpage" as 139
+participant "invokeaddcharityusecase" as 149
+
+Weight loser -> 09: invalidinformationaboutaddedweights()
+activate 09
+
+deactivate 09
+
+Weight loser -> 19: Theweightloseraddonesponsorsuccessfullymessage()
+activate 19
+
+19 -> 09: createthegoal()
+activate 09
+
+09 -> 09: creategoalconfirmationmessage()
+deactivate 09
+
+09 -> 09: goalinfo()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+Weight loser -> 09: creategoallinkonhomepage()
+activate 09
+
+09 -> 139: redirecttheusertocreatgoalpage()
+activate 139
+
+139 -> 139: creategoalpage()
+139 -> 149: invokeaddcharityusecase()
+activate 149
+
+149 -> 19: addcharitysuccessfullymessage()
+activate 19
+
+19 -> 19: Invoketheinviitesponsorusecase()
+19 -> 19: Theweightloseraddonesponsorsuccessfullymessage()
+19 -> 09: createthegoal()
+deactivate 09
+
+deactivate 19
+
+19 -> 19: errormessageinaddingcharityandsponsor()
+activate 19
+
+deactivate 19
+
+149 -> 19: errormessageinaddingcharityandsponsor()
+activate 19
+
+deactivate 19
+
+149 -> 09: invalidinformationaboutaddedweights()
+activate 09
+
+deactivate 09
+
+deactivate 149
+
+deactivate 139
+
+139 -> 09: goalinfo()
+activate 09
+
+deactivate 09
+
+Weight loser -> 19: errormessageinaddingcharityandsponsor()
+activate 19
+
+deactivate 19
+
+Weight loser -> 09: creategoalconfirmationmessage()
+activate 09
+
+deactivate 09
+
+Weight loser -> 09: creategoalpage()
+activate 09
+
+09 -> 149: invokeaddcharityusecase()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+Weight loser -> 19: addcharitysuccessfullymessage()
+activate 19
+
+19 -> 19: Invoketheinviitesponsorusecase()
+deactivate 19
+
+@enduml

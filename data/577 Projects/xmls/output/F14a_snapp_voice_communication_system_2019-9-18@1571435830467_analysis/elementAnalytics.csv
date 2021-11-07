@@ -1,0 +1,144 @@
+id,element,useCase,type,component
+1,User Agent:softphone screen,Call customers,boundary,popsoftphonescreen
+2,User Agent:lead detail,Call customers,boundary,leaddetail
+3,User Agent:call details,Call customers,boundary,leaddetail
+4,User Agent:leads list,Call customers,boundary,leaddetail
+5,User Agent:show leads list,Call customers,boundary,leaddetail
+6,User Agent:login page,Call customers,entity,loginpage
+7,thirdparty call agency:call finishs and display call details,Call customers,boundary,leaddetail
+8,make a phone call:thirdparty call agency,Call customers,entity,loginpage
+9,call finishs and display call details:call details,Call customers,boundary,leaddetail
+10,check login information:login info,Call customers,entity,loginpage
+11,check login information:show leads list,Call customers,boundary,leaddetail
+12,login page:check login information,Call customers,entity,loginpage
+13,query lead information:lead,Call customers,boundary,leaddetail
+14,query leads list:lead,Call customers,boundary,leaddetail
+15,lead detail:pop softphone screen,Call customers,boundary,popsoftphonescreen
+16,query lead information:lead detail,Call customers,boundary,leaddetail
+17,leads list:query lead information,Call customers,boundary,leaddetail
+18,query leads list:leads list,Call customers,boundary,leaddetail
+19,make a phone call:softphone screen,Call customers,boundary,popsoftphonescreen
+20,softphone screen:make a phone call,Call customers,boundary,popsoftphonescreen
+21,pop softphone screen:softphone screen,Call customers,boundary,popsoftphonescreen
+22,show leads list:query leads list,Call customers,boundary,leaddetail
+23,stl#User Agent:softphone screen,Call customers,Stimulus,undefined
+24,stl#User Agent:lead detail,Call customers,Stimulus,undefined
+25,stl#User Agent:call details,Call customers,Stimulus,undefined
+26,stl#User Agent:leads list,Call customers,Stimulus,undefined
+27,stl#User Agent:show leads list,Call customers,Stimulus,undefined
+28,stl#User Agent:login page,Call customers,Stimulus,undefined
+29,stl#thirdparty call agency:call finishs and display call details,Call customers,Stimulus,undefined
+30,Manager:list of agents with status,Monitor Agents,boundary,connecttoTwilioAPIforagentscall
+31,Manager:view agent activites button,Monitor Agents,boundary,connecttoTwilioAPIforagentscall
+32,Manager:softphone screen,Monitor Agents,control,softphonescreen
+33,connect to Twilio API for agent's call:Twilio API,Monitor Agents,boundary,connecttoTwilioAPIforagentscall
+34,query agent:agent,Monitor Agents,entity,loginpage
+35,connect to Twilio API for agent's call:softphone screen,Monitor Agents,control,softphonescreen
+36,list of agents with status:connect to Twilio API for agent's call,Monitor Agents,boundary,connecttoTwilioAPIforagentscall
+37,query agent:list of agents with status,Monitor Agents,boundary,connecttoTwilioAPIforagentscall
+38,view agent activites button:query agent,Monitor Agents,entity,loginpage
+39,stl#Manager:list of agents with status,Monitor Agents,Stimulus,undefined
+40,stl#Manager:view agent activites button,Monitor Agents,Stimulus,undefined
+41,stl#Manager:softphone screen,Monitor Agents,Stimulus,undefined
+42,income call dialog:Agent,Receeive Calls,entity,assigncalltoagent
+43,Customer:1-800 dial button,Receeive Calls,entity,1800dialbutton
+44,Lead:softphone screen,Receeive Calls,control,softphonescreen
+45,Lead:1-800 dial button,Receeive Calls,entity,1800dialbutton
+46,Lead:voice mail panel,Receeive Calls,boundary,voicemailpanel
+47,Twilio API:save call log,Receeive Calls,entity,assigncalltoagent
+48,Twilio API:popup income call dialog,Receeive Calls,entity,assigncalltoagent
+49,Twilio API:redirect to void mail,Receeive Calls,boundary,voicemailpanel
+50,assign call to agent:Twilio API,Receeive Calls,control,TwilioAPI
+51,1-800 dial button:assign call to agent,Receeive Calls,entity,assigncalltoagent
+52,connect to Twilio API for agent's call:agent,Receeive Calls,entity,assigncalltoagent
+53,save call log:call log,Receeive Calls,entity,loginpage
+54,connect to Twilio API for agent's call:softphone screen,Receeive Calls,control,softphonescreen
+55,voice mail panel:connect to Twilio API for agent's call,Receeive Calls,control,TwilioAPI
+56,popup income call dialog:income call dialog,Receeive Calls,entity,loginpage
+57,redirect to void mail:voice mail panel,Receeive Calls,boundary,voicemailpanel
+58,stl#Customer:1-800 dial button,Receeive Calls,Stimulus,undefined
+59,stl#Lead:softphone screen,Receeive Calls,Stimulus,undefined
+60,stl#Lead:1-800 dial button,Receeive Calls,Stimulus,undefined
+61,stl#Lead:voice mail panel,Receeive Calls,Stimulus,undefined
+62,stl#Twilio API:save call log,Receeive Calls,Stimulus,undefined
+63,stl#Twilio API:popup income call dialog,Receeive Calls,Stimulus,undefined
+64,stl#Twilio API:redirect to void mail,Receeive Calls,Stimulus,undefined
+65,Lead:income call popup,Record calls and call details,actor,customer
+66,Twilio API:popup income call and customer's number,Record calls and call details,actor,customer
+67,Twilio API:popup income call and user agent number,Record calls and call details,actor,customer
+68,answer phone call:Twilio API,Record calls and call details,control,TwilioAPI
+69,answer phone call:Twilio API,Record calls and call details,control,TwilioAPI
+70,dial with Twilio API:Twilio API,Record calls and call details,control,TwilioAPI
+71,User Agent:call/auto dialer button,Record calls and call details,entity,1800dialbutton
+72,User Agent:income call popup,Record calls and call details,actor,customer
+73,caller number:customer,Record calls and call details,actor,customer
+74,caller number:answer phone call,Record calls and call details,control,softphonescreen
+75,answer phone call:call log,Record calls and call details,entity,loginpage
+76,income call popup:answer phone call,Record calls and call details,control,softphonescreen
+77,call/auto dialer button:dial with Twilio API,Record calls and call details,control,TwilioAPI
+78,popup income call and user agent number:caller number,Record calls and call details,control,callernumber
+79,popup income call and customer's number:income call popup,Record calls and call details,control,callernumber
+80,stl#Lead:income call popup,Record calls and call details,Stimulus,undefined
+81,stl#Twilio API:popup income call and customer's number,Record calls and call details,Stimulus,undefined
+82,stl#Twilio API:popup income call and user agent number,Record calls and call details,Stimulus,undefined
+83,stl#User Agent:call/auto dialer button,Record calls and call details,Stimulus,undefined
+84,stl#User Agent:income call popup,Record calls and call details,Stimulus,undefined
+85,Sales Agent:dropdown list for removing lead,Remove lead from auto dialer list,boundary,dropdownlistforremovinglead
+86,Sales Agent:success message for removing lead,Remove lead from auto dialer list,boundary,dropdownlistforremovinglead
+87,remove lead from autodialing list:autodialing list,Remove lead from auto dialer list,entity,1800dialbutton
+88,dropdown list for removing lead:remove lead from autodialing list,Remove lead from auto dialer list,boundary,dropdownlistforremovinglead
+89,remove lead from autodialing list:success message for removing lead,Remove lead from auto dialer list,boundary,dropdownlistforremovinglead
+90,stl#Sales Agent:dropdown list for removing lead,Remove lead from auto dialer list,Stimulus,undefined
+91,stl#Sales Agent:success message for removing lead,Remove lead from auto dialer list,Stimulus,undefined
+92,Customer:request manager conference button,Request Manager Conference,boundary,Popupofmanagersacceptance
+93,Customer:Popup of manager's acceptance,Request Manager Conference,boundary,Popupofmanagersacceptance
+94,Customer:conference cancel notification,Request Manager Conference,boundary,voicemailpanel
+95,Manager:connect to ongoing call,Request Manager Conference,control,callernumber
+96,Manager:popup with request detail of the agent,Request Manager Conference,boundary,Popupofmanagersacceptance
+97,Twilio API:Notify Manager,Request Manager Conference,boundary,Popupofmanagersacceptance
+98,Twilio API:notify cancel request,Request Manager Conference,boundary,voicemailpanel
+99,Twilio API:notify acceptance from manager,Request Manager Conference,boundary,Popupofmanagersacceptance
+100,send conference request:Twilio API,Request Manager Conference,control,TwilioAPI
+101,connect to ongoing call:Twilio API,Request Manager Conference,control,TwilioAPI
+102,Notify Manager:popup with request detail of the agent,Request Manager Conference,boundary,Popupofmanagersacceptance
+103,Popup of manager's acceptance:autodialing list,Request Manager Conference,entity,1800dialbutton
+104,notify acceptance from manager:Popup of manager's acceptance,Request Manager Conference,boundary,Popupofmanagersacceptance
+105,notify cancel request:conference cancel notification,Request Manager Conference,boundary,voicemailpanel
+106,request manager conference button:send conference request,Request Manager Conference,control,softphonescreen
+107,stl#Customer:request manager conference button,Request Manager Conference,Stimulus,undefined
+108,stl#Customer:Popup of manager's acceptance,Request Manager Conference,Stimulus,undefined
+109,stl#Customer:conference cancel notification,Request Manager Conference,Stimulus,undefined
+110,stl#Manager:connect to ongoing call,Request Manager Conference,Stimulus,undefined
+111,stl#Manager:popup with request detail of the agent,Request Manager Conference,Stimulus,undefined
+112,stl#Twilio API:Notify Manager,Request Manager Conference,Stimulus,undefined
+113,stl#Twilio API:notify cancel request,Request Manager Conference,Stimulus,undefined
+114,stl#Twilio API:notify acceptance from manager,Request Manager Conference,Stimulus,undefined
+115,User Agent:status selector dropdown list,Update Lead Status,control,statusselectordropdownlist
+116,User Agent:changed status,Update Lead Status,control,statusselectordropdownlist
+117,save status for lead:Lead,Update Lead Status,boundary,leaddetail
+118,save status for lead:changed status,Update Lead Status,control,statusselectordropdownlist
+119,status selector dropdown list:save status for lead,Update Lead Status,control,statusselectordropdownlist
+120,stl#User Agent:status selector dropdown list,Update Lead Status,Stimulus,undefined
+121,stl#User Agent:changed status,Update Lead Status,Stimulus,undefined
+122,Manager:list of agents with status,View call los and listen to call recordings,control,queryagentactivies
+123,Manager:view agent activities link,View call los and listen to call recordings,control,queryagentactivies
+124,Manager:call detailed information,View call los and listen to call recordings,boundary,leaddetail
+125,Manager:call record downloaded message,View call los and listen to call recordings,entity,callrecorddownloadedmessage
+126,Twilio API:download call records,View call los and listen to call recordings,entity,callrecorddownloadedmessage
+127,Twilio API:receive call information,View call los and listen to call recordings,entity,callrecorddownloadedmessage
+128,connect to Twilio API for call's info:Twilio API,View call los and listen to call recordings,control,TwilioAPI
+129,connect to Twilio API for agent's call records:Twilio API,View call los and listen to call recordings,control,TwilioAPI
+130,query agent activies:agent,View call los and listen to call recordings,control,queryagentactivies
+131,receive call information:call detailed information,View call los and listen to call recordings,boundary,leaddetail
+132,download call records:call record downloaded message,View call los and listen to call recordings,entity,callrecorddownloadedmessage
+133,download call records:call records,View call los and listen to call recordings,entity,callrecorddownloadedmessage
+134,list of agents with status:connect to Twilio API for agent's call records,View call los and listen to call recordings,control,TwilioAPI
+135,list of agents with status:connect to Twilio API for call's info,View call los and listen to call recordings,control,TwilioAPI
+136,query agent activies:list of agents with status,View call los and listen to call recordings,control,queryagentactivies
+137,view agent activities link:query agent activies,View call los and listen to call recordings,control,queryagentactivies
+138,stl#Manager:list of agents with status,View call los and listen to call recordings,Stimulus,undefined
+139,stl#Manager:view agent activities link,View call los and listen to call recordings,Stimulus,undefined
+140,stl#Manager:call detailed information,View call los and listen to call recordings,Stimulus,undefined
+141,stl#Manager:call record downloaded message,View call los and listen to call recordings,Stimulus,undefined
+142,stl#Twilio API:download call records,View call los and listen to call recordings,Stimulus,undefined
+143,stl#Twilio API:receive call information,View call los and listen to call recordings,Stimulus,undefined

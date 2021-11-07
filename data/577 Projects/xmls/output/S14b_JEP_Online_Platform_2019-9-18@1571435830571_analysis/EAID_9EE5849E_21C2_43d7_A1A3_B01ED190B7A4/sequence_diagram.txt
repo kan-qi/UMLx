@@ -1,0 +1,152 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "adduserintodb" as 09
+participant "emptyannouncementform" as 19
+participant "successmessage" as 69
+participant "errorlertaboutconfliect" as 79
+participant "displayinvalidemailformat" as 89
+participant "redirecttoapagewiththecurerntsiteslist" as 99
+participant "checkuscidexistornot" as 189
+
+User -> 09: manageuserlink()
+activate 09
+
+09 -> 99: redirecttoapgageforusermanagement()
+activate 99
+
+99 -> 09: usermanagement()
+deactivate 09
+
+99 -> 09: usermanagementpage()
+activate 09
+
+09 -> 89: displayformwithtextinputarea()
+activate 89
+
+89 -> 99: sitelist()
+deactivate 99
+
+89 -> 89: userinformationinputpage()
+89 -> 189: checkuscidexistornot()
+activate 189
+
+189 -> 89: DisplayuscIdemptyerror()
+deactivate 89
+
+189 -> 09: USCIDexistingerror()
+deactivate 09
+
+189 -> 09: adduserintodb()
+activate 09
+
+09 -> 69: displaysuccessmessage()
+activate 69
+
+69 -> 19: directbacktoannouncementpage()
+activate 19
+
+19 -> 69: successmessage()
+deactivate 69
+
+deactivate 19
+
+69 -> 69: successmessage()
+activate 69
+
+deactivate 69
+
+09 -> 79: errorlertaboutconfliect()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+189 -> 19: emptyannouncementform()
+activate 19
+
+19 -> 09: adduserintodb()
+activate 09
+
+09 -> 69: displaysuccessmessage()
+activate 69
+
+deactivate 69
+
+09 -> 79: errorlertaboutconfliect()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+deactivate 19
+
+189 -> 89: displayinvalidemailformat()
+activate 89
+
+deactivate 89
+
+deactivate 189
+
+User -> 19: DisplayuscIdemptyerror()
+activate 19
+
+deactivate 19
+
+User -> 09: userinformationinputpage()
+activate 09
+
+09 -> 189: checkuscidexistornot()
+activate 189
+
+deactivate 189
+
+deactivate 09
+
+User -> 19: emptyannouncementform()
+activate 19
+
+19 -> 09: adduserintodb()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: USCIDexistingerror()
+activate 09
+
+deactivate 09
+
+User -> 09: usermanagementpage()
+activate 09
+
+09 -> 89: displayformwithtextinputarea()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+User -> 69: successmessage()
+activate 69
+
+deactivate 69
+
+User -> 79: errorlertaboutconfliect()
+activate 79
+
+deactivate 79
+
+User -> 89: displayinvalidemailformat()
+activate 89
+
+deactivate 89
+
+@enduml

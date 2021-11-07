@@ -1,0 +1,122 @@
+id,element,useCase,type,component
+1,User:Click Continue button,Take scenario team quiz,control,loadsCommunicationTechnique
+2,User:reads scenario memo,Take scenario team quiz,control,readsscenariomemo
+3,User:clicks next,Take scenario team quiz,boundary,clicksnext
+4,User:reads question,Take scenario team quiz,control,loadsCommunicationTechnique
+5,User:clicks on radio buttons of answers,Take scenario team quiz,boundary,clicksnext
+6,User:clicks continue button,Take scenario team quiz,boundary,clicksnext
+7,User:Click Select another scenario button,Take scenario team quiz,control,readsscenariomemo
+8,User:give their responses,Take scenario team quiz,boundary,givetheirresponses
+9,User:read task,Take scenario team quiz,control,readsscenariomemo
+10,Answers from page stored as cookie:loads response statistics page,Take scenario team quiz,boundary,givetheirresponses
+11,clicks next:Answers from page stored as cookie,Take scenario team quiz,control,Answersfrompagestoredascookie
+12,reads question:Answers from page stored as cookie,Take scenario team quiz,control,Answersfrompagestoredascookie
+13,reads scenario memo:Answers from page stored as cookie,Take scenario team quiz,control,Answersfrompagestoredascookie
+14,clicks continue button:Answers from page stored as cookie,Take scenario team quiz,control,Answersfrompagestoredascookie
+15,clicks on radio buttons of answers:Answers from page stored as cookie,Take scenario team quiz,control,Answersfrompagestoredascookie
+16,Answers submitted to system:Scenario list loaded,Take scenario team quiz,control,readsscenariomemo
+17,read task:Answers submitted to system,Take scenario team quiz,control,Answersfrompagestoredascookie
+18,give their responses:Answers submitted to system,Take scenario team quiz,control,Answersfrompagestoredascookie
+19,loads Communication Technique:Answers submitted to system,Take scenario team quiz,control,Answersfrompagestoredascookie
+20,Click Select another scenario button:Answers submitted to system,Take scenario team quiz,control,Answersfrompagestoredascookie
+21,Click Continue button:loads response statistics page,Take scenario team quiz,boundary,givetheirresponses
+22,loads response statistics page:loads Communication Technique,Take scenario team quiz,control,loadsCommunicationTechnique
+23,stl#User:Click Continue button,Take scenario team quiz,Stimulus,undefined
+24,stl#User:reads scenario memo,Take scenario team quiz,Stimulus,undefined
+25,stl#User:clicks next,Take scenario team quiz,Stimulus,undefined
+26,stl#User:reads question,Take scenario team quiz,Stimulus,undefined
+27,stl#User:clicks on radio buttons of answers,Take scenario team quiz,Stimulus,undefined
+28,stl#User:clicks continue button,Take scenario team quiz,Stimulus,undefined
+29,stl#User:Click Select another scenario button,Take scenario team quiz,Stimulus,undefined
+30,stl#User:give their responses,Take scenario team quiz,Stimulus,undefined
+31,stl#User:read task,Take scenario team quiz,Stimulus,undefined
+32,User:Click on Empty/Drop tables button	,clear submit answers,control,Displayslistoftablesalongwithemptydropbuttonsnexttothem
+33,User:Homepage,clear submit answers,control,Answersfrompagestoredascookie
+34,User:selects empty for userResponses table,clear submit answers,boundary,givetheirresponses
+35,User:Click on Database button on sidebar,clear submit answers,boundary,clicksnext
+36,Click on Database button on sidebar:Shows database information,clear submit answers,control,Showsdatabaseinformation
+37,Click on Empty/Drop tables button	:Shows database information,clear submit answers,control,Showsdatabaseinformation
+38,Displays list of tables along with empty/drop buttons next to them:Responses deleted from table,clear submit answers,boundary,givetheirresponses
+39,selects empty for userResponses table:Displays list of tables along with empty/drop buttons next to them,clear submit answers,control,Displayslistoftablesalongwithemptydropbuttonsnexttothem
+40,Shows database information:Displays list of tables along with empty/drop buttons next to them,clear submit answers,control,Displayslistoftablesalongwithemptydropbuttonsnexttothem
+41,Responses deleted from table:Homepage,clear submit answers,control,Answersfrompagestoredascookie
+42,stl#User:Click on Empty/Drop tables button	,clear submit answers,Stimulus,undefined
+43,stl#User:Homepage,clear submit answers,Stimulus,undefined
+44,stl#User:selects empty for userResponses table,clear submit answers,Stimulus,undefined
+45,stl#User:Click on Database button on sidebar,clear submit answers,Stimulus,undefined
+46,User:Modifies the text that displays on that page,edit page on website,boundary,givetheirresponses
+47,User:selects page to edit,edit page on website,control,Answersfrompagestoredascookie
+48,User:Clicks update button,edit page on website,boundary,clicksnext
+49,User:Homepage,edit page on website,control,Answersfrompagestoredascookie
+50,Clicks update button:Displays error message indicating why the update failed,edit page on website,control,Answersfrompagestoredascookie
+51,Displays error message indicating why the update failed:Homepage,edit page on website,control,Answersfrompagestoredascookie
+52,Displays message saying page has been updated:Displays error message indicating why the update failed,edit page on website,control,Answersfrompagestoredascookie
+53,Modifies the text that displays on that page:Displays message saying page has been updated,edit page on website,control,Answersfrompagestoredascookie
+54,selects page to edit:Displays message saying page has been updated,edit page on website,control,Answersfrompagestoredascookie
+55,stl#User:Modifies the text that displays on that page,edit page on website,Stimulus,undefined
+56,stl#User:selects page to edit,edit page on website,Stimulus,undefined
+57,stl#User:Clicks update button,edit page on website,Stimulus,undefined
+58,stl#User:Homepage,edit page on website,Stimulus,undefined
+59,User:Homepage,login,control,Answersfrompagestoredascookie
+60,User:Click Continue button,login,boundary,clicksnext
+61,User:User does not select any radio button,login,boundary,User
+62,User:Click on login in page,login,boundary,clicksnext
+63,Click Continue button:imput usename and password ,login,control,Answersfrompagestoredascookie
+64,Click on login in page:imput usename and password ,login,control,Answersfrompagestoredascookie
+65,show confirmation:Homepage,login,control,Answersfrompagestoredascookie
+66,User does not select any radio button:validate usename and password,login,control,Answersfrompagestoredascookie
+67,imput usename and password :validate usename and password,login,control,Answersfrompagestoredascookie
+68,validate usename and password:show confirmation,login,control,Showsdatabaseinformation
+69,stl#User:Homepage,login,Stimulus,undefined
+70,stl#User:Click Continue button,login,Stimulus,undefined
+71,stl#User:User does not select any radio button,login,Stimulus,undefined
+72,stl#User:Click on login in page,login,Stimulus,undefined
+73,User:Click logout button	,logout,boundary,clicksnext
+74,User:Homepage,logout,control,Answersfrompagestoredascookie
+75,User:User does not select any radio button,logout,boundary,User
+76,User:Click Continue button,logout,boundary,clicksnext
+77,Returns staff member to combat conflict front page:Browser alerts user that they have not selected any option,logout,control,Showsdatabaseinformation
+78,Homepage:Browser alerts user that they have not selected any option,logout,control,Showsdatabaseinformation
+79,User does not select any radio button:Browser alerts user that they have not selected any option,logout,control,Showsdatabaseinformation
+80,Click Continue button:Returns staff member to combat conflict front page,logout,control,Answersfrompagestoredascookie
+81,Click logout button	:Returns staff member to combat conflict front page,logout,control,Answersfrompagestoredascookie
+82,show confirmation:Homepage,logout,control,Answersfrompagestoredascookie
+83,Returns staff member to combat conflict front page:show confirmation,logout,control,Showsdatabaseinformation
+84,stl#User:Click logout button	,logout,Stimulus,undefined
+85,stl#User:Homepage,logout,Stimulus,undefined
+86,stl#User:User does not select any radio button,logout,Stimulus,undefined
+87,stl#User:Click Continue button,logout,Stimulus,undefined
+88,User:Click Continue button,provide information,boundary,clicksnext
+89,User:Click on Civilian or veteran radio button,provide information,boundary,clicksnext
+90,User:Click Continue button,provide information,boundary,clicksnext
+91,User:User does not select any radio button,provide information,boundary,User
+92,System loads and displays first scenario:Browser alerts user that they have not selected any option,provide information,control,Showsdatabaseinformation
+93,User does not select any radio button:Browser alerts user that they have not selected any option,provide information,control,Showsdatabaseinformation
+94,Click Continue button:Browser alerts user that they have not selected any option,provide information,control,Showsdatabaseinformation
+95,Click Continue button:System loads and displays first scenario,provide information,control,readsscenariomemo
+96,Click on Civilian or veteran radio button:System loads and displays first scenario,provide information,control,readsscenariomemo
+97,stl#User:Click Continue button,provide information,Stimulus,undefined
+98,stl#User:Click on Civilian or veteran radio button,provide information,Stimulus,undefined
+99,stl#User:Click Continue button,provide information,Stimulus,undefined
+100,stl#User:User does not select any radio button,provide information,Stimulus,undefined
+101,User:Homepage,take scenario pre-assignment,control,Answersfrompagestoredascookie
+102,User:clicks continue button,take scenario pre-assignment,boundary,clicksnext
+103,User:Click Continue button,take scenario pre-assignment,boundary,clicksnext
+104,User:User reads scenario description	,take scenario pre-assignment,control,readsscenariomemo
+105,User:clicks on radio buttons of answers,take scenario pre-assignment,boundary,clicksnext
+106,Answers from page stored as cookie:loads next scenario,take scenario pre-assignment,control,readsscenariomemo
+107,System loads and displays first scenario:Answers from page stored as cookie,take scenario pre-assignment,control,Answersfrompagestoredascookie
+108,Click Continue button:Answers from page stored as cookie,take scenario pre-assignment,control,Answersfrompagestoredascookie
+109,displays thank you message :Homepage,take scenario pre-assignment,control,Answersfrompagestoredascookie
+110,clicks on radio buttons of answers:System loads and displays first scenario,take scenario pre-assignment,control,readsscenariomemo
+111,User reads scenario description	:System loads and displays first scenario,take scenario pre-assignment,control,readsscenariomemo
+112,clicks continue button:System loads and displays first scenario,take scenario pre-assignment,control,readsscenariomemo
+113,stores answers in database:displays thank you message ,take scenario pre-assignment,control,displaysthankyoumessage
+114,loads next scenario:stores answers in database,take scenario pre-assignment,control,Answersfrompagestoredascookie
+115,stl#User:Homepage,take scenario pre-assignment,Stimulus,undefined
+116,stl#User:clicks continue button,take scenario pre-assignment,Stimulus,undefined
+117,stl#User:Click Continue button,take scenario pre-assignment,Stimulus,undefined
+118,stl#User:User reads scenario description	,take scenario pre-assignment,Stimulus,undefined
+119,stl#User:clicks on radio buttons of answers,take scenario pre-assignment,Stimulus,undefined
+120,undefined,Use Case1,undefined,Object1
+121,stl#undefined,Use Case1,Stimulus,undefined

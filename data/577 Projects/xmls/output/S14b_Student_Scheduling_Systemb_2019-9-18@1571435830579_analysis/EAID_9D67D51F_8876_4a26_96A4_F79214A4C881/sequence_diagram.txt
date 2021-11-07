@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "addnewcoursepage" as 09
+participant "deletionsuccessmessage" as 19
+participant "udpateuserprofile" as 39
+participant "incorrectinput" as 69
+
+User -> 09: initialpage()
+activate 09
+
+deactivate 09
+
+User -> 19: theusercannotbedeleteerrormessage()
+activate 19
+
+deactivate 19
+
+User -> 19: deletionconfirmationdialog()
+activate 19
+
+19 -> 39: deleteuserfromdatabase()
+activate 39
+
+39 -> 39: userinfo()
+deactivate 39
+
+39 -> 69: redirecttoinitialpage()
+activate 69
+
+69 -> 09: initialpage()
+activate 09
+
+deactivate 09
+
+69 -> 39: userinfo()
+activate 39
+
+deactivate 39
+
+deactivate 69
+
+39 -> 19: theusercannotbedeleteerrormessage()
+deactivate 19
+
+User -> 39: deleteuser()
+activate 39
+
+39 -> 19: requestsconfirmationfordeletiontheuser()
+activate 19
+
+19 -> 19: deletionconfirmationdialog()
+19 -> 39: deleteuserfromdatabase()
+deactivate 39
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,12 @@
+id,element,useCase,type,component
+1,User:Publishes a meeting ,Send Notification,boundary,Choosesameeting
+2,User:Hompage,Send Notification,boundary,Hompage
+3,User:Submits a comment to an assigned task,Send Notification,control,validateusenameandpassword
+4,Adds comment to the minute :sends a Parse Push notification ,Send Notification,control,validateusenameandpassword
+5,Publishes meeting and sends a Parse Push notification :Adds comment to the minute ,Send Notification,control,attemptstoverifytheinputs
+6,Submits a comment to an assigned task:Adds comment to the minute ,Send Notification,control,attemptstoverifytheinputs
+7,sends a Parse Push notification :Hompage,Send Notification,boundary,Hompage
+8,Publishes a meeting :Publishes meeting and sends a Parse Push notification ,Send Notification,boundary,Choosesameeting
+9,stl#User:Publishes a meeting ,Send Notification,Stimulus,undefined
+10,stl#User:Hompage,Send Notification,Stimulus,undefined
+11,stl#User:Submits a comment to an assigned task,Send Notification,Stimulus,undefined
