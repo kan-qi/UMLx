@@ -1,7 +1,0 @@
-id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
-1,stl#user:Denied transaction message->user:Denied transaction message,Make Payment,2,1,0,0,0
-2,stl#user:success message->user:success message,Make Payment,2,0,0,1,0
-3,stl#user:"Make a payment" button->user:"Make a payment" button->"Make a payment" button:Validate information input->Validate information input:Display a message showing that the payment has been made successfully->Display a message showing that the payment has been made successfully:success message,Make Payment,5,1,2,1,0
-4,stl#user:"Make a payment" button->user:"Make a payment" button->"Make a payment" button:Validate information input->Validate information input:Notify the user denied transaction->Notify the user denied transaction:Denied transaction message,Make Payment,5,2,2,0,0
-5,stl#user:"Make a payment" button->user:"Make a payment" button->"Make a payment" button:Validate information input->Validate information input:Notify the user denied transaction->Notify the user denied transaction:User notification,Make Payment,5,2,2,0,0
-6,stl#user:"Make a payment" button->user:"Make a payment" button->"Make a payment" button:Validate information input->Validate information input:Payment information,Make Payment,4,1,2,0,0

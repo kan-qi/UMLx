@@ -1,7 +1,0 @@
-id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
-1,stl#guests:invitation page->guests:invitation page,Send E-invitations to guest,CTRL;EXTCLL;DM;EI,2,5,7,1,14
-2,stl#guests:error messageno invites send messaage->guests:error messageno invites send messaage->error messageno invites send messaage:redirect to invitation page->redirect to invitation page:invitation page,Send E-invitations to guest,TRAN_NA,4,2,6,3,24
-3,stl#guests:invitation send success message->guests:invitation send success message,Send E-invitations to guest,CTRL;EXTCLL;INT,2,5,4,1,8
-4,stl#guests:send invites button->guests:send invites button->send invites button:send emails with invitation links->send emails with invitation links:invitation send success message,Send E-invitations to guest,TRAN_NA,4,2,6,3,24
-5,stl#guests:send invites button->guests:send invites button->send invites button:send emails with invitation links->send emails with invitation links:invitation link info,Send E-invitations to guest,TRAN_NA,4,2,7,3,28
-6,stl#guests:send invites button->guests:send invites button->send invites button:send emails with invitation links->send emails with invitation links:error messageno invites send messaage->error messageno invites send messaage:redirect to invitation page->redirect to invitation page:invitation page,Send E-invitations to guest,TRAN_NA,6,3,6.4,5,38.400000000000006

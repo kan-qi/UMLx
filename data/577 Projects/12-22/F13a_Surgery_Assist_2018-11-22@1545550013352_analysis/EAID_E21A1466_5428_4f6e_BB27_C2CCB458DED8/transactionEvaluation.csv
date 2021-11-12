@@ -1,9 +1,0 @@
-id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
-1,stl#user:Login button->user:Login button->Login button:disable the user's privilege to login->disable the user's privilege to login:Notify administrator->Notify administrator:administrator email box,Login,TRAN_NA,5,5,3,4,15
-2,stl#user:Login button->user:Login button->Login button:disable the user's privilege to login->disable the user's privilege to login:Notify administrator->Notify administrator:not allowed to login message,Login,TRAN_NA,5,5,3,4,15
-3,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:redirect the user to their personal home page->redirect the user to their personal home page:personal home page,Login,TRAN_NA,5,6,1.75,4,8.75
-4,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:User Info,Login,TRAN_NA,4,6,1.6666666666666667,3,6.666666666666667
-5,stl#user:Login button->user:Login button->Login button:Validate username and password->Validate username and password:Invalid user information,Login,TRAN_NA,4,5,2,3,8
-6,stl#user:Invalid user information->user:Invalid user information,Login,CTRL;EXTCLL;INT,2,0,2,1,4
-7,stl#user:not allowed to login message->user:not allowed to login message,Login,CTRL,2,0,3,1,6
-8,stl#user:personal home page->user:personal home page,Login,CTRL;EXTCLL;INT,2,0,2,1,4
