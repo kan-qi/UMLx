@@ -253,8 +253,7 @@ function queryTempRepoInfo(callbackfunc){
 	    var o_id = new mongo.ObjectID(repoId);
 
          db.collection("repos").update({_id:o_id}, repoInfo, function(){
-        	 
-        	 
+
         	 umlFileManager.writeFile(tempRepoIDStorePath, repoInfo._id, function(path){
         		 	if(callbackfunc){
         		 		callbackfunc(repoInfo._id);
@@ -267,6 +266,7 @@ function queryTempRepoInfo(callbackfunc){
 	}
 	
 	umlFileManager.readFile(tempRepoIDStorePath, function(tempRepoID){
+	    console.log("tempRepoID: " + tempRepoID);
 		if(!tempRepoID){
 			createTempRepo(function(tempRepoID){
 				queryRepoInfo(tempRepoID, function(repoInfo){
@@ -752,7 +752,7 @@ function deleteRepo(repoId, callbackfunc) {
 	
     function queryRepoInfo(repoId, callbackfunc)
     {
-        console.log("inside queryRepoInfo");
+        console.log("inside queryRepoInfo: " + repoId);
         MongoClient.connect(url, function(err, db)
         {
 			
@@ -764,7 +764,7 @@ function deleteRepo(repoId, callbackfunc) {
 				   "_id":new mongo.ObjectID(repoId)
 				}
 			},
-               { 	
+               {
                     "$lookup":
                     {
                         "from": "modelInfo",
@@ -773,12 +773,14 @@ function deleteRepo(repoId, callbackfunc) {
                         "as": "Models"
                     }
                 }
-            ], function(err, result) 
+            ], function(err, result)
             {
                 db.close();
 
+                console.log("result:" + result);
+
             	if (err){
-            	    console.log("spot error in queryRepoInfo");
+            	   console.log("spot error in queryRepoInfo");
             	   console.log(err);
             	   if(callbackfunc){
             		   callbackfunc(false);

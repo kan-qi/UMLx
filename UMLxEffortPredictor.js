@@ -76,9 +76,10 @@
             predictionModel.predictEffort(modelInfo, estimationModel, function(estimationResults){
 //              console.log("finished prediction 1");
 //              process.exit();
-
+                console.log("estimation results: " + JSON.stringify(estimationResults));
                 // decompose effort for activities in Android apk
                 if (modelInfo.apkFile) {
+
                     if (estimationResults["UseCases"].length === 0) {
                         if(callbackfunc){
                             callbackfunc(false);

@@ -19,7 +19,8 @@ if (length(args) < 2) {
 	args[4] = "effort_prediction"
 }
 
-
+print(.libPaths())
+print(Sys.getenv('R_LIBS_USER'))
 modelUrl <- args[1]
 dataUrl <- args[2]
 outputDir <- args[3]

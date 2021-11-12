@@ -187,13 +187,14 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
         packed_obj['formInfo'] = formInfo;
         packed_obj['umlModelName'] = "query"+uploadDate+"@"+Date.now();
         packed_obj['estimationModel'] = estimationModel;
-
         const worker = fork('./UMLxPredictEffortWorker.js',
             [],
             {
                 execArgv: []
             });
         worker.on('message', (return_obj) => {
+            console.log(return_obj);
+
             return_obj = JSON.parse(return_obj);
             let func = return_obj['func']
                 , estimationResults = return_obj['estimationResults']

@@ -31,7 +31,20 @@
 		});
 		loop();
 	}
-	
+
+	function runRScriptTest(command) {
+	    // test the rscript command with:
+	    // node -e 'require("./utils/RscriptUtil.js").runRScriptTest(command)'
+//	    console.log(libPaths);
+	    var child = exec(RExec+" "+command, {env: {"R_LIBS_USER": libPaths}}, function(error, stdout, stderr) {
+	                    console.log(stderr);
+	                    console.log(stdout);
+        				if (error) {
+        					console.log(error);
+        				}
+        });
+	}
+
 	function loop(){
 		if(runningCount < threadLimit){
 			var commandObject = commandPool.shift();
@@ -63,8 +76,9 @@
 			});
 		}
 	}
-	
+
 	module.exports = {
-			runRScript: runRScript
+			runRScript: runRScript,
+			runRScriptTest: runRScriptTest
 	}
 })();

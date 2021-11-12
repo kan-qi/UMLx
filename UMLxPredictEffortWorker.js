@@ -17,6 +17,7 @@ process.on("message", (packed_obj) => {
     console.l("in worker, package_json: " + packed_obj);
     let return_obj = {};
     umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
+        console.log(repoInfo);
         if(!repoInfo){
             return_obj['func'] = 'error';
             return_obj['estimationResults'] = '';
